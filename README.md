@@ -61,6 +61,9 @@ there. Every selector name carries one proof of its own: a live domain that publ
 the record name as found, and the date checked (a numbered series such as s1, s2 needs one for the
 series). A name without a proof does not get merged.
 
+Every proof is rechecked against live DNS each week and on any pull request that touches
+`vendors.json`. A proof that no longer holds opens an issue, so a stale selector is caught and fixed.
+
 ## Related
 
 - [dns-audit.com](https://dns-audit.com): a full email security audit of a domain.
