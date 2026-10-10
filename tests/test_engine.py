@@ -97,3 +97,20 @@ def test_a_domain_is_accepted_however_it_is_pasted(pasted, domain):
 def test_nonsense_is_refused(bad):
     with pytest.raises(ValueError):
         clean_domain(bad)
+
+
+async def test_a_subdomain_whose_mx_is_google_probes_google_before_any_other_rule(
+    offline, monkeypatch
+):
+    # Reversed, so Google starts last and only the subdomain's own MX can move it up.
+    monkeypatch.setattr(engine, "load_rules", lambda: tuple(reversed(load_rules())))
+    zone = Zone().add("mail.subhint.test", "MX", "1 smtp.google.com")
+    await map_domain("subhint.test", resolver=zone, http=offline, use_web=False)
+    probed = [
+        name.removesuffix("._domainkey.mail.subhint.test")
+        for name, rtype in zone.asked
+        if rtype == "TXT" and name.endswith("._domainkey.mail.subhint.test")
+    ][1:]  # the first is the wildcard canary
+    assert probed[0] == "google"
+    # The budget, then the names the Google MX backs that the budget left out.
+    assert set(probed[engine.SUBDOMAIN_PROBES :]) == {"ga1", "gapps", "googlemail"}

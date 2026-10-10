@@ -3,14 +3,14 @@
 Two phases. The first reads what needs no prior knowledge: MX, SPF, tokens, report addresses,
 labels, the website, sending subdomains. The second uses it: DKIM names a generic selector after
 a service SPF or MX already shows; the networks source looks up the IP ranges the SPF walk found;
-each sending subdomain gets its own smaller scan.
+each sending subdomain gets its own smaller scan, ranked by its own MX and SPF.
 """
 
 from __future__ import annotations
 
 import asyncio
 import time
-from collections.abc import Awaitable, Callable
+from collections.abc import Awaitable, Callable, Iterable, Mapping
 from contextlib import AsyncExitStack
 
 import httpx
@@ -19,7 +19,7 @@ from . import catalog as catalog_module
 from .dns import Lookups, Resolver, SystemResolver
 from .infer import backed_selectors, services
 from .model import Finding, Gap, Kind, Observed, SenderMap, Severity
-from .selectors import load_rules, probe_order, rank_rules
+from .selectors import Rule, load_rules, probe_order, rank_rules
 from .sources import (
     Context,
     bimi,
@@ -37,6 +37,8 @@ from .sources import (
 
 Progress = Callable[[str], Awaitable[None]]
 MAX_SUBDOMAINS = 30
+# DKIM names probed per sending subdomain, besides the ones its own SPF or MX backs.
+SUBDOMAIN_PROBES = 27
 
 
 async def map_domain(
@@ -86,10 +88,7 @@ async def map_domain(
 
         await say("Scanning DKIM keys and the networks in SPF")
         backed = backed_selectors(apex.claims, ctx.catalog)
-        # The MX source already asked, so this query is a cache hit.
-        mx_hosts = [h for r in (await ctx.dns.query(domain, "MX")).records if (h := mx.exchange(r))]
-        ranked = rank_rules(rules, mx_hosts, tree.includes)
-        selectors = probe_order(ranked, (*ctx.catalog.probe_selectors, *backed))
+        selectors = await _probe_order(ctx, rules, domain, tree.includes, backed)
         deep = await asyncio.gather(
             dkim.collect(ctx, domain, selectors, backed),
             networks.collect(ctx, domain, tree.ranges),
@@ -97,7 +96,7 @@ async def map_domain(
 
         picked = sending_subdomains[:MAX_SUBDOMAINS]
         await say(f"Checking {len(picked)} sending subdomains")
-        under = await asyncio.gather(*(_subdomain(ctx, name) for name in picked))
+        under = await asyncio.gather(*(_subdomain(ctx, rules, name) for name in picked))
 
         observed = sum((*deep, *under), apex)
         result = SenderMap(
@@ -115,16 +114,30 @@ async def map_domain(
         return result
 
 
-# Not intended: subdomains skip the rules and ranking map_domain uses. They should match the apex.
-async def _subdomain(ctx: Context, name: str) -> Observed:
+async def _subdomain(ctx: Context, rules: tuple[Rule, ...], name: str) -> Observed:
     (found, tree), received = await asyncio.gather(spf.collect(ctx, name), mx.collect(ctx, name))
     first = found + received
     backed = backed_selectors(first.claims, ctx.catalog)
+    order = await _probe_order(ctx, rules, name, tree.includes, backed)
     keys, owned = await asyncio.gather(
-        dkim.collect(ctx, name, (*ctx.catalog.subdomain_selectors, *backed), backed),
+        dkim.collect(ctx, name, (*order[:SUBDOMAIN_PROBES], *backed), backed),
         networks.collect(ctx, name, tree.ranges),
     )
     return first + keys + owned
+
+
+async def _probe_order(
+    ctx: Context,
+    rules: tuple[Rule, ...],
+    where: str,
+    spf_includes: Iterable[str],
+    backed: Mapping[str, str],
+) -> tuple[str, ...]:
+    """The DKIM sweep for `where`, with the rules its own MX and SPF hint at moved first."""
+    # The MX source already asked, so this query is a cache hit.
+    mx_hosts = [h for r in (await ctx.dns.query(where, "MX")).records if (h := mx.exchange(r))]
+    ranked = rank_rules(rules, mx_hosts, spf_includes)
+    return probe_order(ranked, (*ctx.catalog.probe_selectors, *backed))
 
 
 def _cross_findings(ctx: Context, observed: Observed) -> tuple[Finding, ...]:
