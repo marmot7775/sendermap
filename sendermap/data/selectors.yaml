@@ -1,12 +1,22 @@
+# reference backs a rule's selector names; hints_reference backs its hints.
+
+# The MX page names only smtp.google.com. Domains set up before 2023 use legacy hosts it
+# describes only as starting with "aspmx", so those do not match yet.
 - vendor: Google Workspace
   shape: {kind: fixed, names: [google]}
   source: vendor_docs
   reference: https://support.google.com/a/answer/174124
+  hints: {mx: [smtp.google.com], spf: [_spf.google.com]}
+  hints_reference:
+    - https://knowledge.workspace.google.com/admin/domains/set-up-mx-records-for-google-workspace
+    - https://knowledge.workspace.google.com/admin/security/set-up-spf
 
 - vendor: Microsoft 365
   shape: {kind: numbered, prefix: selector, stop: 2}
   source: vendor_docs
   reference: https://learn.microsoft.com/defender-office-365/email-authentication-dkim-configure
+  hints: {mx: [mail.protection.outlook.com], spf: [spf.protection.outlook.com]}
+  hints_reference: https://learn.microsoft.com/microsoft-365/enterprise/external-domain-name-system-records
 
 - vendor: Mailchimp
   shape: {kind: fixed, names: [k2]}
@@ -19,13 +29,14 @@
   source: pattern
 
 # Customers can choose a custom three character selector, so s1 and s2 are not guaranteed.
-# The MX and SPF values below are the ones the docs put on the em return-path subdomain,
-# not the apex.
+# Subdomain hints: the docs put these MX and SPF values on the em#### return-path subdomain,
+# not the apex, so an apex scan does not match them. Subdomain discovery comes later.
 - vendor: SendGrid
   shape: {kind: numbered, prefix: s, stop: 2}
   source: vendor_docs
   reference: https://www.twilio.com/docs/sendgrid/ui/account-and-settings/how-to-set-up-domain-authentication
   hints: {mx: [mx.sendgrid.net], spf: [sendgrid.net]}
+  hints_reference: https://www.twilio.com/docs/sendgrid/ui/account-and-settings/how-to-set-up-domain-authentication
 
 - vendor: Amazon SES
   shape: {kind: dated, prefix: ses, years_back: 2}
