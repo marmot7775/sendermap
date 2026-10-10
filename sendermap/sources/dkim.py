@@ -36,19 +36,23 @@ class Key:
         return self.tags.get("p", "") == ""
 
     @property
+    def algorithm(self) -> str:
+        """The k= tag, lowercase; RSA when the record leaves it out (RFC 6376, section 3.6.1)."""
+        return self.tags.get("k", "rsa").lower()
+
+    @property
     def bits(self) -> int | None:
-        """RSA modulus size, from the length of the public key. None for Ed25519 or unreadable."""
-        if self.tags.get("k", "rsa").lower() != "rsa":
+        """The key's size: for RSA, the length of the modulus read from the key itself; for
+        Ed25519, 256, fixed by the type. None when the key cannot be read."""
+        if self.algorithm == "ed25519":
+            return 256
+        if self.algorithm != "rsa":
             return None
         try:
-            der = base64.b64decode(self.tags.get("p", "").replace(" ", ""), validate=False)
+            der = base64.b64decode("".join(self.tags.get("p", "").split()), validate=True)
         except ValueError:
             return None
-        # A SubjectPublicKeyInfo wraps the modulus in about 38 bytes of structure.
-        for size, limit in ((1024, 200), (2048, 330), (3072, 460), (4096, 600)):
-            if len(der) <= limit:
-                return size
-        return None
+        return _rsa_modulus_bits(der)
 
     def evidence(self, checked_at: datetime) -> Evidence:
         return Evidence(self.name, "TXT", self.described(), checked_at)
@@ -63,7 +67,7 @@ class Key:
         for part in self.record.split(";"):
             key, sep, value = part.strip().partition("=")
             if sep and key.strip().lower() == "p" and value.strip():
-                size = f", {self.bits}-bit" if self.bits else ""
+                size = f", {self.bits}-bit" if self.bits else ", could not read key size"
                 parts.append(f"p={value.strip()[:12]}...{size}")
             elif part.strip():
                 parts.append(part.strip())
@@ -117,17 +121,65 @@ async def collect(
             claims.append(Claim(service, kind, where, evidence))
         else:
             unknowns.append(Unknown("DKIM key", selector, where))
-        if key.bits == 1024:
-            findings.append(
-                Finding(
-                    Severity.WARNING,
-                    f"The {selector} key at {where} is 1024-bit",
-                    "Some receivers already treat 1024-bit RSA keys as weak. Rotate to 2048-bit.",
-                    (evidence,),
-                )
-            )
+        if key.algorithm == "rsa" and key.bits is not None and key.bits <= 1024:
+            findings.append(_short_key(selector, where, key.bits, evidence))
     gaps = (Gap(f"{failed} DKIM selectors at {where}", "lookups failed"),) if failed else ()
     return Observed(tuple(claims), tuple(unknowns), tuple(findings), gaps)
+
+
+def _short_key(selector: str, where: str, bits: int, evidence: Evidence) -> Finding:
+    title = f"The {selector} key at {where} is {bits}-bit"
+    if bits < 1024:
+        detail = (
+            "RFC 8301 (section 3.2) requires RSA signing keys of at least 1024 bits, and this one "
+            "is smaller. Rotate to 2048-bit."
+        )
+        return Finding(Severity.RISK, title, detail, (evidence,))
+    detail = "Some receivers already treat 1024-bit RSA keys as weak. Rotate to 2048-bit."
+    return Finding(Severity.WARNING, title, detail, (evidence,))
+
+
+# DER tags in an RSA public key.
+_SEQUENCE, _INTEGER, _BIT_STRING = 0x30, 0x02, 0x03
+
+
+def _rsa_modulus_bits(der: bytes) -> int | None:
+    """The bit length of the RSA modulus in a SubjectPublicKeyInfo, the form RFC 6376 asks for,
+    or in a bare RSAPublicKey, which some senders publish instead. None when it does not parse."""
+    try:
+        tag, body, rest = _tlv(der)
+        if tag != _SEQUENCE or rest:
+            return None
+        tag, value, after = _tlv(body)
+        if tag == _SEQUENCE:  # SubjectPublicKeyInfo: the algorithm, then the key in a BIT STRING
+            tag, wrapped, extra = _tlv(after)
+            if tag != _BIT_STRING or extra or wrapped[:1] != b"\x00":
+                return None
+            tag, body, rest = _tlv(wrapped[1:])
+            if tag != _SEQUENCE or rest:
+                return None
+            tag, value, after = _tlv(body)
+        exponent_tag, _, tail = _tlv(after)
+    except ValueError:
+        return None
+    if tag != _INTEGER or exponent_tag != _INTEGER or tail:
+        return None
+    return int.from_bytes(value).bit_length() or None
+
+
+def _tlv(data: bytes) -> tuple[int, bytes, bytes]:
+    """One DER element: its tag, its value, and the bytes after it. ValueError if cut short."""
+    if len(data) < 2:
+        raise ValueError("truncated")
+    tag, length, start = data[0], data[1], 2
+    if length & 0x80:
+        size = length & 0x7F
+        if not 0 < size <= 4 or len(data) < 2 + size:
+            raise ValueError("bad length")
+        length, start = int.from_bytes(data[2 : 2 + size]), 2 + size
+    if start + length > len(data):
+        raise ValueError("truncated")
+    return tag, data[start : start + length], data[start + length :]
 
 
 def _dangling(
