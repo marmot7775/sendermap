@@ -2,16 +2,15 @@
 
 A bounce (return path) CNAME lets a service's bounces align with the domain; a tracking CNAME
 serves its click and open links. Either is the service set up to send. A wildcard CNAME answers
-every label, so one random label is asked first and any answer matching it is ignored.
+every label, so one label nobody publishes is asked first and any answer matching it is ignored.
 """
 
 from __future__ import annotations
 
 import asyncio
-import secrets
 
 from ..model import Claim, Evidence, Kind, Observed
-from . import Context
+from . import CANARY, Context
 
 _KINDS = {
     "return path": Kind.RETURN_PATH,
@@ -23,7 +22,7 @@ _KINDS = {
 async def collect(ctx: Context, where: str) -> Observed:
     labels = ctx.catalog.cname_labels
     canary, *answers = await asyncio.gather(
-        ctx.dns.query(f"sm{secrets.token_hex(5)}.{where}", "CNAME"),
+        ctx.dns.query(f"{CANARY}.{where}", "CNAME"),
         *(ctx.dns.query(f"{label}.{where}", "CNAME") for label in labels),
     )
     wildcard = canary.target

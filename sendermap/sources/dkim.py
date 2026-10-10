@@ -9,13 +9,12 @@ from __future__ import annotations
 
 import asyncio
 import base64
-import secrets
 from collections.abc import Iterable, Mapping
 from dataclasses import dataclass
 
 from ..dns import Answer
 from ..model import Claim, Evidence, Finding, Gap, Kind, Observed, Severity, Unknown
-from . import Context
+from . import CANARY, Context
 
 
 @dataclass(frozen=True, slots=True)
@@ -73,14 +72,14 @@ async def collect(
     """Scan `selectors` under `where`. `backed` maps a selector to a service the domain's SPF
     or MX already shows, whose own selector list has that name."""
     base = f"_domainkey.{where}"
-    canary = await ctx.dns.txt(f"sm{secrets.token_hex(5)}.{base}")
+    canary = await ctx.dns.txt(f"{CANARY}.{base}")
     if canary.ok and any("p=" in r for r in canary.records):
         wildcard = Finding(
             Severity.NOTE,
             f"Every name under {base} answers with a key",
             "A wildcard record makes every selector look published, so keys there say nothing "
             "about which services sign for the domain.",
-            (Evidence(canary.name, "TXT", canary.records[0]),),
+            (Evidence(f"*.{base}", "TXT", canary.records[0]),),
         )
         return Observed(findings=(wildcard,))
     names = list(dict.fromkeys(s.lower() for s in selectors))

@@ -54,6 +54,7 @@ async def test_a_wildcard_makes_every_key_meaningless():
     observed = await scan(zone, ["k1", "s1"])
     assert observed.claims == ()
     assert "wildcard" in observed.findings[0].detail
+    assert observed.findings[0].evidence[0].name == "*._domainkey.example.com"
 
 
 async def test_a_1024_bit_key_is_flagged():
