@@ -25,7 +25,9 @@ def render(result: SenderMap) -> str:
     if result.unknowns:
         lines += ["", "## Not recognised", ""]
         lines += [
-            f"- {u.what}: `{u.value}`" + ("" if u.where == result.domain else f" at {u.where}")
+            f"- {u.what}: `{u.value}`"
+            + ("" if u.where == result.domain else f" at {u.where}")
+            + f", from `{u.evidence}`"
             for u in result.unknowns
         ]
     if ct := ct_lines(result):
@@ -48,7 +50,6 @@ def render(result: SenderMap) -> str:
 def _row(service: Service, domain: str) -> str:
     claim = service.decided_by
     at = "" if claim.where == domain else f" at {claim.where}"
-    return (
-        f"| {service.name} | {service.category} | {service.tier or ''} | "
-        f"{claim.kind.value}{at}: `{claim.evidence}` |"
-    )
+    via = "".join(f" via `{e}`" for e in claim.supporting)
+    cell = f"{claim.kind.value}{at}: `{claim.evidence}`{via}".replace("|", "\\|")
+    return f"| {service.name} | {service.category} | {service.tier or ''} | {cell} |"

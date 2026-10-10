@@ -30,7 +30,7 @@ async def collect(ctx: Context, where: str) -> Observed:
         if service := ctx.catalog.mx(host):
             claims.append(Claim(service, kind_at(ctx, service, where), where, evidence))
         else:
-            unknowns.append(Unknown("mail server", host, where))
+            unknowns.append(Unknown("mail server", host, where, evidence))
     return Observed(tuple(claims), tuple(unknowns), tuple(findings))
 
 

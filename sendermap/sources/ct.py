@@ -30,6 +30,7 @@ from ..model import (
     Claim,
     CtStatus,
     CtSummary,
+    Evidence,
     Gap,
     Historical,
     Kind,
@@ -104,7 +105,7 @@ async def collect(ctx: Context, cache: Path | None) -> tuple[Observed, CtSummary
 
 
 async def _read(
-    ctx: Context, logged: Logged, published: dict[networks.Network, frozenset[str]]
+    ctx: Context, logged: Logged, published: networks.Published
 ) -> tuple[Observed, bool]:
     """What one logged name shows now, and whether it is gone without naming any service."""
     name = logged.name
@@ -145,10 +146,10 @@ async def _by_address(
     ctx: Context,
     logged: Logged,
     address: Answer,
-    published: dict[networks.Network, frozenset[str]],
+    published: networks.Published,
 ) -> Observed:
-    """The first address in a range one service publishes, or in a network a service owns. A
-    shared cloud is never credited."""
+    """The first address in a range one service publishes, or in a network a service owns, with
+    the published range or the network's answer as support. A shared cloud is never credited."""
     for ip in address.records:
         try:
             network = ipaddress.ip_network(ip)
@@ -156,16 +157,16 @@ async def _by_address(
             continue
         candidates = networks.published_by(network, published)
         service: str | None = None
+        support: tuple[Evidence, ...] = ()
         if len(candidates) == 1:
-            (service,) = candidates
-            why = f"inside {service}'s published range"
+            ((service, source),) = candidates.items()
+            support = (source,)
         elif announced := await networks.owner(ctx, network[0]):
-            asn, owner_name = announced
-            service = ctx.catalog.network(asn)
-            why = f"network {asn}, {owner_name}"
+            service, support = ctx.catalog.network(announced.asn), announced.evidence
         if service:
-            evidence = _evidence(ctx, logged, "A", f"{ip} ({why})")
-            return Observed((Claim(service, Kind.CT_ADDRESS, logged.name, evidence),))
+            evidence = _evidence(ctx, logged, "A", ip)
+            claim = Claim(service, Kind.CT_ADDRESS, logged.name, evidence, support)
+            return Observed((claim,))
     return Observed()
 
 

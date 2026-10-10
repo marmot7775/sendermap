@@ -22,7 +22,7 @@ from __future__ import annotations
 import asyncio
 import ipaddress
 from collections import Counter
-from dataclasses import replace
+from dataclasses import dataclass
 
 from ..model import Claim, Evidence, Gap, Kind, Observed, Unknown
 from . import Context
@@ -33,6 +33,18 @@ MAX_RANGES = 24
 MAX_PUBLISHED_DEPTH = 3
 
 Network = ipaddress.IPv4Network | ipaddress.IPv6Network
+# {network: {service: the term in that service's own SPF record that publishes it}}
+Published = dict[Network, dict[str, Evidence]]
+
+
+@dataclass(frozen=True, slots=True)
+class Owner:
+    """Who announces an address or range: the ASN and its owner's name, both "" when no one
+    network does, and the Team Cymru answers that say so."""
+
+    asn: str
+    name: str
+    evidence: tuple[Evidence, ...]
 
 
 async def collect(ctx: Context, where: str, ranges: list[tuple[str, Evidence]]) -> Observed:
@@ -45,13 +57,10 @@ async def collect(ctx: Context, where: str, ranges: list[tuple[str, Evidence]]) 
     for cidr, evidence, network in networks:
         candidates = published_by(network, published)
         if len(candidates) == 1:
-            (publisher,) = candidates
-            noted = replace(
-                evidence, value=f"{evidence.value} (inside {publisher}'s published range)"
-            )
-            claims.append(Claim(publisher, Kind.SPF_NETWORK, where, noted))
+            ((publisher, source),) = candidates.items()
+            claims.append(Claim(publisher, Kind.SPF_NETWORK, where, evidence, (source,)))
         else:
-            rest.append((cidr, evidence, network, candidates))
+            rest.append((cidr, evidence, network, frozenset(candidates)))
     picked = rest[:MAX_RANGES]
     if dropped := len(rest) - len(picked):
         asked = f"network owners of the IP ranges in SPF at {where}"
@@ -60,37 +69,38 @@ async def collect(ctx: Context, where: str, ranges: list[tuple[str, Evidence]]) 
     owners = await asyncio.gather(*(range_owner(ctx, n) for _, _, n, _ in picked))
     unknowns: list[Unknown] = []
     failed: list[str] = []
-    for (cidr, evidence, network, candidates), announced in zip(picked, owners, strict=True):
-        listed = f"; listed by {' and '.join(sorted(candidates))}" if candidates else ""
+    for (cidr, evidence, network, listers), announced in zip(picked, owners, strict=True):
+        listed = f"; listed by {' and '.join(sorted(listers))}" if listers else ""
         single = network.prefixlen == network.max_prefixlen
         what = "IP address in SPF" if single else "IP range in SPF"
         if announced is None:
             failed.append(cidr)
-            unknowns.append(Unknown(what, f"{cidr} (network lookup failed{listed})", where))
+            value = f"{cidr} (network lookup failed{listed})"
+            unknowns.append(Unknown(what, value, where, evidence))
             continue
-        asn, name = announced
+        asn, name = announced.asn, announced.name
         service = ctx.catalog.network(asn)
         if service:
-            noted = replace(evidence, value=f"{evidence.value} (network {asn}, {name})")
-            claims.append(Claim(service, Kind.SPF_NETWORK, where, noted))
+            claims.append(Claim(service, Kind.SPF_NETWORK, where, evidence, announced.evidence))
             continue
         if not asn:
-            unknowns.append(Unknown(what, f"{cidr} (no one network announces it{listed})", where))
+            value = f"{cidr} (no one network announces it{listed})"
+            unknowns.append(Unknown(what, value, where, evidence))
             continue
         label = ctx.catalog.clouds.get(asn) or name or "owner name not published"
-        unknowns.append(Unknown(what, f"{cidr} ({asn}, {label}{listed})", where))
+        unknowns.append(Unknown(what, f"{cidr} ({asn}, {label}{listed})", where, evidence))
     if failed:
         asked = f"network owners: Team Cymru TXT for {', '.join(failed)}"
         gaps += (Gap(asked, "lookup failed"),)
     return Observed(tuple(claims), tuple(unknowns), gaps=gaps)
 
 
-async def range_owner(ctx: Context, network: Network) -> tuple[str, str] | None:
-    """The network that announces most of a range: (ASN, owner name), ("", "") when no one
-    network announces most of it, or None when a lookup failed. A large range can hold blocks
-    announced by others: 149.72.0.0/16 is SendGrid's, but its first /24 is announced by Amazon.
-    So a range wider than one routed block (an IPv4 /24, an IPv6 /48) is sampled at three points
-    and the majority wins."""
+async def range_owner(ctx: Context, network: Network) -> Owner | None:
+    """The network that announces most of a range, with the answers for the samples that agree;
+    an Owner with no ASN when no one network announces most of it; None when a lookup failed. A
+    large range can hold blocks announced by others: 149.72.0.0/16 is SendGrid's, but its first
+    /24 is announced by Amazon. So a range wider than one routed block (an IPv4 /24, an IPv6 /48)
+    is sampled at three points and the majority wins."""
     size = network.num_addresses
     block = 24 if network.version == 4 else 48
     points = [1] if network.prefixlen >= block else [1, size // 2 + 1, 3 * size // 4 + 1]
@@ -98,14 +108,15 @@ async def range_owner(ctx: Context, network: Network) -> tuple[str, str] | None:
     samples = [s for s in found if s is not None]
     if len(samples) < len(found):
         return None
-    asn, name = Counter(samples).most_common(1)[0][0]
-    return (asn, name) if sum(1 for s in samples if s[0] == asn) * 2 > len(samples) else ("", "")
+    asn, name = Counter((s.asn, s.name) for s in samples).most_common(1)[0][0]
+    agree = [s for s in samples if s.asn == asn]
+    if len(agree) * 2 <= len(samples):
+        return Owner("", "", tuple(e for s in samples for e in s.evidence))
+    return Owner(asn, name, tuple(dict.fromkeys(e for s in agree for e in s.evidence)))
 
 
-async def owner(
-    ctx: Context, ip: ipaddress.IPv4Address | ipaddress.IPv6Address
-) -> tuple[str, str] | None:
-    """(ASN, owner name) for an address, ("", "") when no network announces it, or None when a
+async def owner(ctx: Context, ip: ipaddress.IPv4Address | ipaddress.IPv6Address) -> Owner | None:
+    """Who announces an address, an Owner with no ASN when no network does, or None when a
     lookup failed. IPv4 asks origin.asn.cymru.com by reversed octets; IPv6 asks
     origin6.asn.cymru.com by reversed nibbles."""
     if ip.version == 4:
@@ -116,13 +127,16 @@ async def owner(
     if not origin.answered:
         return None
     if not origin.ok:
-        return "", ""
+        return Owner("", "", (Evidence(origin_name, "TXT", origin.status.value, ctx.checked_at),))
     asn = "AS" + origin.records[0].split("|")[0].split()[0]
+    said = Evidence(origin_name, "TXT", origin.records[0], ctx.checked_at)
     about = await ctx.dns.txt(f"{asn}.asn.cymru.com")
     if not about.answered:
         return None
-    name = about.records[0].split("|")[-1].strip() if about.ok else ""
-    return asn, name
+    if not about.ok:
+        return Owner(asn, "", (said,))
+    named = Evidence(about.name, "TXT", about.records[0], ctx.checked_at)
+    return Owner(asn, about.records[0].split("|")[-1].strip(), (said, named))
 
 
 def _network(cidr: str) -> Network | None:
@@ -135,9 +149,10 @@ def _network(cidr: str) -> Network | None:
 # ---------------------------------------------------------------- published ranges
 
 
-async def published_ranges(ctx: Context) -> tuple[dict[Network, frozenset[str]], tuple[Gap, ...]]:
-    """{network: the services that publish it}, read from every service's own SPF record through
-    this map's lookups, and a gap for each service whose ranges could not all be read."""
+async def published_ranges(ctx: Context) -> tuple[Published, tuple[Gap, ...]]:
+    """{network: {service: the term that publishes it}}, read from every service's own SPF
+    record through this map's lookups, and a gap for each service whose ranges could not all be
+    read."""
     # A hosted SPF service's own record is its company mail, not its customers' senders.
     sources = [
         (name, host)
@@ -146,19 +161,19 @@ async def published_ranges(ctx: Context) -> tuple[dict[Network, frozenset[str]],
         for host in hosts
     ]
     found = await asyncio.gather(*(_ranges_of(ctx, host, name, 0) for name, host in sources))
-    owners: dict[Network, set[str]] = {}
+    owners: Published = {}
     problems: dict[tuple[str, str], None] = {}
     for (name, _), (networks, missed) in zip(sources, found, strict=True):
-        for network in networks:
-            owners.setdefault(network, set()).add(name)
+        for network, evidence in networks:
+            owners.setdefault(network, {}).setdefault(name, evidence)
         problems.update(dict.fromkeys((name, problem) for problem in missed))
     gaps = tuple(Gap(f"published ranges: SPF of {name}", why) for name, why in problems)
-    return {network: frozenset(names) for network, names in owners.items()}, gaps
+    return owners, gaps
 
 
 async def _ranges_of(
     ctx: Context, host: str, owner: str, depth: int
-) -> tuple[list[Network], tuple[str, ...]]:
+) -> tuple[list[tuple[Network, Evidence]], tuple[str, ...]]:
     """The ranges a service's record authorizes, and what kept any of them from being read."""
     if depth > MAX_PUBLISHED_DEPTH:
         return [], (f"includes more than {MAX_PUBLISHED_DEPTH} levels deep not read (cap)",)
@@ -168,13 +183,14 @@ async def _ranges_of(
     records = spf_records(answer)
     if len(records) != 1:
         return [], ()
-    found: list[Network] = []
+    found: list[tuple[Network, Evidence]] = []
     nested: list[str] = []
     for term in terms(records[0]):
         if not term.authorizes:
             continue
         if term.mechanism in ("ip4", "ip6") and (network := _network(term.value)):
-            found.append(network)
+            listed = Evidence(answer.name, "TXT", f"{term.mechanism}:{term.value}", ctx.checked_at)
+            found.append((network, listed))
         elif _follows(term.mechanism, term.value) and ctx.catalog.spf(term.value) in (None, owner):
             nested.append(term.value)  # another service's ranges stay theirs
     missed: tuple[str, ...] = ()
@@ -186,11 +202,12 @@ async def _ranges_of(
     return found, missed
 
 
-def published_by(network: Network, published: dict[Network, frozenset[str]]) -> frozenset[str]:
-    """The services whose published range holds this one, judged at the most specific holding
-    range. More than one means the range is shared, and the network owner decides."""
+def published_by(network: Network, published: Published) -> dict[str, Evidence]:
+    """{service: the term that publishes it} for the services whose published range holds this
+    one, judged at the most specific holding range. More than one means the range is shared,
+    and the network owner decides."""
     holders = [(p.prefixlen, names) for p, names in published.items() if _inside(network, p)]
-    return max(holders, key=lambda h: h[0])[1] if holders else frozenset()
+    return max(holders, key=lambda h: h[0])[1] if holders else {}
 
 
 def _inside(network: Network, outer: Network) -> bool:

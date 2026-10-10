@@ -47,5 +47,5 @@ async def collect(ctx: Context) -> Observed:
                 if service := ctx.catalog.reporting(host):
                     claims.append(Claim(service, kind, ctx.domain, evidence))
                 elif not (host == ctx.domain or host.endswith("." + ctx.domain)):
-                    unknowns.append(Unknown(label, host, ctx.domain))
+                    unknowns.append(Unknown(label, host, ctx.domain, evidence))
     return Observed(tuple(claims), tuple(unknowns), gaps=tuple(gaps))

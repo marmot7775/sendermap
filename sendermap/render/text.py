@@ -10,7 +10,7 @@ from rich.panel import Panel
 from rich.table import Table
 from rich.text import Text
 
-from ..model import SenderMap, Service, Severity, Tier
+from ..model import Claim, SenderMap, Service, Severity, Tier
 from . import asked, asked_in_full, ct_lines
 
 _TIER_STYLE = {
@@ -50,6 +50,7 @@ def render(result: SenderMap, console: Console, *, evidence: bool = False) -> No
         for u in result.unknowns:
             where = "" if u.where == result.domain else f"  at {u.where}"
             console.print(Text(f"  {u.what}: {u.value}{where}", style="bright_black"))
+            console.print(Text(f"    {u.evidence}", style="bright_black"))
     if lines := ct_lines(result):
         console.print(Text("\nCERTIFICATE TRANSPARENCY", style="bold"))
         for line in lines:
@@ -76,13 +77,15 @@ def _services(services: list[Service], domain: str, evidence: bool) -> Table:
     table.add_column(overflow="fold")
     for service in services:
         claims = service.claims if evidence else (service.decided_by,)
-        lines = [_claim_line(c.kind.value, str(c.evidence), c.where, domain) for c in claims]
+        lines = [_claim_line(c, domain) for c in claims]
         if not evidence and len(service.claims) > 1:
             lines.append(Text(f"+ {len(service.claims) - 1} more", style="bright_black"))
         table.add_row(Text(f"  {service.name}", style="bold"), service.category, Group(*lines))
     return table
 
 
-def _claim_line(kind: str, evidence: str, where: str, domain: str) -> Text:
-    at = "" if where == domain else f" at {where}"
-    return Text.assemble((kind + at, ""), ("\n" + evidence, "bright_black"))
+def _claim_line(claim: Claim, domain: str) -> Text:
+    """The kind of claim, its record, and any record supporting it, one per line."""
+    at = "" if claim.where == domain else f" at {claim.where}"
+    records = [str(claim.evidence), *(f"via {e}" for e in claim.supporting)]
+    return Text.assemble((claim.kind.value + at, ""), ("\n" + "\n".join(records), "bright_black"))
