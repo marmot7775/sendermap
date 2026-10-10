@@ -192,11 +192,17 @@ class _Walked:
 
 class _Walk:
     """Walks the tree one term at a time, depth first, so a name met twice is always walked at
-    its first place in the record and every list comes out in the same order."""
+    its first place in the record and every list comes out in the same order.
+
+    A receiver evaluates a repeated include every time it meets it, so a repeat adds the lookups
+    of everything below it again. Only the count is repeated: claims and ranges come from the
+    first walk, and the records are read once, from the lookup cache.
+    """
 
     def __init__(self, ctx: Context, where: str) -> None:
         self.ctx, self.where = ctx, where
         self.seen: set[str] = {norm(where)}
+        self.lookups_below: dict[str, int] = {}  # per walked name, once its walk is done
 
     async def visit(
         self, name: str, record: str, depth: int, inside: str | None, authorized: bool
@@ -234,24 +240,41 @@ class _Walk:
         walked = self._credit(link, service) if link.live else _Walked()
         key = norm(link.target)
         if key in self.seen:
-            return walked
+            if key not in self.lookups_below:  # still being walked: it includes itself
+                return walked + _Walked(observed=Observed(findings=(self._loop(link),)))
+            return walked + _Walked(lookups=self.lookups_below[key])
         if link.depth + 1 > MAX_DEPTH:
             return walked + _Walked(too_deep=(key,))
         self.seen.add(key)
+        below = await self._below(link, service)
+        self.lookups_below[key] = below.lookups
+        return walked + below
+
+    async def _below(self, link: _Link, service: str | None) -> _Walked:
+        """Everything the target's own record contributes, walked for the first time."""
         answer = await self.ctx.dns.txt(link.target)
         if not answer.answered:
             gap = Gap(f"SPF {link.how}: TXT at {link.target}", answer.status.value)
-            return walked + _Walked(observed=Observed(gaps=(gap,)))
+            return _Walked(observed=Observed(gaps=(gap,)))
         records = spf_records(answer)
         if len(records) != 1:
-            return walked
+            return _Walked()
         # A flattening service (EasyDMARC) copies the domain's own senders into its record,
         # so what is inside still speaks for the domain. Any other service's record is its own.
         flattened = service in self.ctx.catalog.flattening_spf
         owner = link.inside or (None if flattened else service)
-        if flattened and service and link.live:
-            walked += _Walked(flattened=(service,))
-        return walked + await self.visit(link.target, records[0], link.depth + 1, owner, link.live)
+        read = _Walked(flattened=(service,)) if flattened and service and link.live else _Walked()
+        return read + await self.visit(link.target, records[0], link.depth + 1, owner, link.live)
+
+    def _loop(self, link: _Link) -> Finding:
+        return Finding(
+            Severity.RISK,
+            f"SPF at {self.where} includes {link.target} inside itself",
+            f"{link.parent} names {link.target}, which is already being evaluated above it. A "
+            f"receiver following it loops until it passes {LOOKUP_LIMIT} lookups and returns an "
+            "error (RFC 7208, section 4.6.4), so SPF fails.",
+            (link.evidence(self.ctx.checked_at),),
+        )
 
     def _credit(self, link: _Link, service: str | None) -> _Walked:
         if service and self.ctx.catalog.is_hosted_spf(service):
