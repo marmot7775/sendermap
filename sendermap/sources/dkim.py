@@ -27,12 +27,11 @@ class Key:
 
     @property
     def tags(self) -> dict[str, str]:
-        pairs = (part.partition("=") for part in self.record.split(";"))
-        return {k.strip().lower(): v.strip() for k, sep, v in pairs if sep}
+        return tags(self.record)
 
     @property
-    def retired(self) -> bool:
-        """An empty p= tag: the key was revoked on purpose."""
+    def revoked(self) -> bool:
+        """An empty p= tag: the key was revoked on purpose (RFC 6376, section 3.6.1)."""
         return self.tags.get("p", "") == ""
 
     @property
@@ -74,6 +73,12 @@ class Key:
         return "; ".join(parts)
 
 
+def tags(record: str) -> dict[str, str]:
+    """A DKIM record's tags by exact name, so ap= or rp= is never read as p=."""
+    pairs = (part.partition("=") for part in record.split(";"))
+    return {k.strip().lower(): v.strip() for k, sep, v in pairs if sep}
+
+
 async def collect(
     ctx: Context, where: str, selectors: Iterable[str], backed: Mapping[str, str]
 ) -> Observed:
@@ -81,7 +86,7 @@ async def collect(
     or MX already shows, whose own selector list has that name."""
     base = f"_domainkey.{where}"
     canary = await ctx.dns.txt(f"{CANARY}.{base}")
-    if canary.ok and any("p=" in r for r in canary.records):
+    if canary.ok and any("p" in tags(r) for r in canary.records):
         wildcard = Finding(
             Severity.NOTE,
             f"Every name under {base} answers with a key",
@@ -92,37 +97,14 @@ async def collect(
         return Observed(findings=(wildcard,), checked=(Checked(where),))
     names = list(dict.fromkeys(s.lower() for s in selectors))
     answers = await asyncio.gather(*(ctx.dns.txt(f"{s}.{base}") for s in names))
-    claims: list[Claim] = []
-    unknowns: list[Unknown] = []
-    findings: list[Finding] = []
+    echo = frozenset(canary.records) if canary.ok else None
+    observed = Observed()
     failed: list[str] = []
     for selector, answer in zip(names, answers, strict=True):
-        if not answer.answered:
-            failed.append(selector)
-            continue
-        if answer.dangling:
-            claims_, finding = _dangling(ctx, where, selector, answer)
-            claims += claims_
-            findings.append(finding)
-            continue
-        record = next((r for r in answer.records if "p=" in r), None)
-        if record is None:
-            continue
-        key = Key(selector, answer.name, record, answer.chain)
-        evidence = key.evidence(ctx.checked_at)
-        service = ctx.catalog.dkim_key(selector, key.chain, backed.get(selector))
-        by_cname = service is not None and ctx.catalog.dkim_cname(key.chain) == service
-        if key.retired:
-            if service:
-                claims.append(Claim(service, Kind.DKIM_RETIRED, where, evidence))
-            continue
-        if service:
-            kind = Kind.DKIM_CNAME if by_cname else Kind.DKIM_NAME
-            claims.append(Claim(service, kind, where, evidence))
+        if answer.answered:
+            observed += _read(ctx, where, selector, answer, backed=backed.get(selector), echo=echo)
         else:
-            unknowns.append(Unknown("DKIM key", selector, where))
-        if key.algorithm == "rsa" and key.bits is not None and key.bits <= 1024:
-            findings.append(_short_key(selector, where, key.bits, evidence))
+            failed.append(selector)
     gaps: list[Gap] = []
     if not canary.answered:
         gaps.append(
@@ -134,8 +116,53 @@ async def collect(
     if failed:
         asked = f"DKIM keys: TXT at {len(failed)} selectors under {base} ({', '.join(failed)})"
         gaps.append(Gap(asked, "lookup failed"))
-    checked = (Checked(where, dkim_selectors=tuple(names)),)
-    return Observed(tuple(claims), tuple(unknowns), tuple(findings), tuple(gaps), checked)
+    return observed + Observed(gaps=tuple(gaps), checked=(Checked(where, tuple(names)),))
+
+
+def _read(
+    ctx: Context,
+    where: str,
+    selector: str,
+    answer: Answer,
+    *,
+    backed: str | None,
+    echo: frozenset[str] | None,
+) -> Observed:
+    """What one selector's answer shows. `echo` is what a wildcard answers, if anything."""
+    if answer.dangling:
+        claims, finding = _dangling(ctx, where, selector, answer)
+        return Observed(tuple(claims), findings=(finding,))
+    if not answer.records or frozenset(answer.records) == echo:
+        return Observed()  # nothing here, or a wildcard's answer that is not a key
+    record = next((r for r in answer.records if "p" in tags(r)), None)
+    if record is None:
+        return Observed(findings=(_malformed(ctx, where, selector, answer),))
+    key = Key(selector, answer.name, record, answer.chain)
+    evidence = key.evidence(ctx.checked_at)
+    service = ctx.catalog.dkim_key(selector, key.chain, backed)
+    if key.revoked:
+        return Observed((Claim(service, Kind.DKIM_REVOKED, where, evidence),) if service else ())
+    if service:
+        by_cname = ctx.catalog.dkim_cname(key.chain) == service
+        kind = Kind.DKIM_CNAME if by_cname else Kind.DKIM_NAME
+        found = Observed(claims=(Claim(service, kind, where, evidence),))
+    else:
+        found = Observed(unknowns=(Unknown("DKIM key", selector, where),))
+    if key.algorithm == "rsa" and key.bits is not None and key.bits <= 1024:
+        found += Observed(findings=(_short_key(selector, where, key.bits, evidence),))
+    return found
+
+
+def _malformed(ctx: Context, where: str, selector: str, answer: Answer) -> Finding:
+    evidence = tuple(Evidence(answer.name, "TXT", r, ctx.checked_at) for r in answer.records)
+    return Finding(
+        Severity.WARNING,
+        f"The {selector} DKIM record at {where} has no p= tag",
+        "RFC 6376 (section 3.6.1) requires p=. Without it the record is malformed, not a key, so "
+        "mail signed with this selector fails DKIM. A revoked key is different: it keeps p= and "
+        "leaves it empty.",
+        evidence,
+    )
 
 
 def _short_key(selector: str, where: str, bits: int, evidence: Evidence) -> Finding:

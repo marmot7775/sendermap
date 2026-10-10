@@ -19,7 +19,7 @@ import httpx
 from . import catalog as catalog_module
 from .dns import Lookups, Resolver, SystemResolver
 from .infer import backed_selectors, services
-from .model import Finding, Gap, Kind, Observed, Run, SenderMap, Severity
+from .model import Evidence, Finding, Gap, Kind, Observed, Run, SenderMap, Severity
 from .selectors import Rule, load_rules, probe_order, rank_rules
 from .sources import (
     Context,
@@ -168,23 +168,21 @@ async def _probe_order(
 
 
 def _cross_findings(ctx: Context, observed: Observed) -> tuple[Finding, ...]:
-    gateways = sorted(
-        {
-            c.service
-            for c in observed.claims
-            if c.kind is Kind.MX
-            and c.where == ctx.domain
-            and ctx.catalog.category(c.service) == "Security gateway"
-        }
-    )
+    """A note for each security gateway in the domain's MX, carrying those MX records."""
+    gateways: dict[str, list[Evidence]] = {}
+    for c in observed.claims:
+        if c.kind is Kind.MX and ctx.catalog.category(c.service) == "Security gateway":
+            gateways.setdefault(c.service, []).append(c.evidence)
     return tuple(
         Finding(
             Severity.NOTE,
-            f"Mail reaches {g} before the mailbox provider",
-            f"{g} filters incoming mail, so the mailbox provider behind it does not show in "
-            "MX. MTA-STS, SPF and DKIM usually still name it.",
+            f"MX at {ctx.domain} points at {g}, a security gateway",
+            "Inferred from the MX records: a security gateway filters incoming mail and hands it "
+            "on to the server that holds the mailboxes, and MX records do not say which server "
+            "that is.",
+            tuple(evidence),
         )
-        for g in gateways
+        for g, evidence in sorted(gateways.items())
     )
 
 

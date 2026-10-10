@@ -1,15 +1,16 @@
 """The domain's own website: the signup forms and widgets it loads, and the services its
 subprocessor page names.
 
-A script on the homepage is the service running there, usually collecting addresses it will
-mail later; it is "Likely" evidence, never more. A subprocessor list is the company's own
-statement of which services handle its data.
+A script or stylesheet the homepage loads from a service's host is that service running there,
+often collecting addresses it will mail later. A service's host appearing anywhere else in the
+HTML, in a link, a form or text, is only mentioned. A subprocessor list is the company's own
+statement of which services handle its data. Each is "Likely" evidence, never more.
 """
 
 from __future__ import annotations
 
 import re
-from urllib.parse import urljoin
+from urllib.parse import urljoin, urlsplit
 
 import httpx
 
@@ -29,6 +30,9 @@ _SENDING_CATEGORIES = frozenset(
     }
 )
 _SUBPROCESSOR_LINK = re.compile(r'href="([^"]*sub-?processors?[^"]*)"', re.IGNORECASE)
+_LOADED = re.compile(
+    r"<(?:script\b[^>]*?\ssrc|link\b[^>]*?\shref)\s*=\s*[\"']?([^\"'\s>]+)", re.IGNORECASE
+)
 
 
 async def collect(ctx: Context) -> Observed:
@@ -39,14 +43,15 @@ async def collect(ctx: Context) -> Observed:
     if isinstance(page, str):
         return Observed(gaps=(Gap(f"the website: GET {home}", page),), checked=_page(ctx, home))
     url, html, cut = page
+    loaded = (urlsplit(urljoin(url, src)).hostname or "" for src in _LOADED.findall(html))
     claims = [
         Claim(
             service,
-            Kind.WEBSITE,
+            Kind.WEBSITE if loads else Kind.WEBSITE_MENTION,
             ctx.domain,
-            Evidence(url, "page", f"loads {host}", ctx.checked_at),
+            Evidence(url, "page", f"loads {host}" if loads else f"mentions {host}", ctx.checked_at),
         )
-        for service, host in ctx.catalog.website_services(html).items()
+        for service, (host, loads) in ctx.catalog.website_services(html, loaded).items()
     ]
     observed = Observed(
         tuple(claims), gaps=_cut(f"the website: GET {home}", cut), checked=_page(ctx, home)
@@ -67,7 +72,7 @@ async def _subprocessors(ctx: Context, url: str) -> Observed:
     claims = (
         Claim(
             service,
-            Kind.WEBSITE,
+            Kind.SUBPROCESSOR,
             ctx.domain,
             Evidence(final, "page", f"names {service}", ctx.checked_at),
         )

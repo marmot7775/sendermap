@@ -17,17 +17,22 @@ Everything Sendermap reports is built from a few frozen dataclasses in `senderma
   its claims. The tier is the strongest tier among its claims, so a reader can always find the
   claim that decided it (`Service.decided_by`).
 - **Tier**: how sure the map is that a service sends, in words, strongest first:
-  - **In use**: an MX record at the domain, a mailbox provider's or security gateway's MX at a
-    sending subdomain, or an MX line in the domain's MTA-STS policy.
+  - **In use**: an MX record at the domain.
   - **Configured**: an authorizing SPF include, a range in SPF that a service publishes or
     whose network it owns, a DKIM key served through a CNAME into the service's zone, a bounce
-    or tracking CNAME, or a sending service's MX on a subdomain.
-  - **Likely**: a DKIM key known only by its selector name, or the service named on the
-    domain's website.
-  - **Account only**: a verification token, an autodiscover CNAME, a retired DKIM key, or a
-    DKIM CNAME to a name that no longer exists.
+    or tracking CNAME, a sending service's MX on a subdomain, a permitted MX host in the
+    MTA-STS policy (the policy lists hosts allowed to receive, in any mode, not where mail
+    goes), or a mailbox provider's or security gateway's MX on a subdomain. That last claim
+    reads "in use for a subdomain's mail" and is in use there only, so it does not make the
+    service In use for the whole domain.
+  - **Likely**: a DKIM key known only by its selector name; a script or stylesheet the homepage
+    loads from the service's host (a `script src` or `link href`); the service's host
+    mentioned anywhere else in the homepage's HTML (a link, a form, text); or the service named
+    as a subprocessor.
+  - **Account only**: a verification token, an autodiscover CNAME, a revoked DKIM key (an empty
+    `p=`), or a DKIM CNAME to a name that no longer exists.
 - **Role**: `sender`, or `reporting` for a service that only receives the domain's DMARC or
-  TLS reports. A reporting service's tier field reads "Account only" and carries no meaning.
+  TLS reports. A reporting service has no tier (`null` in JSON): nothing shows that it sends.
 - **Finding**: something that needs attention (a dangling DKIM CNAME, SPF over ten lookups,
   a short key), with a severity of risk, warning or note.
 - **Unknown**: a record that clearly points at a sender no service in the vendor data matches.
@@ -39,8 +44,8 @@ Everything Sendermap reports is built from a few frozen dataclasses in `senderma
   gaps, it says what the map's silence covers.
 - **Run**: when and how one map was made: `checked_at`, `elapsed` seconds and DNS `lookups`.
 - **SenderMap**: the domain, its services, findings, unknowns, gaps, the sending subdomains
-  checked, one Checked per name, the BIMI logo if any, and the Run. `to_dict()` gives JSON with schema
-  `sendermap/1`.
+  checked, one Checked per name, the BIMI logo if any, and the Run. `to_dict()` gives JSON with
+  schema `sendermap/1`.
 
 ## From domain to result
 
@@ -124,10 +129,19 @@ These live in `catalog.py` and the sources, and each has a test.
 - An IP range in SPF, IPv4 or IPv6, is named by the narrowest range a service publishes in its own SPF record
   that contains it, when exactly one service publishes that range. Otherwise the network that
   announces it decides, from Team Cymru's IP to ASN data over DNS (`origin` for IPv4, `origin6`
-  for IPv6), sampled at three points for a range wider than an IPv4 /24 or an IPv6 /48: the range goes to the service the vendor data lists as owning that
-  network, or to the one publishing service whose name appears in the network owner's name.
-  Anything left is listed as unknown, with the cloud named when the network is a shared cloud.
+  for IPv6), sampled at three points for a range wider than an IPv4 /24 or an IPv6 /48: the
+  range goes to the service the vendor data lists as owning that network. Anything left is
+  listed as unknown, with the cloud named when the network is a shared cloud and the services
+  that publish the range. A cloud is never credited: 74.125.0.0/16, published by Google
+  Workspace and HubSpot and announced by Google's network, stays unknown.
 - A DKIM key's size is read from the key: the RSA modulus length, or 256 for Ed25519.
+- DKIM tags are read by exact name, so `ap=` is not `p=`. A record with no `p=` tag at all is
+  malformed, a warning of its own; an empty `p=` is a revoked key. A wildcard answer that is
+  not a key is ignored wherever it echoes.
+- A security gateway in the domain's MX is a note that states what MX shows and is labelled as
+  inferred from it. A flattening SPF service (EasyDMARC) is a note that says whether the walk
+  read its record; other hosted services and macro includes are a note that they can authorize
+  services without naming them.
 
 ## Determinism
 

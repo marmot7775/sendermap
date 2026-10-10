@@ -46,6 +46,6 @@ def _row(service: Service, domain: str) -> str:
     claim = service.decided_by
     at = "" if claim.where == domain else f" at {claim.where}"
     return (
-        f"| {service.name} | {service.category} | {service.tier.value} | "
+        f"| {service.name} | {service.category} | {service.tier or ''} | "
         f"{claim.kind.value}{at}: `{claim.evidence}` |"
     )

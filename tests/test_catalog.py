@@ -58,8 +58,15 @@ def test_tracking_labels_prefer_the_tracking_table():
 
 def test_website_signatures_match_hosts_and_their_subdomains_only():
     page = '<script src="https://us1.list-manage.com/x.js"></script> notlist-manage.com'
-    assert C.website_services(page) == {"Mailchimp": "list-manage.com"}
-    assert C.website_services("<p>static.klaviyo.comics</p>") == {}
+    loaded = ["us1.list-manage.com"]
+    assert C.website_services(page, loaded) == {"Mailchimp": ("us1.list-manage.com", True)}
+    assert C.website_services("<p>static.klaviyo.comics</p>", []) == {}
+    assert C.website_services("", ["notlist-manage.com"]) == {}
+
+
+def test_a_host_the_page_does_not_load_from_is_only_mentioned():
+    page = '<form action="https://acme.us1.list-manage.com/subscribe/post"></form>'
+    assert C.website_services(page, []) == {"Mailchimp": ("list-manage.com", False)}
 
 
 def test_every_service_has_a_category():

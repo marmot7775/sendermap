@@ -22,7 +22,7 @@ def _service(name: str, claims: list[Claim], catalog: Catalog, domain: str) -> S
     return Service(
         name=name,
         category=catalog.category(name),
-        tier=min(tiers, key=lambda t: t.rank) if tiers else Tier.ACCOUNT_ONLY,
+        tier=min(tiers, key=lambda t: t.rank) if tiers else None,
         role=Role.SENDER if tiers else Role.REPORTING,
         claims=tuple(sorted(claims, key=lambda c: _strength(c, domain))),
     )
@@ -35,7 +35,8 @@ def _strength(claim: Claim, domain: str) -> tuple[int, bool, int]:
 
 
 def _order(service: Service) -> tuple[bool, int, str]:
-    return (service.role is Role.REPORTING, service.tier.rank, service.name.lower())
+    rank = service.tier.rank if service.tier else len(Tier)
+    return (service.role is Role.REPORTING, rank, service.name.lower())
 
 
 def backed_selectors(claims: Iterable[Claim], catalog: Catalog) -> dict[str, str]:
@@ -43,7 +44,7 @@ def backed_selectors(claims: Iterable[Claim], catalog: Catalog) -> dict[str, str
     on their list counts as theirs. The first service to claim a name keeps it."""
     backed: dict[str, str] = {}
     for claim in claims:
-        if claim.kind in (Kind.MX, Kind.SPF_INCLUDE, Kind.SPF_NETWORK):
+        if claim.kind in (Kind.MX, Kind.SUBDOMAIN_MAILBOX, Kind.SPF_INCLUDE, Kind.SPF_NETWORK):
             for selector in sorted(catalog.selectors_of(claim.service)):
                 backed.setdefault(selector, claim.service)
     return backed

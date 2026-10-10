@@ -41,7 +41,10 @@ def exchange(record: str) -> str:
 
 
 def _kind(ctx: Context, service: str, where: str) -> Kind:
-    """A mailbox host is where mail lives, at the domain or a subdomain. A sending service's MX
-    on a subdomain only takes in the replies and bounces to what it sends."""
+    """At the domain, MX is where its mail is delivered. On a subdomain, a mailbox host or
+    gateway is in use for that subdomain's mail only; a sending service's MX only takes in the
+    replies and bounces to what it sends."""
+    if where == ctx.domain:
+        return Kind.MX
     mailbox = ctx.catalog.category(service) in ("Mailbox", "Security gateway")
-    return Kind.MX if where == ctx.domain or mailbox else Kind.SUBDOMAIN_MX
+    return Kind.SUBDOMAIN_MAILBOX if mailbox else Kind.SUBDOMAIN_MX

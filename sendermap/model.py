@@ -36,18 +36,21 @@ class Kind(StrEnum):
     """What a piece of evidence shows about a service, and so how much it counts."""
 
     MX = "receives the domain's mail (MX)"
+    SUBDOMAIN_MAILBOX = "in use for a subdomain's mail (MX)"
     SUBDOMAIN_MX = "receives replies and bounces for a sending subdomain (MX)"
-    MTA_STS = "named in the MTA-STS policy"
+    MTA_STS = "permitted MX host in the MTA-STS policy"
     SPF_INCLUDE = "included in SPF"
     SPF_NETWORK = "owns a network listed in SPF"
     DKIM_CNAME = "hosts a DKIM key (CNAME)"
     DKIM_NAME = "DKIM key named for it"
     RETURN_PATH = "bounce address CNAME"
     TRACKING = "link tracking CNAME"
-    WEBSITE = "script or form on the website"
+    WEBSITE = "website loads a script or stylesheet from it"
+    WEBSITE_MENTION = "mentioned on the website"
+    SUBPROCESSOR = "named as a subprocessor"
     TOKEN = "verification token"
     AUTODISCOVER = "autodiscover CNAME"
-    DKIM_RETIRED = "retired DKIM key"
+    DKIM_REVOKED = "revoked DKIM key (empty p=)"
     DKIM_DANGLING = "DKIM CNAME to a missing key"
     DMARC_REPORTS = "receives DMARC reports"
     TLSRPT_REPORTS = "receives TLS reports"
@@ -60,7 +63,10 @@ class Kind(StrEnum):
 
 _KIND_TIER = {
     Kind.MX: Tier.IN_USE,
-    Kind.MTA_STS: Tier.IN_USE,
+    # In use for that subdomain only, so for the service as a whole it shows a configured setup.
+    Kind.SUBDOMAIN_MAILBOX: Tier.CONFIGURED,
+    # The policy lists hosts allowed to receive, in any mode; it does not show where mail goes.
+    Kind.MTA_STS: Tier.CONFIGURED,
     Kind.SUBDOMAIN_MX: Tier.CONFIGURED,
     Kind.SPF_INCLUDE: Tier.CONFIGURED,
     Kind.SPF_NETWORK: Tier.CONFIGURED,
@@ -69,9 +75,11 @@ _KIND_TIER = {
     Kind.TRACKING: Tier.CONFIGURED,
     Kind.DKIM_NAME: Tier.LIKELY,
     Kind.WEBSITE: Tier.LIKELY,
+    Kind.WEBSITE_MENTION: Tier.LIKELY,
+    Kind.SUBPROCESSOR: Tier.LIKELY,
     Kind.TOKEN: Tier.ACCOUNT_ONLY,
     Kind.AUTODISCOVER: Tier.ACCOUNT_ONLY,
-    Kind.DKIM_RETIRED: Tier.ACCOUNT_ONLY,
+    Kind.DKIM_REVOKED: Tier.ACCOUNT_ONLY,
     Kind.DKIM_DANGLING: Tier.ACCOUNT_ONLY,
 }
 
@@ -110,9 +118,12 @@ class Claim:
 
 @dataclass(frozen=True, slots=True)
 class Service:
+    """One row of the map. A reporting service, known only from report addresses, has no tier:
+    nothing shows that it sends."""
+
     name: str
     category: str
-    tier: Tier
+    tier: Tier | None
     role: Role
     claims: tuple[Claim, ...]
 
