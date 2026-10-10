@@ -22,7 +22,7 @@ def with_entry(field: str, entry: object) -> dict[str, Any]:
     return raw
 
 
-def test_every_shipped_pattern_has_a_proof():
+def test_every_shipped_pattern_has_a_proof() -> None:
     loaded = catalog.load()
     entries = sum(
         len(block.get(field, ()))
@@ -32,7 +32,7 @@ def test_every_shipped_pattern_has_a_proof():
     assert entries and len(loaded.patterns) == entries
 
 
-def test_a_proofed_entry_loads_and_matches():
+def test_a_proofed_entry_loads_and_matches() -> None:
     raw = with_entry("spf_includes", {"value": "_spf.vendor.test", "proof": PROOF})
     assert catalog.build(raw).spf("_spf.vendor.test") == "Test Vendor"
 
@@ -45,7 +45,7 @@ def test_a_proofed_entry_loads_and_matches():
         {"value": "_spf.vendor.test", "proof": None},
     ],
 )
-def test_an_entry_without_a_proof_is_refused(entry):
+def test_an_entry_without_a_proof_is_refused(entry: object) -> None:
     with pytest.raises(ValueError, match="no proof"):
         catalog.build(with_entry("spf_includes", entry))
 
@@ -64,12 +64,14 @@ def test_an_entry_without_a_proof_is_refused(entry):
         ("subprocessor_names", PROOF, "an https URL on the domain"),
     ],
 )
-def test_a_proof_whose_record_could_not_show_the_pattern_is_refused(field, proof, message):
+def test_a_proof_whose_record_could_not_show_the_pattern_is_refused(
+    field: str, proof: dict[str, str], message: str
+) -> None:
     with pytest.raises(ValueError, match=message):
         catalog.build(with_entry(field, {"value": "vendor.test", "proof": proof}))
 
 
-def test_an_other_cname_needs_a_proof_too():
+def test_an_other_cname_needs_a_proof_too() -> None:
     entry = {"label": "autodiscover", "target": "autodiscover.vendor.test"}
     with pytest.raises(ValueError, match="no proof"):
         catalog.build(with_entry("other_cname", entry))

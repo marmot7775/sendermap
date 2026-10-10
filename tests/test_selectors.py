@@ -3,11 +3,11 @@ from typing import Any
 import pytest
 
 from sendermap import catalog
+from sendermap.proofs import Proof
 from sendermap.selectors import (
     Fixed,
     Hints,
     Numbered,
-    Proof,
     Rule,
     Source,
     build_dictionary,
@@ -29,20 +29,20 @@ def proof_json(name: str) -> dict[str, str]:
     }
 
 
-def test_fixed_expands_to_its_names():
+def test_fixed_expands_to_its_names() -> None:
     assert list(Fixed(("a", "b")).expand()) == ["a", "b"]
 
 
-def test_numbered_counts_from_one():
+def test_numbered_counts_from_one() -> None:
     assert list(Numbered("s", 3).expand()) == ["s1", "s2", "s3"]
 
 
-def test_vendor_docs_without_reference_is_rejected():
+def test_vendor_docs_without_reference_is_rejected() -> None:
     with pytest.raises(ValueError):
         Rule("X", Fixed(("x",)), Source.VENDOR_DOCS, proof("x"))
 
 
-def test_a_name_claimed_by_two_vendors_keeps_both_claims():
+def test_a_name_claimed_by_two_vendors_keeps_both_claims() -> None:
     rules = (
         Rule("A", Fixed(("s1",)), Source.PATTERN, proof("s1")),
         Rule("B", Numbered("s", 1), Source.PATTERN, proof("s1")),
@@ -51,8 +51,8 @@ def test_a_name_claimed_by_two_vendors_keeps_both_claims():
     assert {c.vendor for c in found["s1"]} == {"A", "B"}
 
 
-def test_rules_load_from_the_vendor_blocks():
-    vendors = {
+def test_rules_load_from_the_vendor_blocks() -> None:
+    vendors: dict[str, Any] = {
         "Google Workspace": {
             "category": "Mailbox",
             "selectors": [
@@ -80,8 +80,11 @@ def test_rules_load_from_the_vendor_blocks():
         ({**proof_json("example"), "record": "  "}, "Example Vendor example: proof has no record"),
     ],
 )
-def test_a_selector_entry_without_a_proof_is_rejected(entry_proof, message):
-    entry = {"shape": {"kind": "fixed", "names": ["example"]}, "source": "pattern"}
+def test_a_selector_entry_without_a_proof_is_rejected(entry_proof: object, message: str) -> None:
+    entry: dict[str, object] = {
+        "shape": {"kind": "fixed", "names": ["example"]},
+        "source": "pattern",
+    }
     if entry_proof is not None:
         entry["proof"] = entry_proof
     vendors = {"Example Vendor": {"selectors": [entry]}}
@@ -109,30 +112,30 @@ NO_HINTS = Rule("Example Vendor", Fixed(("example",)), Source.PATTERN, proof("ex
 RULES = (MICROSOFT, NO_HINTS, GOOGLE)
 
 
-def test_a_rule_whose_mx_hint_matches_moves_first_and_the_rest_keep_order():
+def test_a_rule_whose_mx_hint_matches_moves_first_and_the_rest_keep_order() -> None:
     ranked = rank_rules(RULES, ["aspmx.l.google.com"], [])
     assert ranked == (GOOGLE, MICROSOFT, NO_HINTS)
 
 
-def test_hosts_match_regardless_of_case_or_trailing_dot():
+def test_hosts_match_regardless_of_case_or_trailing_dot() -> None:
     assert rank_rules(RULES, ["ASPMX.L.Google.com."], [])[0] is GOOGLE
     assert rank_rules(RULES, [], ["_SPF.Google.com."])[0] is GOOGLE
 
 
-def test_spf_include_matches_exactly():
+def test_spf_include_matches_exactly() -> None:
     assert rank_rules(RULES, [], ["_SPF.google.com"])[0] is GOOGLE
     assert rank_rules(RULES, [], ["google.com"]) == RULES
 
 
-def test_mx_suffix_matches_on_a_label_boundary():
+def test_mx_suffix_matches_on_a_label_boundary() -> None:
     assert rank_rules(RULES, ["notgoogle.com"], []) == RULES
 
 
-def test_no_match_keeps_original_order():
+def test_no_match_keeps_original_order() -> None:
     assert rank_rules(RULES, ["mx.example.net"], ["spf.example.net"]) == RULES
 
 
-def test_a_rule_without_hints_never_moves():
+def test_a_rule_without_hints_never_moves() -> None:
     ranked = rank_rules(RULES, ["example-com.mail.protection.outlook.com"], [])
     assert ranked == (MICROSOFT, NO_HINTS, GOOGLE)
     assert rank_rules((NO_HINTS,), ["aspmx.l.google.com"], ["_spf.google.com"]) == (NO_HINTS,)
@@ -142,8 +145,8 @@ def pattern_entry(shape: dict[str, Any], name: str) -> dict[str, Any]:
     return {"shape": shape, "source": "pattern", "proof": proof_json(name)}
 
 
-def test_hints_are_normalised_on_load():
-    vendors = {
+def test_hints_are_normalised_on_load() -> None:
+    vendors: dict[str, Any] = {
         "Google Workspace": {
             "selectors": [pattern_entry({"kind": "fixed", "names": ["google"]}, "google")],
             "hints": {"mx": ["Google.com."], "spf": ["_spf.google.com"]},
@@ -159,8 +162,8 @@ def test_hints_are_normalised_on_load():
     assert example.hints == Hints()
 
 
-def test_selector_names_are_lowercased_on_load():
-    vendors = {
+def test_selector_names_are_lowercased_on_load() -> None:
+    vendors: dict[str, Any] = {
         "A": {"selectors": [pattern_entry({"kind": "fixed", "names": ["Google"]}, "google")]},
         "B": {
             "selectors": [
@@ -171,14 +174,14 @@ def test_selector_names_are_lowercased_on_load():
     assert list(build_dictionary(parse_rules(vendors))) == ["google", "selector1"]
 
 
-def test_an_unknown_shape_kind_is_rejected():
+def test_an_unknown_shape_kind_is_rejected() -> None:
     shape = {"kind": "dated", "prefix": "ex", "years_back": 1}
     vendors = {"Example Vendor": {"selectors": [pattern_entry(shape, "ex")]}}
     with pytest.raises(ValueError, match="Example Vendor: unknown shape kind 'dated'"):
         parse_rules(vendors)
 
 
-def test_shipped_rules_split_mailchimp_by_provenance():
+def test_shipped_rules_split_mailchimp_by_provenance() -> None:
     mailchimp = [r for r in catalog.load().rules if r.vendor == "Mailchimp"]
     assert [(r.source, list(r.shape.expand())) for r in mailchimp] == [
         (Source.VENDOR_DOCS, ["k2"]),
@@ -198,14 +201,16 @@ def test_shipped_rules_split_mailchimp_by_provenance():
         ),
     ],
 )
-def test_a_fixed_shape_with_several_names_needs_one_proof_per_name(entry_proof, message):
+def test_a_fixed_shape_with_several_names_needs_one_proof_per_name(
+    entry_proof: object, message: str
+) -> None:
     entry = {"shape": {"kind": "fixed", "names": ["k1", "k3"]}, "source": "pattern"}
     vendors = {"Example Vendor": {"selectors": [{**entry, "proof": entry_proof}]}}
     with pytest.raises(ValueError, match=f"Example Vendor k1, k3: {message}"):
         parse_rules(vendors)
 
 
-def test_each_name_in_a_fixed_shape_carries_its_own_proof():
+def test_each_name_in_a_fixed_shape_carries_its_own_proof() -> None:
     entry = {
         "shape": {"kind": "fixed", "names": ["k1", "k3"]},
         "source": "pattern",
@@ -217,8 +222,8 @@ def test_each_name_in_a_fixed_shape_carries_its_own_proof():
     assert found["k3"][0].proof == proof("k3")
 
 
-def test_a_hints_reference_given_as_one_string_is_rejected():
-    vendors = {
+def test_a_hints_reference_given_as_one_string_is_rejected() -> None:
+    vendors: dict[str, Any] = {
         "Google Workspace": {
             "selectors": [pattern_entry({"kind": "fixed", "names": ["google"]}, "google")],
             "hints": {"mx": ["google.com"]},
@@ -229,16 +234,16 @@ def test_a_hints_reference_given_as_one_string_is_rejected():
         parse_rules(vendors)
 
 
-def test_hints_without_hints_reference_are_rejected():
+def test_hints_without_hints_reference_are_rejected() -> None:
     with pytest.raises(ValueError, match="hints_reference"):
         Rule("X", Fixed(("x",)), Source.PATTERN, proof("x"), hints=Hints(mx=("x.test",)))
 
 
-def test_hints_reference_without_hints_is_accepted():
+def test_hints_reference_without_hints_is_accepted() -> None:
     assert Rule("X", Fixed(("x",)), Source.PATTERN, proof("x"), hints_reference=("https://x.test",))
 
 
-def test_probe_order_moves_rule_names_ahead_and_keeps_the_sweep():
+def test_probe_order_moves_rule_names_ahead_and_keeps_the_sweep() -> None:
     sweep = ("k1", "Google", "selector2", "zz", "selector1")
     order = probe_order((MICROSOFT, NO_HINTS, GOOGLE), sweep)
     assert order == ("selector1", "selector2", "google", "k1", "zz")

@@ -4,7 +4,7 @@ import httpx
 from conftest import CHECKED, Zone
 
 from sendermap import map_domain
-from sendermap.model import Kind
+from sendermap.model import Kind, SenderMap
 
 KEY = "v=DKIM1; k=rsa; p=" + "A" * 392
 SHORT_KEY = (  # a 512-bit RSA key
@@ -82,14 +82,14 @@ def site(request: httpx.Request) -> httpx.Response:
     return httpx.Response(200, text=body, headers={"content-type": "text/html"})
 
 
-async def mapped_map():
+async def mapped_map() -> SenderMap:
     async with httpx.AsyncClient(transport=httpx.MockTransport(site)) as http:
         return await map_domain(
             "mapped.test", checked_at=CHECKED, resolver=mapped(), http=http, use_ct=True
         )
 
 
-async def test_every_claim_unknown_and_finding_carries_evidence():
+async def test_every_claim_unknown_and_finding_carries_evidence() -> None:
     result = await mapped_map()
     claims = [c for s in result.services for c in s.claims]
     # The fake domain reaches every kind of claim and most kinds of finding.

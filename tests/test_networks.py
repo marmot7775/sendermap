@@ -17,13 +17,13 @@ def owner(zone: Zone, ip: str, asn: str, name: str) -> Zone:
     return zone
 
 
-async def test_a_range_inside_one_services_published_range_is_that_service():
+async def test_a_range_inside_one_services_published_range_is_that_service() -> None:
     zone = Zone().add("amazonses.com", "TXT", "v=spf1 ip4:54.240.0.0/18 -all")
     observed = await networks.collect(context(zone), "example.com", [("54.240.8.0/21", EV)])
     assert [(c.service, c.kind) for c in observed.claims] == [("Amazon SES", Kind.SPF_NETWORK)]
 
 
-async def test_only_a_services_own_ranges_count():
+async def test_only_a_services_own_ranges_count() -> None:
     # Atlassian's record includes SendGrid's: those ranges stay SendGrid's.
     zone = (
         Zone()
@@ -34,7 +34,7 @@ async def test_only_a_services_own_ranges_count():
     assert [c.service for c in observed.claims] == ["SendGrid"]
 
 
-async def test_a_shared_range_on_a_cloud_network_is_unknown_and_lists_its_publishers():
+async def test_a_shared_range_on_a_cloud_network_is_unknown_and_lists_its_publishers() -> None:
     # 74.125.0.0/16 is listed by Google Workspace and HubSpot, announced by Google.
     zone = (
         Zone()
@@ -50,13 +50,13 @@ async def test_a_shared_range_on_a_cloud_network_is_unknown_and_lists_its_publis
     ]
 
 
-async def test_a_services_own_network_names_it():
+async def test_a_services_own_network_names_it() -> None:
     zone = owner(Zone(), "198.2.128.1", "AS14782", "THEROCKETSCIENCEGROUP - MailChimp, US")
     observed = await networks.collect(context(zone), "example.com", [("198.2.128.0/24", EV)])
     assert [c.service for c in observed.claims] == ["Mailchimp"]
 
 
-async def test_a_large_range_follows_the_majority_of_its_blocks():
+async def test_a_large_range_follows_the_majority_of_its_blocks() -> None:
     # Its first /24 is announced by Amazon, as with SendGrid's 149.72.0.0/16; the other two
     # samples by Mailchimp.
     zone = owner(Zone(), "198.2.128.1", "AS14618", "AMAZON-AES - Amazon.com, Inc., US")
@@ -66,7 +66,7 @@ async def test_a_large_range_follows_the_majority_of_its_blocks():
     assert [c.service for c in observed.claims] == ["Mailchimp"]
 
 
-async def test_a_cloud_is_never_credited_to_a_service():
+async def test_a_cloud_is_never_credited_to_a_service() -> None:
     zone = owner(Zone(), "35.80.141.6", "AS16509", "AMAZON-02 - Amazon.com, Inc., US")
     observed = await networks.collect(context(zone), "example.com", [("35.80.141.6/32", EV)])
     assert observed.claims == ()
@@ -74,7 +74,7 @@ async def test_a_cloud_is_never_credited_to_a_service():
     assert observed.unknowns[0].what == "IP address in SPF"
 
 
-async def test_a_services_ranges_are_read_through_the_maps_own_lookups():
+async def test_a_services_ranges_are_read_through_the_maps_own_lookups() -> None:
     zone = Zone().add("amazonses.com", "TXT", "v=spf1 ip4:54.240.0.0/18 -all")
     ctx = context(zone)
     await networks.collect(ctx, "example.com", [("54.240.8.0/21", EV)])
@@ -82,7 +82,7 @@ async def test_a_services_ranges_are_read_through_the_maps_own_lookups():
     assert ctx.dns.count == len(set(zone.asked))
 
 
-async def test_a_service_whose_ranges_could_not_be_read_is_a_gap_naming_it():
+async def test_a_service_whose_ranges_could_not_be_read_is_a_gap_naming_it() -> None:
     zone = Zone(failing={"amazonses.com"})
     observed = await networks.collect(context(zone), "example.com", [("54.240.8.0/21", EV)])
     assert "published ranges: SPF of Amazon SES" in [g.asked for g in observed.gaps]

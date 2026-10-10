@@ -243,13 +243,17 @@ vendors.json.
 `tests/conftest.py` provides a fake DNS zone (`Zone`) with CNAMEs, wildcards and names that fail
 on purpose, and an HTTP client that answers the certificate log with nothing and fails the test
 on any other request, so the suite never reaches the network (the web test serves on loopback
-only). Run `pytest`. `mypy --strict` and `ruff check` pass on `sendermap/`, and `ruff check`
-on the tests; the tests and tools are not yet typed strictly.
+only). Run `pytest`. `mypy` (strict, over `sendermap/`, `tests/` and `tools/`), `ruff check` and
+`ruff format --check` pass on the whole repository.
 
 Tests that hold the rules: `test_evidence.py` maps a fake domain that reaches every kind of
 claim and requires evidence on every claim, unknown and finding, and the supporting records on
 every claim whose evidence does not name its service; `test_gaps.py` and `test_caps.py`
 require a gap for each failed question and each cap; `test_checked.py` requires the record of
 what was asked and its rendering; `test_labels_say_what_was_seen.py` holds the wording of the
-labels; `test_determinism.py` requires the same map from the same answers. `test_ct.py`
-runs the CT source on a recorded crt.sh answer (`tests/fixtures/crtsh_allbirds.json`).
+labels; `test_determinism.py` requires the same map from the same answers;
+`test_vendor_proofs.py`, `test_one_selector_list.py` and `test_subprocessor_names.py` require a
+proof on every vendor pattern and one proofed selector list read once; `test_pending_vendors.py`
+requires that the engine never opens the pending file and that a host only a pending pattern
+matches shows as not recognised. `test_ct.py` runs the CT source on a recorded crt.sh answer
+(`tests/fixtures/crtsh_allbirds.json`).

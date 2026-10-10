@@ -4,6 +4,7 @@ import asyncio
 import json
 import random
 
+import httpx
 from conftest import CHECKED, Zone
 
 from sendermap import map_domain
@@ -75,7 +76,9 @@ class Jittery:
         return await self.zone.query(name, rtype)
 
 
-async def test_the_same_answers_give_the_same_map_however_they_are_timed(offline):
+async def test_the_same_answers_give_the_same_map_however_they_are_timed(
+    offline: httpx.AsyncClient,
+) -> None:
     maps = [
         await map_domain(
             "mixed.test",

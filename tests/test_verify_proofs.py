@@ -106,7 +106,9 @@ async def run(
     return code, out, err
 
 
-async def test_json_prints_one_object_per_proof(monkeypatch, capsys):
+async def test_json_prints_one_object_per_proof(
+    monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
+) -> None:
     code, out, err = await run(monkeypatch, capsys, "--json")
     rows = [json.loads(line) for line in out.splitlines()]
     assert all(list(row) == FIELDS for row in rows)
@@ -140,7 +142,9 @@ async def test_json_prints_one_object_per_proof(monkeypatch, capsys):
     assert code == 1
 
 
-async def test_each_kind_of_pattern_is_found_where_its_record_shows_it(monkeypatch, capsys):
+async def test_each_kind_of_pattern_is_found_where_its_record_shows_it(
+    monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
+) -> None:
     _, out, _ = await run(monkeypatch, capsys, "--json", rules=())
     rows = [json.loads(line) for line in out.splitlines()]
     assert [(row["field"], row["pattern"], row["status"]) for row in rows] == [
@@ -161,7 +165,9 @@ async def test_each_kind_of_pattern_is_found_where_its_record_shows_it(monkeypat
     assert rows[6]["observed"] == "loads eu.cdn.vendor.net"
 
 
-async def test_text_stays_the_default(monkeypatch, capsys):
+async def test_text_stays_the_default(
+    monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
+) -> None:
     _, out, _ = await run(monkeypatch, capsys)
     lines = out.splitlines()
     assert lines[0].startswith(
@@ -174,7 +180,9 @@ async def test_text_stays_the_default(monkeypatch, capsys):
     assert lines[-1] == "10 of 18 proofs found, 2 could not be checked"
 
 
-async def test_could_not_check_does_not_fail_the_run(monkeypatch, capsys):
+async def test_could_not_check_does_not_fail_the_run(
+    monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
+) -> None:
     code, _, err = await run(
         monkeypatch, capsys, "--json", rules=(RULES[0], RULES[4]), patterns=PATTERNS[:1]
     )

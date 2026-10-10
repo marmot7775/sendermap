@@ -1,12 +1,14 @@
 """Rule 3: a question that got no answer is a gap that says what was asked and what happened,
 never silence and never an absence."""
 
+from collections.abc import Callable
+
 import httpx
 import pytest
 from conftest import CHECKED, Zone, context
 
-from sendermap import engine, map_domain
-from sendermap.model import Evidence
+from sendermap import map_domain
+from sendermap.model import Evidence, Observed, SenderMap
 from sendermap.sources import (
     CANARY,
     Context,
@@ -22,17 +24,19 @@ from sendermap.sources import (
 EV = Evidence("example.com", "TXT", "ip4:...", CHECKED)
 
 
-def asked(observed) -> dict[str, str]:
+def asked(observed: Observed | SenderMap) -> dict[str, str]:
     return {g.asked: g.happened for g in observed.gaps}
 
 
-def with_http(zone: Zone, handler) -> tuple[Context, httpx.AsyncClient]:
+def with_http(
+    zone: Zone, handler: Callable[[httpx.Request], httpx.Response]
+) -> tuple[Context, httpx.AsyncClient]:
     http = httpx.AsyncClient(transport=httpx.MockTransport(handler))
     ctx = context(zone)
     return Context(ctx.domain, ctx.dns, ctx.catalog, ctx.checked_at, http), http
 
 
-async def test_a_failed_dmarc_or_tls_rpt_lookup_is_a_gap():
+async def test_a_failed_dmarc_or_tls_rpt_lookup_is_a_gap() -> None:
     zone = Zone(failing={"_dmarc.example.com", "_smtp._tls.example.com"})
     assert asked(await reports.collect(context(zone))) == {
         "DMARC: TXT at _dmarc.example.com": "lookup failed",
@@ -40,24 +44,24 @@ async def test_a_failed_dmarc_or_tls_rpt_lookup_is_a_gap():
     }
 
 
-async def test_a_missing_dmarc_record_is_an_absence_not_a_gap():
+async def test_a_missing_dmarc_record_is_an_absence_not_a_gap() -> None:
     assert (await reports.collect(context(Zone()))).gaps == ()
 
 
-async def test_failed_label_lookups_and_a_failed_wildcard_check_are_gaps():
+async def test_failed_label_lookups_and_a_failed_wildcard_check_are_gaps() -> None:
     zone = Zone(failing={f"{CANARY}.example.com", "bounce.example.com"})
     gaps = asked(await labels.collect(context(zone), "example.com"))
     assert gaps["bounce and tracking CNAMEs: CNAME at bounce.example.com"] == "lookup failed"
     assert gaps[f"wildcard check: CNAME at {CANARY}.example.com"].startswith("lookup failed")
 
 
-async def test_a_failed_dkim_wildcard_check_is_a_gap():
+async def test_a_failed_dkim_wildcard_check_is_a_gap() -> None:
     zone = Zone(failing={f"{CANARY}._domainkey.example.com"})
     observed = await dkim.collect(context(zone), "example.com", ["k1"], {})
     assert f"wildcard check: TXT at {CANARY}._domainkey.example.com" in asked(observed)
 
 
-async def test_an_mta_sts_policy_that_does_not_load_is_a_gap():
+async def test_an_mta_sts_policy_that_does_not_load_is_a_gap() -> None:
     zone = Zone().add("_mta-sts.example.com", "TXT", "v=STSv1; id=1")
     ctx, http = with_http(zone, lambda request: httpx.Response(404))
     async with http:
@@ -67,20 +71,20 @@ async def test_an_mta_sts_policy_that_does_not_load_is_a_gap():
     }
 
 
-async def test_an_mta_sts_policy_not_fetched_for_want_of_a_web_client_is_a_gap():
+async def test_an_mta_sts_policy_not_fetched_for_want_of_a_web_client_is_a_gap() -> None:
     zone = Zone().add("_mta-sts.example.com", "TXT", "v=STSv1; id=1")
     (gap,) = (await mta_sts.collect(context(zone))).gaps
     assert gap.happened.startswith("not fetched")
 
 
-async def test_a_failed_mta_sts_record_lookup_is_a_gap():
+async def test_a_failed_mta_sts_record_lookup_is_a_gap() -> None:
     zone = Zone(failing={"_mta-sts.example.com"})
     assert asked(await mta_sts.collect(context(zone))) == {
         "MTA-STS: TXT at _mta-sts.example.com": "lookup failed"
     }
 
 
-async def test_a_subprocessor_page_that_does_not_load_is_a_gap():
+async def test_a_subprocessor_page_that_does_not_load_is_a_gap() -> None:
     def handler(request: httpx.Request) -> httpx.Response:
         if request.url.path == "/":
             html = '<a href="/legal/subprocessors">Subprocessors</a>'
@@ -95,7 +99,9 @@ async def test_a_subprocessor_page_that_does_not_load_is_a_gap():
     }
 
 
-async def test_a_subdomain_whose_lookups_failed_is_a_gap_not_a_non_sender(offline):
+async def test_a_subdomain_whose_lookups_failed_is_a_gap_not_a_non_sender(
+    offline: httpx.AsyncClient,
+) -> None:
     zone = Zone(failing={"email.example.com"})
     ctx = context(zone)
     ctx = Context(ctx.domain, ctx.dns, ctx.catalog, ctx.checked_at, offline)
@@ -105,7 +111,7 @@ async def test_a_subdomain_whose_lookups_failed_is_a_gap_not_a_non_sender(offlin
     assert "email.example.com" in gap.asked and gap.happened.startswith("lookup failed")
 
 
-async def test_a_failed_network_lookup_is_not_read_as_no_network():
+async def test_a_failed_network_lookup_is_not_read_as_no_network() -> None:
     failed = Zone(failing={"1.100.51.198.origin.asn.cymru.com"})
     observed = await networks.collect(context(failed), "example.com", [("198.51.100.0/24", EV)])
     assert observed.unknowns[0].value == "198.51.100.0/24 (network lookup failed)"
@@ -117,7 +123,9 @@ async def test_a_failed_network_lookup_is_not_read_as_no_network():
     assert unannounced.gaps == ()
 
 
-async def test_a_failed_apex_txt_lookup_says_spf_and_tokens_were_not_checked(offline):
+async def test_a_failed_apex_txt_lookup_says_spf_and_tokens_were_not_checked(
+    offline: httpx.AsyncClient,
+) -> None:
     zone = Zone(failing={"acme.test"})
     result = await map_domain(
         "acme.test", checked_at=CHECKED, resolver=zone, http=offline, use_web=False
@@ -127,11 +135,13 @@ async def test_a_failed_apex_txt_lookup_says_spf_and_tokens_were_not_checked(off
     assert gaps["verification tokens: TXT at acme.test"] == "lookup failed"
 
 
-async def test_a_crash_in_the_subdomain_search_is_reported_as_a_crash(offline, monkeypatch):
-    async def crash(ctx):
+async def test_a_crash_in_the_subdomain_search_is_reported_as_a_crash(
+    offline: httpx.AsyncClient, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    async def crash(ctx: Context) -> subdomains.Found:
         raise KeyError("wordlist")
 
-    monkeypatch.setattr(engine.subdomains, "discover", crash)
+    monkeypatch.setattr(subdomains, "discover", crash)
     result = await map_domain("acme.test", checked_at=CHECKED, resolver=Zone(), http=offline)
     assert asked(result)["sending subdomains"] == "the search crashed: KeyError"
     assert not any("certificate" in g.asked for g in result.gaps)
@@ -145,7 +155,9 @@ async def test_a_crash_in_the_subdomain_search_is_reported_as_a_crash(offline, m
         (False, False, {"the website", "sending subdomains", "MTA-STS policy"}),
     ],
 )
-async def test_turning_a_check_off_is_a_gap(offline, use_web, use_subdomains, expected):
+async def test_turning_a_check_off_is_a_gap(
+    offline: httpx.AsyncClient, use_web: bool, use_subdomains: bool, expected: set[str]
+) -> None:
     zone = Zone().add("_mta-sts.acme.test", "TXT", "v=STSv1; id=1")
 
     def no_policy(request: httpx.Request) -> httpx.Response:

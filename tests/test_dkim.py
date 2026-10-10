@@ -5,7 +5,7 @@ import base64
 import pytest
 from conftest import Zone, context
 
-from sendermap.model import Kind, Severity
+from sendermap.model import Claim, Kind, Observed, Severity
 from sendermap.sources import dkim
 
 
@@ -39,11 +39,13 @@ KEY_2048 = record(spki(2048))
 KEY_1024 = record(spki(1024))
 
 
-async def scan(zone: Zone, selectors, backed=None):
+async def scan(
+    zone: Zone, selectors: list[str], backed: dict[str, Claim] | None = None
+) -> Observed:
     return await dkim.collect(context(zone), "example.com", selectors, backed or {})
 
 
-async def test_a_key_behind_a_cname_is_the_service_hosting_it():
+async def test_a_key_behind_a_cname_is_the_service_hosting_it() -> None:
     zone = (
         Zone()
         .alias("k2._domainkey.example.com", "dkim2.mcsv.net")
@@ -53,33 +55,33 @@ async def test_a_key_behind_a_cname_is_the_service_hosting_it():
     assert [(c.service, c.kind) for c in observed.claims] == [("Mailchimp", Kind.DKIM_CNAME)]
 
 
-async def test_a_key_known_by_name_is_only_likely():
+async def test_a_key_known_by_name_is_only_likely() -> None:
     zone = Zone().add("mandrill._domainkey.example.com", "TXT", KEY_2048)
     observed = await scan(zone, ["mandrill"])
     assert [(c.service, c.kind) for c in observed.claims] == [("Mandrill", Kind.DKIM_NAME)]
 
 
-async def test_a_key_nobody_can_name_is_listed():
+async def test_a_key_nobody_can_name_is_listed() -> None:
     zone = Zone().add("default._domainkey.example.com", "TXT", KEY_2048)
     observed = await scan(zone, ["default"])
     assert observed.claims == ()
     assert [u.value for u in observed.unknowns] == ["default"]
 
 
-async def test_a_revoked_key_is_an_account_trace():
+async def test_a_revoked_key_is_an_account_trace() -> None:
     zone = Zone().add("mandrill._domainkey.example.com", "TXT", "v=DKIM1; p=")
     observed = await scan(zone, ["mandrill"])
     assert [c.kind for c in observed.claims] == [Kind.DKIM_REVOKED]
 
 
-async def test_a_cname_to_nowhere_is_a_risk():
+async def test_a_cname_to_nowhere_is_a_risk() -> None:
     zone = Zone().alias("s1._domainkey.example.com", "s1.domainkey.u1.wl1.sendgrid.net")
     observed = await scan(zone, ["s1"])
     assert [c.kind for c in observed.claims] == [Kind.DKIM_DANGLING]
     assert observed.findings[0].severity is Severity.RISK
 
 
-async def test_a_wildcard_makes_every_key_meaningless():
+async def test_a_wildcard_makes_every_key_meaningless() -> None:
     zone = Zone().add("*._domainkey.example.com", "TXT", KEY_2048)
     observed = await scan(zone, ["k1", "s1"])
     assert observed.claims == ()
@@ -88,23 +90,23 @@ async def test_a_wildcard_makes_every_key_meaningless():
 
 
 @pytest.mark.parametrize("bits", [512, 1024, 1536, 2048])
-def test_an_rsa_key_reports_the_length_of_its_modulus(bits):
+def test_an_rsa_key_reports_the_length_of_its_modulus(bits: int) -> None:
     key = dkim.Key("s", "s._domainkey.example.com", record(spki(bits)), ())
     assert key.bits == bits
     assert f", {bits}-bit" in key.summary()
 
 
-def test_a_bare_rsa_public_key_is_read_too():
+def test_a_bare_rsa_public_key_is_read_too() -> None:
     assert dkim.Key("s", "s._domainkey.example.com", record(rsa_public_key(2048)), ()).bits == 2048
 
 
-def test_an_ed25519_key_is_256_bits_by_its_type():
+def test_an_ed25519_key_is_256_bits_by_its_type() -> None:
     key = dkim.Key("s", "s._domainkey.example.com", record(bytes(32), "ed25519"), ())
     assert key.bits == 256
 
 
 @pytest.mark.parametrize("p", ["A" * 392, "not base64!", base64.b64encode(b"\x30\x05").decode()])
-def test_a_key_that_does_not_parse_says_its_size_could_not_be_read(p):
+def test_a_key_that_does_not_parse_says_its_size_could_not_be_read(p: str) -> None:
     key = dkim.Key("s", "s._domainkey.example.com", f"v=DKIM1; k=rsa; p={p}", ())
     assert key.bits is None
     assert "could not read key size" in key.summary()
@@ -113,14 +115,14 @@ def test_a_key_that_does_not_parse_says_its_size_could_not_be_read(p):
 @pytest.mark.parametrize(
     ("bits", "severity"), [(512, Severity.RISK), (1024, Severity.WARNING), (1536, None)]
 )
-async def test_an_rsa_key_of_1024_bits_or_fewer_is_flagged(bits, severity):
+async def test_an_rsa_key_of_1024_bits_or_fewer_is_flagged(bits: int, severity: Severity) -> None:
     zone = Zone().add("mandrill._domainkey.example.com", "TXT", record(spki(bits)))
     observed = await scan(zone, ["mandrill"])
     flagged = [f.severity for f in observed.findings if f"{bits}-bit" in f.title]
     assert flagged == ([severity] if severity else [])
 
 
-async def test_failed_lookups_are_a_gap():
+async def test_failed_lookups_are_a_gap() -> None:
     zone = Zone(failing={"k1._domainkey.example.com"})
     observed = await scan(zone, ["k1"])
     assert observed.gaps

@@ -5,8 +5,9 @@ recorded on 2026-10-09. The DNS answers here are made up; no test reaches the ne
 """
 
 import json
-from datetime import timedelta
+from datetime import datetime, timedelta
 from pathlib import Path
+from typing import Any
 
 import httpx
 import pytest
@@ -14,7 +15,7 @@ from conftest import CHECKED, Zone, context
 
 from sendermap import map_domain
 from sendermap.cli import _parser
-from sendermap.model import CertificateEvidence, CtStatus, Kind
+from sendermap.model import CertificateEvidence, CtStatus, CtSummary, Kind, Observed, Tier
 from sendermap.render import markdown
 from sendermap.sources import Context, ct
 
@@ -41,8 +42,9 @@ def zone() -> Zone:
 class CrtSh:
     """A crt.sh that answers with `body` after failing `failures` times, counting requests."""
 
-    def __init__(self, body=RECORDED, failures: int = 0) -> None:
-        self.body, self.failures, self.requests = body, failures, []
+    def __init__(self, body: list[dict[str, Any]] = RECORDED, failures: int = 0) -> None:
+        self.body, self.failures = body, failures
+        self.requests: list[httpx.Request] = []
 
     def __call__(self, request: httpx.Request) -> httpx.Response:
         if request.url.host != "crt.sh":
@@ -53,7 +55,9 @@ class CrtSh:
         return httpx.Response(200, json=self.body)
 
 
-async def run(crtsh: CrtSh, cache: Path | None, at=CHECKED, dns: Zone | None = None):
+async def run(
+    crtsh: CrtSh, cache: Path | None, at: datetime = CHECKED, dns: Zone | None = None
+) -> tuple[Observed, CtSummary]:
     async with httpx.AsyncClient(transport=httpx.MockTransport(crtsh)) as http:
         ctx = context(dns or zone(), DOMAIN)
         ctx = Context(ctx.domain, ctx.dns, ctx.catalog, at, http)
@@ -61,11 +65,11 @@ async def run(crtsh: CrtSh, cache: Path | None, at=CHECKED, dns: Zone | None = N
 
 
 @pytest.fixture(autouse=True)
-def no_waiting(monkeypatch):
+def no_waiting(monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.setattr(ct, "BACKOFF", 0.0)
 
 
-def test_names_are_split_lowercased_and_cleaned():
+def test_names_are_split_lowercased_and_cleaned() -> None:
     extra = [
         {
             "name_value": "LINKS.MAIL.ALLBIRDS.COM",
@@ -94,7 +98,7 @@ def test_names_are_split_lowercased_and_cleaned():
     assert (links.not_before, links.not_after) == ("2025-12-07T00:00:00", "2027-01-05T23:59:59")
 
 
-async def test_the_query_is_for_every_name_under_the_domain_url_encoded(tmp_path):
+async def test_the_query_is_for_every_name_under_the_domain_url_encoded(tmp_path: Path) -> None:
     crtsh = CrtSh()
     await run(crtsh, tmp_path)
     (request,) = crtsh.requests
@@ -102,7 +106,9 @@ async def test_the_query_is_for_every_name_under_the_domain_url_encoded(tmp_path
     assert "q=%25.allbirds.com" in str(request.url) and request.url.params["output"] == "json"
 
 
-async def test_logged_names_go_through_the_dns_matchers_with_certificate_evidence(tmp_path):
+async def test_logged_names_go_through_the_dns_matchers_with_certificate_evidence(
+    tmp_path: Path,
+) -> None:
     observed, summary = await run(CrtSh(), tmp_path)
     claims = {(c.service, c.kind, c.where): c.evidence for c in observed.claims}
     assert set(claims) == {
@@ -120,7 +126,9 @@ async def test_logged_names_go_through_the_dns_matchers_with_certificate_evidenc
     assert summary.status is CtStatus.READ and summary.logged == summary.resolved == 9
 
 
-async def test_a_logged_name_that_no_longer_resolves_is_a_possible_past_vendor(tmp_path):
+async def test_a_logged_name_that_no_longer_resolves_is_a_possible_past_vendor(
+    tmp_path: Path,
+) -> None:
     observed, summary = await run(CrtSh(), tmp_path)
     (past,) = observed.historical
     assert past.service == "SparkPost" and past.evidence.name == "app-email.allbirds.com"
@@ -130,7 +138,9 @@ async def test_a_logged_name_that_no_longer_resolves_is_a_possible_past_vendor(t
     assert summary.gone_unnamed == 3
 
 
-async def test_a_logged_autodiscover_cname_is_an_account_trace_as_in_the_dns_path(tmp_path):
+async def test_a_logged_autodiscover_cname_is_an_account_trace_as_in_the_dns_path(
+    tmp_path: Path,
+) -> None:
     logged = [
         {"name_value": "autodiscover.allbirds.com", "not_before": "2012", "not_after": "2015"}
     ]
@@ -139,16 +149,18 @@ async def test_a_logged_autodiscover_cname_is_an_account_trace_as_in_the_dns_pat
     observed, _ = await run(CrtSh(logged), tmp_path, dns=dns)
     (claim,) = observed.claims
     assert (claim.service, claim.kind) == ("Microsoft 365", Kind.AUTODISCOVER)
-    assert claim.kind.tier.value == "Account only"
+    assert claim.kind.tier is Tier.ACCOUNT_ONLY
 
 
-async def test_crt_sh_is_retried_twice_then_answers(tmp_path):
+async def test_crt_sh_is_retried_twice_then_answers(tmp_path: Path) -> None:
     crtsh = CrtSh(failures=2)
     _, summary = await run(crtsh, tmp_path)
     assert len(crtsh.requests) == 3 and summary.status is CtStatus.READ
 
 
-async def test_crt_sh_failing_three_times_marks_ct_unavailable_and_the_map_finishes(offline):
+async def test_crt_sh_failing_three_times_marks_ct_unavailable_and_the_map_finishes(
+    offline: httpx.AsyncClient,
+) -> None:
     crtsh = CrtSh(failures=3)
     async with httpx.AsyncClient(transport=httpx.MockTransport(crtsh)) as http:
         result = await map_domain(
@@ -167,7 +179,7 @@ async def test_crt_sh_failing_three_times_marks_ct_unavailable_and_the_map_finis
     assert "crt.sh was unavailable" in markdown.render(result)
 
 
-async def test_answers_are_cached_on_disk_for_a_day(tmp_path):
+async def test_answers_are_cached_on_disk_for_a_day(tmp_path: Path) -> None:
     await run(CrtSh(), tmp_path)
     assert (tmp_path / "allbirds.com.json").exists()
     refuses = CrtSh(failures=99)
@@ -184,7 +196,7 @@ async def test_answers_are_cached_on_disk_for_a_day(tmp_path):
     assert len(again.requests) == 1 and summary.status is CtStatus.READ
 
 
-async def test_ct_is_off_unless_asked_for(offline):
+async def test_ct_is_off_unless_asked_for(offline: httpx.AsyncClient) -> None:
     # The offline client fails the test on any request to crt.sh.
     result = await map_domain(DOMAIN, checked_at=CHECKED, resolver=zone(), http=offline)
     assert result.ct.status is CtStatus.OFF and result.historical == ()
@@ -192,7 +204,7 @@ async def test_ct_is_off_unless_asked_for(offline):
     assert _parser().parse_args(["allbirds.com", "--ct"]).ct
 
 
-async def test_the_map_and_its_markdown_carry_the_ct_section(tmp_path):
+async def test_the_map_and_its_markdown_carry_the_ct_section(tmp_path: Path) -> None:
     async with httpx.AsyncClient(transport=httpx.MockTransport(CrtSh())) as http:
         result = await map_domain(
             DOMAIN,
@@ -205,7 +217,7 @@ async def test_the_map_and_its_markdown_carry_the_ct_section(tmp_path):
             ct_cache=tmp_path,
         )
     tracking = next(s for s in result.senders if s.name == "Customer.io")
-    assert tracking.tier.value == "Configured"
+    assert tracking.tier is Tier.CONFIGURED
     page = markdown.render(result)
     assert "## Certificate transparency" in page
     assert "Possible past vendor: SparkPost at app-email.allbirds.com" in page
