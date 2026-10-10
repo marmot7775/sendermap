@@ -127,3 +127,31 @@ async def test_a_failed_lookup_is_a_gap_not_an_absence():
     zone = Zone(failing={"example.com"})
     observed, _ = await walk(zone)
     assert observed.gaps and observed.claims == ()
+
+
+async def test_a_repeated_include_counts_its_lookups_each_time_as_receivers_do():
+    zone = (
+        Zone()
+        .add("example.com", "TXT", "v=spf1 include:_a.example.com include:_b.example.com -all")
+        .add("_a.example.com", "TXT", "v=spf1 include:_c.example.com -all")
+        .add("_b.example.com", "TXT", "v=spf1 include:_c.example.com -all")
+        .add("_c.example.com", "TXT", "v=spf1 include:x1.example.net include:x2.example.net -all")
+    )
+    ctx = context(zone)
+    _, tree = await spf.collect(ctx, "example.com")
+    # _a, _c, x1, x2, then _b, and _c with x1 and x2 again.
+    assert tree.lookups == 8
+    asked = [name for name, _ in zone.asked]
+    assert len(asked) == len(set(asked)), "a record was asked twice"
+
+
+async def test_an_include_loop_is_a_risk():
+    zone = (
+        Zone()
+        .add("example.com", "TXT", "v=spf1 include:_a.example.com -all")
+        .add("_a.example.com", "TXT", "v=spf1 include:example.com -all")
+    )
+    observed, _ = await walk(zone)
+    (loop,) = [f for f in observed.findings if "inside itself" in f.title]
+    assert loop.severity is Severity.RISK
+    assert loop.evidence[0].value == "include:example.com"

@@ -117,6 +117,9 @@ These live in `catalog.py` and the sources, and each has a test.
   without the Microsoft CNAME. Next, a selector on the list of a service that SPF or MX already
   shows is that service's. Last, the name table, except for generic names (`default`, `mail`,
   any two-letter name not explicitly allowed).
+- The SPF lookup count follows receivers: an include met twice adds the lookups of everything
+  below it each time, read from the lookup cache, so no record is asked twice. An include that
+  is already being evaluated above itself is a loop, reported as a risk.
 - Only authorizing SPF terms are credited: a bare or `+` include or redirect, before `all`.
   A redirect is ignored when the record has `all`. Inside a service's own record nothing more
   is credited, except inside a flattening service's record (EasyDMARC), which copies the
@@ -187,7 +190,10 @@ it weekly and on any pull request that touches vendors.json.
 These are open items from the October 2026 review, listed so the description above is not read
 as more than it is.
 
-- The SPF lookup count walks a repeated include once, so it can read lower than a receiver's.
+- Some claims leave out a record that decided them: a range credited by a published range or a
+  network carries the domain's `ip4:` or `ip6:` term with the reason in words, not the vendor's
+  record or Team Cymru's answer; a DKIM key credited through a backed selector does not carry
+  the SPF or MX claim that backed it; an Unknown carries no Evidence.
 
 ## Tests
 
