@@ -10,7 +10,6 @@ requires-python = ">=3.12"
 dependencies = [
     "dnspython>=2.7",
     "httpx>=0.28",
-    "pyyaml>=6.0",
     "rich>=13.9",
 ]
 keywords = ["email", "dns", "spf", "dkim", "dmarc", "deliverability"]
@@ -24,7 +23,7 @@ classifiers = [
 
 [project.optional-dependencies]
 web = ["fastapi>=0.115", "uvicorn>=0.32"]
-dev = ["pytest>=8", "pytest-asyncio>=0.24", "mypy>=1.13", "ruff>=0.8", "types-PyYAML>=6.0"]
+dev = ["pytest>=8", "pytest-asyncio>=0.24", "mypy>=1.13", "ruff>=0.8"]
 
 [project.scripts]
 sendermap = "sendermap.cli:main"
