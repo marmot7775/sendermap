@@ -1,118 +1,173 @@
 # Sendermap architecture
 
-What Sendermap is for, how it is built, and the rules the code keeps. Read this before changing
-anything structural.
+Sendermap answers one question: which services send email as this domain, and what public
+record shows it? This file describes the code as it is. Where the code falls short of the
+rules it is meant to keep, the gap is named below rather than left out.
 
-## The question
+## The result
 
-"Which services send email as this domain, and how do we know?"
+Everything Sendermap reports is built from a few frozen dataclasses in `sendermap/model.py`.
 
-Every answer Sendermap gives is a claim about a service, backed by evidence a reader can check
-for themselves in public data. A claim with no evidence is never shown, and the strength of a claim
-is stated in words, from the evidence, never guessed.
+- **Evidence**: one observed public fact: the name it was found at, the record type (or `page`
+  or `policy` for web content), the value, and `checked_at`, the moment of the run.
+- **Claim**: what one piece of evidence shows about one service, of one **Kind** (an MX host, an
+  SPF include, a DKIM key behind a CNAME, a verification token, and so on), at one name: the
+  domain itself or one of its subdomains.
+- **Service**: one row of the map: a name, a category from the vendor data, a tier, a role and
+  its claims. The tier is the strongest tier among its claims, so a reader can always find the
+  claim that decided it (`Service.decided_by`).
+- **Tier**: how sure the map is that a service sends, in words, strongest first:
+  - **In use**: an MX record at the domain, a mailbox provider's or security gateway's MX at a
+    sending subdomain, or an MX line in the domain's MTA-STS policy.
+  - **Configured**: an authorizing SPF include, a range in SPF that a service publishes or
+    whose network it owns, a DKIM key served through a CNAME into the service's zone, a bounce
+    or tracking CNAME, or a sending service's MX on a subdomain.
+  - **Likely**: a DKIM key known only by its selector name, or the service named on the
+    domain's website.
+  - **Account only**: a verification token, an autodiscover CNAME, a retired DKIM key, or a
+    DKIM CNAME to a name that no longer exists.
+- **Role**: `sender`, or `reporting` for a service that only receives the domain's DMARC or
+  TLS reports. A reporting service's tier field reads "Account only" and carries no meaning.
+- **Finding**: something that needs attention (a dangling DKIM CNAME, SPF over ten lookups,
+  a short key), with a severity of risk, warning or note.
+- **Unknown**: a record that clearly points at a sender no service in the vendor data matches.
+- **Gap**: a check that did not complete, and why, so its silence is not read as absence.
+- **Run**: when and how one map was made: `checked_at`, `elapsed` seconds and DNS `lookups`.
+- **SenderMap**: the domain, its services, findings, unknowns, gaps, the sending subdomains
+  checked, the BIMI logo if any, and the Run. `to_dict()` gives JSON with schema
+  `sendermap/1`.
 
-## Principles
-
-1. **Evidence first.** A source observes public facts and turns each into a claim about one
-   service, carrying the evidence: "the SPF record at example.com includes servers.mcsv.net".
-   Inference groups claims into services and ranks them. Rendering shows each service with the
-   evidence under it.
-2. **Say how sure, in words.** Four tiers for a sender, strongest first:
-   - **In use**: the domain's mail is delivered there (MX).
-   - **Configured**: set up to send as the domain (an SPF include, a DKIM key the service hosts
-     through a CNAME, a bounce or tracking CNAME, a network the service owns in SPF).
-   - **Likely**: a DKIM key known only by its name, or a script on the domain's website.
-   - **Account only**: a trace of an account with nothing set up to send (a verification
-     token, an autodiscover CNAME, a retired key).
-   Services that only receive the domain's DMARC or TLS reports are shown as **reporting
-   services**, never as senders.
-3. **Silence is not absence.** A lookup that failed, timed out or was cut short is recorded as
-   such. "Nothing found" is said only about names that were actually asked and answered.
-4. **Public data only, read politely.** DNS, certificate transparency, the domain's own public web
-   pages and public registry data. No logins, no guessing passwords, no sending mail. One request
-   per resource, cached, rate limited.
-5. **Plain words.** Every claim and finding reads as a sentence a non-specialist can follow, with
-   the technical detail one click away.
-6. **One engine, every surface.** The library is the product; the command line, the web site and
-   the bulk scanner are thin layers over it.
-
-## Layout
+## From domain to result
 
 ```
-sendermap/
-  model.py         Evidence, Claim, Service, Finding, SenderMap: frozen dataclasses
-  catalog.py       the vendor catalog from sendermap/data/vendors.json, and every matching rule
-  dns.py           a Resolver protocol, dnspython and DNS over HTTPS implementations, a cache
-  sources/         one module per source; each returns an Observed: claims, unknowns, findings, gaps
-    mx.py            MX hosts
-    spf.py           the SPF tree: includes, redirects, nested wrappers, IP ranges, lookup count
-    dkim.py          selector scan, CNAME chains, retired and dangling keys, wildcard canary
-    labels.py        bounce, tracking and autodiscover CNAMEs at fixed labels
-    tokens.py        verification tokens in TXT records
-    reports.py       DMARC and TLS-RPT report addresses
-    subdomains.py    sending subdomains from a wordlist and certificate transparency
-    networks.py      who owns the IP ranges in SPF and the MX addresses (ASN over DNS)
-    web.py           the homepage and privacy pages: forms, widgets, named subprocessors
-    mta_sts.py       the MTA-STS policy and the MX hosts it names
-    bimi.py          the BIMI record and logo
-  infer.py         evidence to claims to services, tiers and roles
-  findings.py      what needs attention: dangling CNAMEs, lookup limit, retired keys, unknowns
-  engine.py        runs the sources concurrently under one budget and streams progress
-  render/          text, Markdown and JSON
-  cli.py           `sendermap example.com`
-  web/             the site: an API that streams a map as it builds, and the static page
-sendermap/data/vendors.json  the catalog: one block per service
-tests/             a fake resolver, recorded fixtures, and the rules each test pins
+pasted text ─ clean_domain (engine) ─> domain
+  Context = domain + Lookups (one DNS cache per map, counts queries)
+          + Catalog (vendors.json) + checked_at + optional HTTP client
+Phase 1, concurrent
+  spf.collect(domain)   -> claims + SpfTree (IP ranges, include hints, lookup count)
+  mx, tokens, reports, labels, mta_sts, web   -> claims, unknowns, findings, gaps
+  bimi.logo             -> logo URL, not evidence
+  subdomains.discover   -> wordlist + CT log names that publish SPF or MX
+Phase 2, the domain itself
+  backed = generic DKIM names that belong to services SPF or MX already shows
+  probe order = selector rules ranked by MX and SPF hints, then the sweep list
+  dkim.collect  ||  networks.collect (SPF IP ranges: published vendor ranges, then ASN)
+Phase 3, each sending subdomain (first 30)
+  spf + mx -> backed -> dkim (27 names + backed)  ||  networks
+Assembly
+  all Observed summed -> infer.services: group by service,
+     tier = strongest Kind, report-only services -> role "reporting"
+  findings sorted by severity, + gateway note; unknowns and gaps deduplicated
+  -> SenderMap + Run -> render.text | render.markdown | to_dict JSON | web stream
 ```
 
-## The data model
+Each source returns an `Observed`: claims, unknowns, findings and gaps. Sources never raise
+for a failed lookup: every DNS answer has a status (`ok`, `no such name`, `no record of this
+type`, `lookup failed`), and a source turns a failure into a gap where it handles one. If the
+MX, token, report, label, MTA-STS or website source raises an exception, it becomes a gap
+instead of losing the map.
 
-- `Evidence(name, rtype, value)` is one observed fact: a record at a name, or a line on a page.
-- `Claim(service, kind, where, evidence)` says what a piece of evidence, found at `where` (the
-  domain or one of its subdomains), shows about one service: its
-  MX, an SPF include, a DKIM key by CNAME, a key by name, a bounce CNAME, a tracking CNAME, an
-  owned network, a website script, a verification token, a report address.
-- `Service(name, category, tier, role, claims)` is one row of the map. Its tier is the strongest
-  of its claims, so a reader can always see which claim decided it.
-- `Finding(severity, title, detail, evidence)` is something that needs attention.
-- `Unknown(what, value, where)` is a clear sign of a sender that matches no service yet.
-- `Gap(what, why)` is a lookup that did not complete, so its silence says nothing.
-- `SenderMap(domain, services, findings, unknowns, gaps, subdomains_checked, logo, lookups,
-  elapsed)` is the result,
-  serialised to versioned JSON (`"schema": "sendermap/1"`).
+## Modules
 
-## Rules carried from dns-audit
+| Module | Owns |
+|---|---|
+| `model.py` | The result types above, and which Tier each Kind supports |
+| `dns.py` | The Resolver interface, the system and DNS-over-HTTPS resolvers, and `Lookups`: the per-map cache that asks each name and type once and counts the queries |
+| `catalog.py` | Loading vendors.json into match tables; matching a host, token or selector to a service |
+| `selectors.py` | DKIM selector rules with proofs: loading and checking them, and ordering the probes |
+| `infer.py` | Turning claims into ranked services; the map of backed selectors |
+| `engine.py` | `map_domain`: input cleaning, the phase order, subdomain scans, limits, the gateway note |
+| `sources/spf.py` | Walking the SPF tree: credited includes, IP ranges, the lookup count, SPF findings |
+| `sources/mx.py`, `sources/mta_sts.py` | Where the domain receives mail |
+| `sources/dkim.py` | DKIM probing, the wildcard check, reading keys, dangling and short keys |
+| `sources/labels.py`, `tokens.py`, `reports.py`, `bimi.py` | Fixed-label CNAMEs, verification TXT, report addresses, the BIMI logo |
+| `sources/networks.py` | Naming SPF IP ranges by the ranges services publish, then by network owner |
+| `sources/subdomains.py` | Finding sending subdomains from a wordlist and the certificate log |
+| `render/text.py`, `render/markdown.py` | The terminal and Markdown views |
+| `cli.py` | The `sendermap` command |
+| `web/app.py` | The site: a page, and an API that streams progress and the finished map |
 
-These were learned on live domains and each has a test:
+## Matching rules
 
-- Hostname patterns match on label boundaries and the longest pattern wins
-  (`u161779.wl030.sendgrid.net` is Klaviyo's own SendGrid account, not SendGrid).
-- A DKIM key belongs to a service by CNAME first; `selector1` and `selector2` name nobody
-  without the Microsoft CNAME; a generic name (`default`, `mail`, `s`, any two letters not
-  allowed by name) names a service only when SPF or MX already shows it.
-- Only authorizing SPF terms count: a bare or `+` include, or a redirect, before `all`.
-  Includes inside a service's own record are that service, not an account at another.
-- A service seen only by a bounce or tracking CNAME sends from that subdomain; it needs nothing
-  in the main domain's SPF.
-- A hosted SPF service (Valimail, OnDMARC) or a macro include can authorize a service without
-  naming it, so no include is ever called missing behind one.
-- A wildcard answers every name: each wave of probes asks one random name first, and an answer
-  that matches the wildcard is not evidence.
+These live in `catalog.py` and the sources, and each has a test.
+
+- A hostname pattern matches the host or any name under it, on a label boundary, and the
+  longest pattern wins: `u161779.wl030.sendgrid.net` is Klaviyo, not SendGrid.
+- A DKIM key belongs to a service by CNAME first. `selector1` and `selector2` name nobody
+  without the Microsoft CNAME. Next, a selector on the list of a service that SPF or MX already
+  shows is that service's. Last, the name table, except for generic names (`default`, `mail`,
+  any two-letter name not explicitly allowed).
+- Only authorizing SPF terms are credited: a bare or `+` include or redirect, before `all`.
+  A redirect is ignored when the record has `all`. Inside a service's own record nothing more
+  is credited, except inside a flattening service's record (EasyDMARC), which copies the
+  domain's own senders.
+- A hosted SPF service (Valimail, OnDMARC, EasyDMARC) or a macro include is reported as a note,
+  since it can authorize services without naming them.
+- A wildcard answers every name, so DKIM probes and label CNAMEs first ask a fixed name nobody
+  publishes (`sendermap-wildcard-check`). A wildcard DKIM key ends the DKIM scan at that name
+  with a note; a label CNAME that matches the wildcard target is ignored.
+- An IP range in SPF is named by the narrowest range a service publishes in its own SPF record
+  that contains it, when exactly one service publishes that range. Otherwise the network that
+  announces it decides, from Team Cymru's IP to ASN data over DNS, sampled at three points for a
+  range larger than a /24: the range goes to the service the vendor data lists as owning that
+  network, or to the one publishing service whose name appears in the network owner's name.
+  Anything left is listed as unknown, with the cloud named when the network is a shared cloud.
+- A DKIM key's size is read from the key: the RSA modulus length, or 256 for Ed25519.
+
+## Determinism
+
+The same DNS answers (and the same web pages and certificate log, when those are read) and the
+same `checked_at` give the same map. `map_domain` takes
+`checked_at` from the caller and refuses one without a timezone. Only the Run's `elapsed`
+differs between such runs, and `SenderMap` equality ignores the Run. The SPF walk asks for every
+reachable record at once, then walks the tree depth first in the order of its terms, so its
+output never follows DNS timing. The vendor range table is built per map through the same
+lookups and counted with them. `tests/test_determinism.py` maps one busy fake domain twenty
+times with random delays on every answer and requires identical output.
+
+## The vendor data
+
+All vendor knowledge is in `sendermap/data/vendors.json`: one block per service with its
+category and the patterns that identify it (SPF includes, MX hosts, DKIM CNAME targets and
+selector names, bounce and tracking CNAMEs, report addresses, verification tokens, networks,
+website hosts), plus shared `rules` (generic selectors, hosted SPF services, cloud networks,
+the labels and selectors to probe).
+
+A `selectors` entry names a vendor's DKIM selectors with how they are known and a proof: a live
+domain that publishes the record, the record name and the date checked. Loading refuses an entry
+without one. Four vendors have such entries so far; they set the order of DKIM probes. Every
+other pattern, including the `dkim_selectors` lists used to credit keys, carries no proof yet.
+`tools/verify_proofs.py` rechecks every proof against live DNS; the `Verify proofs` workflow runs
+it weekly and on any pull request that touches vendors.json.
 
 ## Surfaces
 
-- **Library**: `await sendermap.map_domain("example.com")`.
-- **Command line**: `sendermap example.com`, `--json`, `--markdown`, and `--list domains.txt`
-  for a polite bulk scan.
-- **Web site**: a FastAPI app. `GET /api/map?d=` streams progress and the finished map as
-  server-sent events; the page draws the map as the evidence arrives. The server keeps no record
-  of the domains looked up; results are cached in memory for a few minutes so a shared link
-  opens instantly.
+- **Library**: `await sendermap.map_domain("example.com", checked_at=datetime.now(UTC))`.
+  Optional: `resolver`, `http`, `use_web`, `use_subdomains`, and a `progress` callback.
+- **Command line**: `sendermap example.com`, with `--json`, `--markdown`, `--evidence` (every
+  claim, not only the deciding one), `--no-web`, `--no-subdomains` and `--doh` (Cloudflare DNS
+  over HTTPS).
+- **Web site**: a FastAPI app. `GET /api/map?d=` returns the map as JSON, `GET /api/map.md?d=`
+  as Markdown, and `GET /api/map/stream?d=` streams progress then the map as server-sent events.
+  Results are kept in memory for ten minutes, keyed by domain only, and concurrent requests for
+  one domain share one build. At most six maps build at once, and each visitor may make twelve
+  map requests a minute.
 
-## Quality bar
+## Known limits
 
-- Python 3.12, typed throughout, `mypy --strict` and `ruff` clean.
-- Small pure functions; side effects only in `dns.py`, `sources/` and the surfaces.
-- Every rule above has a test with the live domain that taught it named in the docstring.
-- No network in unit tests: a fake resolver serves recorded answers. A separate, opt-in suite
-  runs against live DNS.
+These are open items from the October 2026 review, listed so the description above is not read
+as more than it is.
+
+- Some failed lookups produce no gap: DMARC and TLS-RPT, label CNAMEs, the MTA-STS policy, the
+  subprocessor page, a subdomain's SPF or MX, and the network owner of a range.
+- Caps drop names without saying so: 30 sending subdomains, 24 SPF ranges for the network
+  lookup, 60 names from the certificate log, an SPF depth of 10. IPv6 ranges are not named.
+- `--no-web` and `--no-subdomains` record no gap, and the Markdown view does not show gaps.
+- The SPF lookup count walks a repeated include once, so it can read lower than a receiver's.
+
+## Tests
+
+`tests/conftest.py` provides a fake DNS zone (`Zone`) with CNAMEs, wildcards and names that fail
+on purpose, and an HTTP client that answers the certificate log with nothing and fails the test
+on any other request, so the suite never reaches the network. Run `pytest`. `mypy --strict` and
+`ruff check` pass on `sendermap/`; the tests and tools are not yet typed strictly.
