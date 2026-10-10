@@ -66,9 +66,9 @@ from the vendor tables in [dns-audit](https://github.com/marmot7775/dns-audit) (
 
 Each vendor gets one block in `sendermap/data/vendors.json`, and everything known about it goes
 there. Every pattern in a block (an SPF include, an MX host, a CNAME target, a report address, a
-verification token, a network, a website host, a selector name) carries one proof of its own: a
-live domain that publishes it, the record name or page as found, and the date checked (a
-numbered series of selectors such as s1, s2 needs one for the series). A pattern without a proof
+verification token, a network, a website host, a selector name, a subprocessor name) carries one
+proof of its own: a live domain that publishes it, the record name or page as found, and the
+date checked (a numbered series of selectors such as s1, s2 needs one for the series). A pattern without a proof
 does not get merged, and Sendermap refuses to load one.
 
 Patterns not yet proven wait in `sendermap/data/vendors_pending.json`, each block with a note of

@@ -26,7 +26,13 @@ from .selectors import Rule, build_dictionary, parse_rules
 _HOST_FIELDS = ("spf_includes", "mx", "dkim_cname", "reporting", "return_path", "tracking")
 # Every field whose entries are a value and its proof. other_cname entries are a label, a
 # target and a proof.
-PATTERN_FIELDS = (*_HOST_FIELDS, "verification_txt", "networks", "website")
+PATTERN_FIELDS = (
+    *_HOST_FIELDS,
+    "verification_txt",
+    "networks",
+    "website",
+    "subprocessor_names",
+)
 
 
 @dataclass(frozen=True, slots=True)
@@ -80,6 +86,9 @@ class Catalog:
     tracking_labels: frozenset[str]
     sending_labels: tuple[str, ...]
     website: dict[str, str]
+    # The names a sending service goes by, as a subprocessor page would list it, to the service.
+    # A name that is also an ordinary word ("Kit", "Wix") is simply not listed.
+    subprocessor_names: dict[str, str]
 
     # ------------------------------------------------------------ lookups by record
 
@@ -214,7 +223,10 @@ def build(raw: dict[str, Any]) -> Catalog:
     other: dict[str, HostTable] = {}
     networks: dict[str, str] = {}
     website: dict[str, str] = {}
+    named: dict[str, str] = {}
     for name, block in services.items():
+        for text in block.get("subprocessor_names", ()):
+            named[text] = name
         for host in block.get("website", ()):
             website[host.lower()] = name
         for f in _HOST_FIELDS:
@@ -245,6 +257,7 @@ def build(raw: dict[str, Any]) -> Catalog:
         tracking_labels=frozenset(rules["tracking_labels"]),
         sending_labels=tuple(rules["sending_labels"]),
         website=website,
+        subprocessor_names=named,
     )
 
 

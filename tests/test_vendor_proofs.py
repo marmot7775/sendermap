@@ -61,6 +61,7 @@ def test_an_entry_without_a_proof_is_refused(entry):
         ("dkim_cname", PROOF, "a name under _domainkey.vendor.test"),
         ("website", {**PROOF, "record": "http://vendor.test/"}, "an https URL on the domain"),
         ("website", {**PROOF, "record": "https://other.test/"}, "an https URL on the domain"),
+        ("subprocessor_names", PROOF, "an https URL on the domain"),
     ],
 )
 def test_a_proof_whose_record_could_not_show_the_pattern_is_refused(field, proof, message):

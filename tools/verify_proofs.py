@@ -12,7 +12,8 @@ what is published there now. What counts as found depends on the kind of pattern
   pattern;
 - a verification token: a TXT record at the name that the pattern matches, with a value after it;
 - a network: an address of the name that, by Team Cymru's answer, the network announces;
-- a website host: the page at the URL loads a script or stylesheet from the pattern's host.
+- a website host: the page at the URL loads a script or stylesheet from the pattern's host;
+- a subprocessor name: the page at the URL has the name as a whole word in its text.
 
 Anything else at the name, such as a wildcard SPF record where a key should be, is not found. A
 lookup or request that fails, or a page that answers with anything but 200, 404 or 410, is could
@@ -65,6 +66,7 @@ EXPECTED = {
     "verification_txt": "TXT record matching {}",
     "networks": "an address announced by {}",
     "website": "a page that loads a script or stylesheet from {}",
+    "subprocessor_names": "a page that names {}",
 }
 
 
@@ -168,7 +170,9 @@ async def _network(checker: Checker, record: str, asn: str) -> Seen:
     return Seen(shows, "; ".join(announced) or "no network announces its addresses")
 
 
-async def _website(checker: Checker, url: str, pattern: str) -> Seen:
+async def _page(checker: Checker, url: str) -> httpx.Response | Seen:
+    """The page at `url`, or what to report when it could not be read. A page that is gone is
+    not found; any other refusal says nothing about the proof."""
     try:
         response = await checker.http.get(
             url, headers={"user-agent": USER_AGENT}, follow_redirects=True, timeout=20
@@ -176,14 +180,26 @@ async def _website(checker: Checker, url: str, pattern: str) -> Seen:
     except httpx.HTTPError as e:
         return Seen(False, f"request failed: {type(e).__name__}", False)
     if response.status_code != 200:
-        # A page that is gone is not found; any other refusal says nothing about the proof.
         return Seen(False, f"HTTP {response.status_code}", response.status_code in (404, 410))
-    hosts = [
-        urlsplit(urljoin(str(response.url), s)).hostname or ""
-        for s in _LOADED.findall(response.text)
-    ]
+    return response
+
+
+async def _website(checker: Checker, url: str, pattern: str) -> Seen:
+    page = await _page(checker, url)
+    if isinstance(page, Seen):
+        return page
+    hosts = [urlsplit(urljoin(str(page.url), s)).hostname or "" for s in _LOADED.findall(page.text)]
     loads = [h for h in hosts if h and _under(h, pattern)]
     return Seen(bool(loads), f"loads {', '.join(dict.fromkeys(loads))}" if loads else "no load")
+
+
+async def _named(checker: Checker, url: str, name: str) -> Seen:
+    page = await _page(checker, url)
+    if isinstance(page, Seen):
+        return page
+    text = re.sub(r"<[^>]+>", " ", page.text)
+    shows = re.search(rf"\b{re.escape(name)}\b", text) is not None
+    return Seen(shows, f"names {name}" if shows else f"does not name {name}")
 
 
 CHECKS: dict[str, Check] = {
@@ -198,6 +214,7 @@ CHECKS: dict[str, Check] = {
     "verification_txt": _token,
     "networks": _network,
     "website": _website,
+    "subprocessor_names": _named,
 }
 
 
