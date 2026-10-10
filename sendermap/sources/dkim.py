@@ -14,7 +14,7 @@ from dataclasses import dataclass
 from datetime import datetime
 
 from ..dns import Answer
-from ..model import Claim, Evidence, Finding, Gap, Kind, Observed, Severity, Unknown
+from ..model import Checked, Claim, Evidence, Finding, Gap, Kind, Observed, Severity, Unknown
 from . import CANARY, Context
 
 
@@ -89,7 +89,7 @@ async def collect(
             "about which services sign for the domain.",
             (Evidence(f"*.{base}", "TXT", canary.records[0], ctx.checked_at),),
         )
-        return Observed(findings=(wildcard,))
+        return Observed(findings=(wildcard,), checked=(Checked(where),))
     names = list(dict.fromkeys(s.lower() for s in selectors))
     answers = await asyncio.gather(*(ctx.dns.txt(f"{s}.{base}") for s in names))
     claims: list[Claim] = []
@@ -134,7 +134,8 @@ async def collect(
     if failed:
         asked = f"DKIM keys: TXT at {len(failed)} selectors under {base} ({', '.join(failed)})"
         gaps.append(Gap(asked, "lookup failed"))
-    return Observed(tuple(claims), tuple(unknowns), tuple(findings), tuple(gaps))
+    checked = (Checked(where, dkim_selectors=tuple(names)),)
+    return Observed(tuple(claims), tuple(unknowns), tuple(findings), tuple(gaps), checked)
 
 
 def _short_key(selector: str, where: str, bits: int, evidence: Evidence) -> Finding:

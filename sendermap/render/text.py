@@ -11,6 +11,7 @@ from rich.table import Table
 from rich.text import Text
 
 from ..model import SenderMap, Service, Severity, Tier
+from . import asked, asked_in_full
 
 _TIER_STYLE = {
     Tier.IN_USE: "bold green",
@@ -55,6 +56,12 @@ def render(result: SenderMap, console: Console, *, evidence: bool = False) -> No
         footer.append(f"and {len(result.subdomains_checked)} sending subdomains")
     for gap in result.gaps:
         footer.append(f"\nNot checked: {gap.asked} ({gap.happened})")
+    for record in result.checked:
+        footer.append(f"\nAsked at {record.where}: {asked(record)}")
+        if evidence:
+            footer += [
+                f"\n  {heading}: {', '.join(names)}" for heading, names in asked_in_full(record)
+            ]
     console.print(Text("\n" + " ".join(footer), style="bright_black"))
 
 

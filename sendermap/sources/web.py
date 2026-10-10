@@ -13,7 +13,7 @@ from urllib.parse import urljoin
 
 import httpx
 
-from ..model import Claim, Evidence, Gap, Kind, Observed
+from ..model import Checked, Claim, Evidence, Gap, Kind, Observed
 from . import Context, http_failure
 
 USER_AGENT = "Sendermap/0.1 (+https://github.com/marmot7775/sendermap)"
@@ -37,7 +37,7 @@ async def collect(ctx: Context) -> Observed:
     home = f"https://{ctx.domain}/"
     page = await _fetch(ctx.http, home)
     if isinstance(page, str):
-        return Observed(gaps=(Gap(f"the website: GET {home}", page),))
+        return Observed(gaps=(Gap(f"the website: GET {home}", page),), checked=_page(ctx, home))
     url, html, cut = page
     claims = [
         Claim(
@@ -48,7 +48,9 @@ async def collect(ctx: Context) -> Observed:
         )
         for service, host in ctx.catalog.website_services(html).items()
     ]
-    observed = Observed(tuple(claims), gaps=_cut(f"the website: GET {home}", cut))
+    observed = Observed(
+        tuple(claims), gaps=_cut(f"the website: GET {home}", cut), checked=_page(ctx, home)
+    )
     if link := _SUBPROCESSOR_LINK.search(html):
         return observed + await _subprocessors(ctx, urljoin(url, link.group(1)))
     return observed
@@ -58,7 +60,8 @@ async def _subprocessors(ctx: Context, url: str) -> Observed:
     assert ctx.http is not None
     page = await _fetch(ctx.http, url)
     if isinstance(page, str):
-        return Observed(gaps=(Gap(f"the subprocessor page: GET {url}", page),))
+        gap = Gap(f"the subprocessor page: GET {url}", page)
+        return Observed(gaps=(gap,), checked=_page(ctx, url))
     final, html, cut = page
     text = re.sub(r"<[^>]+>", " ", html)
     claims = (
@@ -73,7 +76,12 @@ async def _subprocessors(ctx: Context, url: str) -> Observed:
         and len(service) >= 5  # short names ("Kit", "Wix") are ordinary words too
         and re.search(rf"\b{re.escape(service)}\b", text)
     )
-    return Observed(tuple(claims), gaps=_cut(f"the subprocessor page: GET {url}", cut))
+    gaps = _cut(f"the subprocessor page: GET {url}", cut)
+    return Observed(tuple(claims), gaps=gaps, checked=_page(ctx, url))
+
+
+def _page(ctx: Context, url: str) -> tuple[Checked, ...]:
+    return (Checked(ctx.domain, pages=(url,)),)
 
 
 def _cut(asked: str, cut: bool) -> tuple[Gap, ...]:

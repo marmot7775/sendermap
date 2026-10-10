@@ -126,6 +126,7 @@ async def map_domain(
             unknowns=tuple(dict.fromkeys(observed.unknowns)),
             gaps=tuple(dict.fromkeys(observed.gaps)),
             subdomains_checked=tuple(picked),
+            checked=observed.checked_by_name(),
             logo=logo,
         )
         await say("Done")
