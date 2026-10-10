@@ -70,7 +70,7 @@ class SpfTree:
 async def collect(ctx: Context, where: str) -> tuple[Observed, SpfTree]:
     answer = await ctx.dns.txt(where)
     if not answer.answered:
-        return Observed(gaps=(Gap(f"SPF at {where}", answer.status.value),)), SpfTree()
+        return Observed(gaps=(Gap(f"SPF: TXT at {where}", answer.status.value),)), SpfTree()
     records = spf_records(answer)
     if not records:
         return Observed(), SpfTree()
@@ -227,7 +227,7 @@ class _Walk:
         self.seen.add(key)
         answer = await self.ctx.dns.txt(link.target)
         if not answer.answered:
-            gap = Gap(f"SPF at {link.target}", answer.status.value)
+            gap = Gap(f"SPF {link.how}: TXT at {link.target}", answer.status.value)
             return walked + _Walked(observed=Observed(gaps=(gap,)))
         records = spf_records(answer)
         if len(records) != 1:

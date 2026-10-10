@@ -85,14 +85,14 @@ async def map_domain(
                     (reports.collect(ctx), "report addresses"),
                     (labels.collect(ctx, domain), "bounce and tracking CNAMEs"),
                     (mta_sts.collect(ctx), "the MTA-STS policy"),
-                    (web.collect(ctx) if use_web else _nothing(), "the website"),
+                    (web.collect(ctx) if use_web else _skipped(_NO_WEB), "the website"),
                 )
             ]
             logo_task = tg.create_task(bimi.logo(ctx))
-            subs_task = tg.create_task(_discover(ctx) if use_subdomains else _none_found())
+            subs_task = tg.create_task(_discover(ctx) if use_subdomains else _no_subdomains())
         found, tree = spf_task.result()
-        apex = sum((task.result() for task in evidence), found)
-        sending_subdomains, ct_read = subs_task.result()
+        discovered = subs_task.result()
+        apex = sum((task.result() for task in evidence), found) + Observed(gaps=discovered.gaps)
         logo = logo_task.result()
 
         await say("Scanning DKIM keys and the networks in SPF")
@@ -103,7 +103,7 @@ async def map_domain(
             networks.collect(ctx, domain, tree.ranges),
         )
 
-        picked = sending_subdomains[:MAX_SUBDOMAINS]
+        picked = discovered.sending[:MAX_SUBDOMAINS]
         await say(f"Checking {len(picked)} sending subdomains")
         under = await asyncio.gather(*(_subdomain(ctx, rules, name) for name in picked))
 
@@ -118,7 +118,7 @@ async def map_domain(
             ),
             findings=_sorted(observed.findings + _cross_findings(ctx, observed)),
             unknowns=tuple(dict.fromkeys(observed.unknowns)),
-            gaps=tuple(dict.fromkeys(observed.gaps + (() if ct_read else (_ct_gap(),)))),
+            gaps=tuple(dict.fromkeys(observed.gaps)),
             subdomains_checked=tuple(picked),
             logo=logo,
         )
@@ -178,10 +178,10 @@ def _sorted(findings: tuple[Finding, ...]) -> tuple[Finding, ...]:
     return tuple(sorted(dict.fromkeys(findings), key=lambda f: order.index(f.severity)))
 
 
-def _ct_gap() -> Gap:
-    return Gap(
-        "certificate transparency logs", "they did not answer, so only common labels were checked"
-    )
+_NO_WEB = Gap("the website", "not read: web checks were turned off (--no-web)")
+_NO_SUBDOMAINS = Gap(
+    "sending subdomains", "not searched: subdomain checks were turned off (--no-subdomains)"
+)
 
 
 async def _guard(source: Awaitable[Observed], what: str) -> Observed:
@@ -189,23 +189,24 @@ async def _guard(source: Awaitable[Observed], what: str) -> Observed:
     try:
         return await source
     except Exception as e:  # a source bug must not take down every other source
-        return Observed(gaps=(Gap(what, f"failed: {type(e).__name__}"),))
+        return Observed(gaps=(Gap(what, f"the check crashed: {type(e).__name__}"),))
 
 
-async def _discover(ctx: Context) -> tuple[list[str], bool]:
-    """Sending subdomains; a failure here costs the subdomains, not the map."""
+async def _discover(ctx: Context) -> subdomains.Found:
+    """Sending subdomains; a crash here costs the subdomains, not the map, and says so."""
     try:
         return await subdomains.discover(ctx)
-    except Exception:  # a source bug must not take down every other source
-        return [], False
+    except Exception as e:  # a source bug must not take down every other source
+        crashed = Gap("sending subdomains", f"the search crashed: {type(e).__name__}")
+        return subdomains.Found(gaps=(crashed,))
 
 
-async def _nothing() -> Observed:
-    return Observed()
+async def _skipped(gap: Gap) -> Observed:
+    return Observed(gaps=(gap,))
 
 
-async def _none_found() -> tuple[list[str], bool]:
-    return [], True
+async def _no_subdomains() -> subdomains.Found:
+    return subdomains.Found(gaps=(_NO_SUBDOMAINS,))
 
 
 async def _quiet(_: str) -> None:

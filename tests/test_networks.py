@@ -81,4 +81,4 @@ async def test_a_services_ranges_are_read_through_the_maps_own_lookups():
 async def test_a_service_whose_ranges_could_not_be_read_is_a_gap_naming_it():
     zone = Zone(failing={"amazonses.com"})
     observed = await networks.collect(context(zone), "example.com", [("54.240.8.0/21", EV)])
-    assert "the published ranges of Amazon SES" in [g.what for g in observed.gaps]
+    assert "published ranges: SPF of Amazon SES" in [g.asked for g in observed.gaps]

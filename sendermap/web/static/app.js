@@ -293,7 +293,7 @@ function renderFootnote(map) {
   let text = `${map.run.lookups} DNS lookups in ${map.run.elapsed.toFixed(1)} s. Checked ${map.domain}`;
   text += subs ? ` and ${subs} sending subdomain${subs === 1 ? "" : "s"}` : "";
   text += ` on ${checked} UTC.`;
-  for (const gap of map.gaps) text += ` Not checked: ${gap.what} (${gap.why}).`;
+  for (const gap of map.gaps) text += ` Not checked: ${gap.asked} (${gap.happened}).`;
   $("footnote").textContent = text;
 }
 

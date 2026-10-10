@@ -150,10 +150,11 @@ class Finding:
 
 @dataclass(frozen=True, slots=True)
 class Gap:
-    """A lookup that did not complete, so its silence says nothing."""
+    """A question that got no usable answer: what was asked, and what happened instead. Its
+    silence says nothing, so it is never to be read as absent."""
 
-    what: str
-    why: str
+    asked: str
+    happened: str
 
 
 @dataclass(frozen=True, slots=True)

@@ -9,7 +9,7 @@ from __future__ import annotations
 
 import asyncio
 
-from ..model import Claim, Evidence, Kind, Observed
+from ..model import Claim, Evidence, Gap, Kind, Observed
 from . import CANARY, Context
 
 _KINDS = {
@@ -27,7 +27,11 @@ async def collect(ctx: Context, where: str) -> Observed:
     )
     wildcard = canary.target
     claims: list[Claim] = []
+    failed: list[str] = []
     for label, answer in zip(labels, answers, strict=True):
+        if not answer.answered:
+            failed.append(label)
+            continue
         target = answer.records[0] if answer.ok else answer.target
         if not target or target == wildcard:
             continue
@@ -35,4 +39,15 @@ async def collect(ctx: Context, where: str) -> Observed:
             service, kind = match
             evidence = Evidence(f"{label}.{where}", "CNAME", target, ctx.checked_at)
             claims.append(Claim(service, _KINDS[kind], where, evidence))
-    return Observed(tuple(claims))
+    gaps: list[Gap] = []
+    if not canary.answered:
+        gaps.append(
+            Gap(
+                f"wildcard check: CNAME at {CANARY}.{where}",
+                f"{canary.status.value}, so a wildcard CNAME was not ruled out for the labels",
+            )
+        )
+    if failed:
+        names = ", ".join(f"{label}.{where}" for label in failed)
+        gaps.append(Gap(f"bounce and tracking CNAMEs: CNAME at {names}", "lookup failed"))
+    return Observed(tuple(claims), gaps=tuple(gaps))

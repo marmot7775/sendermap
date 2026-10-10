@@ -31,7 +31,9 @@ Everything Sendermap reports is built from a few frozen dataclasses in `senderma
 - **Finding**: something that needs attention (a dangling DKIM CNAME, SPF over ten lookups,
   a short key), with a severity of risk, warning or note.
 - **Unknown**: a record that clearly points at a sender no service in the vendor data matches.
-- **Gap**: a check that did not complete, and why, so its silence is not read as absence.
+- **Gap**: a question that got no usable answer: what was `asked` (the record type and name,
+  the page, or the check) and what `happened` (the lookup failed, HTTP 404, the check was turned
+  off, the source crashed), so its silence is not read as absence.
 - **Run**: when and how one map was made: `checked_at`, `elapsed` seconds and DNS `lookups`.
 - **SenderMap**: the domain, its services, findings, unknowns, gaps, the sending subdomains
   checked, the BIMI logo if any, and the Run. `to_dict()` gives JSON with schema
@@ -63,9 +65,13 @@ Assembly
 
 Each source returns an `Observed`: claims, unknowns, findings and gaps. Sources never raise
 for a failed lookup: every DNS answer has a status (`ok`, `no such name`, `no record of this
-type`, `lookup failed`), and a source turns a failure into a gap where it handles one. If the
-MX, token, report, label, MTA-STS or website source raises an exception, it becomes a gap
-instead of losing the map.
+type`, `lookup failed`), and every source turns a failed lookup or page into a gap, while an
+answer of no such name or no record is an absence. A failed network-owner lookup leaves the
+range listed as unknown with "network lookup failed", not "no network". If the MX, token,
+report, label, MTA-STS or website source or the subdomain search raises an exception, it
+becomes a gap that says it crashed instead of losing the map. A check turned off by the caller
+(`--no-web`, `--no-subdomains`) is a gap too, and with both off the MTA-STS policy is not
+fetched, which is also a gap.
 
 ## Modules
 
@@ -158,11 +164,9 @@ it weekly and on any pull request that touches vendors.json.
 These are open items from the October 2026 review, listed so the description above is not read
 as more than it is.
 
-- Some failed lookups produce no gap: DMARC and TLS-RPT, label CNAMEs, the MTA-STS policy, the
-  subprocessor page, a subdomain's SPF or MX, and the network owner of a range.
 - Caps drop names without saying so: 30 sending subdomains, 24 SPF ranges for the network
   lookup, 60 names from the certificate log, an SPF depth of 10. IPv6 ranges are not named.
-- `--no-web` and `--no-subdomains` record no gap, and the Markdown view does not show gaps.
+- The Markdown view does not show gaps.
 - The SPF lookup count walks a repeated include once, so it can read lower than a receiver's.
 
 ## Tests
