@@ -60,6 +60,7 @@ async def map_domain(
             catalog_module.load(),
             http if (use_web or use_subdomains) else None,
         )
+        rules = load_rules()
         say = progress or _quiet
 
         await say("Reading MX, SPF, DMARC and the website")
@@ -85,7 +86,9 @@ async def map_domain(
 
         await say("Scanning DKIM keys and the networks in SPF")
         backed = backed_selectors(apex.claims, ctx.catalog)
-        ranked = rank_rules(load_rules(), await _mx_hosts(ctx, domain), tree.includes)
+        # The MX source already asked, so this query is a cache hit.
+        mx_hosts = [h for r in (await ctx.dns.query(domain, "MX")).records if (h := mx.exchange(r))]
+        ranked = rank_rules(rules, mx_hosts, tree.includes)
         selectors = probe_order(ranked, (*ctx.catalog.probe_selectors, *backed))
         deep = await asyncio.gather(
             dkim.collect(ctx, domain, selectors, backed),
@@ -121,12 +124,6 @@ async def _subdomain(ctx: Context, name: str) -> Observed:
         networks.collect(ctx, name, tree.ranges),
     )
     return first + keys + owned
-
-
-async def _mx_hosts(ctx: Context, where: str) -> list[str]:
-    """The MX hosts at `where`. The MX source already asked, so this is a cache hit."""
-    answer = await ctx.dns.query(where, "MX")
-    return [host for r in answer.records if (host := r.partition(" ")[2]) not in ("", ".")]
 
 
 def _cross_findings(ctx: Context, observed: Observed) -> tuple[Finding, ...]:

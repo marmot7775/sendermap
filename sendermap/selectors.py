@@ -13,6 +13,7 @@ from collections import defaultdict
 from collections.abc import Iterable, Iterator, Mapping
 from dataclasses import dataclass
 from enum import Enum
+from functools import cache
 from importlib import resources
 from importlib.resources.abc import Traversable
 from typing import Any, Protocol
@@ -64,8 +65,9 @@ class Hints:
     mx: tuple[str, ...] = ()
     spf: tuple[str, ...] = ()
 
-    def __bool__(self) -> bool:
-        return bool(self.mx or self.spf)
+    @property
+    def empty(self) -> bool:
+        return not (self.mx or self.spf)
 
     def matches(self, mx_hosts: frozenset[str], spf_includes: frozenset[str]) -> bool:
         """True when any MX host ends in a hint suffix or any include is a hint domain.
@@ -74,11 +76,9 @@ class Hints:
         matches on a label boundary, so google.com matches aspmx.l.google.com
         but not notgoogle.com.
         """
-        for host in mx_hosts:
-            for suffix in self.mx:
-                if host == suffix or host.endswith("." + suffix):
-                    return True
-        return not spf_includes.isdisjoint(self.spf)
+        return any(
+            host == suffix or host.endswith("." + suffix) for host in mx_hosts for suffix in self.mx
+        ) or not spf_includes.isdisjoint(self.spf)
 
 
 @dataclass(frozen=True, slots=True)
@@ -97,7 +97,7 @@ class Rule:
     def __post_init__(self) -> None:
         if self.source is Source.VENDOR_DOCS and not self.reference:
             raise ValueError(f"{self.vendor}: vendor docs claimed, no reference given")
-        if self.hints and not self.hints_reference:
+        if not self.hints.empty and not self.hints_reference:
             raise ValueError(f"{self.vendor}: hints given, no hints_reference")
 
 
@@ -111,18 +111,21 @@ class Selector:
     reference: str
 
 
-def parse_rule(raw: Mapping[str, Any]) -> Rule:
+def _parse_rule(raw: Mapping[str, Any]) -> Rule:
     """Build a Rule from one mapping in the rules file."""
-    shape = _parse_shape(raw["vendor"], raw["shape"])
+    vendor = raw["vendor"]
+    hints_reference = raw.get("hints_reference", [])
+    if isinstance(hints_reference, str):
+        raise ValueError(f"{vendor}: hints_reference must be a list, even with one URL")
     hint_spec = raw.get("hints") or {}
     hints = Hints(**{key: tuple(map(_normalise, names)) for key, names in hint_spec.items()})
     return Rule(
-        vendor=raw["vendor"],
-        shape=shape,
+        vendor=vendor,
+        shape=_parse_shape(vendor, raw["shape"]),
         source=Source(raw["source"]),
         reference=raw.get("reference", ""),
         hints=hints,
-        hints_reference=_strings(raw.get("hints_reference", ())),
+        hints_reference=tuple(hints_reference),
     )
 
 
@@ -137,11 +140,6 @@ def _parse_shape(vendor: str, spec: Mapping[str, Any]) -> Shape:
             raise ValueError(f"{vendor}: unknown shape kind {kind!r}")
 
 
-def _strings(value: str | Iterable[str]) -> tuple[str, ...]:
-    """One string or a list of them, as a tuple."""
-    return (value,) if isinstance(value, str) else tuple(value)
-
-
 def _normalise(name: str) -> str:
     """Lowercase a DNS name and drop any trailing dot."""
     return name.lower().rstrip(".")
@@ -152,11 +150,15 @@ def _normalise(name: str) -> str:
 RULES_FILE = resources.files("sendermap").joinpath("data/selectors.yaml")
 
 
+@cache
 def load_rules(path: Traversable = RULES_FILE) -> tuple[Rule, ...]:
-    """Read every rule from a YAML file; the rules shipped with Sendermap by default."""
+    """Read every rule from a YAML file; the rules shipped with Sendermap by default.
+
+    Cached per path, so a process reads each file once. Rules are frozen, so sharing is safe.
+    """
     with path.open(encoding="utf-8") as handle:
         document = yaml.safe_load(handle) or []
-    return tuple(parse_rule(raw) for raw in document)
+    return tuple(_parse_rule(raw) for raw in document)
 
 
 def build_dictionary(rules: Iterable[Rule]) -> dict[str, tuple[Selector, ...]]:
@@ -179,7 +181,7 @@ def probe_order(rules: Iterable[Rule], sweep: Iterable[str]) -> tuple[str, ...]:
     """
     names = tuple(dict.fromkeys(s.lower() for s in sweep))
     known = frozenset(names)
-    claimed = (n for rule in rules for n in rule.shape.expand() if n in known)
+    claimed = (n for n in build_dictionary(rules) if n in known)
     return tuple(dict.fromkeys((*claimed, *names)))
 
 
@@ -190,13 +192,10 @@ def rank_rules(
 ) -> tuple[Rule, ...]:
     """Move rules whose hints match the domain's MX or SPF to the front.
 
-    Matched rules keep their original order, then every other rule in its
-    original order. Nothing is dropped; a match only changes position.
+    The sort is stable, so matched rules keep their original order, then every
+    other rule in its original order. Nothing is dropped; a match only changes
+    position.
     """
     mx = frozenset(_normalise(h) for h in mx_hosts)
     spf = frozenset(_normalise(d) for d in spf_includes)
-    matched: list[Rule] = []
-    rest: list[Rule] = []
-    for rule in rules:
-        (matched if rule.hints.matches(mx, spf) else rest).append(rule)
-    return (*matched, *rest)
+    return tuple(sorted(rules, key=lambda rule: not rule.hints.matches(mx, spf)))

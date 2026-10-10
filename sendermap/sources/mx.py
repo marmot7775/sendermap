@@ -14,9 +14,9 @@ async def collect(ctx: Context, where: str) -> Observed:
     unknowns: list[Unknown] = []
     findings: list[Finding] = []
     for record in answer.records:
-        _, _, host = record.partition(" ")
+        host = exchange(record)
         evidence = Evidence(where, "MX", record)
-        if host in ("", "."):  # RFC 7505 null MX
+        if not host:  # RFC 7505 null MX
             if where == ctx.domain:
                 findings.append(
                     Finding(
@@ -32,6 +32,12 @@ async def collect(ctx: Context, where: str) -> Observed:
         else:
             unknowns.append(Unknown("mail server", host, where))
     return Observed(tuple(claims), tuple(unknowns), tuple(findings))
+
+
+def exchange(record: str) -> str:
+    """The host an MX record points to, or "" for an RFC 7505 null MX."""
+    host = record.partition(" ")[2]
+    return "" if host == "." else host
 
 
 def _kind(ctx: Context, service: str, where: str) -> Kind:
