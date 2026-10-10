@@ -12,7 +12,6 @@ import asyncio
 import time
 from collections.abc import Awaitable, Callable
 from contextlib import AsyncExitStack
-from datetime import date
 
 import httpx
 
@@ -87,7 +86,7 @@ async def map_domain(
         await say("Scanning DKIM keys and the networks in SPF")
         backed = backed_selectors(apex.claims, ctx.catalog)
         ranked = rank_rules(load_rules(), await _mx_hosts(ctx, domain), tree.includes)
-        selectors = probe_order(ranked, (*ctx.catalog.probe_selectors, *backed), date.today())
+        selectors = probe_order(ranked, (*ctx.catalog.probe_selectors, *backed))
         deep = await asyncio.gather(
             dkim.collect(ctx, domain, selectors, backed),
             networks.collect(ctx, domain, tree.ranges),

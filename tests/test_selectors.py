@@ -1,10 +1,8 @@
-from datetime import date
 from pathlib import Path
 
 import pytest
 
 from sendermap.selectors import (
-    Dated,
     Fixed,
     Hints,
     Numbered,
@@ -16,22 +14,13 @@ from sendermap.selectors import (
     rank_rules,
 )
 
-TODAY = date(2026, 10, 9)
-
 
 def test_fixed_expands_to_its_names():
-    assert list(Fixed(("a", "b")).expand(TODAY)) == ["a", "b"]
+    assert list(Fixed(("a", "b")).expand()) == ["a", "b"]
 
 
 def test_numbered_counts_from_one():
-    assert list(Numbered("s", 3).expand(TODAY)) == ["s1", "s2", "s3"]
-
-
-def test_dated_covers_every_month_back_to_years_back():
-    names = list(Dated("ses", 1).expand(TODAY))
-    assert names[0] == "ses202501"
-    assert names[-1] == "ses202612"
-    assert len(names) == 24
+    assert list(Numbered("s", 3).expand()) == ["s1", "s2", "s3"]
 
 
 def test_vendor_docs_without_reference_is_rejected():
@@ -44,7 +33,7 @@ def test_collisions_keep_every_claim():
         Rule("A", Fixed(("s1",)), Source.PATTERN),
         Rule("B", Numbered("s", 1), Source.PATTERN),
     )
-    found = build_dictionary(rules, TODAY)
+    found = build_dictionary(rules)
     assert {c.vendor for c in found["s1"]} == {"A", "B"}
 
 
@@ -58,7 +47,7 @@ def test_rules_file_round_trips(tmp_path: Path):
         encoding="utf-8",
     )
     rules = load_rules(rules_file)
-    found = build_dictionary(rules, TODAY)
+    found = build_dictionary(rules)
     assert found["google"][0].vendor == "Google Workspace"
 
 
@@ -124,9 +113,23 @@ def test_hints_parse_from_the_rules_file(tmp_path: Path):
     assert ses.hints == Hints()
 
 
+def test_selector_names_are_lowercased_on_load(tmp_path: Path):
+    rules_file = tmp_path / "rules.yaml"
+    rules_file.write_text(
+        "- vendor: A\n"
+        "  shape: {kind: fixed, names: [Google]}\n"
+        "  source: pattern\n"
+        "- vendor: B\n"
+        "  shape: {kind: numbered, prefix: Selector, stop: 1}\n"
+        "  source: pattern\n",
+        encoding="utf-8",
+    )
+    assert list(build_dictionary(load_rules(rules_file))) == ["google", "selector1"]
+
+
 def test_shipped_rules_split_mailchimp_by_provenance():
     mailchimp = [r for r in load_rules() if r.vendor == "Mailchimp"]
-    by_source = {r.source: list(r.shape.expand(TODAY)) for r in mailchimp}
+    by_source = {r.source: list(r.shape.expand()) for r in mailchimp}
     assert by_source == {Source.VENDOR_DOCS: ["k2"], Source.PATTERN: ["k1", "k3"]}
 
 
@@ -141,5 +144,5 @@ def test_hints_reference_without_hints_is_accepted():
 
 def test_probe_order_moves_rule_names_ahead_and_keeps_the_sweep():
     sweep = ("k1", "Google", "selector2", "zz", "selector1")
-    order = probe_order((MICROSOFT, NO_HINTS, GOOGLE), sweep, TODAY)
+    order = probe_order((MICROSOFT, NO_HINTS, GOOGLE), sweep)
     assert order == ("selector1", "selector2", "google", "k1", "zz")
