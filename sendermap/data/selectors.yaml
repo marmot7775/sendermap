@@ -1,0 +1,22 @@
+- vendor: Google Workspace
+  shape: {kind: fixed, names: [google]}
+  source: vendor_docs
+  reference: https://support.google.com/a/answer/174124
+
+- vendor: Microsoft 365
+  shape: {kind: numbered, prefix: selector, stop: 2}
+  source: vendor_docs
+  reference: https://learn.microsoft.com/defender-office-365/email-authentication-dkim-configure
+
+- vendor: Mailchimp
+  shape: {kind: fixed, names: [k1, k2, k3]}
+  source: pattern
+
+- vendor: SendGrid
+  shape: {kind: numbered, prefix: s, stop: 2}
+  source: vendor_docs
+  reference: https://www.twilio.com/docs/sendgrid/ui/account-and-settings/how-to-set-up-domain-authentication
+
+- vendor: Amazon SES
+  shape: {kind: dated, prefix: ses, years_back: 2}
+  source: pattern
