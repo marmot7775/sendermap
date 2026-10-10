@@ -1,5 +1,7 @@
 """The whole map, end to end, on a fake domain."""
 
+from datetime import UTC, datetime
+
 import pytest
 from conftest import Zone
 
@@ -8,6 +10,7 @@ from sendermap.engine import clean_domain
 from sendermap.model import Role, Tier
 from sendermap.selectors import load_rules
 
+CHECKED = datetime(2026, 10, 9, 12, 0, tzinfo=UTC)
 KEY = "v=DKIM1; k=rsa; p=" + "A" * 392
 
 
@@ -31,8 +34,14 @@ def acme() -> Zone:
     )
 
 
+async def acme_map(http):
+    return await map_domain(
+        "acme.test", checked_at=CHECKED, resolver=acme(), http=http, use_web=False
+    )
+
+
 async def test_the_map_ranks_every_service_by_its_strongest_evidence(offline):
-    result = await map_domain("acme.test", resolver=acme(), http=offline, use_web=False)
+    result = await acme_map(offline)
     tiers = {s.name: s.tier for s in result.senders}
     assert tiers == {
         "Google Workspace": Tier.IN_USE,
@@ -49,16 +58,23 @@ async def test_the_map_ranks_every_service_by_its_strongest_evidence(offline):
 
 
 async def test_the_order_is_strongest_tier_first_and_reporting_last(offline):
-    result = await map_domain("acme.test", resolver=acme(), http=offline, use_web=False)
+    result = await acme_map(offline)
     ranks = [s.tier.rank for s in result.senders]
     assert ranks == sorted(ranks)
     assert result.services[-1].role is Role.REPORTING
 
 
 async def test_the_result_serialises(offline):
-    result = await map_domain("acme.test", resolver=acme(), http=offline, use_web=False)
+    result = await acme_map(offline)
     data = result.to_dict()
     assert data["schema"] == "sendermap/1" and data["domain"] == "acme.test"
+    assert data["run"]["checked_at"] == "2026-10-09T12:00:00+00:00"
+    assert data["run"]["lookups"] == result.run.lookups > 0
+
+
+async def test_a_map_is_dated_by_its_caller_in_a_known_timezone(offline):
+    with pytest.raises(ValueError, match="timezone"):
+        await map_domain("acme.test", checked_at=datetime(2026, 10, 9), resolver=acme())
 
 
 async def test_mx_and_spf_hints_put_google_and_microsoft_selectors_first(offline, monkeypatch):
@@ -70,7 +86,7 @@ async def test_mx_and_spf_hints_put_google_and_microsoft_selectors_first(offline
         .add("hinted.test", "TXT", "v=spf1 include:_spf.hinted.test ~all")
         .add("_spf.hinted.test", "TXT", "v=spf1 include:spf.protection.outlook.com ~all")
     )
-    await map_domain("hinted.test", resolver=zone, http=offline, use_web=False)
+    await map_domain("hinted.test", checked_at=CHECKED, resolver=zone, http=offline, use_web=False)
     probed = [
         name.removesuffix("._domainkey.hinted.test")
         for name, rtype in zone.asked
@@ -105,7 +121,7 @@ async def test_a_subdomain_whose_mx_is_google_probes_google_before_any_other_rul
     # Reversed, so Google starts last and only the subdomain's own MX can move it up.
     monkeypatch.setattr(engine, "load_rules", lambda: tuple(reversed(load_rules())))
     zone = Zone().add("mail.subhint.test", "MX", "1 smtp.google.com")
-    await map_domain("subhint.test", resolver=zone, http=offline, use_web=False)
+    await map_domain("subhint.test", checked_at=CHECKED, resolver=zone, http=offline, use_web=False)
     probed = [
         name.removesuffix("._domainkey.mail.subhint.test")
         for name, rtype in zone.asked

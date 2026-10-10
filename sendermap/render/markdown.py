@@ -9,7 +9,7 @@ def render(result: SenderMap) -> str:
     lines = [f"# Sendermap: {result.domain}", ""]
     lines.append(
         f"{len(result.senders)} sending services found from public records "
-        f"({result.lookups} lookups)."
+        f"({result.run.lookups} lookups)."
     )
     lines += ["", "| Service | Category | How sure | Evidence |", "|---|---|---|---|"]
     lines += [_row(s, result.domain) for s in result.senders]
