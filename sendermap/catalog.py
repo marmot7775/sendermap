@@ -1,7 +1,11 @@
 """The vendor catalog, and every rule for matching a record to a service.
 
-All knowledge about services lives in data/vendors.json, one block per service. This module only
-indexes it and applies the matching rules, each of which was learned on a live domain.
+All knowledge about services lives in data/vendors.json, one block per service. Every pattern in
+a block carries a proof: a live domain that publishes it, the record, and the date it was
+checked. Loading refuses a pattern without one. This module checks the proofs, indexes the
+patterns and applies the matching rules, each of which was learned on a live domain.
+
+data/vendors_pending.json holds patterns with no proof yet. Nothing here reads it.
 """
 
 from __future__ import annotations
@@ -14,9 +18,26 @@ from functools import cache
 from importlib import resources
 from typing import Any
 
+from . import proofs
 from .dns import norm
+from .proofs import Proof
 
 _HOST_FIELDS = ("spf_includes", "mx", "dkim_cname", "reporting", "return_path", "tracking")
+# Every field whose entries are a value and its proof. other_cname entries are a label, a
+# target and a proof.
+PATTERN_FIELDS = (*_HOST_FIELDS, "verification_txt", "networks", "website")
+
+
+@dataclass(frozen=True, slots=True)
+class Pattern:
+    """One vendor pattern and the proof that it was seen live. `label` is set only for an
+    other_cname pattern, whose value is the CNAME target expected at that label."""
+
+    vendor: str
+    field: str
+    value: str
+    proof: Proof
+    label: str | None = None
 
 
 @dataclass(frozen=True, slots=True)
@@ -41,6 +62,7 @@ class HostTable:
 @dataclass(frozen=True, slots=True)
 class Catalog:
     services: dict[str, dict[str, Any]]
+    patterns: tuple[Pattern, ...]
     tables: dict[str, HostTable]
     selectors: dict[str, str]
     tokens: tuple[tuple[re.Pattern[str], str], ...]
@@ -172,7 +194,9 @@ def load() -> Catalog:
 
 
 def build(raw: dict[str, Any]) -> Catalog:
-    services: dict[str, dict[str, Any]] = raw["vendors"]
+    """Index the vendor data. ValueError if any pattern lacks a valid proof."""
+    patterns = tuple(p for name, block in raw["vendors"].items() for p in _patterns(name, block))
+    services = {name: _values(block) for name, block in raw["vendors"].items()}
     rules: dict[str, Any] = raw["rules"]
     tables = {f: HostTable({}) for f in _HOST_FIELDS}
     selectors: dict[str, str] = {}
@@ -196,6 +220,7 @@ def build(raw: dict[str, Any]) -> Catalog:
             networks[asn.upper()] = name
     return Catalog(
         services=services,
+        patterns=patterns,
         tables=tables,
         selectors=selectors,
         tokens=tuple(tokens),
@@ -213,3 +238,34 @@ def build(raw: dict[str, Any]) -> Catalog:
         sending_labels=tuple(rules["sending_labels"]),
         website=website,
     )
+
+
+def _patterns(vendor: str, block: dict[str, Any]) -> list[Pattern]:
+    """Every pattern in one vendor block, each with its proof checked."""
+    found: list[Pattern] = []
+    for kind in (*PATTERN_FIELDS, "other_cname"):
+        for entry in block.get(kind, ()):
+            if not isinstance(entry, dict) or not entry.get("proof"):
+                raise ValueError(f"{vendor} {kind} {entry!r}: no proof")
+            label = entry.get("label") if kind == "other_cname" else None
+            value = entry["target"] if kind == "other_cname" else entry["value"]
+            where = f"{vendor} {kind} {value}"
+            proof = proofs.parse(entry["proof"])
+            proofs.check(where, proof)
+            proofs.check_record(where, kind, proof)
+            found.append(Pattern(vendor, kind, value, proof, label))
+    return found
+
+
+def _values(block: dict[str, Any]) -> dict[str, Any]:
+    """The block with each proofed entry reduced to what matching uses: its value, or for
+    other_cname its label and target."""
+    plain = dict(block)
+    for kind in PATTERN_FIELDS:
+        if kind in block:
+            plain[kind] = [entry["value"] for entry in block[kind]]
+    if "other_cname" in block:
+        plain["other_cname"] = [
+            {"label": e["label"], "target": e["target"]} for e in block["other_cname"]
+        ]
+    return plain

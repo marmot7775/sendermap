@@ -14,12 +14,14 @@ import json
 from collections import defaultdict
 from collections.abc import Iterable, Iterator, Mapping
 from dataclasses import dataclass
-from datetime import date
 from enum import Enum
 from functools import cache
 from importlib import resources
 from importlib.resources.abc import Traversable
 from typing import Any, Protocol
+
+from . import proofs
+from .proofs import Proof
 
 
 class Source(Enum):
@@ -85,19 +87,6 @@ class Hints:
 
 
 @dataclass(frozen=True, slots=True)
-class Proof:
-    """A live domain seen publishing one of a rule's selectors.
-
-    record is the name as found, such as k2._domainkey.example.com; date is the
-    day it was checked, as YYYY-MM-DD.
-    """
-
-    domain: str
-    record: str
-    date: str
-
-
-@dataclass(frozen=True, slots=True)
 class Rule:
     """What a vendor names its selectors, how we know, and where it was seen.
 
@@ -146,13 +135,7 @@ class Rule:
 
 def _check_proof(where: str, proof: Proof, names: tuple[str, ...]) -> None:
     """Reject a proof with a blank field, a malformed date, or a record outside `names`."""
-    for field in ("domain", "record", "date"):
-        if _missing(getattr(proof, field)):
-            raise ValueError(f"{where}: proof has no {field}")
-    try:
-        date.fromisoformat(proof.date)
-    except ValueError:
-        raise ValueError(f"{where}: proof date {proof.date!r} is not YYYY-MM-DD") from None
+    proofs.check(where, proof)
     domain = _normalise(proof.domain)
     if _normalise(proof.record) not in {f"{name}._domainkey.{domain}" for name in names}:
         raise ValueError(
@@ -191,18 +174,13 @@ def _parse_vendor(vendor: str, block: Mapping[str, Any]) -> Iterator[Rule]:
             vendor=vendor,
             shape=shape,
             source=Source(raw["source"]),
-            proof=tuple(map(_parse_proof, proof))
+            proof=tuple(map(proofs.parse, proof))
             if isinstance(proof, list)
-            else _parse_proof(proof),
+            else proofs.parse(proof),
             reference=None if _missing(reference) else reference,
             hints=hints,
             hints_reference=None if hints_reference is None else tuple(hints_reference),
         )
-
-
-def _parse_proof(raw: Mapping[str, Any]) -> Proof:
-    """A field left out arrives blank, so the Rule check names it as missing."""
-    return Proof(*(str(raw.get(field) or "") for field in ("domain", "record", "date")))
 
 
 def _parse_shape(vendor: str, spec: Mapping[str, Any]) -> Shape:
@@ -216,14 +194,8 @@ def _parse_shape(vendor: str, spec: Mapping[str, Any]) -> Shape:
             raise ValueError(f"{vendor}: unknown shape kind {kind!r}")
 
 
-def _normalise(name: str) -> str:
-    """Lowercase a DNS name and drop any trailing dot."""
-    return name.lower().rstrip(".")
-
-
-def _missing(text: str | None) -> bool:
-    """True for None, an empty string, or only whitespace."""
-    return text is None or not text.strip()
+_normalise = proofs.normalise
+_missing = proofs.missing
 
 
 def _where(vendor: str, shape: Shape) -> str:

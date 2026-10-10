@@ -13,7 +13,7 @@ SHORT_KEY = (  # a 512-bit RSA key
 )
 HOME = (
     '<script src="https://static.klaviyo.com/onsite/js/klaviyo.js"></script>'
-    '<form action="https://acme.us1.list-manage.com/subscribe/post"></form>'
+    '<a href="https://cdn.shopify.com/s/files/terms.pdf">Terms</a>'
     '<a href="/legal/subprocessors">Subprocessors</a>'
 )
 PAGES = {
@@ -36,7 +36,7 @@ def mapped() -> Zone:
             "mapped.test",
             "TXT",
             "v=spf1 include:_spf.google.com include:_loop.mapped.test ip4:198.51.100.0/24 "
-            "include:unknown.example.net include:_spf.easydmarc.com +all",
+            "include:unknown.example.net include:x._s.easydmarc.pro +all",
             "MS=ms12345678",
         )
         .add("_loop.mapped.test", "TXT", "v=spf1 include:mapped.test -all")
@@ -51,9 +51,9 @@ def mapped() -> Zone:
         .alias("k2._domainkey.mapped.test", "dkim2.mcsv.net")
         .add("dkim2.mcsv.net", "TXT", KEY)
         .alias("s2._domainkey.mapped.test", "s2.domainkey.u1.wl1.sendgrid.net")
-        .add("_spf.easydmarc.com", "TXT", "v=spf1 include:sendgrid.net -all")
+        .add("x._s.easydmarc.pro", "TXT", "v=spf1 include:sendgrid.net -all")
         .alias("bounce.mapped.test", "sparkpostmail.com")
-        .alias("links.mapped.test", "links.iterable.com")
+        .alias("links.mapped.test", "e.customeriomail.com")
         .alias("autodiscover.mapped.test", "autodiscover.outlook.com")
         .add("email.mapped.test", "TXT", "v=spf1 include:mailgun.org ~all")
         .add("email.mapped.test", "MX", "10 mxa.mailgun.org")
@@ -63,9 +63,9 @@ def mapped() -> Zone:
         .add("1.100.51.198.origin.asn.cymru.com", "TXT", "14782 | 198.51.100.0/24 | US | arin")
         .add("AS14782.asn.cymru.com", "TXT", "14782 | US | arin | 2005 | MAILCHIMP - Mailchimp")
         .add("www.mapped.test", "A", "198.51.100.1")
-        .alias("trk.mapped.test", "dct.klaviyodns.com")
-        .add("dct.klaviyodns.com", "A", "192.0.2.20")
-        .alias("old.mapped.test", "gone.wl.sendgrid.net")
+        .alias("trk.mapped.test", "u161779.wl030.sendgrid.net")
+        .add("u161779.wl030.sendgrid.net", "A", "192.0.2.20")
+        .alias("old.mapped.test", "gone.sparkpostmail.com")
     )
 
 
