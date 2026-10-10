@@ -12,7 +12,7 @@ import asyncio
 from ..model import Checked, Claim, Evidence, Gap, Kind, Observed
 from . import CANARY, Context
 
-_KINDS = {
+KINDS = {
     "return path": Kind.RETURN_PATH,
     "tracking": Kind.TRACKING,
     "autodiscover": Kind.AUTODISCOVER,
@@ -38,7 +38,7 @@ async def collect(ctx: Context, where: str) -> Observed:
         if match := ctx.catalog.label_cname(label, target):
             service, kind = match
             evidence = Evidence(f"{label}.{where}", "CNAME", target, ctx.checked_at)
-            claims.append(Claim(service, _KINDS[kind], where, evidence))
+            claims.append(Claim(service, KINDS[kind], where, evidence))
     gaps: list[Gap] = []
     if not canary.answered:
         gaps.append(

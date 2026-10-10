@@ -43,7 +43,7 @@ async def collect(ctx: Context, where: str, ranges: list[tuple[str, Evidence]]) 
     claims: list[Claim] = []
     rest: list[tuple[str, Evidence, Network, frozenset[str]]] = []
     for cidr, evidence, network in networks:
-        candidates = _published_by(network, published)
+        candidates = published_by(network, published)
         if len(candidates) == 1:
             (publisher,) = candidates
             noted = replace(
@@ -186,7 +186,7 @@ async def _ranges_of(
     return found, missed
 
 
-def _published_by(network: Network, published: dict[Network, frozenset[str]]) -> frozenset[str]:
+def published_by(network: Network, published: dict[Network, frozenset[str]]) -> frozenset[str]:
     """The services whose published range holds this one, judged at the most specific holding
     range. More than one means the range is shared, and the network owner decides."""
     holders = [(p.prefixlen, names) for p, names in published.items() if _inside(network, p)]

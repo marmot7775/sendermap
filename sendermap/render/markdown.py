@@ -5,7 +5,7 @@ from __future__ import annotations
 from datetime import UTC
 
 from ..model import SenderMap, Service
-from . import asked, asked_in_full
+from . import asked, asked_in_full, ct_lines
 
 
 def render(result: SenderMap) -> str:
@@ -28,6 +28,9 @@ def render(result: SenderMap) -> str:
             f"- {u.what}: `{u.value}`" + ("" if u.where == result.domain else f" at {u.where}")
             for u in result.unknowns
         ]
+    if ct := ct_lines(result):
+        lines += ["", "## Certificate transparency", ""]
+        lines += [f"- {line}" for line in ct]
     if result.gaps:
         lines += ["", "## Not checked", ""]
         lines += [f"- {g.asked}: {g.happened}" for g in result.gaps]

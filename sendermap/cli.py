@@ -15,6 +15,7 @@ from . import __version__
 from .dns import DohResolver, Resolver, SystemResolver
 from .engine import map_domain
 from .render import markdown, text
+from .sources.ct import default_cache
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -44,6 +45,8 @@ async def _run(args: argparse.Namespace) -> int:
                 http=http,
                 use_web=not args.no_web,
                 use_subdomains=not args.no_subdomains,
+                use_ct=args.ct,
+                ct_cache=default_cache(),
                 progress=progress,
             )
     if args.json:
@@ -67,6 +70,11 @@ def _parser() -> argparse.ArgumentParser:
     p.add_argument("--evidence", action="store_true", help="show every piece of evidence")
     p.add_argument("--no-web", action="store_true", help="do not read the domain's website")
     p.add_argument("--no-subdomains", action="store_true", help="check the main domain only")
+    p.add_argument(
+        "--ct",
+        action="store_true",
+        help="also resolve every name crt.sh has logged a certificate for (slow; cached a day)",
+    )
     p.add_argument("--doh", action="store_true", help="look up DNS over HTTPS (Cloudflare)")
     p.add_argument("--version", action="version", version=f"sendermap {__version__}")
     return p

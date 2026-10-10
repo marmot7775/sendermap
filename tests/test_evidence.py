@@ -20,6 +20,10 @@ PAGES = {
     "https://mapped.test/": HOME,
     "https://mapped.test/legal/subprocessors": "<td>Zendesk</td><td>Postmark</td>",
 }
+LOGGED = [  # what crt.sh answers for %.mapped.test
+    {"name_value": n, "not_before": "2026-01-01T00:00:00", "not_after": "2026-12-31T00:00:00"}
+    for n in ("trk.mapped.test", "email.mapped.test", "www.mapped.test", "old.mapped.test")
+]
 POLICY = "version: STSv1\nmode: enforce\nmx: *.mail.protection.outlook.com\nmax_age: 86400\n"
 
 
@@ -58,12 +62,18 @@ def mapped() -> Zone:
         .add("mail.mapped.test", "TXT", "v=spf1 include:sendgrid.net -all", "v=spf1 -all")
         .add("1.100.51.198.origin.asn.cymru.com", "TXT", "14782 | 198.51.100.0/24 | US | arin")
         .add("AS14782.asn.cymru.com", "TXT", "14782 | US | arin | 2005 | MAILCHIMP - Mailchimp")
+        .add("www.mapped.test", "A", "198.51.100.1")
+        .alias("trk.mapped.test", "dct.klaviyodns.com")
+        .add("dct.klaviyodns.com", "A", "192.0.2.20")
+        .alias("old.mapped.test", "gone.wl.sendgrid.net")
     )
 
 
 def site(request: httpx.Request) -> httpx.Response:
     if request.url.host == "api.certspotter.com":
         return httpx.Response(200, json=[{"dns_names": ["corp.mapped.test"]}])
+    if request.url.host == "crt.sh":
+        return httpx.Response(200, json=LOGGED)
     if request.url.host == "mta-sts.mapped.test":
         return httpx.Response(200, text=POLICY)
     body = PAGES.get(str(request.url))
@@ -74,7 +84,9 @@ def site(request: httpx.Request) -> httpx.Response:
 
 async def mapped_map():
     async with httpx.AsyncClient(transport=httpx.MockTransport(site)) as http:
-        return await map_domain("mapped.test", checked_at=CHECKED, resolver=mapped(), http=http)
+        return await map_domain(
+            "mapped.test", checked_at=CHECKED, resolver=mapped(), http=http, use_ct=True
+        )
 
 
 async def test_every_claim_and_finding_carries_evidence():
@@ -86,6 +98,10 @@ async def test_every_claim_and_finding_carries_evidence():
     for claim in claims:
         e = claim.evidence
         assert e.name and e.rtype and e.value and e.checked_at == CHECKED, claim
+    assert result.historical
+    for past in result.historical:
+        e = past.evidence
+        assert e.name and e.value and e.not_before and e.not_after and e.target, past
     for finding in result.findings:
         assert finding.evidence, f"no evidence: {finding.title}"
         for e in finding.evidence:
