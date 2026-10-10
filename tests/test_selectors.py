@@ -28,7 +28,7 @@ def test_vendor_docs_without_reference_is_rejected():
         Rule("X", Fixed(("x",)), Source.VENDOR_DOCS)
 
 
-def test_collisions_keep_every_claim():
+def test_a_name_claimed_by_two_vendors_keeps_both_claims():
     rules = (
         Rule("A", Fixed(("s1",)), Source.PATTERN),
         Rule("B", Numbered("s", 1), Source.PATTERN),
@@ -129,6 +129,18 @@ def test_selector_names_are_lowercased_on_load(tmp_path: Path):
         encoding="utf-8",
     )
     assert list(build_dictionary(load_rules(rules_file))) == ["google", "selector1"]
+
+
+def test_an_unknown_shape_kind_is_rejected(tmp_path: Path):
+    rules_file = tmp_path / "rules.yaml"
+    rules_file.write_text(
+        "- vendor: Example Vendor\n"
+        "  shape: {kind: dated, prefix: ex, years_back: 1}\n"
+        "  source: pattern\n",
+        encoding="utf-8",
+    )
+    with pytest.raises(ValueError, match="Example Vendor: unknown shape kind 'dated'"):
+        load_rules(rules_file)
 
 
 def test_shipped_rules_split_mailchimp_by_provenance():

@@ -115,6 +115,7 @@ async def map_domain(
         return result
 
 
+# Not intended: subdomains skip the rules and ranking map_domain uses. They should match the apex.
 async def _subdomain(ctx: Context, name: str) -> Observed:
     (found, tree), received = await asyncio.gather(spf.collect(ctx, name), mx.collect(ctx, name))
     first = found + received
