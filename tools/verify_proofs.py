@@ -14,13 +14,12 @@ import asyncio
 import sys
 
 from sendermap.dns import Answer, SystemResolver
-from sendermap.selectors import Rule, load_rules
+from sendermap.selectors import Proof, Rule, load_rules
 from sendermap.sources.dkim import Key
 
 
-async def check(resolver: SystemResolver, rule: Rule) -> tuple[bool, str]:
-    """(found, one line of report) for one rule's proof."""
-    proof = rule.proof
+async def check(resolver: SystemResolver, rule: Rule, proof: Proof) -> tuple[bool, str]:
+    """(found, one line of report) for one of a rule's proofs."""
     answer = await resolver.query(proof.record, "TXT")
     record = next((r for r in answer.records if "p=" in r), None)
     label = f"{rule.vendor} [{', '.join(rule.shape.expand())}] {proof.record} ({proof.date})"
@@ -40,7 +39,9 @@ def _published(answer: Answer) -> str:
 
 async def main() -> int:
     resolver = SystemResolver()
-    results = await asyncio.gather(*(check(resolver, rule) for rule in load_rules()))
+    results = await asyncio.gather(
+        *(check(resolver, rule, proof) for rule in load_rules() for proof in rule.proofs)
+    )
     for _, line in results:
         print(line)
     failed = sum(not found for found, _ in results)

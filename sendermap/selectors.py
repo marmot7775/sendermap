@@ -99,12 +99,16 @@ class Proof:
 
 @dataclass(frozen=True, slots=True)
 class Rule:
-    """What a vendor names its selectors, how we know, and where it was seen."""
+    """What a vendor names its selectors, how we know, and where it was seen.
+
+    A fixed shape with several names takes a tuple of proofs, one per name in order. Any
+    other shape takes one proof: for a numbered shape, one name in the series stands for it.
+    """
 
     vendor: str
     shape: Shape
     source: Source
-    proof: Proof
+    proof: Proof | tuple[Proof, ...]
     reference: str | None = None
     hints: Hints = Hints()
     # Backs the hints, not the names: the page that lists a vendor's MX and SPF values is
@@ -118,17 +122,42 @@ class Rule:
         cited = bool(self.hints_reference) and not any(map(_missing, self.hints_reference or ()))
         if not self.hints.empty and not cited:
             raise ValueError(f"{where}: hints given, no hints_reference")
-        for field in ("domain", "record", "date"):
-            if _missing(getattr(self.proof, field)):
-                raise ValueError(f"{where}: proof has no {field}")
-        try:
-            date.fromisoformat(self.proof.date)
-        except ValueError:
-            raise ValueError(f"{where}: proof date {self.proof.date!r} is not YYYY-MM-DD") from None
-        domain = _normalise(self.proof.domain)
-        records = {f"{name}._domainkey.{domain}" for name in self.shape.expand()}
-        if _normalise(self.proof.record) not in records:
-            raise ValueError(f"{where}: proof record {self.proof.record!r} names none of these")
+        names = tuple(self.shape.expand())
+        if isinstance(self.shape, Fixed) and len(names) > 1:
+            if not isinstance(self.proof, tuple) or len(self.proof) != len(names):
+                raise ValueError(f"{where}: {len(names)} names need {len(names)} proofs, in order")
+            for name, proof in zip(names, self.proof, strict=True):
+                _check_proof(where, proof, (name,))
+        elif isinstance(self.proof, tuple):
+            raise ValueError(f"{where}: one proof expected, not a list")
+        else:
+            _check_proof(where, self.proof, names)
+
+    def proof_for(self, name: str) -> Proof:
+        """The proof that stands for one of this rule's names."""
+        if isinstance(self.proof, tuple):
+            return self.proof[tuple(self.shape.expand()).index(name)]
+        return self.proof
+
+    @property
+    def proofs(self) -> tuple[Proof, ...]:
+        return self.proof if isinstance(self.proof, tuple) else (self.proof,)
+
+
+def _check_proof(where: str, proof: Proof, names: tuple[str, ...]) -> None:
+    """Reject a proof with a blank field, a malformed date, or a record outside `names`."""
+    for field in ("domain", "record", "date"):
+        if _missing(getattr(proof, field)):
+            raise ValueError(f"{where}: proof has no {field}")
+    try:
+        date.fromisoformat(proof.date)
+    except ValueError:
+        raise ValueError(f"{where}: proof date {proof.date!r} is not YYYY-MM-DD") from None
+    domain = _normalise(proof.domain)
+    if _normalise(proof.record) not in {f"{name}._domainkey.{domain}" for name in names}:
+        raise ValueError(
+            f"{where}: proof record {proof.record!r} does not name {' or '.join(names)}"
+        )
 
 
 @dataclass(frozen=True, slots=True)
@@ -162,11 +191,18 @@ def _parse_vendor(vendor: str, block: Mapping[str, Any]) -> Iterator[Rule]:
             vendor=vendor,
             shape=shape,
             source=Source(raw["source"]),
-            proof=Proof(proof.get("domain"), proof.get("record"), proof.get("date")),
+            proof=tuple(map(_parse_proof, proof))
+            if isinstance(proof, list)
+            else _parse_proof(proof),
             reference=None if _missing(reference) else reference,
             hints=hints,
             hints_reference=None if hints_reference is None else tuple(hints_reference),
         )
+
+
+def _parse_proof(raw: Mapping[str, Any]) -> Proof:
+    """A field left out arrives blank, so the Rule check names it as missing."""
+    return Proof(*(str(raw.get(field) or "") for field in ("domain", "record", "date")))
 
 
 def _parse_shape(vendor: str, spec: Mapping[str, Any]) -> Shape:
@@ -220,7 +256,7 @@ def build_dictionary(rules: Iterable[Rule]) -> dict[str, tuple[Selector, ...]]:
     for rule in rules:
         for name in rule.shape.expand():
             claims[name].append(
-                Selector(name, rule.vendor, rule.source, rule.reference, rule.proof)
+                Selector(name, rule.vendor, rule.source, rule.reference, rule.proof_for(name))
             )
     return {name: tuple(found) for name, found in claims.items()}
 
