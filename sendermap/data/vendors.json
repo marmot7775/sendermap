@@ -324,35 +324,6 @@
       "ses",
       "sp"
     ],
-    "subdomain_selectors": [
-      "s1",
-      "s2",
-      "k1",
-      "k2",
-      "k3",
-      "pdk1",
-      "pdk2",
-      "mte1",
-      "mte2",
-      "smtpapi",
-      "pm",
-      "mx",
-      "mail",
-      "dkim",
-      "default",
-      "selector1",
-      "selector2",
-      "google",
-      "sig1",
-      "scph0124",
-      "20230601",
-      "kl",
-      "kl2",
-      "cm",
-      "mailjet",
-      "sendgrid",
-      "em"
-    ],
     "flattening_spf": [
       "EasyDMARC"
     ]

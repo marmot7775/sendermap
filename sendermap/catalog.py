@@ -56,7 +56,6 @@ class Catalog:
     tracking_labels: frozenset[str]
     probe_selectors: tuple[str, ...]
     sending_labels: tuple[str, ...]
-    subdomain_selectors: tuple[str, ...]
     website: dict[str, str]
 
     # ------------------------------------------------------------ lookups by record
@@ -205,6 +204,5 @@ def build(raw: dict[str, Any]) -> Catalog:
         tracking_labels=frozenset(rules["tracking_labels"]),
         probe_selectors=tuple(rules["probe_selectors"]),
         sending_labels=tuple(rules["sending_labels"]),
-        subdomain_selectors=tuple(rules["subdomain_selectors"]),
         website=website,
     )
