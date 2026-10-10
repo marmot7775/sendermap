@@ -1,4 +1,5 @@
-# reference backs a rule's selector names; hints_reference backs its hints.
+# reference backs a rule's selector names and is one URL; hints_reference backs its hints and
+# is always a list, even with one URL.
 
 # The MX page names only smtp.google.com. Domains set up before 2023 use legacy hosts it
 # describes only as starting with "aspmx", so those do not match yet.
@@ -16,7 +17,8 @@
   source: vendor_docs
   reference: https://learn.microsoft.com/defender-office-365/email-authentication-dkim-configure
   hints: {mx: [mail.protection.outlook.com], spf: [spf.protection.outlook.com]}
-  hints_reference: https://learn.microsoft.com/microsoft-365/enterprise/external-domain-name-system-records
+  hints_reference:
+    - https://learn.microsoft.com/microsoft-365/enterprise/external-domain-name-system-records
 
 - vendor: Mailchimp
   shape: {kind: fixed, names: [k2]}
@@ -36,7 +38,8 @@
   source: vendor_docs
   reference: https://www.twilio.com/docs/sendgrid/ui/account-and-settings/how-to-set-up-domain-authentication
   hints: {mx: [mx.sendgrid.net], spf: [sendgrid.net]}
-  hints_reference: https://www.twilio.com/docs/sendgrid/ui/account-and-settings/how-to-set-up-domain-authentication
+  hints_reference:
+    - https://www.twilio.com/docs/sendgrid/ui/account-and-settings/how-to-set-up-domain-authentication
 
 # No Amazon SES rule: Easy DKIM selectors are tokens SES generates per identity, not a series.
 # https://docs.aws.amazon.com/ses/latest/APIReference-V2/API_DkimAttributes.html
