@@ -220,6 +220,17 @@ one. `tools/verify_proofs.py` rechecks every proof against live DNS and, for web
 page; the `Verify proofs` workflow runs it weekly and on any pull request that touches
 vendors.json.
 
+A vendor's own domain rarely publishes what it asks its customers to publish, so
+`tools/hunt_proofs.py` looks for the pending patterns on customer domains: `data/hunt_domains.txt`,
+the top 2,000 of a Tranco list (its id and date on the first line) and three retail brands. At each
+domain it reads what the engine reads (SPF down the whole include chain, MX, DKIM keys at every
+proven, pending and generic selector name, the bounce and tracking labels, report addresses,
+tokens, networks, the sending subdomains and one fetch of the homepage), one query at a time per
+domain with domains in parallel, and confirms each find with the check `verify_proofs.py` defines
+for its kind, so found means the same in both. A name under a wildcard proves nothing. Answers and
+pages are cached on disk, so a rerun asks only what failed. The highest ranked domain that shows a
+pattern becomes its proof; `--move` moves proven patterns into vendors.json.
+
 ## Surfaces
 
 - **Library**: `await sendermap.map_domain("example.com", checked_at=datetime.now(UTC))`.
@@ -255,5 +266,6 @@ labels; `test_determinism.py` requires the same map from the same answers;
 `test_vendor_proofs.py`, `test_one_selector_list.py` and `test_subprocessor_names.py` require a
 proof on every vendor pattern and one proofed selector list read once; `test_pending_vendors.py`
 requires that the engine never opens the pending file and that a host only a pending pattern
-matches shows as not recognised. `test_ct.py` runs the CT source on a recorded crt.sh answer
+matches shows as not recognised; `test_hunt_proofs.py` holds where the hunt may find each kind of
+pattern, which domain's proof wins, that a rerun asks nothing and that a moved proof loads. `test_ct.py` runs the CT source on a recorded crt.sh answer
 (`tests/fixtures/crtsh_allbirds.json`).

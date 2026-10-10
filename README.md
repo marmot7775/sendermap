@@ -74,7 +74,8 @@ does not get merged, and Sendermap refuses to load one.
 Patterns not yet proven wait in `sendermap/data/vendors_pending.json`, each block with a note of
 what was checked; Sendermap never reads that file, so a record they would match shows as not
 recognised. A vendor moves from pending to vendors.json with one proof per pattern, the same rule
-as any new block.
+as any new block. `tools/hunt_proofs.py` looks for those proofs on the customer domains in
+`data/hunt_domains.txt`, with the same checks as the weekly recheck.
 
 Every proof is rechecked against live DNS and the web each week and on any pull request that
 touches `vendors.json`. A proof that no longer holds opens an issue, so a stale pattern is caught
