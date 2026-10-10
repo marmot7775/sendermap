@@ -1,13 +1,16 @@
 """The Sendermap website: one page, and an API that streams a map as it is built.
 
-Privacy: the server keeps no record of the domains looked up. There is no access log of query
-strings, and results live only in a short in-memory cache so a shared link opens instantly.
+Privacy: the server keeps no record of the domains looked up. Uvicorn's access log, which would
+record each request's query string, is turned off when the app starts. Results are held in
+memory for ten minutes so a shared link opens instantly, and a visitor's address is held in
+memory for one minute for the rate limit. Neither is written anywhere.
 """
 
 from __future__ import annotations
 
 import asyncio
 import json
+import logging
 import time
 from collections.abc import AsyncIterator
 from contextlib import asynccontextmanager
@@ -25,6 +28,7 @@ from ..engine import Progress, clean_domain, map_domain
 from ..model import SenderMap
 from ..render import markdown
 
+ACCESS_LOG = "uvicorn.access"
 CACHE_SECONDS = 600
 MAX_RUNNING = 6
 REQUESTS_PER_MINUTE = 12
@@ -45,6 +49,9 @@ state = _State()
 
 @asynccontextmanager
 async def _lifespan(_: FastAPI) -> AsyncIterator[None]:
+    # Uvicorn has configured its loggers by now; turning this one off keeps ?d= out of any log,
+    # whatever flags the server was started with.
+    logging.getLogger(ACCESS_LOG).disabled = True
     async with httpx.AsyncClient() as http:
         state.http = http
         yield
@@ -144,7 +151,8 @@ def _domain(text: str) -> str:
 
 
 def _limit(request: Request) -> None:
-    """A short sliding window per visitor. The address is held for a minute and never stored."""
+    """A short sliding window per visitor. The address is held in memory for one minute and
+    written nowhere."""
     who = request.headers.get("cf-connecting-ip") or (request.client.host if request.client else "")
     now = time.monotonic()
     recent = [t for t in state.seen.get(who, []) if now - t < 60]
