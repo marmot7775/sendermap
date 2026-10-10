@@ -68,3 +68,17 @@ async def test_a_cloud_is_never_credited_to_a_service():
     assert observed.claims == ()
     assert "Amazon Web Services" in observed.unknowns[0].value
     assert observed.unknowns[0].what == "IP address in SPF"
+
+
+async def test_a_services_ranges_are_read_through_the_maps_own_lookups():
+    zone = Zone().add("amazonses.com", "TXT", "v=spf1 ip4:54.240.0.0/18 -all")
+    ctx = context(zone)
+    await networks.collect(ctx, "example.com", [("54.240.8.0/21", EV)])
+    assert ("amazonses.com", "TXT") in zone.asked
+    assert ctx.dns.count == len(set(zone.asked))
+
+
+async def test_a_service_whose_ranges_could_not_be_read_is_a_gap_naming_it():
+    zone = Zone(failing={"amazonses.com"})
+    observed = await networks.collect(context(zone), "example.com", [("54.240.8.0/21", EV)])
+    assert "the published ranges of Amazon SES" in [g.what for g in observed.gaps]

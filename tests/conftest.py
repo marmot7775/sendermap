@@ -2,14 +2,14 @@
 
 from __future__ import annotations
 
-from collections.abc import AsyncIterator, Iterator
+from collections.abc import AsyncIterator
 
 import httpx
 import pytest
 
 from sendermap import catalog
 from sendermap.dns import Answer, Lookups, Status, norm
-from sendermap.sources import Context, networks
+from sendermap.sources import Context
 
 
 class Zone:
@@ -66,13 +66,6 @@ class Zone:
 
 def context(zone: Zone, domain: str = "example.com") -> Context:
     return Context(domain, Lookups(zone), catalog.load())
-
-
-@pytest.fixture(autouse=True)
-def _fresh_published_ranges(monkeypatch: pytest.MonkeyPatch) -> Iterator[None]:
-    """Each test builds the services' published ranges from its own zone."""
-    monkeypatch.setattr(networks, "published_ranges", networks.PublishedRanges())
-    yield
 
 
 @pytest.fixture

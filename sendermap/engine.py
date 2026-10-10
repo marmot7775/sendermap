@@ -104,7 +104,7 @@ async def map_domain(
             services=services(observed.claims, ctx.catalog, domain),
             findings=_sorted(observed.findings + _cross_findings(ctx, observed)),
             unknowns=tuple(dict.fromkeys(observed.unknowns)),
-            gaps=observed.gaps + (() if ct_read else (_ct_gap(),)),
+            gaps=tuple(dict.fromkeys(observed.gaps + (() if ct_read else (_ct_gap(),)))),
             subdomains_checked=tuple(picked),
             logo=logo,
             lookups=ctx.dns.count,
