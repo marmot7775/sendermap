@@ -1,0 +1,210 @@
+"""The vendor catalog, and every rule for matching a record to a service.
+
+All knowledge about services lives in data/vendors.json, one block per service. This module only
+indexes it and applies the matching rules, each of which was learned on a live domain.
+"""
+
+from __future__ import annotations
+
+import json
+import re
+from collections.abc import Iterable, Iterator
+from dataclasses import dataclass, field
+from functools import cache
+from importlib import resources
+from typing import Any
+
+from .dns import norm
+
+_HOST_FIELDS = ("spf_includes", "mx", "dkim_cname", "reporting", "return_path", "tracking")
+
+
+@dataclass(frozen=True, slots=True)
+class HostTable:
+    """Hostname patterns to services. A pattern matches the host itself or any name under it,
+    on a label boundary, and the longest match wins: sendgrid.net.evil.example is not SendGrid,
+    and u161779.wl030.sendgrid.net (Klaviyo's own SendGrid account) beats sendgrid.net."""
+
+    patterns: dict[str, str] = field(default_factory=dict)
+
+    def match(self, host: str | None) -> str | None:
+        if not host:
+            return None
+        labels = norm(host).split(".")
+        for start in range(len(labels)):  # longest suffix first
+            service = self.patterns.get(".".join(labels[start:]))
+            if service:
+                return service
+        return None
+
+
+@dataclass(frozen=True, slots=True)
+class Catalog:
+    services: dict[str, dict[str, Any]]
+    tables: dict[str, HostTable]
+    selectors: dict[str, str]
+    tokens: tuple[tuple[re.Pattern[str], str], ...]
+    other_cnames: dict[str, HostTable]
+    networks: dict[str, str]
+    clouds: dict[str, str]
+    generic_selectors: frozenset[str]
+    short_selectors_allowed: frozenset[str]
+    cname_only_selectors: frozenset[str]
+    hosted_spf: frozenset[str]
+    flattening_spf: frozenset[str]
+    cname_labels: tuple[str, ...]
+    tracking_labels: frozenset[str]
+    probe_selectors: tuple[str, ...]
+    sending_labels: tuple[str, ...]
+    subdomain_selectors: tuple[str, ...]
+    website: dict[str, str]
+
+    # ------------------------------------------------------------ lookups by record
+
+    def spf(self, host: str) -> str | None:
+        return self.tables["spf_includes"].match(host)
+
+    def mx(self, host: str) -> str | None:
+        return self.tables["mx"].match(host)
+
+    def reporting(self, host: str) -> str | None:
+        return self.tables["reporting"].match(host)
+
+    def network(self, asn: str) -> str | None:
+        return self.networks.get(asn.upper())
+
+    def token(self, record: str) -> str | None:
+        """The service whose verification token this apex TXT record is, if any."""
+        text = record.strip().lower()
+        for pattern, service in self.tokens:
+            m = pattern.match(text)
+            # A prefix with nothing after it verifies nothing.
+            if m and len(text[m.end() :].strip()) >= 4:
+                return service
+        return None
+
+    def dkim_cname(self, chain: Iterable[str]) -> str | None:
+        """The first hop of a DKIM alias chain that names a service."""
+        return next(filter(None, map(self.tables["dkim_cname"].match, chain)), None)
+
+    def dkim_key(self, selector: str, chain: tuple[str, ...], backed: str | None) -> str | None:
+        """Who a published DKIM key belongs to.
+
+        1. A CNAME into the service's zone, always: the service hosts the key.
+        2. selector1 and selector2 name nobody without that CNAME (Microsoft 365 publishes them
+           only as aliases into its own zone).
+        3. backed: a service the domain's SPF or MX already shows, whose selector list has this
+           name. k1 on a Mailgun domain is Mailgun, not Mailchimp.
+        4. The name table, unless the name is generic.
+        """
+        if by_cname := self.dkim_cname(chain):
+            return by_cname
+        name = selector.lower()
+        if name in self.cname_only_selectors:
+            return None
+        if backed:
+            return backed
+        if self.is_generic(name):
+            return None
+        return self.selectors.get(name)
+
+    def is_generic(self, selector: str) -> bool:
+        s = selector.lower()
+        return s in self.generic_selectors or (
+            len(s) <= 2 and s not in self.short_selectors_allowed
+        )
+
+    def label_cname(self, label: str, target: str) -> tuple[str, str] | None:
+        """(service, "return path" | "tracking" | label) for a CNAME at <label>.<domain>."""
+        label = label.lower()
+        if label in self.other_cnames:
+            service = self.other_cnames[label].match(target)
+            return (service, label) if service else None
+        order = [("tracking", "tracking"), ("return path", "return_path")]
+        if label not in self.tracking_labels:
+            order.reverse()
+        for kind, table in order:
+            if service := self.tables[table].match(target):
+                return service, kind
+        return None
+
+    def website_services(self, html: str) -> dict[str, str]:
+        """{service: host} for every service whose script or form host appears in the page."""
+        page = html.lower()
+        found: dict[str, str] = {}
+        for host, service in self.website.items():
+            if service not in found and re.search(rf"(?<![a-z0-9-]){re.escape(host)}\b", page):
+                found[service] = host
+        return found
+
+    def selectors_of(self, service: str) -> frozenset[str]:
+        return frozenset(self.services.get(service, {}).get("dkim_selectors", ()))
+
+    def category(self, service: str) -> str:
+        return str(self.services.get(service, {}).get("category", "Other"))
+
+    def is_hosted_spf(self, service: str | None) -> bool:
+        return service in self.hosted_spf
+
+    def spf_sources(self) -> dict[str, list[str]]:
+        """{service: its SPF include hosts} for services whose includes are real records,
+        not zones that only hold per-customer names."""
+        return {
+            name: [h for h in block.get("spf_includes", ()) if "." in h]
+            for name, block in self.services.items()
+            if block.get("spf_includes")
+        }
+
+    def __iter__(self) -> Iterator[str]:
+        return iter(self.services)
+
+
+@cache
+def load() -> Catalog:
+    raw = json.loads(resources.files(__package__).joinpath("data/vendors.json").read_text())
+    return build(raw)
+
+
+def build(raw: dict[str, Any]) -> Catalog:
+    services: dict[str, dict[str, Any]] = raw["vendors"]
+    rules: dict[str, Any] = raw["rules"]
+    tables = {f: HostTable({}) for f in _HOST_FIELDS}
+    selectors: dict[str, str] = {}
+    tokens: list[tuple[re.Pattern[str], str]] = []
+    other: dict[str, HostTable] = {}
+    networks: dict[str, str] = {}
+    website: dict[str, str] = {}
+    for name, block in services.items():
+        for host in block.get("website", ()):
+            website[host.lower()] = name
+        for f in _HOST_FIELDS:
+            for pattern in block.get(f, ()):
+                tables[f].patterns[norm(pattern)] = name
+        for selector in block.get("dkim_selectors", ()):
+            selectors[selector.lower()] = name
+        for pattern in block.get("verification_txt", ()):
+            tokens.append((re.compile(pattern, re.IGNORECASE), name))
+        for entry in block.get("other_cname", ()):
+            other.setdefault(entry["label"], HostTable({})).patterns[norm(entry["target"])] = name
+        for asn in block.get("networks", ()):
+            networks[asn.upper()] = name
+    return Catalog(
+        services=services,
+        tables=tables,
+        selectors=selectors,
+        tokens=tuple(tokens),
+        other_cnames=other,
+        networks=networks,
+        clouds={k.upper(): v for k, v in rules.get("cloud_networks", {}).items()},
+        generic_selectors=frozenset(rules["generic_selectors"]),
+        short_selectors_allowed=frozenset(rules["short_selectors_allowed"]),
+        cname_only_selectors=frozenset(rules["cname_only_selectors"]),
+        hosted_spf=frozenset(rules["hosted_spf"]),
+        flattening_spf=frozenset(rules.get("flattening_spf", ())),
+        cname_labels=tuple(rules["cname_labels"]),
+        tracking_labels=frozenset(rules["tracking_labels"]),
+        probe_selectors=tuple(rules["probe_selectors"]),
+        sending_labels=tuple(rules["sending_labels"]),
+        subdomain_selectors=tuple(rules["subdomain_selectors"]),
+        website=website,
+    )

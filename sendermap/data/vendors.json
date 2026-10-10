@@ -1,5 +1,5 @@
 {
-  "about": "Email services recognisable from a domain's own DNS. One block per vendor; imported from dns-audit (MIT) at fac9e2e. Hostname patterns match the host itself or any name under it, and the longest match wins.",
+  "about": "Email services recognisable from a domain's own DNS. One block per vendor; imported from dns-audit (MIT) at fac9e2e. Hostname patterns match the host itself or any name under it, and the longest match wins. Networks are autonomous system numbers a service owns outright; shared clouds are listed under rules.cloud_networks and never credited to a service.",
   "categories": [
     "Mailbox",
     "Security gateway",
@@ -45,6 +45,7 @@
       "selector2"
     ],
     "hosted_spf": [
+      "EasyDMARC",
       "Red Sift OnDMARC",
       "Valimail"
     ],
@@ -252,6 +253,108 @@
       "zendesk2",
       "zoho",
       "zohomail"
+    ],
+    "cloud_networks": {
+      "AS16509": "Amazon Web Services",
+      "AS14618": "Amazon Web Services",
+      "AS15169": "Google",
+      "AS396982": "Google Cloud",
+      "AS8075": "Microsoft",
+      "AS13335": "Cloudflare",
+      "AS14061": "DigitalOcean",
+      "AS63949": "Akamai Linode",
+      "AS24940": "Hetzner",
+      "AS16276": "OVH"
+    },
+    "sending_labels": [
+      "mg",
+      "mail",
+      "email",
+      "em",
+      "e",
+      "news",
+      "newsletter",
+      "marketing",
+      "mktg",
+      "send",
+      "sender",
+      "bounce",
+      "bounces",
+      "info",
+      "hello",
+      "notify",
+      "notifications",
+      "mailer",
+      "m",
+      "comms",
+      "updates",
+      "reply",
+      "support",
+      "help",
+      "t",
+      "mta",
+      "smtp",
+      "outbound",
+      "transactional",
+      "txn",
+      "alerts",
+      "accounts",
+      "billing",
+      "crm",
+      "sf",
+      "go",
+      "links",
+      "click",
+      "e2",
+      "mail2",
+      "email2",
+      "service",
+      "promo",
+      "offers",
+      "shop",
+      "orders",
+      "receipts",
+      "team",
+      "events",
+      "msg",
+      "messages",
+      "mc",
+      "sg",
+      "pm",
+      "ses",
+      "sp"
+    ],
+    "subdomain_selectors": [
+      "s1",
+      "s2",
+      "k1",
+      "k2",
+      "k3",
+      "pdk1",
+      "pdk2",
+      "mte1",
+      "mte2",
+      "smtpapi",
+      "pm",
+      "mx",
+      "mail",
+      "dkim",
+      "default",
+      "selector1",
+      "selector2",
+      "google",
+      "sig1",
+      "scph0124",
+      "20230601",
+      "kl",
+      "kl2",
+      "cm",
+      "mailjet",
+      "sendgrid",
+      "em"
+    ],
+    "flattening_spf": [
+      "EasyDMARC"
     ]
   },
   "vendors": {
@@ -265,7 +368,10 @@
         "acdkim2",
         "activecampaign"
       ],
-      "category": "Marketing"
+      "category": "Marketing",
+      "website": [
+        "trackcmp.net"
+      ]
     },
     "Agari": {
       "reporting": [
@@ -303,6 +409,13 @@
       ],
       "category": "Commerce and apps"
     },
+    "Attentive": {
+      "category": "Marketing",
+      "website": [
+        "cdn.attn.tv",
+        "attentivemobile.com"
+      ]
+    },
     "AWeber": {
       "spf_includes": [
         "send.aweber.com"
@@ -336,7 +449,12 @@
         "appboy",
         "braze"
       ],
-      "category": "Marketing"
+      "category": "Marketing",
+      "website": [
+        "js.appboycdn.com",
+        "js.braze.com",
+        "cdn.braze.eu"
+      ]
     },
     "Brevo": {
       "spf_includes": [
@@ -356,7 +474,14 @@
       "verification_txt": [
         "(brevo|sendinblue)-code:"
       ],
-      "category": "Marketing"
+      "category": "Marketing",
+      "networks": [
+        "AS200484"
+      ],
+      "website": [
+        "sibforms.com",
+        "sibautomation.com"
+      ]
     },
     "Calendly": {
       "dkim_selectors": [
@@ -408,7 +533,13 @@
         "ctct1",
         "ctct2"
       ],
-      "category": "Marketing"
+      "category": "Marketing",
+      "networks": [
+        "AS40444"
+      ],
+      "website": [
+        "static.ctctcdn.com"
+      ]
     },
     "Customer.io": {
       "dkim_selectors": [
@@ -418,7 +549,11 @@
       "tracking": [
         "customeriomail.com"
       ],
-      "category": "Marketing"
+      "category": "Marketing",
+      "website": [
+        "assets.customer.io",
+        "track.customer.io"
+      ]
     },
     "DMARCian": {
       "reporting": [
@@ -438,7 +573,11 @@
         "easydmarc.eu",
         "easydmarc.us"
       ],
-      "category": "DMARC reporting"
+      "category": "DMARC reporting",
+      "spf_includes": [
+        "easydmarc.com",
+        "easydmarc.pro"
+      ]
     },
     "Elastic Email": {
       "spf_includes": [
@@ -580,7 +719,11 @@
         "gor2",
         "gorgias"
       ],
-      "category": "Support and CRM"
+      "category": "Support and CRM",
+      "website": [
+        "config.gorgias.chat",
+        "gorgias.chat"
+      ]
     },
     "Help Scout": {
       "spf_includes": [
@@ -594,7 +737,10 @@
         "strong1",
         "strong2"
       ],
-      "category": "Support and CRM"
+      "category": "Support and CRM",
+      "website": [
+        "beacon-v2.helpscout.net"
+      ]
     },
     "HubSpot": {
       "spf_includes": [
@@ -610,7 +756,12 @@
         "hs2",
         "hubspot"
       ],
-      "category": "Marketing"
+      "category": "Marketing",
+      "website": [
+        "js.hs-scripts.com",
+        "js.hsforms.net",
+        "js.hs-analytics.net"
+      ]
     },
     "Intercom": {
       "spf_includes": [
@@ -624,7 +775,11 @@
         "ic1",
         "intercom"
       ],
-      "category": "Support and CRM"
+      "category": "Support and CRM",
+      "website": [
+        "widget.intercom.io",
+        "js.intercomcdn.com"
+      ]
     },
     "IONOS": {
       "spf_includes": [
@@ -651,7 +806,10 @@
       "tracking": [
         "iterable.com"
       ],
-      "category": "Marketing"
+      "category": "Marketing",
+      "website": [
+        "js.iterable.com"
+      ]
     },
     "Keap": {
       "spf_includes": [
@@ -664,7 +822,10 @@
         "cka",
         "convertkit"
       ],
-      "category": "Marketing"
+      "category": "Marketing",
+      "website": [
+        "f.convertkit.com"
+      ]
     },
     "Klaviyo": {
       "spf_includes": [
@@ -688,12 +849,20 @@
         "kt2"
       ],
       "return_path": [
-        "klaviyodns.com"
+        "klaviyodns.com",
+        "u161779.wl030.sendgrid.net"
       ],
       "verification_txt": [
         "klaviyo-site-verification="
       ],
-      "category": "Marketing"
+      "category": "Marketing",
+      "website": [
+        "static.klaviyo.com",
+        "static-forms.klaviyo.com"
+      ],
+      "tracking": [
+        "u161779.wl030.sendgrid.net"
+      ]
     },
     "Mailchimp": {
       "spf_includes": [
@@ -708,14 +877,25 @@
         "k3",
         "mailchimp"
       ],
-      "category": "Marketing"
+      "category": "Marketing",
+      "networks": [
+        "AS14782"
+      ],
+      "website": [
+        "chimpstatic.com",
+        "list-manage.com"
+      ]
     },
     "MailerLite": {
       "dkim_selectors": [
         "litesrv",
         "mailerlite"
       ],
-      "category": "Marketing"
+      "category": "Marketing",
+      "website": [
+        "assets.mailerlite.com",
+        "groot.mailerlite.com"
+      ]
     },
     "Mailgun": {
       "spf_includes": [
@@ -737,7 +917,13 @@
       "verification_txt": [
         "mgverify="
       ],
-      "category": "Transactional"
+      "category": "Transactional",
+      "networks": [
+        "AS396479"
+      ],
+      "mx": [
+        "mailgun.org"
+      ]
     },
     "Mailjet": {
       "spf_includes": [
@@ -753,7 +939,10 @@
       "tracking": [
         "mailjet.com"
       ],
-      "category": "Transactional"
+      "category": "Transactional",
+      "networks": [
+        "AS200069"
+      ]
     },
     "MailPoet": {
       "dkim_selectors": [
@@ -795,7 +984,10 @@
       "return_path": [
         "mktomail.com"
       ],
-      "category": "Marketing"
+      "category": "Marketing",
+      "website": [
+        "munchkin.marketo.net"
+      ]
     },
     "Microsoft 365": {
       "spf_includes": [
@@ -854,7 +1046,11 @@
       "dkim_selectors": [
         "omnisend"
       ],
-      "category": "Marketing"
+      "category": "Marketing",
+      "website": [
+        "omnisnippet1.com",
+        "omnisrc.com"
+      ]
     },
     "Omnivery": {
       "spf_includes": [
@@ -1035,7 +1231,10 @@
       "verification_txt": [
         "pardot\\d+="
       ],
-      "category": "Marketing"
+      "category": "Marketing",
+      "website": [
+        "pi.pardot.com"
+      ]
     },
     "Salesforce Marketing Cloud Engagement": {
       "dkim_selectors": [
@@ -1043,7 +1242,10 @@
         "sfmc",
         "sfmc1"
       ],
-      "category": "Marketing"
+      "category": "Marketing",
+      "networks": [
+        "AS22606"
+      ]
     },
     "SendGrid": {
       "spf_includes": [
@@ -1064,7 +1266,13 @@
       "tracking": [
         "sendgrid.net"
       ],
-      "category": "Transactional"
+      "category": "Transactional",
+      "networks": [
+        "AS11377"
+      ],
+      "mx": [
+        "sendgrid.net"
+      ]
     },
     "Shopify": {
       "spf_includes": [
@@ -1074,7 +1282,10 @@
         "myshopify",
         "shopify"
       ],
-      "category": "Commerce and apps"
+      "category": "Commerce and apps",
+      "website": [
+        "cdn.shopify.com"
+      ]
     },
     "SparkPost": {
       "spf_includes": [
@@ -1094,7 +1305,10 @@
         "et.e.sparkpost.com",
         "spgo.io"
       ],
-      "category": "Transactional"
+      "category": "Transactional",
+      "mx": [
+        "sparkpostmail.com"
+      ]
     },
     "Square": {
       "dkim_selectors": [
@@ -1110,7 +1324,10 @@
         "sqsp",
         "squarespace"
       ],
-      "category": "Commerce and apps"
+      "category": "Commerce and apps",
+      "website": [
+        "static1.squarespace.com"
+      ]
     },
     "Stripe": {
       "dkim_selectors": [
@@ -1151,7 +1368,10 @@
       "dkim_selectors": [
         "wix"
       ],
-      "category": "Commerce and apps"
+      "category": "Commerce and apps",
+      "website": [
+        "static.wixstatic.com"
+      ]
     },
     "Zendesk": {
       "spf_includes": [
@@ -1165,7 +1385,10 @@
         "zendesk1",
         "zendesk2"
       ],
-      "category": "Support and CRM"
+      "category": "Support and CRM",
+      "website": [
+        "static.zdassets.com"
+      ]
     },
     "Zoho Campaigns": {
       "spf_includes": [
