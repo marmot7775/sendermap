@@ -28,7 +28,7 @@ async def collect(ctx: Context, where: str) -> Observed:
                 )
             continue
         if service := ctx.catalog.mx(host):
-            claims.append(Claim(service, _kind(ctx, service, where), where, evidence))
+            claims.append(Claim(service, kind_at(ctx, service, where), where, evidence))
         else:
             unknowns.append(Unknown("mail server", host, where))
     return Observed(tuple(claims), tuple(unknowns), tuple(findings))
@@ -40,7 +40,7 @@ def exchange(record: str) -> str:
     return "" if host == "." else host
 
 
-def _kind(ctx: Context, service: str, where: str) -> Kind:
+def kind_at(ctx: Context, service: str, where: str) -> Kind:
     """At the domain, MX is where its mail is delivered. On a subdomain, a mailbox host or
     gateway is in use for that subdomain's mail only; a sending service's MX only takes in the
     replies and bounces to what it sends."""

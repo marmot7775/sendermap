@@ -52,6 +52,8 @@ class Kind(StrEnum):
     AUTODISCOVER = "autodiscover CNAME"
     DKIM_REVOKED = "revoked DKIM key (empty p=)"
     DKIM_DANGLING = "DKIM CNAME to a missing key"
+    CT_CNAME = "CNAME into its zone at a name from certificate logs"
+    CT_ADDRESS = "address in its network at a name from certificate logs"
     DMARC_REPORTS = "receives DMARC reports"
     TLSRPT_REPORTS = "receives TLS reports"
 
@@ -73,6 +75,9 @@ _KIND_TIER = {
     Kind.DKIM_CNAME: Tier.CONFIGURED,
     Kind.RETURN_PATH: Tier.CONFIGURED,
     Kind.TRACKING: Tier.CONFIGURED,
+    Kind.CT_CNAME: Tier.CONFIGURED,
+    # A web host in a service's network: a landing page or app there, not mail set up.
+    Kind.CT_ADDRESS: Tier.LIKELY,
     Kind.DKIM_NAME: Tier.LIKELY,
     Kind.WEBSITE: Tier.LIKELY,
     Kind.WEBSITE_MENTION: Tier.LIKELY,
@@ -104,6 +109,17 @@ class Evidence:
 
     def __str__(self) -> str:
         return f"{self.name} {self.rtype} {self.value}"
+
+
+@dataclass(frozen=True, slots=True)
+class CertificateEvidence(Evidence):
+    """A name found in certificate transparency logs, the record it has now, and the validity of
+    the latest certificate naming it. `name` is the hostname; `target` is the CNAME hop that
+    matched a service, if a CNAME did."""
+
+    not_before: str
+    not_after: str
+    target: str | None = None
 
 
 @dataclass(frozen=True, slots=True)
@@ -160,6 +176,33 @@ class Finding:
 
 
 @dataclass(frozen=True, slots=True)
+class Historical:
+    """A name in certificate logs that no longer resolves, whose leftover CNAME points at a
+    service: possibly a past vendor, never a current sender."""
+
+    service: str
+    evidence: CertificateEvidence
+
+
+class CtStatus(StrEnum):
+    OFF = "off"
+    READ = "read from crt.sh"
+    CACHED = "read from the local crt.sh cache"
+    UNAVAILABLE = "unavailable"
+
+
+@dataclass(frozen=True, slots=True)
+class CtSummary:
+    """How the certificate transparency source went: whether crt.sh answered, how many names it
+    logged, how many were resolved, and how many no longer resolve and name no service."""
+
+    status: CtStatus = CtStatus.OFF
+    logged: int = 0
+    resolved: int = 0
+    gone_unnamed: int = 0
+
+
+@dataclass(frozen=True, slots=True)
 class Gap:
     """A question that got no usable answer: what was asked, and what happened instead. Its
     silence says nothing, so it is never to be read as absent."""
@@ -197,6 +240,7 @@ class Observed:
     findings: tuple[Finding, ...] = ()
     gaps: tuple[Gap, ...] = ()
     checked: tuple[Checked, ...] = ()
+    historical: tuple[Historical, ...] = ()
 
     def __add__(self, other: Observed) -> Observed:
         return Observed(
@@ -205,6 +249,7 @@ class Observed:
             self.findings + other.findings,
             self.gaps + other.gaps,
             self.checked + other.checked,
+            self.historical + other.historical,
         )
 
     def checked_by_name(self) -> tuple[Checked, ...]:
@@ -238,6 +283,8 @@ class SenderMap:
     gaps: tuple[Gap, ...] = ()
     subdomains_checked: tuple[str, ...] = ()
     checked: tuple[Checked, ...] = ()
+    ct: CtSummary = field(default_factory=CtSummary)
+    historical: tuple[Historical, ...] = ()
     logo: str | None = None
     schema: str = field(default=SCHEMA)
 

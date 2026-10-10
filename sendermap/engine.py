@@ -13,17 +13,30 @@ import time
 from collections.abc import Awaitable, Callable, Iterable, Mapping
 from contextlib import AsyncExitStack
 from datetime import datetime
+from pathlib import Path
 
 import httpx
 
 from . import catalog as catalog_module
 from .dns import Lookups, Resolver, SystemResolver
 from .infer import backed_selectors, services
-from .model import Evidence, Finding, Gap, Kind, Observed, Run, SenderMap, Severity
+from .model import (
+    CtStatus,
+    CtSummary,
+    Evidence,
+    Finding,
+    Gap,
+    Kind,
+    Observed,
+    Run,
+    SenderMap,
+    Severity,
+)
 from .selectors import Rule, load_rules, probe_order, rank_rules
 from .sources import (
     Context,
     bimi,
+    ct,
     dkim,
     labels,
     mta_sts,
@@ -50,26 +63,30 @@ async def map_domain(
     http: httpx.AsyncClient | None = None,
     use_web: bool = True,
     use_subdomains: bool = True,
+    use_ct: bool = False,
+    ct_cache: Path | None = None,
     progress: Progress | None = None,
 ) -> SenderMap:
     """Map the services that send email as `domain`, with the evidence for each.
 
     `checked_at` is the moment the map is dated by, timezone-aware; the caller says when, so the
-    same DNS answers and the same moment give the same map.
+    same DNS answers and the same moment give the same map. `use_ct` adds every name crt.sh has
+    logged a certificate for, cached for a day in `ct_cache` (None: no cache).
     """
     if checked_at.tzinfo is None:
         raise ValueError("checked_at needs a timezone")
     domain = clean_domain(domain)
     started = time.perf_counter()
+    online = use_web or use_subdomains or use_ct
     async with AsyncExitStack() as stack:
-        if http is None and (use_web or use_subdomains):
+        if http is None and online:
             http = await stack.enter_async_context(httpx.AsyncClient(http2=False))
         ctx = Context(
             domain,
             Lookups(resolver or SystemResolver()),
             catalog_module.load(),
             checked_at,
-            http if (use_web or use_subdomains) else None,
+            http if online else None,
         )
         rules = load_rules()
         say = progress or _quiet
@@ -90,7 +107,9 @@ async def map_domain(
             ]
             logo_task = tg.create_task(bimi.logo(ctx))
             subs_task = tg.create_task(_discover(ctx) if use_subdomains else _no_subdomains())
+            ct_task = tg.create_task(_certificates(ctx, ct_cache) if use_ct else _ct_off())
         found, tree = spf_task.result()
+        logged, ct_summary = ct_task.result()
         discovered = subs_task.result()
         apex = sum((task.result() for task in evidence), found) + Observed(gaps=discovered.gaps)
         logo = logo_task.result()
@@ -113,7 +132,7 @@ async def map_domain(
         await say(f"Checking {len(picked)} sending subdomains")
         under = await asyncio.gather(*(_subdomain(ctx, rules, name) for name in picked))
 
-        observed = sum((*deep, *under), apex)
+        observed = sum((*deep, *under), apex) + logged
         result = SenderMap(
             domain=domain,
             services=services(observed.claims, ctx.catalog, domain),
@@ -127,6 +146,8 @@ async def map_domain(
             gaps=tuple(dict.fromkeys(observed.gaps)),
             subdomains_checked=tuple(picked),
             checked=observed.checked_by_name(),
+            ct=ct_summary,
+            historical=tuple(dict.fromkeys(observed.historical)),
             logo=logo,
         )
         await say("Done")
@@ -212,6 +233,19 @@ async def _discover(ctx: Context) -> subdomains.Found:
     except Exception as e:  # a source bug must not take down every other source
         crashed = Gap("sending subdomains", f"the search crashed: {type(e).__name__}")
         return subdomains.Found(gaps=(crashed,))
+
+
+async def _certificates(ctx: Context, cache: Path | None) -> tuple[Observed, CtSummary]:
+    """Certificate transparency; a crash here costs CT, not the map, and says so."""
+    try:
+        return await ct.collect(ctx, cache)
+    except Exception as e:  # a source bug must not take down every other source
+        crashed = Gap("certificate transparency", f"the check crashed: {type(e).__name__}")
+        return Observed(gaps=(crashed,)), CtSummary(CtStatus.UNAVAILABLE)
+
+
+async def _ct_off() -> tuple[Observed, CtSummary]:
+    return Observed(), CtSummary()
 
 
 async def _skipped(gap: Gap) -> Observed:

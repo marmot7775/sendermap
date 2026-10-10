@@ -42,6 +42,13 @@ Everything Sendermap reports is built from a few frozen dataclasses in `senderma
 - **Checked**: what was asked at one name: the DKIM selectors probed, the labels whose CNAMEs
   were asked, and the pages requested (homepage, subprocessor page, MTA-STS policy). With the
   gaps, it says what the map's silence covers.
+- **CertificateEvidence**: the evidence type of the CT source: an Evidence (`rtype`
+  `certificate`, `name` the hostname) that also carries the latest certificate's `not_before`
+  and `not_after`, and the CNAME `target` that matched, when a CNAME did.
+- **Historical**: a name in certificate logs that no longer resolves but whose leftover CNAME
+  points at a service: a possible past vendor, kept apart from the services.
+- **CtSummary**: whether CT was off, read from crt.sh, read from the cache, or unavailable, with
+  counts of names logged, resolved, and gone without naming a service.
 - **Run**: when and how one map was made: `checked_at`, `elapsed` seconds and DNS `lookups`.
 - **SenderMap**: the domain, its services, findings, unknowns, gaps, the sending subdomains
   checked, one Checked per name, the BIMI logo if any, and the Run. `to_dict()` gives JSON with
@@ -58,6 +65,7 @@ Phase 1, concurrent
   mx, tokens, reports, labels, mta_sts, web   -> claims, unknowns, findings, gaps
   bimi.logo             -> logo URL, not evidence
   subdomains.discover   -> wordlist + CT log names that publish SPF or MX
+  ct.collect (--ct)     -> crt.sh names, each resolved for CNAME, A and MX and matched
 Phase 2, the domain itself
   backed = generic DKIM names that belong to services SPF or MX already shows
   probe order = selector rules ranked by MX and SPF hints, then the sweep list
@@ -85,7 +93,7 @@ Every cap that leaves names unasked records a gap naming the cap and the count i
 sending subdomains, 27 DKIM names per sending subdomain beyond the ones its SPF or MX backs, 24
 SPF ranges for the network lookup, 60 names from the certificate log and names more than two
 labels below the domain, an SPF depth of 10, a vendor's own SPF read 3 levels deep for its
-published ranges, and 2,000,000 bytes of a web page.
+published ranges, 2,000,000 bytes of a web page, and 200 names from crt.sh.
 
 ## Modules
 
@@ -102,6 +110,7 @@ published ranges, and 2,000,000 bytes of a web page.
 | `sources/dkim.py` | DKIM probing, the wildcard check, reading keys, dangling and short keys |
 | `sources/labels.py`, `tokens.py`, `reports.py`, `bimi.py` | Fixed-label CNAMEs, verification TXT, report addresses, the BIMI logo |
 | `sources/networks.py` | Naming SPF IP ranges by the ranges services publish, then by network owner |
+| `sources/ct.py` | Certificate transparency (`--ct`): crt.sh with retries and a one-day disk cache, then each logged name resolved and matched by the same catalog matchers as the DNS sources |
 | `sources/subdomains.py` | Finding sending subdomains from a wordlist and the certificate log |
 | `render/text.py`, `render/markdown.py` | The terminal and Markdown views; both show the gaps and what was asked at each name, as the web page does |
 | `cli.py` | The `sendermap` command |
@@ -137,6 +146,16 @@ These live in `catalog.py` and the sources, and each has a test.
   listed as unknown, with the cloud named when the network is a shared cloud and the services
   that publish the range. A cloud is never credited: 74.125.0.0/16, published by Google
   Workspace and HubSpot and announced by Google's network, stays unknown.
+- A name from certificate logs (`--ct`) is matched with the matchers the DNS path uses: each
+  hop of its CNAME chain through `label_cname` with the name's first label, as a label CNAME
+  is; then its MX hosts through the MX table; then its addresses through the published ranges
+  and network owners, as SPF ranges are (Likely only: a web host is not mail set up). Its claim
+  gets the Kind the DNS path gives the same record (a subdomain MX; a bounce, tracking or
+  autodiscover CNAME when its label is one the DNS path asks for), or, for a CNAME at any other
+  label, "CNAME into its zone", which does not guess what the CNAME is for. It counts
+  as gone when its address lookup says no such name and it has no MX; gone with a CNAME that
+  still names a service, it is a possible past vendor. At most 200 names are resolved, with a
+  gap for the rest.
 - A DKIM key's size is read from the key: the RSA modulus length, or 256 for Ed25519.
 - DKIM tags are read by exact name, so `ap=` is not `p=`. A record with no `p=` tag at all is
   malformed, a warning of its own; an empty `p=` is a revoked key. A wildcard answer that is
@@ -175,10 +194,12 @@ it weekly and on any pull request that touches vendors.json.
 ## Surfaces
 
 - **Library**: `await sendermap.map_domain("example.com", checked_at=datetime.now(UTC))`.
-  Optional: `resolver`, `http`, `use_web`, `use_subdomains`, and a `progress` callback.
+  Optional: `resolver`, `http`, `use_web`, `use_subdomains`, `use_ct` (off by default) with
+  `ct_cache` (a directory, or None for no cache), and a `progress` callback.
 - **Command line**: `sendermap example.com`, with `--json`, `--markdown`, `--evidence` (every
-  claim, not only the deciding one), `--no-web`, `--no-subdomains` and `--doh` (Cloudflare DNS
-  over HTTPS).
+  claim, not only the deciding one), `--no-web`, `--no-subdomains`, `--ct` (names from
+  certificate logs, cached in `$XDG_CACHE_HOME/sendermap/crtsh` or `~/.cache/sendermap/crtsh`)
+  and `--doh` (Cloudflare DNS over HTTPS). The web site does not use CT.
 - **Web site**: a FastAPI app. `GET /api/map?d=` returns the map as JSON, `GET /api/map.md?d=`
   as Markdown, and `GET /api/map/stream?d=` streams progress then the map as server-sent events.
   Uvicorn's access log is turned off when the app starts, so no query string is logged; a test
@@ -210,4 +231,5 @@ Tests that hold the rules: `test_evidence.py` maps a fake domain that reaches ev
 claim and requires evidence on every claim and finding; `test_gaps.py` and `test_caps.py`
 require a gap for each failed question and each cap; `test_checked.py` requires the record of
 what was asked and its rendering; `test_labels_say_what_was_seen.py` holds the wording of the
-labels; `test_determinism.py` requires the same map from the same answers.
+labels; `test_determinism.py` requires the same map from the same answers. `test_ct.py`
+runs the CT source on a recorded crt.sh answer (`tests/fixtures/crtsh_allbirds.json`).

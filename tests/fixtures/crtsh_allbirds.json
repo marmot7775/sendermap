@@ -1,0 +1,123 @@
+[
+ {
+  "issuer_ca_id": 247119,
+  "issuer_name": "C=US, O=Amazon, CN=Amazon RSA 2048 M04",
+  "common_name": "links.mail.allbirds.com",
+  "name_value": "links.mail.allbirds.com",
+  "id": 22947278909,
+  "not_before": "2025-12-07T00:00:00",
+  "not_after": "2027-01-05T23:59:59",
+  "serial_number": "0c2535cd72f620a9772db8e2042cf3d5",
+  "result_count": 2
+ },
+ {
+  "issuer_ca_id": 247119,
+  "issuer_name": "C=US, O=Amazon, CN=Amazon RSA 2048 M04",
+  "common_name": "links.mail.allbirds.com",
+  "name_value": "links.mail.allbirds.com",
+  "id": 22945707833,
+  "not_before": "2025-12-07T00:00:00",
+  "not_after": "2027-01-05T23:59:59",
+  "serial_number": "0c2535cd72f620a9772db8e2042cf3d5",
+  "result_count": 2
+ },
+ {
+  "issuer_ca_id": 16418,
+  "issuer_name": "C=US, O=Let's Encrypt, CN=Let's Encrypt Authority X3",
+  "common_name": "app-email.allbirds.com",
+  "name_value": "app-email.allbirds.com",
+  "id": 3370371540,
+  "not_before": "2020-09-11T23:33:19",
+  "not_after": "2020-12-10T23:33:19",
+  "serial_number": "046c2f908dded1d809e597f105dcabad1179",
+  "result_count": 2
+ },
+ {
+  "issuer_ca_id": 16418,
+  "issuer_name": "C=US, O=Let's Encrypt, CN=Let's Encrypt Authority X3",
+  "common_name": "app-email.allbirds.com",
+  "name_value": "app-email.allbirds.com",
+  "id": 3370373024,
+  "not_before": "2020-09-11T23:33:19",
+  "not_after": "2020-12-10T23:33:19",
+  "serial_number": "046c2f908dded1d809e597f105dcabad1179",
+  "result_count": 2
+ },
+ {
+  "issuer_ca_id": 286236,
+  "issuer_name": "C=US, O=Google Trust Services, CN=WE1",
+  "common_name": "accounts.allbirds.com",
+  "name_value": "accounts.allbirds.com",
+  "id": 29684094990,
+  "not_before": "2026-10-03T06:30:41",
+  "not_after": "2027-01-01T07:30:37",
+  "serial_number": "00d7a61ce83523d28813eef90816c4d6bf",
+  "result_count": 2
+ },
+ {
+  "issuer_ca_id": 286242,
+  "issuer_name": "C=US, O=Google Trust Services, CN=WR1",
+  "common_name": "accounts.allbirds.com",
+  "name_value": "accounts.allbirds.com",
+  "id": 29684080985,
+  "not_before": "2026-10-03T06:30:31",
+  "not_after": "2027-01-01T07:29:21",
+  "serial_number": "32fa186ea1068c820e60bbacba65ae9e",
+  "result_count": 2
+ },
+ {
+  "issuer_ca_id": 247119,
+  "issuer_name": "C=US, O=Amazon, CN=Amazon RSA 2048 M04",
+  "common_name": "dev.api.allbirds.com",
+  "name_value": "dev.api.allbirds.com\ntest.api.allbirds.com",
+  "id": 29622061253,
+  "not_before": "2026-09-27T00:00:00",
+  "not_after": "2027-04-12T23:59:59",
+  "serial_number": "0b31267910848f841de384d983780ff0",
+  "result_count": 3
+ },
+ {
+  "issuer_ca_id": 247119,
+  "issuer_name": "C=US, O=Amazon, CN=Amazon RSA 2048 M04",
+  "common_name": "gift-cards.middle-tier-prod.aws.allbirds.com",
+  "name_value": "2a57j78d05nkylnjxxxbsfyb1hqpih3.gift-cards.middle-tier-prod.aws.allbirds.com\ngift-cards.middle-tier-prod.aws.allbirds.com",
+  "id": 28636779174,
+  "not_before": "2026-08-08T00:00:00",
+  "not_after": "2027-02-21T23:59:59",
+  "serial_number": "0f1d4cdef730ac2a9a849dd363a9ac46",
+  "result_count": 3
+ },
+ {
+  "issuer_ca_id": 247119,
+  "issuer_name": "C=US, O=Amazon, CN=Amazon RSA 2048 M04",
+  "common_name": "gift-cards.middle-tier-prod.aws.allbirds.com",
+  "name_value": "2a57j78d05nkylnjxxxbsfyb1hqpih3.gift-cards.middle-tier-prod.aws.allbirds.com\ngift-cards.middle-tier-prod.aws.allbirds.com",
+  "id": 28636223486,
+  "not_before": "2026-08-08T00:00:00",
+  "not_after": "2027-02-21T23:59:59",
+  "serial_number": "0f1d4cdef730ac2a9a849dd363a9ac46",
+  "result_count": 3
+ },
+ {
+  "issuer_ca_id": 246719,
+  "issuer_name": "C=US, O=Amazon, CN=Amazon RSA 2048 M01",
+  "common_name": "*.middle-tier-prod.aws.allbirds.com",
+  "name_value": "*.middle-tier-prod.aws.allbirds.com\nmiddle-tier-prod.aws.allbirds.com",
+  "id": 24277390699,
+  "not_before": "2026-02-09T00:00:00",
+  "not_after": "2027-03-10T23:59:59",
+  "serial_number": "0b9c9d4227cce4791ff01fee086df7f6",
+  "result_count": 3
+ },
+ {
+  "issuer_ca_id": 247119,
+  "issuer_name": "C=US, O=Amazon, CN=Amazon RSA 2048 M04",
+  "common_name": "*.middle-tier-dev.aws.allbirds.com",
+  "name_value": "*.middle-tier-dev.aws.allbirds.com\nmiddle-tier-dev.aws.allbirds.com",
+  "id": 24255730608,
+  "not_before": "2026-02-08T00:00:00",
+  "not_after": "2027-03-09T23:59:59",
+  "serial_number": "0a485737f278a5b7ae4fab8bfae45c23",
+  "result_count": 3
+ }
+]

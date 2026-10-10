@@ -36,6 +36,12 @@ that supports it, so you can check it yourself.
 - **Sending subdomains** come from the names services ask for and from certificate logs.
 - **The website** shows the scripts and stylesheets it loads, the services it mentions, and the
   services its subprocessor page names.
+- **Certificate transparency** (`--ct`, off by default): every name crt.sh has logged a
+  certificate for is resolved now and matched like any DNS record, so a branded tracking link
+  such as `link.example.com` pointing at an email platform shows up. A logged name that no
+  longer resolves but still points at a service is listed as a possible past vendor, not a
+  current sender. crt.sh is often slow; it is tried three times, answers are cached for a day,
+  and if it never answers the map says so and finishes without it.
 
 Run it from the command line:
 
@@ -45,6 +51,7 @@ sendermap example.com
 sendermap example.com --evidence     # every piece of evidence
 sendermap example.com --markdown     # a summary to paste
 sendermap example.com --json         # everything, for scripts
+sendermap example.com --ct           # add names from certificate logs (crt.sh)
 ```
 
 The website keeps no record of the domains looked up.

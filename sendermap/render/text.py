@@ -11,7 +11,7 @@ from rich.table import Table
 from rich.text import Text
 
 from ..model import SenderMap, Service, Severity, Tier
-from . import asked, asked_in_full
+from . import asked, asked_in_full, ct_lines
 
 _TIER_STYLE = {
     Tier.IN_USE: "bold green",
@@ -50,6 +50,10 @@ def render(result: SenderMap, console: Console, *, evidence: bool = False) -> No
         for u in result.unknowns:
             where = "" if u.where == result.domain else f"  at {u.where}"
             console.print(Text(f"  {u.what}: {u.value}{where}", style="bright_black"))
+    if lines := ct_lines(result):
+        console.print(Text("\nCERTIFICATE TRANSPARENCY", style="bold"))
+        for line in lines:
+            console.print(Text(f"  {line}", style="bright_black"))
     checked = result.run.checked_at.astimezone(UTC).strftime("%Y-%m-%d %H:%M UTC")
     footer = [f"Checked {result.domain} on {checked}"]
     if result.subdomains_checked:
