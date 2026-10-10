@@ -46,12 +46,12 @@ async def test_a_service_is_named_by_the_names_its_block_lists() -> None:
 
 
 async def test_a_service_with_no_listed_name_is_never_named() -> None:
-    # Kit and Wix are ordinary words, a DMARC reporter does not send, and Google Workspace's name
-    # has no proof yet: none of them lists a subprocessor name.
-    page = "<td>Kit</td><td>Wix</td><td>Valimail</td><td>Google Workspace</td><td>Zendesk</td>"
+    # Kit and Wix are ordinary words, a DMARC reporter does not send, and Mailjet's name has no
+    # proof yet: none of them lists a subprocessor name.
+    page = "<td>Kit</td><td>Wix</td><td>Valimail</td><td>Mailjet</td><td>Zendesk</td>"
     assert await named_on(page) == {"Zendesk": "names Zendesk"}
     loaded = catalog.load()
-    assert not {"Kit", "Wix", "Valimail", "Google Workspace"} & set(loaded.subprocessor_names)
+    assert not {"Kit", "Wix", "Valimail", "Mailjet"} & set(loaded.subprocessor_names)
 
 
 def test_every_listed_name_belongs_to_a_sending_service() -> None:
