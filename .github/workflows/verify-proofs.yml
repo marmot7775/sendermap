@@ -1,0 +1,61 @@
+# Recheck every selector proof in vendors.json against live DNS: on any pull request that touches
+# the file or the checker, weekly, and by hand. A proof not found fails the job, which blocks a
+# pull request; on the weekly run it also opens an issue, or comments on the open one. A proof
+# that could not be checked (timeout, lookup failure) is listed in the output and fails nothing.
+
+name: Verify proofs
+
+on:
+  pull_request:
+    paths:
+      - sendermap/data/vendors.json
+      - tools/verify_proofs.py
+  schedule:
+    - cron: "0 9 * * 1"  # Monday 09:00 UTC
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+defaults:
+  run:
+    shell: bash  # -eo pipefail, so the checker's exit code survives the tee
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+      - name: Install
+        run: pip install .
+      - name: Check every proof
+        id: verify
+        run: python tools/verify_proofs.py --json | tee results.jsonl
+      - name: Open or update an issue per failing proof
+        if: failure() && steps.verify.outcome == 'failure' && github.event_name == 'schedule'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          today=$(date -u +%F)
+          open=$(gh issue list --state open --limit 1000 --json number,title)
+          jq -c 'select(.status == "not found")' results.jsonl | while read -r row; do
+            title=$(jq -r '"Proof failed: \(.vendor) \(.selector)"' <<<"$row")
+            body=$(jq -r --arg today "$today" '[
+              "Proof domain: \(.domain)",
+              "Record expected: \(.record), a \(.expected)",
+              "Published now: \(.observed)",
+              "Checked: \($today)"
+            ] | join("\n\n")' <<<"$row")
+            number=$(jq -r --arg title "$title" \
+              'first(.[] | select(.title == $title) | .number) // empty' <<<"$open")
+            if [[ -n $number ]]; then
+              gh issue comment "$number" --body "$body" </dev/null
+            else
+              gh issue create --title "$title" --body "$body" </dev/null
+            fi
+          done
