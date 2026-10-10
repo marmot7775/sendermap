@@ -80,6 +80,7 @@ function render(map) {
   renderReporting(reporting, map.domain);
   renderAttention(map.findings);
   renderUnknowns(map.unknowns, map.domain);
+  renderChecked(map.gaps, map.checked);
   renderFootnote(map);
   show("result");
   $("result").scrollIntoView({ behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" });
@@ -293,8 +294,30 @@ function renderFootnote(map) {
   let text = `${map.run.lookups} DNS lookups in ${map.run.elapsed.toFixed(1)} s. Checked ${map.domain}`;
   text += subs ? ` and ${subs} sending subdomain${subs === 1 ? "" : "s"}` : "";
   text += ` on ${checked} UTC.`;
-  for (const gap of map.gaps) text += ` Not checked: ${gap.asked} (${gap.happened}).`;
   $("footnote").textContent = text;
+}
+
+function renderChecked(gaps, checked) {
+  const box = $("checked");
+  box.replaceChildren();
+  if (gaps.length) {
+    box.append(h("h3", { class: "section-title" }, "Not checked"));
+    const ul = h("ul", { class: "gaps" });
+    gaps.forEach((g) => ul.append(h("li", {}, h("span", { class: "mono" }, g.asked), `: ${g.happened}`)));
+    box.append(ul);
+  }
+  if (!checked.length) return;
+  const d = h("details", { class: "asked" }, h("summary", {}, "What was asked at each name"));
+  for (const c of checked) {
+    d.append(h("h4", { class: "mono" }, c.where));
+    const ul = h("ul");
+    for (const [heading, names] of [["Pages", c.pages], ["CNAME labels", c.labels], ["DKIM selectors", c.dkim_selectors]]) {
+      if (names.length) ul.append(h("li", {}, `${heading} (${names.length}): `, h("span", { class: "mono" }, names.join(", "))));
+    }
+    if (!ul.children.length) ul.append(h("li", {}, "Nothing beyond the records every map reads"));
+    d.append(ul);
+  }
+  box.append(d);
 }
 
 // ------------------------------------------------------------------ sharing

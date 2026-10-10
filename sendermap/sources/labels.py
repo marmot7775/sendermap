@@ -9,7 +9,7 @@ from __future__ import annotations
 
 import asyncio
 
-from ..model import Claim, Evidence, Gap, Kind, Observed
+from ..model import Checked, Claim, Evidence, Gap, Kind, Observed
 from . import CANARY, Context
 
 _KINDS = {
@@ -50,4 +50,4 @@ async def collect(ctx: Context, where: str) -> Observed:
     if failed:
         names = ", ".join(f"{label}.{where}" for label in failed)
         gaps.append(Gap(f"bounce and tracking CNAMEs: CNAME at {names}", "lookup failed"))
-    return Observed(tuple(claims), gaps=tuple(gaps))
+    return Observed(tuple(claims), gaps=tuple(gaps), checked=(Checked(where, labels=labels),))

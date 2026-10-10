@@ -34,9 +34,12 @@ Everything Sendermap reports is built from a few frozen dataclasses in `senderma
 - **Gap**: a question that got no usable answer: what was `asked` (the record type and name,
   the page, or the check) and what `happened` (the lookup failed, HTTP 404, the check was turned
   off, the source crashed), so its silence is not read as absence.
+- **Checked**: what was asked at one name: the DKIM selectors probed, the labels whose CNAMEs
+  were asked, and the pages requested (homepage, subprocessor page, MTA-STS policy). With the
+  gaps, it says what the map's silence covers.
 - **Run**: when and how one map was made: `checked_at`, `elapsed` seconds and DNS `lookups`.
 - **SenderMap**: the domain, its services, findings, unknowns, gaps, the sending subdomains
-  checked, the BIMI logo if any, and the Run. `to_dict()` gives JSON with schema
+  checked, one Checked per name, the BIMI logo if any, and the Run. `to_dict()` gives JSON with schema
   `sendermap/1`.
 
 ## From domain to result
@@ -63,7 +66,7 @@ Assembly
   -> SenderMap + Run -> render.text | render.markdown | to_dict JSON | web stream
 ```
 
-Each source returns an `Observed`: claims, unknowns, findings and gaps. Sources never raise
+Each source returns an `Observed`: claims, unknowns, findings, gaps and what it checked. Sources never raise
 for a failed lookup: every DNS answer has a status (`ok`, `no such name`, `no record of this
 type`, `lookup failed`), and every source turns a failed lookup or page into a gap, while an
 answer of no such name or no record is an absence. A failed network-owner lookup leaves the
@@ -95,7 +98,7 @@ published ranges, and 2,000,000 bytes of a web page.
 | `sources/labels.py`, `tokens.py`, `reports.py`, `bimi.py` | Fixed-label CNAMEs, verification TXT, report addresses, the BIMI logo |
 | `sources/networks.py` | Naming SPF IP ranges by the ranges services publish, then by network owner |
 | `sources/subdomains.py` | Finding sending subdomains from a wordlist and the certificate log |
-| `render/text.py`, `render/markdown.py` | The terminal and Markdown views |
+| `render/text.py`, `render/markdown.py` | The terminal and Markdown views; both show the gaps and what was asked at each name, as the web page does |
 | `cli.py` | The `sendermap` command |
 | `web/app.py` | The site: a page, and an API that streams progress and the finished map |
 
@@ -170,7 +173,6 @@ it weekly and on any pull request that touches vendors.json.
 These are open items from the October 2026 review, listed so the description above is not read
 as more than it is.
 
-- The Markdown view does not show gaps.
 - The SPF lookup count walks a repeated include once, so it can read lower than a receiver's.
 
 ## Tests

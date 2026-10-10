@@ -5,7 +5,7 @@ from __future__ import annotations
 
 import httpx
 
-from ..model import Claim, Evidence, Gap, Kind, Observed
+from ..model import Checked, Claim, Evidence, Gap, Kind, Observed
 from . import Context, http_failure
 
 
@@ -24,7 +24,8 @@ async def collect(ctx: Context) -> Observed:
         response = await ctx.http.get(url, timeout=8)
         response.raise_for_status()
     except httpx.HTTPError as e:
-        return Observed(gaps=(Gap(f"MTA-STS policy: GET {url}", http_failure(e)),))
+        gap = Gap(f"MTA-STS policy: GET {url}", http_failure(e))
+        return Observed(gaps=(gap,), checked=(Checked(ctx.domain, pages=(url,)),))
     claims = []
     for line in response.text.splitlines():
         key, _, value = line.partition(":")
@@ -34,4 +35,4 @@ async def collect(ctx: Context) -> Observed:
         if service := ctx.catalog.mx(host):
             evidence = Evidence(url, "policy", line.strip(), ctx.checked_at)
             claims.append(Claim(service, Kind.MTA_STS, ctx.domain, evidence))
-    return Observed(tuple(claims))
+    return Observed(tuple(claims), checked=(Checked(ctx.domain, pages=(url,)),))

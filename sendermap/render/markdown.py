@@ -5,6 +5,7 @@ from __future__ import annotations
 from datetime import UTC
 
 from ..model import SenderMap, Service
+from . import asked, asked_in_full
 
 
 def render(result: SenderMap) -> str:
@@ -27,6 +28,17 @@ def render(result: SenderMap) -> str:
             f"- {u.what}: `{u.value}`" + ("" if u.where == result.domain else f" at {u.where}")
             for u in result.unknowns
         ]
+    if result.gaps:
+        lines += ["", "## Not checked", ""]
+        lines += [f"- {g.asked}: {g.happened}" for g in result.gaps]
+    if result.checked:
+        lines += ["", "## What was asked", ""]
+        for record in result.checked:
+            lines.append(f"- **{record.where}**: {asked(record)}")
+            lines += [
+                f"  - {heading}: {', '.join(f'`{n}`' for n in names)}"
+                for heading, names in asked_in_full(record)
+            ]
     return "\n".join(lines) + "\n"
 
 

@@ -158,6 +158,26 @@ class Gap:
 
 
 @dataclass(frozen=True, slots=True)
+class Checked:
+    """What was asked at one name: the DKIM selectors probed, the labels whose CNAMEs were
+    asked, the pages requested. Silence about anything not listed here says nothing."""
+
+    where: str
+    dkim_selectors: tuple[str, ...] = ()
+    labels: tuple[str, ...] = ()
+    pages: tuple[str, ...] = ()
+
+    def __add__(self, other: Checked) -> Checked:
+        """Both records of one name, each list in the order first asked, without repeats."""
+        return Checked(
+            self.where,
+            tuple(dict.fromkeys(self.dkim_selectors + other.dkim_selectors)),
+            tuple(dict.fromkeys(self.labels + other.labels)),
+            tuple(dict.fromkeys(self.pages + other.pages)),
+        )
+
+
+@dataclass(frozen=True, slots=True)
 class Observed:
     """What one source returns."""
 
@@ -165,6 +185,7 @@ class Observed:
     unknowns: tuple[Unknown, ...] = ()
     findings: tuple[Finding, ...] = ()
     gaps: tuple[Gap, ...] = ()
+    checked: tuple[Checked, ...] = ()
 
     def __add__(self, other: Observed) -> Observed:
         return Observed(
@@ -172,7 +193,17 @@ class Observed:
             self.unknowns + other.unknowns,
             self.findings + other.findings,
             self.gaps + other.gaps,
+            self.checked + other.checked,
         )
+
+    def checked_by_name(self) -> tuple[Checked, ...]:
+        """One Checked per name, in the order the names were first asked."""
+        merged: dict[str, Checked] = {}
+        for record in self.checked:
+            merged[record.where] = (
+                merged[record.where] + record if record.where in merged else record
+            )
+        return tuple(merged.values())
 
 
 @dataclass(frozen=True, slots=True)
@@ -195,6 +226,7 @@ class SenderMap:
     unknowns: tuple[Unknown, ...] = ()
     gaps: tuple[Gap, ...] = ()
     subdomains_checked: tuple[str, ...] = ()
+    checked: tuple[Checked, ...] = ()
     logo: str | None = None
     schema: str = field(default=SCHEMA)
 
