@@ -12,7 +12,6 @@ from __future__ import annotations
 from collections import defaultdict
 from collections.abc import Iterable, Iterator, Mapping
 from dataclasses import dataclass
-from datetime import date
 from enum import Enum
 from importlib import resources
 from importlib.resources.abc import Traversable
@@ -28,9 +27,9 @@ class Source(Enum):
 
 
 class Shape(Protocol):
-    """Anything that expands into selector names for a given date."""
+    """Anything that expands into selector names."""
 
-    def expand(self, today: date) -> Iterator[str]: ...
+    def expand(self) -> Iterator[str]: ...
 
 
 @dataclass(frozen=True, slots=True)
@@ -39,7 +38,7 @@ class Fixed:
 
     names: tuple[str, ...]
 
-    def expand(self, today: date) -> Iterator[str]:
+    def expand(self) -> Iterator[str]:
         return iter(self.names)
 
 
@@ -50,29 +49,8 @@ class Numbered:
     prefix: str
     stop: int
 
-    def expand(self, today: date) -> Iterator[str]:
+    def expand(self) -> Iterator[str]:
         return (f"{self.prefix}{n}" for n in range(1, self.stop + 1))
-
-
-@dataclass(frozen=True, slots=True)
-class Dated:
-    """A prefix followed by year and month: ses202610."""
-
-    prefix: str
-    years_back: int
-
-    def expand(self, today: date) -> Iterator[str]:
-        first_year = today.year - self.years_back
-        for year in range(first_year, today.year + 1):
-            for month in range(1, 13):
-                yield f"{self.prefix}{year}{month:02d}"
-
-
-SHAPES: Mapping[str, type] = {
-    "fixed": Fixed,
-    "numbered": Numbered,
-    "dated": Dated,
-}
 
 
 @dataclass(frozen=True, slots=True)
@@ -135,11 +113,7 @@ class Selector:
 
 def parse_rule(raw: Mapping[str, Any]) -> Rule:
     """Build a Rule from one mapping in the rules file."""
-    shape_spec = dict(raw["shape"])
-    kind = shape_spec.pop("kind")
-    if kind == "fixed":
-        shape_spec["names"] = tuple(shape_spec["names"])
-    shape = SHAPES[kind](**shape_spec)
+    shape = _parse_shape(raw["vendor"], raw["shape"])
     hint_spec = raw.get("hints") or {}
     hints = Hints(**{key: tuple(map(_normalise, names)) for key, names in hint_spec.items()})
     return Rule(
@@ -150,6 +124,17 @@ def parse_rule(raw: Mapping[str, Any]) -> Rule:
         hints=hints,
         hints_reference=_strings(raw.get("hints_reference", ())),
     )
+
+
+def _parse_shape(vendor: str, spec: Mapping[str, Any]) -> Shape:
+    """Build a Shape from a rule's shape mapping. Names are lowercased here, once."""
+    match spec["kind"]:
+        case "fixed":
+            return Fixed(tuple(name.lower() for name in spec["names"]))
+        case "numbered":
+            return Numbered(spec["prefix"].lower(), spec["stop"])
+        case kind:
+            raise ValueError(f"{vendor}: unknown shape kind {kind!r}")
 
 
 def _strings(value: str | Iterable[str]) -> tuple[str, ...]:
@@ -174,32 +159,28 @@ def load_rules(path: Traversable = RULES_FILE) -> tuple[Rule, ...]:
     return tuple(parse_rule(raw) for raw in document)
 
 
-def build_dictionary(
-    rules: Iterable[Rule],
-    today: date | None = None,
-) -> dict[str, tuple[Selector, ...]]:
+def build_dictionary(rules: Iterable[Rule]) -> dict[str, tuple[Selector, ...]]:
     """Expand rules into candidates keyed by name.
 
     A name claimed by several vendors keeps every claim. A collision
     is a fact about the world; the caller decides what to do with it.
     """
-    today = today or date.today()
     claims: defaultdict[str, list[Selector]] = defaultdict(list)
     for rule in rules:
-        for name in rule.shape.expand(today):
+        for name in rule.shape.expand():
             claims[name].append(Selector(name, rule.vendor, rule.source, rule.reference))
     return {name: tuple(found) for name, found in claims.items()}
 
 
-def probe_order(rules: Iterable[Rule], sweep: Iterable[str], today: date) -> tuple[str, ...]:
+def probe_order(rules: Iterable[Rule], sweep: Iterable[str]) -> tuple[str, ...]:
     """The sweep, lowercase, with the names the rules claim moved ahead in rule order.
 
     Adds nothing and drops nothing: a rule name outside the sweep is not probed.
     """
     names = tuple(dict.fromkeys(s.lower() for s in sweep))
     known = frozenset(names)
-    claimed = (n for rule in rules for n in rule.shape.expand(today) if n.lower() in known)
-    return tuple(dict.fromkeys((*(n.lower() for n in claimed), *names)))
+    claimed = (n for rule in rules for n in rule.shape.expand() if n in known)
+    return tuple(dict.fromkeys((*claimed, *names)))
 
 
 def rank_rules(
