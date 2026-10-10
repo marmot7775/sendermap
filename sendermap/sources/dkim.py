@@ -95,10 +95,10 @@ async def collect(
     claims: list[Claim] = []
     unknowns: list[Unknown] = []
     findings: list[Finding] = []
-    failed = 0
+    failed: list[str] = []
     for selector, answer in zip(names, answers, strict=True):
         if not answer.answered:
-            failed += 1
+            failed.append(selector)
             continue
         if answer.dangling:
             claims_, finding = _dangling(ctx, where, selector, answer)
@@ -123,8 +123,18 @@ async def collect(
             unknowns.append(Unknown("DKIM key", selector, where))
         if key.algorithm == "rsa" and key.bits is not None and key.bits <= 1024:
             findings.append(_short_key(selector, where, key.bits, evidence))
-    gaps = (Gap(f"{failed} DKIM selectors at {where}", "lookups failed"),) if failed else ()
-    return Observed(tuple(claims), tuple(unknowns), tuple(findings), gaps)
+    gaps: list[Gap] = []
+    if not canary.answered:
+        gaps.append(
+            Gap(
+                f"wildcard check: TXT at {canary.name}",
+                f"{canary.status.value}, so a wildcard key was not ruled out for the selectors",
+            )
+        )
+    if failed:
+        asked = f"DKIM keys: TXT at {len(failed)} selectors under {base} ({', '.join(failed)})"
+        gaps.append(Gap(asked, "lookup failed"))
+    return Observed(tuple(claims), tuple(unknowns), tuple(findings), tuple(gaps))
 
 
 def _short_key(selector: str, where: str, bits: int, evidence: Evidence) -> Finding:

@@ -9,7 +9,7 @@ from . import Context
 async def collect(ctx: Context, where: str) -> Observed:
     answer = await ctx.dns.query(where, "MX")
     if not answer.answered:
-        return Observed(gaps=(Gap(f"MX at {where}", answer.status.value),))
+        return Observed(gaps=(Gap(f"mail servers: MX at {where}", answer.status.value),))
     claims: list[Claim] = []
     unknowns: list[Unknown] = []
     findings: list[Finding] = []

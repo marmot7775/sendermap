@@ -22,3 +22,10 @@ class Context:
     catalog: Catalog
     checked_at: datetime  # every Evidence a source records is dated by it
     http: httpx.AsyncClient | None = None
+
+
+def http_failure(error: httpx.HTTPError) -> str:
+    """What happened to a web request, in a few words: its status, or the kind of failure."""
+    if isinstance(error, httpx.HTTPStatusError):
+        return f"HTTP {error.response.status_code}"
+    return f"failed: {type(error).__name__}"

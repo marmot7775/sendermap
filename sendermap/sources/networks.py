@@ -45,38 +45,59 @@ async def collect(ctx: Context, where: str, ranges: list[tuple[str, Evidence]]) 
     picked = rest[:MAX_RANGES]
     owners = await asyncio.gather(*(range_owner(ctx, n) for _, _, n, _ in picked))
     unknowns: list[Unknown] = []
-    for (cidr, evidence, _, candidates), (asn, name) in zip(picked, owners, strict=True):
+    failed: list[str] = []
+    for (cidr, evidence, _, candidates), announced in zip(picked, owners, strict=True):
+        listed = f"; listed by {' and '.join(sorted(candidates))}" if candidates else ""
+        what = "IP address in SPF" if cidr.endswith("/32") or "/" not in cidr else "IP range in SPF"
+        if announced is None:
+            failed.append(cidr)
+            unknowns.append(Unknown(what, f"{cidr} (network lookup failed{listed})", where))
+            continue
+        asn, name = announced
         service = ctx.catalog.network(asn) or _named_in(name, candidates)
         if service:
             noted = replace(evidence, value=f"{evidence.value} (network {asn}, {name})")
             claims.append(Claim(service, Kind.SPF_NETWORK, where, noted))
             continue
-        label = ctx.catalog.clouds.get(asn) or name or "owner unknown"
-        listed = f"; listed by {' and '.join(sorted(candidates))}" if candidates else ""
-        what = "IP address in SPF" if cidr.endswith("/32") or "/" not in cidr else "IP range in SPF"
-        unknowns.append(Unknown(what, f"{cidr} ({asn or 'no network'}, {label}{listed})", where))
+        if not asn:
+            unknowns.append(Unknown(what, f"{cidr} (no one network announces it{listed})", where))
+            continue
+        label = ctx.catalog.clouds.get(asn) or name or "owner name not published"
+        unknowns.append(Unknown(what, f"{cidr} ({asn}, {label}{listed})", where))
+    if failed:
+        asked = f"network owners: Team Cymru TXT for {', '.join(failed)}"
+        gaps += (Gap(asked, "lookup failed"),)
     return Observed(tuple(claims), tuple(unknowns), gaps=gaps)
 
 
-async def range_owner(ctx: Context, network: ipaddress.IPv4Network) -> tuple[str, str]:
-    """The network that announces most of a range. A large range can hold blocks announced by
-    others: 149.72.0.0/16 is SendGrid's, but its first /24 is announced by Amazon. So a range
-    bigger than a /24 is sampled at three points and the majority wins."""
+async def range_owner(ctx: Context, network: ipaddress.IPv4Network) -> tuple[str, str] | None:
+    """The network that announces most of a range: (ASN, owner name), ("", "") when no one
+    network announces most of it, or None when a lookup failed. A large range can hold blocks
+    announced by others: 149.72.0.0/16 is SendGrid's, but its first /24 is announced by Amazon.
+    So a range bigger than a /24 is sampled at three points and the majority wins."""
     size = network.num_addresses
     points = [1] if size <= 256 else [1, size // 2 + 1, 3 * size // 4 + 1]
-    samples = await asyncio.gather(*(owner(ctx, str(network[p % size])) for p in points))
+    found = await asyncio.gather(*(owner(ctx, str(network[p % size])) for p in points))
+    samples = [s for s in found if s is not None]
+    if len(samples) < len(found):
+        return None
     asn, name = Counter(samples).most_common(1)[0][0]
     return (asn, name) if sum(1 for s in samples if s[0] == asn) * 2 > len(samples) else ("", "")
 
 
-async def owner(ctx: Context, ip: str) -> tuple[str, str]:
-    """(ASN, owner name) for an IPv4 address, or ("", "") when unknown."""
+async def owner(ctx: Context, ip: str) -> tuple[str, str] | None:
+    """(ASN, owner name) for an IPv4 address, ("", "") when no network announces it, or None
+    when a lookup failed."""
     reverse = ".".join(reversed(ip.split(".")))
     origin = await ctx.dns.txt(f"{reverse}.origin.asn.cymru.com")
+    if not origin.answered:
+        return None
     if not origin.ok:
         return "", ""
     asn = "AS" + origin.records[0].split("|")[0].split()[0]
     about = await ctx.dns.txt(f"{asn}.asn.cymru.com")
+    if not about.answered:
+        return None
     name = about.records[0].split("|")[-1].strip() if about.ok else ""
     return asn, name
 
@@ -112,7 +133,7 @@ async def published_ranges(
             owners.setdefault(network, set()).add(name)
         if not complete and name not in unread:
             unread.append(name)
-    gaps = tuple(Gap(f"the published ranges of {name}", "lookups failed") for name in unread)
+    gaps = tuple(Gap(f"published ranges: SPF of {name}", "lookup failed") for name in unread)
     return {network: frozenset(names) for network, names in owners.items()}, gaps
 
 

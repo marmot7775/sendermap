@@ -54,7 +54,7 @@ def render(result: SenderMap, console: Console, *, evidence: bool = False) -> No
     if result.subdomains_checked:
         footer.append(f"and {len(result.subdomains_checked)} sending subdomains")
     for gap in result.gaps:
-        footer.append(f"\nNot checked: {gap.what} ({gap.why})")
+        footer.append(f"\nNot checked: {gap.asked} ({gap.happened})")
     console.print(Text("\n" + " ".join(footer), style="bright_black"))
 
 

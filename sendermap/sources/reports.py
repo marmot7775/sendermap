@@ -5,7 +5,7 @@ from __future__ import annotations
 
 import asyncio
 
-from ..model import Claim, Evidence, Kind, Observed, Unknown
+from ..model import Claim, Evidence, Gap, Kind, Observed, Unknown
 from . import Context
 
 
@@ -34,10 +34,13 @@ async def collect(ctx: Context) -> Observed:
     )
     claims: list[Claim] = []
     unknowns: list[Unknown] = []
-    for answer, prefix, tags, kind, label in (
-        (dmarc, "v=dmarc1", ("rua", "ruf"), Kind.DMARC_REPORTS, "DMARC reports go to"),
-        (tlsrpt, "v=tlsrptv1", ("rua",), Kind.TLSRPT_REPORTS, "TLS reports go to"),
+    gaps: list[Gap] = []
+    for answer, record_name, prefix, tags, kind, label in (
+        (dmarc, "DMARC", "v=dmarc1", ("rua", "ruf"), Kind.DMARC_REPORTS, "DMARC reports go to"),
+        (tlsrpt, "TLS-RPT", "v=tlsrptv1", ("rua",), Kind.TLSRPT_REPORTS, "TLS reports go to"),
     ):
+        if not answer.answered:
+            gaps.append(Gap(f"{record_name}: TXT at {answer.name}", answer.status.value))
         for record in (r for r in answer.records if r.lower().replace(" ", "").startswith(prefix)):
             for host in report_domains(record, tags):
                 evidence = Evidence(answer.name, "TXT", record, ctx.checked_at)
@@ -45,4 +48,4 @@ async def collect(ctx: Context) -> Observed:
                     claims.append(Claim(service, kind, ctx.domain, evidence))
                 elif not (host == ctx.domain or host.endswith("." + ctx.domain)):
                     unknowns.append(Unknown(label, host, ctx.domain))
-    return Observed(tuple(claims), tuple(unknowns))
+    return Observed(tuple(claims), tuple(unknowns), gaps=tuple(gaps))

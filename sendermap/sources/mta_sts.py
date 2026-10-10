@@ -5,20 +5,26 @@ from __future__ import annotations
 
 import httpx
 
-from ..model import Claim, Evidence, Kind, Observed
-from . import Context
+from ..model import Claim, Evidence, Gap, Kind, Observed
+from . import Context, http_failure
 
 
 async def collect(ctx: Context) -> Observed:
-    record = await ctx.dns.txt(f"_mta-sts.{ctx.domain}")
-    if ctx.http is None or not any(r.lower().startswith("v=stsv1") for r in record.records):
+    name = f"_mta-sts.{ctx.domain}"
+    record = await ctx.dns.txt(name)
+    if not record.answered:
+        return Observed(gaps=(Gap(f"MTA-STS: TXT at {name}", record.status.value),))
+    if not any(r.lower().startswith("v=stsv1") for r in record.records):
         return Observed()
     url = f"https://mta-sts.{ctx.domain}/.well-known/mta-sts.txt"
+    if ctx.http is None:
+        skipped = "not fetched: web and subdomain checks were both turned off"
+        return Observed(gaps=(Gap(f"MTA-STS policy: GET {url}", skipped),))
     try:
         response = await ctx.http.get(url, timeout=8)
         response.raise_for_status()
-    except httpx.HTTPError:
-        return Observed()
+    except httpx.HTTPError as e:
+        return Observed(gaps=(Gap(f"MTA-STS policy: GET {url}", http_failure(e)),))
     claims = []
     for line in response.text.splitlines():
         key, _, value = line.partition(":")
