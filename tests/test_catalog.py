@@ -62,6 +62,6 @@ def test_website_signatures_match_hosts_and_their_subdomains_only():
     assert C.website_services("<p>static.klaviyo.comics</p>") == {}
 
 
-def test_every_service_has_a_known_category():
+def test_every_service_has_a_category():
     data = C.services
     assert all(block.get("category") for block in data.values())

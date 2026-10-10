@@ -26,7 +26,7 @@ async def test_a_null_mx_says_the_domain_takes_no_mail():
     assert observed.claims == () and "accepts no mail" in observed.findings[0].title
 
 
-async def test_bounce_and_tracking_cnames_and_a_wildcard_ignored():
+async def test_bounce_and_tracking_cnames_name_the_services_they_point_at():
     zone = (
         Zone()
         .alias("bounce.example.com", "sparkpostmail.com")
