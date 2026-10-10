@@ -38,7 +38,7 @@ async def collect(ctx: Context) -> Observed:
     page = await _fetch(ctx.http, home)
     if isinstance(page, str):
         return Observed(gaps=(Gap(f"the website: GET {home}", page),))
-    url, html = page
+    url, html, cut = page
     claims = [
         Claim(
             service,
@@ -48,9 +48,10 @@ async def collect(ctx: Context) -> Observed:
         )
         for service, host in ctx.catalog.website_services(html).items()
     ]
+    observed = Observed(tuple(claims), gaps=_cut(f"the website: GET {home}", cut))
     if link := _SUBPROCESSOR_LINK.search(html):
-        return Observed(tuple(claims)) + await _subprocessors(ctx, urljoin(url, link.group(1)))
-    return Observed(tuple(claims))
+        return observed + await _subprocessors(ctx, urljoin(url, link.group(1)))
+    return observed
 
 
 async def _subprocessors(ctx: Context, url: str) -> Observed:
@@ -58,24 +59,31 @@ async def _subprocessors(ctx: Context, url: str) -> Observed:
     page = await _fetch(ctx.http, url)
     if isinstance(page, str):
         return Observed(gaps=(Gap(f"the subprocessor page: GET {url}", page),))
-    text = re.sub(r"<[^>]+>", " ", page[1])
+    final, html, cut = page
+    text = re.sub(r"<[^>]+>", " ", html)
     claims = (
         Claim(
             service,
             Kind.WEBSITE,
             ctx.domain,
-            Evidence(page[0], "page", f"names {service}", ctx.checked_at),
+            Evidence(final, "page", f"names {service}", ctx.checked_at),
         )
         for service in ctx.catalog
         if ctx.catalog.category(service) in _SENDING_CATEGORIES
         and len(service) >= 5  # short names ("Kit", "Wix") are ordinary words too
         and re.search(rf"\b{re.escape(service)}\b", text)
     )
-    return Observed(tuple(claims))
+    return Observed(tuple(claims), gaps=_cut(f"the subprocessor page: GET {url}", cut))
 
 
-async def _fetch(http: httpx.AsyncClient, url: str) -> tuple[str, str] | str:
-    """(final URL, HTML) for a page that loaded, or what happened instead."""
+def _cut(asked: str, cut: bool) -> tuple[Gap, ...]:
+    happened = f"only the first {MAX_BYTES:,} bytes were read (cap); the rest was not"
+    return (Gap(asked, happened),) if cut else ()
+
+
+async def _fetch(http: httpx.AsyncClient, url: str) -> tuple[str, str, bool] | str:
+    """(final URL, HTML, whether the page was cut at MAX_BYTES) for a page that loaded, or what
+    happened instead."""
     try:
         async with http.stream(
             "GET", url, headers={"user-agent": USER_AGENT}, follow_redirects=True, timeout=10
@@ -90,6 +98,7 @@ async def _fetch(http: httpx.AsyncClient, url: str) -> tuple[str, str] | str:
                 body += chunk
                 if len(body) > MAX_BYTES:
                     break
-            return str(response.url), body.decode(response.encoding or "utf-8", errors="replace")
+            html = body[:MAX_BYTES].decode(response.encoding or "utf-8", errors="replace")
+            return str(response.url), html, len(body) > MAX_BYTES
     except httpx.HTTPError as e:
         return http_failure(e)

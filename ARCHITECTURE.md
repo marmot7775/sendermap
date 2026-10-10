@@ -73,6 +73,12 @@ becomes a gap that says it crashed instead of losing the map. A check turned off
 (`--no-web`, `--no-subdomains`) is a gap too, and with both off the MTA-STS policy is not
 fetched, which is also a gap.
 
+Every cap that leaves names unasked records a gap naming the cap and the count it dropped: 30
+sending subdomains, 27 DKIM names per sending subdomain beyond the ones its SPF or MX backs, 24
+SPF ranges for the network lookup, 60 names from the certificate log and names more than two
+labels below the domain, an SPF depth of 10, a vendor's own SPF read 3 levels deep for its
+published ranges, and 2,000,000 bytes of a web page.
+
 ## Modules
 
 | Module | Owns |
@@ -112,10 +118,10 @@ These live in `catalog.py` and the sources, and each has a test.
 - A wildcard answers every name, so DKIM probes and label CNAMEs first ask a fixed name nobody
   publishes (`sendermap-wildcard-check`). A wildcard DKIM key ends the DKIM scan at that name
   with a note; a label CNAME that matches the wildcard target is ignored.
-- An IP range in SPF is named by the narrowest range a service publishes in its own SPF record
+- An IP range in SPF, IPv4 or IPv6, is named by the narrowest range a service publishes in its own SPF record
   that contains it, when exactly one service publishes that range. Otherwise the network that
-  announces it decides, from Team Cymru's IP to ASN data over DNS, sampled at three points for a
-  range larger than a /24: the range goes to the service the vendor data lists as owning that
+  announces it decides, from Team Cymru's IP to ASN data over DNS (`origin` for IPv4, `origin6`
+  for IPv6), sampled at three points for a range wider than an IPv4 /24 or an IPv6 /48: the range goes to the service the vendor data lists as owning that
   network, or to the one publishing service whose name appears in the network owner's name.
   Anything left is listed as unknown, with the cloud named when the network is a shared cloud.
 - A DKIM key's size is read from the key: the RSA modulus length, or 256 for Ed25519.
@@ -164,8 +170,6 @@ it weekly and on any pull request that touches vendors.json.
 These are open items from the October 2026 review, listed so the description above is not read
 as more than it is.
 
-- Caps drop names without saying so: 30 sending subdomains, 24 SPF ranges for the network
-  lookup, 60 names from the certificate log, an SPF depth of 10. IPv6 ranges are not named.
 - The Markdown view does not show gaps.
 - The SPF lookup count walks a repeated include once, so it can read lower than a receiver's.
 
