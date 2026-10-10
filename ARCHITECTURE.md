@@ -202,5 +202,12 @@ as more than it is.
 
 `tests/conftest.py` provides a fake DNS zone (`Zone`) with CNAMEs, wildcards and names that fail
 on purpose, and an HTTP client that answers the certificate log with nothing and fails the test
-on any other request, so the suite never reaches the network. Run `pytest`. `mypy --strict` and
-`ruff check` pass on `sendermap/`; the tests and tools are not yet typed strictly.
+on any other request, so the suite never reaches the network (the web test serves on loopback
+only). Run `pytest`. `mypy --strict` and `ruff check` pass on `sendermap/`, and `ruff check`
+on the tests; the tests and tools are not yet typed strictly.
+
+Tests that hold the rules: `test_evidence.py` maps a fake domain that reaches every kind of
+claim and requires evidence on every claim and finding; `test_gaps.py` and `test_caps.py`
+require a gap for each failed question and each cap; `test_checked.py` requires the record of
+what was asked and its rendering; `test_labels_say_what_was_seen.py` holds the wording of the
+labels; `test_determinism.py` requires the same map from the same answers.
