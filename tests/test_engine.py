@@ -3,9 +3,10 @@
 import pytest
 from conftest import Zone
 
-from sendermap import map_domain
+from sendermap import engine, map_domain
 from sendermap.engine import clean_domain
 from sendermap.model import Role, Tier
+from sendermap.selectors import load_rules
 
 KEY = "v=DKIM1; k=rsa; p=" + "A" * 392
 
@@ -58,6 +59,25 @@ async def test_the_result_serialises(offline):
     result = await map_domain("acme.test", resolver=acme(), http=offline, use_web=False)
     data = result.to_dict()
     assert data["schema"] == "sendermap/1" and data["domain"] == "acme.test"
+
+
+async def test_mx_and_spf_hints_put_google_and_microsoft_selectors_first(offline, monkeypatch):
+    # Reversed, so Google and Microsoft start last and only their hints can move them up.
+    monkeypatch.setattr(engine, "load_rules", lambda: tuple(reversed(load_rules())))
+    zone = (
+        Zone()
+        .add("hinted.test", "MX", "1 smtp.google.com")
+        .add("hinted.test", "TXT", "v=spf1 include:_spf.hinted.test ~all")
+        .add("_spf.hinted.test", "TXT", "v=spf1 include:spf.protection.outlook.com ~all")
+    )
+    await map_domain("hinted.test", resolver=zone, http=offline, use_web=False)
+    probed = [
+        name.removesuffix("._domainkey.hinted.test")
+        for name, rtype in zone.asked
+        if rtype == "TXT" and name.endswith("._domainkey.hinted.test")
+    ][1:]  # the first is the wildcard canary
+    assert set(probed[:3]) == {"google", "selector1", "selector2"}
+    assert len(probed) == len(set(probed)) > 100  # the full sweep, each name once
 
 
 @pytest.mark.parametrize(

@@ -12,6 +12,7 @@ from sendermap.selectors import (
     Source,
     build_dictionary,
     load_rules,
+    probe_order,
     rank_rules,
 )
 
@@ -66,12 +67,14 @@ GOOGLE = Rule(
     Fixed(("google",)),
     Source.PATTERN,
     hints=Hints(mx=("google.com",), spf=("_spf.google.com",)),
+    hints_reference=("https://example.test/google",),
 )
 MICROSOFT = Rule(
     "Microsoft 365",
     Numbered("selector", 2),
     Source.PATTERN,
     hints=Hints(mx=("mail.protection.outlook.com",), spf=("spf.protection.outlook.com",)),
+    hints_reference=("https://example.test/microsoft",),
 )
 NO_HINTS = Rule("Amazon SES", Fixed(("ses",)), Source.PATTERN)
 RULES = (MICROSOFT, NO_HINTS, GOOGLE)
@@ -109,6 +112,7 @@ def test_hints_parse_from_the_rules_file(tmp_path: Path):
         "  shape: {kind: fixed, names: [google]}\n"
         "  source: pattern\n"
         "  hints: {mx: [Google.com.], spf: [_spf.google.com]}\n"
+        "  hints_reference: https://example.test/hints\n"
         "- vendor: Amazon SES\n"
         "  shape: {kind: fixed, names: [ses]}\n"
         "  source: pattern\n",
@@ -116,6 +120,7 @@ def test_hints_parse_from_the_rules_file(tmp_path: Path):
     )
     google, ses = load_rules(rules_file)
     assert google.hints == Hints(mx=("google.com",), spf=("_spf.google.com",))
+    assert google.hints_reference == ("https://example.test/hints",)
     assert ses.hints == Hints()
 
 
@@ -123,3 +128,18 @@ def test_shipped_rules_split_mailchimp_by_provenance():
     mailchimp = [r for r in load_rules() if r.vendor == "Mailchimp"]
     by_source = {r.source: list(r.shape.expand(TODAY)) for r in mailchimp}
     assert by_source == {Source.VENDOR_DOCS: ["k2"], Source.PATTERN: ["k1", "k3"]}
+
+
+def test_hints_without_hints_reference_are_rejected():
+    with pytest.raises(ValueError, match="hints_reference"):
+        Rule("X", Fixed(("x",)), Source.PATTERN, hints=Hints(mx=("x.test",)))
+
+
+def test_hints_reference_without_hints_is_accepted():
+    assert Rule("X", Fixed(("x",)), Source.PATTERN, hints_reference=("https://x.test",))
+
+
+def test_probe_order_moves_rule_names_ahead_and_keeps_the_sweep():
+    sweep = ("k1", "Google", "selector2", "zz", "selector1")
+    order = probe_order((MICROSOFT, NO_HINTS, GOOGLE), sweep, TODAY)
+    assert order == ("selector1", "selector2", "google", "k1", "zz")

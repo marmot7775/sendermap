@@ -61,6 +61,9 @@ class SpfTree:
     ranges: list[tuple[str, Evidence]] = field(default_factory=list)
     hosted_by: str | None = None
     macros: list[str] = field(default_factory=list)
+    # Include and redirect targets in the domain's record and one level below, lowercase.
+    # A hint for ordering the DKIM scan, not evidence: qualifiers are not checked.
+    includes: list[str] = field(default_factory=list)
 
 
 async def collect(ctx: Context, where: str) -> tuple[Observed, SpfTree]:
@@ -135,6 +138,8 @@ class _Walk:
                 evidence = Evidence(name, "TXT", f"{term.mechanism}:{term.value}")
                 self.tree.ranges.append((term.value, evidence))
             if term.mechanism in ("include", "redirect") and term.value:
+                if depth <= 1 and "%{" not in term.value:
+                    self.tree.includes.append(term.value.lower().rstrip("."))
                 links.append(_Link(name, term.value, term.mechanism, depth, inside, live))
         await asyncio.gather(*map(self.follow, links))
 

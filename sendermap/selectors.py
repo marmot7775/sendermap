@@ -86,6 +86,9 @@ class Hints:
     mx: tuple[str, ...] = ()
     spf: tuple[str, ...] = ()
 
+    def __bool__(self) -> bool:
+        return bool(self.mx or self.spf)
+
     def matches(self, mx_hosts: frozenset[str], spf_includes: frozenset[str]) -> bool:
         """True when any MX host ends in a hint suffix or any include is a hint domain.
 
@@ -109,10 +112,15 @@ class Rule:
     source: Source
     reference: str = ""
     hints: Hints = Hints()
+    # Backs the hints, not the names: the page that lists a vendor's MX and SPF values is
+    # rarely the page that lists its selectors.
+    hints_reference: tuple[str, ...] = ()
 
     def __post_init__(self) -> None:
         if self.source is Source.VENDOR_DOCS and not self.reference:
             raise ValueError(f"{self.vendor}: vendor docs claimed, no reference given")
+        if self.hints and not self.hints_reference:
+            raise ValueError(f"{self.vendor}: hints given, no hints_reference")
 
 
 @dataclass(frozen=True, slots=True)
@@ -140,7 +148,13 @@ def parse_rule(raw: Mapping[str, Any]) -> Rule:
         source=Source(raw["source"]),
         reference=raw.get("reference", ""),
         hints=hints,
+        hints_reference=_strings(raw.get("hints_reference", ())),
     )
+
+
+def _strings(value: str | Iterable[str]) -> tuple[str, ...]:
+    """One string or a list of them, as a tuple."""
+    return (value,) if isinstance(value, str) else tuple(value)
 
 
 def _normalise(name: str) -> str:
@@ -175,6 +189,17 @@ def build_dictionary(
         for name in rule.shape.expand(today):
             claims[name].append(Selector(name, rule.vendor, rule.source, rule.reference))
     return {name: tuple(found) for name, found in claims.items()}
+
+
+def probe_order(rules: Iterable[Rule], sweep: Iterable[str], today: date) -> tuple[str, ...]:
+    """The sweep, lowercase, with the names the rules claim moved ahead in rule order.
+
+    Adds nothing and drops nothing: a rule name outside the sweep is not probed.
+    """
+    names = tuple(dict.fromkeys(s.lower() for s in sweep))
+    known = frozenset(names)
+    claimed = (n for rule in rules for n in rule.shape.expand(today) if n.lower() in known)
+    return tuple(dict.fromkeys((*(n.lower() for n in claimed), *names)))
 
 
 def rank_rules(

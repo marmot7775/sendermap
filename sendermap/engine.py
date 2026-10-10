@@ -12,6 +12,7 @@ import asyncio
 import time
 from collections.abc import Awaitable, Callable
 from contextlib import AsyncExitStack
+from datetime import date
 
 import httpx
 
@@ -19,6 +20,7 @@ from . import catalog as catalog_module
 from .dns import Lookups, Resolver, SystemResolver
 from .infer import backed_selectors, services
 from .model import Finding, Gap, Kind, Observed, SenderMap, Severity
+from .selectors import load_rules, probe_order, rank_rules
 from .sources import (
     Context,
     bimi,
@@ -84,7 +86,8 @@ async def map_domain(
 
         await say("Scanning DKIM keys and the networks in SPF")
         backed = backed_selectors(apex.claims, ctx.catalog)
-        selectors = (*ctx.catalog.probe_selectors, *backed)
+        ranked = rank_rules(load_rules(), await _mx_hosts(ctx, domain), tree.includes)
+        selectors = probe_order(ranked, (*ctx.catalog.probe_selectors, *backed), date.today())
         deep = await asyncio.gather(
             dkim.collect(ctx, domain, selectors, backed),
             networks.collect(ctx, domain, tree.ranges),
@@ -119,6 +122,12 @@ async def _subdomain(ctx: Context, name: str) -> Observed:
         networks.collect(ctx, name, tree.ranges),
     )
     return first + keys + owned
+
+
+async def _mx_hosts(ctx: Context, where: str) -> list[str]:
+    """The MX hosts at `where`. The MX source already asked, so this is a cache hit."""
+    answer = await ctx.dns.query(where, "MX")
+    return [host for r in answer.records if (host := r.partition(" ")[2]) not in ("", ".")]
 
 
 def _cross_findings(ctx: Context, observed: Observed) -> tuple[Finding, ...]:
