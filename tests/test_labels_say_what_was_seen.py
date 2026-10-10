@@ -4,17 +4,17 @@ import httpx
 from conftest import CHECKED, Zone, context
 
 from sendermap import map_domain
-from sendermap.model import Kind, Role, Severity, Tier
+from sendermap.model import Kind, Observed, Role, Severity, Tier
 from sendermap.sources import Context, dkim, mta_sts, mx, spf
 
 KEY = "v=DKIM1; k=rsa; p=" + "A" * 392
 
 
-async def scan(zone: Zone, selectors):
+async def scan(zone: Zone, selectors: list[str]) -> Observed:
     return await dkim.collect(context(zone), "example.com", selectors, {})
 
 
-async def test_a_dkim_record_with_no_p_tag_is_malformed_not_revoked():
+async def test_a_dkim_record_with_no_p_tag_is_malformed_not_revoked() -> None:
     zone = (
         Zone()
         .add("mandrill._domainkey.example.com", "TXT", "v=DKIM1; k=rsa; ap=MIGfMA0")
@@ -27,7 +27,7 @@ async def test_a_dkim_record_with_no_p_tag_is_malformed_not_revoked():
     assert [(c.service, c.kind) for c in observed.claims] == [("Mailchimp", Kind.DKIM_REVOKED)]
 
 
-async def test_a_wildcard_record_that_is_not_a_key_is_not_read_as_a_malformed_key():
+async def test_a_wildcard_record_that_is_not_a_key_is_not_read_as_a_malformed_key() -> None:
     zone = (
         Zone()
         .add("*._domainkey.example.com", "TXT", "hello")
@@ -38,7 +38,7 @@ async def test_a_wildcard_record_that_is_not_a_key_is_not_read_as_a_malformed_ke
     assert [c.kind for c in observed.claims] == [Kind.DKIM_NAME]
 
 
-async def test_a_reporting_service_has_no_tier(offline):
+async def test_a_reporting_service_has_no_tier(offline: httpx.AsyncClient) -> None:
     zone = Zone().add("_dmarc.acme.test", "TXT", "v=DMARC1; p=none; rua=mailto:x@rua.agari.com")
     result = await map_domain(
         "acme.test", checked_at=CHECKED, resolver=zone, http=offline, use_web=False
@@ -48,7 +48,7 @@ async def test_a_reporting_service_has_no_tier(offline):
     assert result.to_dict()["services"][0]["tier"] is None
 
 
-async def test_an_mta_sts_mx_line_is_configured_not_in_use():
+async def test_an_mta_sts_mx_line_is_configured_not_in_use() -> None:
     zone = Zone().add("_mta-sts.example.com", "TXT", "v=STSv1; id=1")
     policy = "version: STSv1\nmode: testing\nmx: *.mail.protection.outlook.com\n"
 
@@ -62,7 +62,7 @@ async def test_an_mta_sts_mx_line_is_configured_not_in_use():
     assert claim.kind is Kind.MTA_STS and claim.kind.tier is Tier.CONFIGURED
 
 
-async def test_a_mailbox_mx_on_a_subdomain_is_in_use_there_only(offline):
+async def test_a_mailbox_mx_on_a_subdomain_is_in_use_there_only(offline: httpx.AsyncClient) -> None:
     zone = Zone().add("mail.acme.test", "MX", "1 smtp.google.com")
     (claim,) = (await mx.collect(context(zone, "acme.test"), "mail.acme.test")).claims
     assert claim.kind is Kind.SUBDOMAIN_MAILBOX and "subdomain" in claim.kind.value
@@ -73,7 +73,9 @@ async def test_a_mailbox_mx_on_a_subdomain_is_in_use_there_only(offline):
     assert google.tier is Tier.CONFIGURED and google.decided_by.where == "mail.acme.test"
 
 
-async def test_the_gateway_note_states_what_mx_shows_labelled_as_inference(offline):
+async def test_the_gateway_note_states_what_mx_shows_labelled_as_inference(
+    offline: httpx.AsyncClient,
+) -> None:
     zone = Zone().add("acme.test", "MX", "10 us-smtp-inbound-1.mimecast.com")
     result = await map_domain(
         "acme.test", checked_at=CHECKED, resolver=zone, http=offline, use_web=False
@@ -85,7 +87,7 @@ async def test_the_gateway_note_states_what_mx_shows_labelled_as_inference(offli
     assert [e.value for e in note.evidence] == ["10 us-smtp-inbound-1.mimecast.com"]
 
 
-async def test_the_easydmarc_note_says_the_walk_read_its_record():
+async def test_the_easydmarc_note_says_the_walk_read_its_record() -> None:
     zone = (
         Zone()
         .add("example.com", "TXT", "v=spf1 include:x._s.easydmarc.pro -all")

@@ -5,6 +5,7 @@ from conftest import CHECKED, Zone
 from rich.console import Console
 
 from sendermap import catalog, engine, map_domain
+from sendermap.model import SenderMap
 from sendermap.render import markdown, text
 
 
@@ -16,7 +17,7 @@ def acme() -> Zone:
     )
 
 
-async def acme_map():
+async def acme_map() -> SenderMap:
     def site(request: httpx.Request) -> httpx.Response:
         if request.url.host == "api.certspotter.com":
             return httpx.Response(200, json=[])
@@ -29,7 +30,7 @@ async def acme_map():
         return await map_domain("acme.test", checked_at=CHECKED, resolver=acme(), http=http)
 
 
-async def test_each_name_records_the_dkim_names_labels_and_pages_asked():
+async def test_each_name_records_the_dkim_names_labels_and_pages_asked() -> None:
     result = await acme_map()
     apex, sub = result.checked
     assert apex.where == "acme.test" and sub.where == "email.acme.test"
@@ -40,7 +41,7 @@ async def test_each_name_records_the_dkim_names_labels_and_pages_asked():
     assert len(sub.dkim_selectors) >= engine.SUBDOMAIN_PROBES and sub.labels == ()
 
 
-async def test_the_checked_record_holds_every_dkim_name_the_scan_asked():
+async def test_the_checked_record_holds_every_dkim_name_the_scan_asked() -> None:
     zone = acme()
     result = await map_domain(
         "acme.test", checked_at=CHECKED, resolver=zone, use_web=False, use_subdomains=False
@@ -54,7 +55,7 @@ async def test_the_checked_record_holds_every_dkim_name_the_scan_asked():
     assert asked - {"sendermap-wildcard-check"} == set(apex.dkim_selectors)
 
 
-async def test_markdown_shows_the_gaps_and_what_was_asked():
+async def test_markdown_shows_the_gaps_and_what_was_asked() -> None:
     page = markdown.render(await acme_map())
     assert "## Not checked" in page
     assert "- DMARC: TXT at _dmarc.acme.test: lookup failed" in page
@@ -62,7 +63,7 @@ async def test_markdown_shows_the_gaps_and_what_was_asked():
     assert "- **email.acme.test**:" in page and "`google`" in page
 
 
-async def test_the_terminal_shows_the_gaps_and_what_was_asked():
+async def test_the_terminal_shows_the_gaps_and_what_was_asked() -> None:
     console = Console(record=True, width=200)
     text.render(await acme_map(), console)
     shown = console.export_text()
@@ -73,7 +74,7 @@ async def test_the_terminal_shows_the_gaps_and_what_was_asked():
     assert "DKIM selectors: " in console.export_text()
 
 
-async def test_the_json_carries_the_checked_record():
+async def test_the_json_carries_the_checked_record() -> None:
     data = (await acme_map()).to_dict()
     assert data["checked"][0]["where"] == "acme.test"
     assert {"dkim_selectors", "labels", "pages"} <= set(data["checked"][0])

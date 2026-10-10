@@ -3,10 +3,11 @@
 import ipaddress
 
 import httpx
+import pytest
 from conftest import CHECKED, Zone, context
 
 from sendermap import engine, map_domain
-from sendermap.model import Evidence, Kind
+from sendermap.model import Evidence, Kind, Observed, SenderMap
 from sendermap.sources import Context, networks, spf, subdomains, web
 
 
@@ -14,11 +15,13 @@ def ev(value: str) -> Evidence:
     return Evidence("example.com", "TXT", value, CHECKED)
 
 
-def asked(observed) -> dict[str, str]:
+def asked(observed: Observed | SenderMap) -> dict[str, str]:
     return {g.asked: g.happened for g in observed.gaps}
 
 
-async def test_sending_subdomains_past_the_cap_are_a_gap(offline, monkeypatch):
+async def test_sending_subdomains_past_the_cap_are_a_gap(
+    offline: httpx.AsyncClient, monkeypatch: pytest.MonkeyPatch
+) -> None:
     monkeypatch.setattr(engine, "MAX_SUBDOMAINS", 1)
     zone = (
         Zone()
@@ -32,7 +35,9 @@ async def test_sending_subdomains_past_the_cap_are_a_gap(offline, monkeypatch):
     assert asked(result)["sending subdomains"].startswith("1 of 2 not checked")
 
 
-async def test_dkim_names_left_out_of_a_subdomains_budget_are_a_gap(offline):
+async def test_dkim_names_left_out_of_a_subdomains_budget_are_a_gap(
+    offline: httpx.AsyncClient,
+) -> None:
     zone = Zone().add("email.acme.test", "TXT", "v=spf1 include:mailgun.org ~all")
     result = await map_domain(
         "acme.test", checked_at=CHECKED, resolver=zone, http=offline, use_web=False
@@ -41,7 +46,7 @@ async def test_dkim_names_left_out_of_a_subdomains_budget_are_a_gap(offline):
     assert "not asked" in happened and f"first {engine.SUBDOMAIN_PROBES}" in happened
 
 
-async def test_ranges_past_the_cap_are_a_gap(monkeypatch):
+async def test_ranges_past_the_cap_are_a_gap(monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.setattr(networks, "MAX_RANGES", 1)
     ranges = [("198.51.100.0/24", ev("ip4:198.51.100.0/24")), ("203.0.113.0/24", ev("ip4:x"))]
     observed = await networks.collect(context(Zone()), "example.com", ranges)
@@ -51,7 +56,9 @@ async def test_ranges_past_the_cap_are_a_gap(monkeypatch):
     )
 
 
-async def test_certificate_log_names_too_deep_or_past_the_cap_are_gaps(monkeypatch):
+async def test_certificate_log_names_too_deep_or_past_the_cap_are_gaps(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
     monkeypatch.setattr(subdomains, "MAX_FROM_CT", 2)
     logged = ["a.example.com", "b.example.com", "c.example.com", "x.y.z.example.com"]
 
@@ -67,7 +74,7 @@ async def test_certificate_log_names_too_deep_or_past_the_cap_are_gaps(monkeypat
     assert gaps["certificate log names"].startswith("1 of 3 not asked")
 
 
-async def test_spf_includes_past_the_depth_cap_are_a_gap():
+async def test_spf_includes_past_the_depth_cap_are_a_gap() -> None:
     zone = Zone().add("example.com", "TXT", "v=spf1 include:l1.example.net -all")
     for level in range(1, spf.MAX_DEPTH + 2):
         zone.add(f"l{level}.example.net", "TXT", f"v=spf1 include:l{level + 1}.example.net -all")
@@ -77,7 +84,7 @@ async def test_spf_includes_past_the_depth_cap_are_a_gap():
     assert gap.happened == f"1 not walked (cap of {spf.MAX_DEPTH} levels)"
 
 
-async def test_a_page_cut_at_the_size_cap_is_a_gap(monkeypatch):
+async def test_a_page_cut_at_the_size_cap_is_a_gap(monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.setattr(web, "MAX_BYTES", 10)
 
     def page(request: httpx.Request) -> httpx.Response:
@@ -99,7 +106,7 @@ def origin6(zone: Zone, address: str, asn: str, name: str) -> Zone:
     return zone
 
 
-async def test_an_ipv6_range_inside_a_services_published_range_is_that_service():
+async def test_an_ipv6_range_inside_a_services_published_range_is_that_service() -> None:
     zone = Zone().add("_spf.google.com", "TXT", "v=spf1 ip6:2001:4860:4000::/36 ~all")
     observed = await networks.collect(
         context(zone), "example.com", [("2001:4860:4864::/56", ev("ip6:2001:4860:4864::/56"))]
@@ -109,7 +116,7 @@ async def test_an_ipv6_range_inside_a_services_published_range_is_that_service()
     ]
 
 
-async def test_an_ipv6_range_is_named_by_its_network_or_listed_as_unknown():
+async def test_an_ipv6_range_is_named_by_its_network_or_listed_as_unknown() -> None:
     zone = origin6(Zone(), "2600:1f18::1", "AS14618", "AMAZON-AES - Amazon.com, Inc., US")
     observed = await networks.collect(
         context(zone),
@@ -123,7 +130,7 @@ async def test_an_ipv6_range_is_named_by_its_network_or_listed_as_unknown():
     ]
 
 
-async def test_the_spf_walk_carries_ipv6_ranges_to_the_networks_source():
+async def test_the_spf_walk_carries_ipv6_ranges_to_the_networks_source() -> None:
     zone = Zone().add("example.com", "TXT", "v=spf1 ip6:2001:db8::/32 ip4:192.0.2.0/24 -all")
     _, tree = await spf.collect(context(zone), "example.com")
     assert [cidr for cidr, _ in tree.ranges] == ["2001:db8::/32", "192.0.2.0/24"]

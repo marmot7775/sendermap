@@ -7,6 +7,7 @@ import sys
 from importlib import resources
 from pathlib import Path
 
+import httpx
 import pytest
 from conftest import CHECKED, Zone
 
@@ -28,7 +29,7 @@ def _audit(event: str, args: tuple[object, ...]) -> None:
 sys.addaudithook(_audit)
 
 
-async def test_the_engine_never_opens_the_pending_file(offline):
+async def test_the_engine_never_opens_the_pending_file(offline: httpx.AsyncClient) -> None:
     catalog.load.cache_clear()
     opened: list[str] = []
     listening.append(opened)
@@ -89,8 +90,8 @@ CASES = [
 
 @pytest.mark.parametrize(("field", "vendor", "host"), CASES)
 async def test_a_host_only_a_pending_pattern_matches_is_unknown_with_its_hostname(
-    offline, field, vendor, host
-):
+    offline: httpx.AsyncClient, field: str, vendor: str, host: str
+) -> None:
     result = await map_domain(
         "example.com",
         checked_at=CHECKED,
@@ -103,7 +104,9 @@ async def test_a_host_only_a_pending_pattern_matches_is_unknown_with_its_hostnam
     assert [u for u in result.unknowns if host in u.value], result.unknowns
 
 
-async def test_an_address_in_a_pending_network_is_unknown_with_its_network(offline):
+async def test_an_address_in_a_pending_network_is_unknown_with_its_network(
+    offline: httpx.AsyncClient,
+) -> None:
     (vendor, asn), *_ = [
         (vendor, entry["value"])
         for vendor, block in PENDING.items()
@@ -127,7 +130,7 @@ async def test_an_address_in_a_pending_network_is_unknown_with_its_network(offli
     assert [u for u in result.unknowns if asn in u.value], result.unknowns
 
 
-def test_every_pending_block_says_what_was_checked():
+def test_every_pending_block_says_what_was_checked() -> None:
     assert PENDING
     for vendor, block in PENDING.items():
         assert block.get("checked", "").strip(), vendor

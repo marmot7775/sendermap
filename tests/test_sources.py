@@ -1,6 +1,7 @@
 """MX, labels, tokens, report addresses and the website."""
 
 import httpx
+import pytest
 from conftest import Zone, context
 
 from sendermap.dns import Answer, Status
@@ -8,7 +9,7 @@ from sendermap.model import Kind
 from sendermap.sources import Context, labels, mx, reports, tokens, web
 
 
-async def test_a_mailbox_host_is_in_use_and_a_senders_subdomain_mx_is_not():
+async def test_a_mailbox_host_is_in_use_and_a_senders_subdomain_mx_is_not() -> None:
     zone = (
         Zone()
         .add("example.com", "MX", "0 example-com.mail.protection.outlook.com")
@@ -21,12 +22,12 @@ async def test_a_mailbox_host_is_in_use_and_a_senders_subdomain_mx_is_not():
     assert [(c.service, c.kind) for c in sub.claims] == [("Mailgun", Kind.SUBDOMAIN_MX)]
 
 
-async def test_a_null_mx_says_the_domain_takes_no_mail():
+async def test_a_null_mx_says_the_domain_takes_no_mail() -> None:
     observed = await mx.collect(context(Zone().add("example.com", "MX", "0 .")), "example.com")
     assert observed.claims == () and "accepts no mail" in observed.findings[0].title
 
 
-async def test_bounce_and_tracking_cnames_name_the_services_they_point_at():
+async def test_bounce_and_tracking_cnames_name_the_services_they_point_at() -> None:
     zone = (
         Zone()
         .alias("bounce.example.com", "sparkpostmail.com")
@@ -39,10 +40,10 @@ async def test_bounce_and_tracking_cnames_name_the_services_they_point_at():
     }
 
 
-async def test_a_wildcard_cname_is_not_evidence(monkeypatch):
+async def test_a_wildcard_cname_is_not_evidence(monkeypatch: pytest.MonkeyPatch) -> None:
     zone = Zone()
 
-    async def every_name_aliases(name, rtype):
+    async def every_name_aliases(name: str, rtype: str) -> Answer:
         return Answer(name, rtype, Status.OK, ("sendgrid.net",), ("sendgrid.net",))
 
     monkeypatch.setattr(zone, "query", every_name_aliases)
@@ -50,13 +51,13 @@ async def test_a_wildcard_cname_is_not_evidence(monkeypatch):
     assert observed.claims == ()
 
 
-async def test_tokens_are_account_traces():
+async def test_tokens_are_account_traces() -> None:
     zone = Zone().add("example.com", "TXT", "MS=ms12345678", "google-site-verification=abc")
     observed = await tokens.collect(context(zone))
     assert [(c.service, c.kind) for c in observed.claims] == [("Microsoft 365", Kind.TOKEN)]
 
 
-def test_report_addresses_parse_like_receivers_do():
+def test_report_addresses_parse_like_receivers_do() -> None:
     record = (
         "v=DMARC1; p=reject; rua=mailto:a@rua.agari.com!10m,mailto:b@example.com?x=y, "
         "MAILTO:c@ag.dmarcian.com; ruf=mailto:d@two@bad.com"
@@ -68,7 +69,7 @@ def test_report_addresses_parse_like_receivers_do():
     ]
 
 
-async def test_report_services_are_reporting_and_others_listed():
+async def test_report_services_are_reporting_and_others_listed() -> None:
     zone = (
         Zone()
         .add(
@@ -88,7 +89,7 @@ async def test_report_services_are_reporting_and_others_listed():
     ]
 
 
-async def test_the_website_names_its_scripts_and_subprocessors():
+async def test_the_website_names_its_scripts_and_subprocessors() -> None:
     pages = {
         "https://example.com/": '<script src="https://static.klaviyo.com/onsite/js/x.js"></script>'
         '<a href="/legal/subprocessors">Subprocessors</a>',
@@ -112,7 +113,7 @@ async def test_the_website_names_its_scripts_and_subprocessors():
     }
 
 
-async def test_a_link_form_or_text_on_the_website_is_a_mention_not_a_load():
+async def test_a_link_form_or_text_on_the_website_is_a_mention_not_a_load() -> None:
     html = (
         '<link rel="stylesheet" href="//static.zdassets.com/x.css">'
         '<a href="https://www.klaviyo.com/">x</a> <script>var s="https://static.klaviyo.com"</script>'

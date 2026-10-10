@@ -21,7 +21,7 @@ class Kept(logging.Handler):
         self.records.append(record)
 
 
-async def test_the_app_starts_with_access_logging_off():
+async def test_the_app_starts_with_access_logging_off() -> None:
     # Uvicorn's own default is to log every request, query string included.
     config = uvicorn.Config(site.app, host="127.0.0.1", port=0, log_level="info")
     assert config.access_log

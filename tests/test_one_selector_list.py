@@ -5,6 +5,7 @@ import json
 import sys
 from importlib import resources
 
+import httpx
 from conftest import CHECKED, Zone
 
 from sendermap import catalog, map_domain
@@ -23,12 +24,12 @@ def _audit(event: str, args: tuple[object, ...]) -> None:
 sys.addaudithook(_audit)
 
 
-def test_the_file_keeps_one_selector_list():
+def test_the_file_keeps_one_selector_list() -> None:
     assert not [v for v, block in SHIPPED["vendors"].items() if "dkim_selectors" in block]
     assert "probe_selectors" not in SHIPPED["rules"]
 
 
-def test_names_credited_backed_and_probed_all_come_from_the_proofed_rules():
+def test_names_credited_backed_and_probed_all_come_from_the_proofed_rules() -> None:
     loaded = catalog.load()
     proofed = set(build_dictionary(loaded.rules))
     assert set(loaded.selectors) == proofed
@@ -37,7 +38,7 @@ def test_names_credited_backed_and_probed_all_come_from_the_proofed_rules():
     assert len(loaded.probe_selectors) == len(set(loaded.probe_selectors))
 
 
-def test_a_pending_selector_is_neither_probed_nor_credited():
+def test_a_pending_selector_is_neither_probed_nor_credited() -> None:
     loaded = catalog.load()
     pending = {
         name
@@ -51,7 +52,7 @@ def test_a_pending_selector_is_neither_probed_nor_credited():
         assert loaded.dkim_key(name, (), backed=None) is None, name
 
 
-async def test_the_vendor_file_is_read_once_for_a_map(offline):
+async def test_the_vendor_file_is_read_once_for_a_map(offline: httpx.AsyncClient) -> None:
     catalog.load.cache_clear()
     opened: list[str] = []
     listening.append(opened)
