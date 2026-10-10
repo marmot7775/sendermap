@@ -9,29 +9,29 @@ from .catalog import Catalog
 from .model import Claim, Kind, Role, Service, Tier
 
 
-def services(claims: Iterable[Claim], catalog: Catalog) -> tuple[Service, ...]:
+def services(claims: Iterable[Claim], catalog: Catalog, domain: str) -> tuple[Service, ...]:
     grouped: defaultdict[str, list[Claim]] = defaultdict(list)
     for claim in dict.fromkeys(claims):  # drop repeats, keep order
         grouped[claim.service].append(claim)
-    return tuple(
-        sorted((_service(name, found, catalog) for name, found in grouped.items()), key=_order)
-    )
+    found = (_service(name, cs, catalog, domain) for name, cs in grouped.items())
+    return tuple(sorted(found, key=_order))
 
 
-def _service(name: str, claims: list[Claim], catalog: Catalog) -> Service:
+def _service(name: str, claims: list[Claim], catalog: Catalog, domain: str) -> Service:
     tiers = [tier for c in claims if (tier := c.kind.tier)]
     return Service(
         name=name,
         category=catalog.category(name),
         tier=min(tiers, key=lambda t: t.rank) if tiers else Tier.ACCOUNT_ONLY,
         role=Role.SENDER if tiers else Role.REPORTING,
-        claims=tuple(sorted(claims, key=_strength)),
+        claims=tuple(sorted(claims, key=lambda c: _strength(c, domain))),
     )
 
 
-def _strength(claim: Claim) -> tuple[int, int]:
+def _strength(claim: Claim, domain: str) -> tuple[int, bool, int]:
+    """Strongest tier first; within a tier, evidence on the domain itself before a subdomain."""
     tier = claim.kind.tier
-    return (tier.rank if tier else len(Tier), list(Kind).index(claim.kind))
+    return (tier.rank if tier else len(Tier), claim.where != domain, list(Kind).index(claim.kind))
 
 
 def _order(service: Service) -> tuple[bool, int, str]:

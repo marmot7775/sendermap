@@ -13,9 +13,10 @@ is stated in words, from the evidence, never guessed.
 
 ## Principles
 
-1. **Evidence first.** Sources produce evidence: one observed fact each, such as "the SPF record
-   at example.com includes servers.mcsv.net". Inference turns evidence into claims about services.
-   Rendering shows claims with the evidence under them. No layer skips another.
+1. **Evidence first.** A source observes public facts and turns each into a claim about one
+   service, carrying the evidence: "the SPF record at example.com includes servers.mcsv.net".
+   Inference groups claims into services and ranks them. Rendering shows each service with the
+   evidence under it.
 2. **Say how sure, in words.** Four tiers for a sender, strongest first:
    - **In use**: the domain's mail is delivered there (MX).
    - **Configured**: set up to send as the domain (an SPF include, a DKIM key the service hosts
@@ -42,7 +43,7 @@ sendermap/
   model.py         Evidence, Claim, Service, Finding, SenderMap: frozen dataclasses
   catalog.py       the vendor catalog from sendermap/data/vendors.json, and every matching rule
   dns.py           a Resolver protocol, dnspython and DNS over HTTPS implementations, a cache
-  sources/         one module per source; each is `async def collect(ctx) -> list[Evidence]`
+  sources/         one module per source; each returns an Observed: claims, unknowns, findings, gaps
     mx.py            MX hosts
     spf.py           the SPF tree: includes, redirects, nested wrappers, IP ranges, lookup count
     dkim.py          selector scan, CNAME chains, retired and dangling keys, wildcard canary
@@ -66,14 +67,18 @@ tests/             a fake resolver, recorded fixtures, and the rules each test p
 
 ## The data model
 
-- `Evidence(source, name, rtype, value, note)` is one observed fact, immutable and hashable.
-- `Claim(service, kind, evidence)` says what a piece of evidence shows about one service: its
+- `Evidence(name, rtype, value)` is one observed fact: a record at a name, or a line on a page.
+- `Claim(service, kind, where, evidence)` says what a piece of evidence, found at `where` (the
+  domain or one of its subdomains), shows about one service: its
   MX, an SPF include, a DKIM key by CNAME, a key by name, a bounce CNAME, a tracking CNAME, an
   owned network, a website script, a verification token, a report address.
 - `Service(name, category, tier, role, claims)` is one row of the map. Its tier is the strongest
   of its claims, so a reader can always see which claim decided it.
 - `Finding(severity, title, detail, evidence)` is something that needs attention.
-- `SenderMap(domain, services, findings, unknowns, lookups, started, elapsed)` is the result,
+- `Unknown(what, value, where)` is a clear sign of a sender that matches no service yet.
+- `Gap(what, why)` is a lookup that did not complete, so its silence says nothing.
+- `SenderMap(domain, services, findings, unknowns, gaps, subdomains_checked, logo, lookups,
+  elapsed)` is the result,
   serialised to versioned JSON (`"schema": "sendermap/1"`).
 
 ## Rules carried from dns-audit

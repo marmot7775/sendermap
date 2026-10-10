@@ -97,7 +97,7 @@ async def map_domain(
         observed = sum((*deep, *under), apex)
         result = SenderMap(
             domain=domain,
-            services=services(observed.claims, ctx.catalog),
+            services=services(observed.claims, ctx.catalog, domain),
             findings=_sorted(observed.findings + _cross_findings(ctx, observed)),
             unknowns=tuple(dict.fromkeys(observed.unknowns)),
             gaps=observed.gaps + (() if ct_read else (_ct_gap(),)),
