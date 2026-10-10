@@ -76,9 +76,7 @@ async def map_domain(
                 )
             ]
             logo_task = tg.create_task(bimi.logo(ctx))
-            subs_task = tg.create_task(
-                subdomains.discover(ctx) if use_subdomains else _none_found()
-            )
+            subs_task = tg.create_task(_discover(ctx) if use_subdomains else _none_found())
         found, tree = spf_task.result()
         apex = sum((task.result() for task in evidence), found)
         sending_subdomains, ct_read = subs_task.result()
@@ -161,6 +159,14 @@ async def _guard(source: Awaitable[Observed], what: str) -> Observed:
         return await source
     except Exception as e:  # a source bug must not take down every other source
         return Observed(gaps=(Gap(what, f"failed: {type(e).__name__}"),))
+
+
+async def _discover(ctx: Context) -> tuple[list[str], bool]:
+    """Sending subdomains; a failure here costs the subdomains, not the map."""
+    try:
+        return await subdomains.discover(ctx)
+    except Exception:  # a source bug must not take down every other source
+        return [], False
 
 
 async def _nothing() -> Observed:
