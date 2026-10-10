@@ -22,6 +22,8 @@ import yaml
 
 
 class Source(Enum):
+    """How a rule's selector names are known."""
+
     VENDOR_DOCS = "vendor_docs"
     AGGREGATE_REPORT = "aggregate_report"
     PATTERN = "pattern"
@@ -88,16 +90,16 @@ class Rule:
     vendor: str
     shape: Shape
     source: Source
-    reference: str = ""
+    reference: str | None = None
     hints: Hints = Hints()
     # Backs the hints, not the names: the page that lists a vendor's MX and SPF values is
     # rarely the page that lists its selectors.
-    hints_reference: tuple[str, ...] = ()
+    hints_reference: tuple[str, ...] | None = None
 
     def __post_init__(self) -> None:
-        if self.source is Source.VENDOR_DOCS and not self.reference:
+        if self.source is Source.VENDOR_DOCS and self.reference is None:
             raise ValueError(f"{self.vendor}: vendor docs claimed, no reference given")
-        if not self.hints.empty and not self.hints_reference:
+        if not self.hints.empty and self.hints_reference is None:
             raise ValueError(f"{self.vendor}: hints given, no hints_reference")
 
 
@@ -108,13 +110,13 @@ class Selector:
     name: str
     vendor: str
     source: Source
-    reference: str
+    reference: str | None
 
 
 def _parse_rule(raw: Mapping[str, Any]) -> Rule:
     """Build a Rule from one mapping in the rules file."""
     vendor = raw["vendor"]
-    hints_reference = raw.get("hints_reference", [])
+    hints_reference = raw.get("hints_reference")
     if isinstance(hints_reference, str):
         raise ValueError(f"{vendor}: hints_reference must be a list, even with one URL")
     hint_spec = raw.get("hints") or {}
@@ -123,9 +125,9 @@ def _parse_rule(raw: Mapping[str, Any]) -> Rule:
         vendor=vendor,
         shape=_parse_shape(vendor, raw["shape"]),
         source=Source(raw["source"]),
-        reference=raw.get("reference", ""),
+        reference=raw.get("reference"),
         hints=hints,
-        hints_reference=tuple(hints_reference),
+        hints_reference=None if hints_reference is None else tuple(hints_reference),
     )
 
 
