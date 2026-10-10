@@ -104,6 +104,12 @@ async def map_domain(
         )
 
         picked = discovered.sending[:MAX_SUBDOMAINS]
+        if dropped := len(discovered.sending) - len(picked):
+            happened = (
+                f"{dropped} of {len(discovered.sending)} not checked: only the first "
+                f"{MAX_SUBDOMAINS} in alphabetical order were (cap)"
+            )
+            apex += Observed(gaps=(Gap("sending subdomains", happened),))
         await say(f"Checking {len(picked)} sending subdomains")
         under = await asyncio.gather(*(_subdomain(ctx, rules, name) for name in picked))
 
@@ -131,11 +137,19 @@ async def _subdomain(ctx: Context, rules: tuple[Rule, ...], name: str) -> Observ
     first = found + received
     backed = backed_selectors(first.claims, ctx.catalog)
     order = await _probe_order(ctx, rules, name, tree.includes, backed)
+    probed = (*order[:SUBDOMAIN_PROBES], *backed)
     keys, owned = await asyncio.gather(
-        dkim.collect(ctx, name, (*order[:SUBDOMAIN_PROBES], *backed), backed),
+        dkim.collect(ctx, name, probed, backed),
         networks.collect(ctx, name, tree.ranges),
     )
-    return first + keys + owned
+    budget = Observed()
+    if unasked := len(set(order) - set(probed)):
+        happened = (
+            f"{unasked} of {len(order)} not asked: only the first {SUBDOMAIN_PROBES} and the "
+            "names its own SPF or MX backs were (cap)"
+        )
+        budget = Observed(gaps=(Gap(f"DKIM selectors at {name}", happened),))
+    return first + keys + owned + budget
 
 
 async def _probe_order(

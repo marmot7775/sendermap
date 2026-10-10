@@ -90,6 +90,10 @@ async def collect(ctx: Context, where: str) -> tuple[Observed, SpfTree]:
     record = records[0]
     await _prefetch(ctx, record, depth=0, nearest={norm(where): 0})
     walked = await _Walk(ctx, where).visit(where, record, depth=0, inside=None, authorized=True)
+    if too_deep := list(dict.fromkeys(walked.too_deep)):
+        asked = f"SPF includes more than {MAX_DEPTH} levels below {where}: {', '.join(too_deep)}"
+        happened = f"{len(too_deep)} not walked (cap of {MAX_DEPTH} levels)"
+        walked += _Walked(observed=Observed(gaps=(Gap(asked, happened),)))
     tree = SpfTree(
         record=record,
         lookups=walked.lookups,
@@ -167,6 +171,7 @@ class _Walked:
     includes: tuple[str, ...] = ()
     macros: tuple[str, ...] = ()
     hosted: tuple[str, ...] = ()  # hosted SPF services on authorizing links
+    too_deep: tuple[str, ...] = ()  # targets past MAX_DEPTH, not walked
 
     def __add__(self, other: _Walked) -> _Walked:
         return _Walked(
@@ -176,6 +181,7 @@ class _Walked:
             self.includes + other.includes,
             self.macros + other.macros,
             self.hosted + other.hosted,
+            self.too_deep + other.too_deep,
         )
 
 
@@ -222,8 +228,10 @@ class _Walk:
         service = self.ctx.catalog.spf(link.target)
         walked = self._credit(link, service) if link.live else _Walked()
         key = norm(link.target)
-        if key in self.seen or link.depth + 1 > MAX_DEPTH:
+        if key in self.seen:
             return walked
+        if link.depth + 1 > MAX_DEPTH:
+            return walked + _Walked(too_deep=(key,))
         self.seen.add(key)
         answer = await self.ctx.dns.txt(link.target)
         if not answer.answered:

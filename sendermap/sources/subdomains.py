@@ -20,6 +20,8 @@ from .spf import spf_records
 
 CT_LOG = "https://api.certspotter.com/v1/issuances"
 MAX_FROM_CT = 60
+# Names deeper than this many labels below the domain are not asked.
+MAX_CT_DEPTH = 2
 
 
 @dataclass(frozen=True, slots=True)
@@ -69,9 +71,22 @@ async def _from_certificates(ctx: Context) -> tuple[set[str], tuple[Gap, ...]]:
     except ValueError:
         return set(), (Gap(asked, "the answer was not JSON, so only the common labels were asked"),)
     names: set[str] = set()
+    deep: set[str] = set()
     for issuance in issuances:
         for raw in issuance.get("dns_names", []):
             name = norm(raw).removeprefix("*.")
-            if name.endswith("." + ctx.domain) and name.count(".") <= ctx.domain.count(".") + 2:
-                names.add(name)
-    return set(sorted(names)[:MAX_FROM_CT]), ()
+            if not name.endswith("." + ctx.domain):
+                continue
+            too_deep = name.count(".") > ctx.domain.count(".") + MAX_CT_DEPTH
+            (deep if too_deep else names).add(name)
+    gaps: tuple[Gap, ...] = ()
+    if deep:
+        happened = f"{len(deep)} not asked (cap of {MAX_CT_DEPTH} labels below the domain)"
+        gaps += (Gap(f"certificate log names more than {MAX_CT_DEPTH} labels deep", happened),)
+    if len(names) > MAX_FROM_CT:
+        happened = (
+            f"{len(names) - MAX_FROM_CT} of {len(names)} not asked: only the first {MAX_FROM_CT} "
+            "in alphabetical order were (cap)"
+        )
+        gaps += (Gap("certificate log names", happened),)
+    return set(sorted(names)[:MAX_FROM_CT]), gaps
