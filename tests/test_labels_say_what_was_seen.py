@@ -88,15 +88,15 @@ async def test_the_gateway_note_states_what_mx_shows_labelled_as_inference(offli
 async def test_the_easydmarc_note_says_the_walk_read_its_record():
     zone = (
         Zone()
-        .add("example.com", "TXT", "v=spf1 include:_spf.easydmarc.com -all")
-        .add("_spf.easydmarc.com", "TXT", "v=spf1 include:sendgrid.net -all")
+        .add("example.com", "TXT", "v=spf1 include:x._s.easydmarc.pro -all")
+        .add("x._s.easydmarc.pro", "TXT", "v=spf1 include:sendgrid.net -all")
     )
     observed, _ = await spf.collect(context(zone), "example.com")
     assert {c.service for c in observed.claims} == {"SendGrid"}
     (note,) = observed.findings
     assert "The walk read that record" in note.detail and "do not show" not in note.detail
-    unread = Zone(failing={"_spf.easydmarc.com"}).add(
-        "example.com", "TXT", "v=spf1 include:_spf.easydmarc.com -all"
+    unread = Zone(failing={"x._s.easydmarc.pro"}).add(
+        "example.com", "TXT", "v=spf1 include:x._s.easydmarc.pro -all"
     )
     observed, _ = await spf.collect(context(unread), "example.com")
     assert "could not read it" in observed.findings[0].detail

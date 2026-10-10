@@ -30,12 +30,12 @@ async def test_bounce_and_tracking_cnames_name_the_services_they_point_at():
     zone = (
         Zone()
         .alias("bounce.example.com", "sparkpostmail.com")
-        .alias("links.example.com", "links.iterable.com")
+        .alias("links.example.com", "e.customeriomail.com")
     )
     observed = await labels.collect(context(zone), "example.com")
     assert {(c.service, c.kind) for c in observed.claims} == {
         ("SparkPost", Kind.RETURN_PATH),
-        ("Iterable", Kind.TRACKING),
+        ("Customer.io", Kind.TRACKING),
     }
 
 
@@ -116,7 +116,7 @@ async def test_a_link_form_or_text_on_the_website_is_a_mention_not_a_load():
     html = (
         '<link rel="stylesheet" href="//static.zdassets.com/x.css">'
         '<a href="https://www.klaviyo.com/">x</a> <script>var s="https://static.klaviyo.com"</script>'
-        '<form action="https://acme.us1.list-manage.com/subscribe/post"></form>'
+        '<a href="https://cdn.shopify.com/s/files/terms.pdf">Terms</a>'
     )
 
     def handler(request: httpx.Request) -> httpx.Response:
@@ -129,5 +129,5 @@ async def test_a_link_form_or_text_on_the_website_is_a_mention_not_a_load():
     assert {(c.service, c.kind, c.evidence.value) for c in observed.claims} == {
         ("Zendesk", Kind.WEBSITE, "loads static.zdassets.com"),
         ("Klaviyo", Kind.WEBSITE_MENTION, "mentions static.klaviyo.com"),
-        ("Mailchimp", Kind.WEBSITE_MENTION, "mentions list-manage.com"),
+        ("Shopify", Kind.WEBSITE_MENTION, "mentions cdn.shopify.com"),
     }

@@ -106,7 +106,8 @@ published ranges, 2,000,000 bytes of a web page, and 200 names from crt.sh.
 |---|---|
 | `model.py` | The result types above, and which Tier each Kind supports |
 | `dns.py` | The Resolver interface, the system and DNS-over-HTTPS resolvers, and `Lookups`: the per-map cache that asks each name and type once and counts the queries |
-| `catalog.py` | Loading vendors.json into match tables; matching a host, token or selector to a service |
+| `catalog.py` | Loading vendors.json into match tables, refusing any pattern without a proof; matching a host, token or selector to a service |
+| `proofs.py` | The Proof type and the checks every proof must pass on loading |
 | `selectors.py` | DKIM selector rules with proofs: loading and checking them, and ordering the probes |
 | `infer.py` | Turning claims into ranked services; the map of backed selectors |
 | `engine.py` | `map_domain`: input cleaning, the phase order, subdomain scans, limits, the gateway note |
@@ -189,12 +190,28 @@ selector names, bounce and tracking CNAMEs, report addresses, verification token
 website hosts), plus shared `rules` (generic selectors, hosted SPF services, cloud networks,
 the labels and selectors to probe).
 
+Every SPF include, MX host, DKIM CNAME target, bounce, tracking and other CNAME, report address,
+verification token, network and website host is an entry with its value and a proof: a domain
+that publishes it, the record (a DNS name, or a page's URL) and the date checked. `catalog.build`
+refuses an entry without one, and checks that the record could show the pattern: a report
+address at `_dmarc.` or `_smtp._tls.` of the domain, a token at the domain itself, a DKIM CNAME
+under its `_domainkey`, a website host on an https page of the domain, anything else at or under
+the domain. `proofs.py` holds those checks.
+
 A `selectors` entry names a vendor's DKIM selectors with how they are known and a proof: a live
 domain that publishes the record, the record name and the date checked. Loading refuses an entry
-without one. Four vendors have such entries so far; they set the order of DKIM probes. Every
-other pattern, including the `dkim_selectors` lists used to credit keys, carries no proof yet.
-`tools/verify_proofs.py` rechecks every proof against live DNS; the `Verify proofs` workflow runs
-it weekly and on any pull request that touches vendors.json.
+without one. Four vendors have such entries so far; they set the order of DKIM probes. The
+`dkim_selectors` lists used to credit keys carry no proof yet.
+
+`sendermap/data/vendors_pending.json` holds the patterns with no proof yet, in the same block
+shape, each block with a note of where they were looked for. Nothing in the package reads it, so
+a record only a pending pattern would match is reported as not recognised: an SPF include, MX
+host, report address or network as it always was, a bounce or tracking CNAME into a zone outside
+the domain as "CNAME at <label>" with its target, and a DKIM key behind a CNAME with the chain it
+is served through. A test watches every file the engine opens and fails if the pending file is
+one. `tools/verify_proofs.py` rechecks every proof against live DNS and, for website hosts, the
+page; the `Verify proofs` workflow runs it weekly and on any pull request that touches
+vendors.json.
 
 ## Surfaces
 

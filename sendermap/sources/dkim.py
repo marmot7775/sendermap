@@ -150,7 +150,9 @@ def _read(
         kind = Kind.DKIM_CNAME if by_cname else Kind.DKIM_NAME
         found = Observed(claims=(Claim(service, kind, where, evidence, via),))
     else:
-        found = Observed(unknowns=(Unknown("DKIM key", selector, where, evidence),))
+        # A key behind a CNAME no service's pattern matches is listed with where it is served.
+        value = f"{selector} via {' -> '.join(key.chain)}" if key.chain else selector
+        found = Observed(unknowns=(Unknown("DKIM key", value, where, evidence),))
     if key.algorithm == "rsa" and key.bits is not None and key.bits <= 1024:
         found += Observed(findings=(_short_key(selector, where, key.bits, evidence),))
     return found

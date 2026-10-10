@@ -1,7 +1,8 @@
-# Recheck every selector proof in vendors.json against live DNS: on any pull request that touches
-# the file or the checker, weekly, and by hand. A proof not found fails the job, which blocks a
-# pull request; on the weekly run it also opens an issue, or comments on the open one. A proof
-# that could not be checked (timeout, lookup failure) is listed in the output and fails nothing.
+# Recheck every proof in vendors.json against live DNS and the web: on any pull request that
+# touches the file or the checker, weekly, and by hand. A proof not found fails the job, which
+# blocks a pull request; on the weekly run it also opens an issue, or comments on the open one. A
+# proof that could not be checked (timeout, lookup failure, a page that refuses the request) is
+# listed in the output and fails nothing.
 
 name: Verify proofs
 
@@ -44,7 +45,7 @@ jobs:
           today=$(date -u +%F)
           open=$(gh issue list --state open --limit 1000 --json number,title)
           jq -c 'select(.status == "not found")' results.jsonl | while read -r row; do
-            title=$(jq -r '"Proof failed: \(.vendor) \(.selector)"' <<<"$row")
+            title=$(jq -r '"Proof failed: \(.vendor) \(.field) \(.pattern)"' <<<"$row")
             body=$(jq -r --arg today "$today" '[
               "Proof domain: \(.domain)",
               "Record expected: \(.record), a \(.expected)",

@@ -25,16 +25,16 @@ DOMAIN = "allbirds.com"
 def zone() -> Zone:
     return (
         Zone()
-        .alias("links.mail.allbirds.com", "links.iterable.com")
-        .add("links.iterable.com", "A", "192.0.2.10")
-        .alias("app-email.allbirds.com", "u123.wl.sendgrid.net")  # dangling: no longer there
+        .alias("links.mail.allbirds.com", "e.customeriomail.com")
+        .add("e.customeriomail.com", "A", "192.0.2.10")
+        .alias("app-email.allbirds.com", "u123.sparkpostmail.com")  # dangling: no longer there
         .add("accounts.allbirds.com", "MX", "10 mxa.mailgun.org")
         .add("dev.api.allbirds.com", "A", "198.2.128.7")
         .add("7.128.2.198.origin.asn.cymru.com", "TXT", "14782 | 198.2.128.0/24 | US | arin")
         .add("AS14782.asn.cymru.com", "TXT", "14782 | US | arin | 2005 | MAILCHIMP - Mailchimp")
         .add("test.api.allbirds.com", "A", "203.0.113.5")  # resolves, names no service
-        .alias("gift-cards.middle-tier-prod.aws.allbirds.com", "dct.klaviyodns.com")
-        .add("dct.klaviyodns.com", "A", "192.0.2.20")
+        .alias("gift-cards.middle-tier-prod.aws.allbirds.com", "u161779.wl030.sendgrid.net")
+        .add("u161779.wl030.sendgrid.net", "A", "192.0.2.20")
     )
 
 
@@ -106,26 +106,26 @@ async def test_logged_names_go_through_the_dns_matchers_with_certificate_evidenc
     observed, summary = await run(CrtSh(), tmp_path)
     claims = {(c.service, c.kind, c.where): c.evidence for c in observed.claims}
     assert set(claims) == {
-        ("Iterable", Kind.TRACKING, "links.mail.allbirds.com"),
+        ("Customer.io", Kind.TRACKING, "links.mail.allbirds.com"),
         ("Mailgun", Kind.SUBDOMAIN_MX, "accounts.allbirds.com"),
         ("Mailchimp", Kind.CT_ADDRESS, "dev.api.allbirds.com"),
         ("Klaviyo", Kind.CT_CNAME, "gift-cards.middle-tier-prod.aws.allbirds.com"),
     }
     assert all(isinstance(e, CertificateEvidence) for e in claims.values())
-    links = claims[("Iterable", Kind.TRACKING, "links.mail.allbirds.com")]
+    links = claims[("Customer.io", Kind.TRACKING, "links.mail.allbirds.com")]
     assert isinstance(links, CertificateEvidence)
     assert links.name == "links.mail.allbirds.com" and links.rtype == "certificate"
     assert (links.not_before, links.not_after) == ("2025-12-07T00:00:00", "2027-01-05T23:59:59")
-    assert links.target == "links.iterable.com"
+    assert links.target == "e.customeriomail.com"
     assert summary.status is CtStatus.READ and summary.logged == summary.resolved == 9
 
 
 async def test_a_logged_name_that_no_longer_resolves_is_a_possible_past_vendor(tmp_path):
     observed, summary = await run(CrtSh(), tmp_path)
     (past,) = observed.historical
-    assert past.service == "SendGrid" and past.evidence.name == "app-email.allbirds.com"
+    assert past.service == "SparkPost" and past.evidence.name == "app-email.allbirds.com"
     assert past.evidence.not_after == "2020-12-10T23:33:19"
-    assert "SendGrid" not in {c.service for c in observed.claims}
+    assert "SparkPost" not in {c.service for c in observed.claims}
     # The other gift-cards name and the middle-tier names do not resolve and name no service.
     assert summary.gone_unnamed == 3
 
@@ -173,7 +173,12 @@ async def test_answers_are_cached_on_disk_for_a_day(tmp_path):
     refuses = CrtSh(failures=99)
     observed, summary = await run(refuses, tmp_path, at=CHECKED + timedelta(hours=23))
     assert refuses.requests == [] and summary.status is CtStatus.CACHED
-    assert {c.service for c in observed.claims} == {"Iterable", "Mailgun", "Mailchimp", "Klaviyo"}
+    assert {c.service for c in observed.claims} == {
+        "Customer.io",
+        "Mailgun",
+        "Mailchimp",
+        "Klaviyo",
+    }
     again = CrtSh()
     _, summary = await run(again, tmp_path, at=CHECKED + timedelta(hours=25))
     assert len(again.requests) == 1 and summary.status is CtStatus.READ
@@ -199,9 +204,9 @@ async def test_the_map_and_its_markdown_carry_the_ct_section(tmp_path):
             use_ct=True,
             ct_cache=tmp_path,
         )
-    iterable = next(s for s in result.senders if s.name == "Iterable")
-    assert iterable.tier.value == "Configured"
+    tracking = next(s for s in result.senders if s.name == "Customer.io")
+    assert tracking.tier.value == "Configured"
     page = markdown.render(result)
     assert "## Certificate transparency" in page
-    assert "Possible past vendor: SendGrid at app-email.allbirds.com" in page
+    assert "Possible past vendor: SparkPost at app-email.allbirds.com" in page
     assert result.to_dict()["historical"][0]["evidence"]["not_after"] == "2020-12-10T23:33:19"

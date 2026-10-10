@@ -39,7 +39,7 @@ async def test_a_shared_range_on_a_cloud_network_is_unknown_and_lists_its_publis
     zone = (
         Zone()
         .add("_spf.google.com", "TXT", "v=spf1 ip4:74.125.0.0/16 ~all")
-        .add("_spf.hubspot.com", "TXT", "v=spf1 ip4:74.125.0.0/16 -all")
+        .add("hubspot.com", "TXT", "v=spf1 ip4:74.125.0.0/16 -all")
     )
     for ip in ("74.125.0.1", "74.125.128.1", "74.125.192.1"):
         owner(zone, ip, "AS15169", "GOOGLE - Google LLC, US")
@@ -57,12 +57,13 @@ async def test_a_services_own_network_names_it():
 
 
 async def test_a_large_range_follows_the_majority_of_its_blocks():
-    # 149.72.0.0/16 is SendGrid's, but its first /24 is announced by Amazon.
-    zone = owner(Zone(), "149.72.0.1", "AS14618", "AMAZON-AES - Amazon.com, Inc., US")
-    for ip in ("149.72.128.1", "149.72.192.1"):
-        owner(zone, ip, "AS11377", "SENDGRID - SendGrid, Inc., US")
-    observed = await networks.collect(context(zone), "example.com", [("149.72.0.0/16", EV)])
-    assert [c.service for c in observed.claims] == ["SendGrid"]
+    # Its first /24 is announced by Amazon, as with SendGrid's 149.72.0.0/16; the other two
+    # samples by Mailchimp.
+    zone = owner(Zone(), "198.2.128.1", "AS14618", "AMAZON-AES - Amazon.com, Inc., US")
+    for ip in ("198.2.160.1", "198.2.176.1"):
+        owner(zone, ip, "AS14782", "THEROCKETSCIENCEGROUP - MailChimp, US")
+    observed = await networks.collect(context(zone), "example.com", [("198.2.128.0/18", EV)])
+    assert [c.service for c in observed.claims] == ["Mailchimp"]
 
 
 async def test_a_cloud_is_never_credited_to_a_service():

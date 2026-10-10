@@ -1,15 +1,28 @@
-"""Check every selector proof in data/vendors.json against live DNS.
+"""Check every proof in data/vendors.json against live DNS and the web.
 
-For each proof, query the record once and report found, not found, or could not check, with what
-the domain publishes there now. A record counts as found when it holds a DKIM key, directly or
-through a CNAME; anything else at the name, such as a wildcard SPF record, is not found. A lookup
-that times out or fails is could not check: it says nothing about the proof, so it is listed but
-never fails the run. Exits 1 if any proof is not found.
+For each proof, ask for its record once and report found, not found, or could not check, with
+what is published there now. What counts as found depends on the kind of pattern:
+
+- a DKIM selector: a TXT record holding a key (p=), directly or through a CNAME;
+- an SPF include: one SPF record at the name, with an include or redirect to the pattern;
+- an MX host: an MX record at the name whose host is the pattern or a name under it;
+- a DKIM, bounce, tracking or other CNAME: a CNAME chain from the name with a hop at or under the
+  pattern (for other_cname, the pattern's target);
+- a report address: a DMARC or TLS-RPT record at the name with a mailto: address at or under the
+  pattern;
+- a verification token: a TXT record at the name that the pattern matches, with a value after it;
+- a network: an address of the name that, by Team Cymru's answer, the network announces;
+- a website host: the page at the URL loads a script or stylesheet from the pattern's host.
+
+Anything else at the name, such as a wildcard SPF record where a key should be, is not found. A
+lookup or request that fails, or a page that answers with anything but 200, 404 or 410, is could
+not check: it says nothing about the proof, so it is listed but never fails the run. Exits 1 if
+any proof is not found.
 
 Usage: python tools/verify_proofs.py [--json]
 
---json prints one JSON object per proof, one per line, with vendor, selector, domain, record,
-expected, observed and status; the totals line goes to stderr.
+--json prints one JSON object per proof, one per line, with vendor, field, pattern, domain,
+record, expected, observed and status; the totals line goes to stderr.
 """
 
 from __future__ import annotations
@@ -17,26 +30,49 @@ from __future__ import annotations
 import argparse
 import asyncio
 import json
+import re
 import sys
+from collections.abc import Awaitable, Callable
 from dataclasses import asdict, dataclass
+from urllib.parse import urljoin, urlsplit
 
-from sendermap.dns import Answer, Resolver, Status, SystemResolver
-from sendermap.selectors import Proof, Rule, load_rules
-from sendermap.sources.dkim import Key
+import httpx
+
+from sendermap import catalog
+from sendermap.catalog import Pattern
+from sendermap.dns import Answer, Resolver, Status, SystemResolver, norm
+from sendermap.proofs import Proof
+from sendermap.selectors import Rule, load_rules
+from sendermap.sources.reports import report_domains
+from sendermap.sources.spf import spf_records, terms
+from sendermap.sources.web import _LOADED, USER_AGENT
 
 FOUND = "found"
 NOT_FOUND = "not found"
 UNCHECKED = "could not check"
 
-EXPECTED = "TXT record holding a DKIM key (p=)"
 TIMEOUT = 3.0  # seconds per query
 CONCURRENCY = 4
+EXPECTED = {
+    "selectors": "TXT record holding a DKIM key (p=)",
+    "spf_includes": "SPF record with an include or redirect to {}",
+    "mx": "MX record with a host at or under {}",
+    "dkim_cname": "CNAME chain through a name at or under {}",
+    "return_path": "CNAME chain through a name at or under {}",
+    "tracking": "CNAME chain through a name at or under {}",
+    "other_cname": "CNAME chain through a name at or under {}",
+    "reporting": "report address at or under {}",
+    "verification_txt": "TXT record matching {}",
+    "networks": "an address announced by {}",
+    "website": "a page that loads a script or stylesheet from {}",
+}
 
 
 @dataclass(frozen=True, slots=True)
 class Result:
     vendor: str
-    selector: str
+    field: str
+    pattern: str
     domain: str
     record: str
     expected: str
@@ -44,36 +80,169 @@ class Result:
     status: str
 
 
-async def check(resolver: Resolver, rule: Rule, proof: Proof) -> tuple[Result, str]:
-    """The result for one of a rule's proofs, and its line of text report."""
-    answer = await resolver.query(proof.record, "TXT")
-    record = next((r for r in answer.records if "p=" in r), None)
-    label = f"{rule.vendor} [{', '.join(rule.shape.expand())}] {proof.record} ({proof.date})"
-    if not answer.answered:
-        status, line = UNCHECKED, f"unchecked  {label}: {answer.status}"
-    elif record is None:
-        status, line = NOT_FOUND, f"not found  {label}: {_published(answer)}"
-    else:
-        key = Key(proof.record.split(".", 1)[0], proof.record, record, answer.chain)
-        status, line = FOUND, f"found      {label}: {key.described()}"
+@dataclass(frozen=True, slots=True)
+class Seen:
+    """What one check saw: whether the record shows the pattern, and what is published there.
+    `answered` is False when the lookup or request failed."""
+
+    shows: bool
+    observed: str
+    answered: bool = True
+
+
+Check = Callable[["Checker", str, str], Awaitable[Seen]]
+
+
+class Checker:
+    """Asks for proof records through one resolver and one HTTP client."""
+
+    def __init__(self, resolver: Resolver, http: httpx.AsyncClient) -> None:
+        self.resolver, self.http = resolver, http
+
+    async def query(self, name: str, rtype: str) -> Answer:
+        return await self.resolver.query(name, rtype)
+
+
+def _under(host: str, pattern: str) -> bool:
+    host, pattern = norm(host), norm(pattern)
+    return host == pattern or host.endswith("." + pattern)
+
+
+def _seen(answer: Answer, shows: bool) -> Seen:
+    return Seen(shows, _observed(answer), answer.answered)
+
+
+async def _key(checker: Checker, record: str, _: str) -> Seen:
+    answer = await checker.query(record, "TXT")
+    return _seen(answer, any("p=" in r for r in answer.records))
+
+
+async def _spf(checker: Checker, record: str, pattern: str) -> Seen:
+    answer = await checker.query(record, "TXT")
+    records = spf_records(answer)
+    shows = len(records) == 1 and any(
+        t.mechanism in ("include", "redirect") and _under(t.value, pattern)
+        for t in terms(records[0])
+    )
+    return _seen(answer, shows)
+
+
+async def _mx(checker: Checker, record: str, pattern: str) -> Seen:
+    answer = await checker.query(record, "MX")
+    return _seen(answer, any(_under(r.partition(" ")[2], pattern) for r in answer.records))
+
+
+async def _cname(checker: Checker, record: str, pattern: str) -> Seen:
+    answer = await checker.query(record, "CNAME")
+    return _seen(answer, any(_under(hop, pattern) for hop in answer.chain))
+
+
+async def _reports(checker: Checker, record: str, pattern: str) -> Seen:
+    answer = await checker.query(record, "TXT")
+    tags = ("rua", "ruf") if record.startswith("_dmarc.") else ("rua",)
+    hosts = [h for r in answer.records for h in report_domains(r, tags)]
+    return _seen(answer, any(_under(h, pattern) for h in hosts))
+
+
+async def _token(checker: Checker, record: str, pattern: str) -> Seen:
+    answer = await checker.query(record, "TXT")
+    rx = re.compile(pattern, re.IGNORECASE)
+    texts = (r.strip().lower() for r in answer.records)
+    return _seen(answer, any((m := rx.match(t)) and len(t[m.end() :].strip()) >= 4 for t in texts))
+
+
+async def _network(checker: Checker, record: str, asn: str) -> Seen:
+    answer = await checker.query(record, "A")
+    if not answer.ok:
+        return _seen(answer, False)
+    announced: list[str] = []
+    for ip in answer.records:
+        origin = await checker.query(
+            ".".join(reversed(ip.split("."))) + ".origin.asn.cymru.com", "TXT"
+        )
+        if not origin.answered:
+            return Seen(False, _observed(origin), False)
+        if origin.ok:
+            announced.append(f"{ip} AS{origin.records[0].split('|')[0].split()[0]}")
+    shows = any(a.endswith(f" {asn.upper()}") for a in announced)
+    return Seen(shows, "; ".join(announced) or "no network announces its addresses")
+
+
+async def _website(checker: Checker, url: str, pattern: str) -> Seen:
+    try:
+        response = await checker.http.get(
+            url, headers={"user-agent": USER_AGENT}, follow_redirects=True, timeout=20
+        )
+    except httpx.HTTPError as e:
+        return Seen(False, f"request failed: {type(e).__name__}", False)
+    if response.status_code != 200:
+        # A page that is gone is not found; any other refusal says nothing about the proof.
+        return Seen(False, f"HTTP {response.status_code}", response.status_code in (404, 410))
+    hosts = [
+        urlsplit(urljoin(str(response.url), s)).hostname or ""
+        for s in _LOADED.findall(response.text)
+    ]
+    loads = [h for h in hosts if h and _under(h, pattern)]
+    return Seen(bool(loads), f"loads {', '.join(dict.fromkeys(loads))}" if loads else "no load")
+
+
+CHECKS: dict[str, Check] = {
+    "selectors": _key,
+    "spf_includes": _spf,
+    "mx": _mx,
+    "dkim_cname": _cname,
+    "return_path": _cname,
+    "tracking": _cname,
+    "other_cname": _cname,
+    "reporting": _reports,
+    "verification_txt": _token,
+    "networks": _network,
+    "website": _website,
+}
+
+
+@dataclass(frozen=True, slots=True)
+class Item:
+    """One proof to check: whose, for which pattern, and the record it names."""
+
+    vendor: str
+    field: str
+    pattern: str
+    proof: Proof
+
+    @property
+    def shown(self) -> str:
+        """The pattern as listed: a selector's name is the first label of its record."""
+        return self.proof.record.split(".", 1)[0] if self.field == "selectors" else self.pattern
+
+
+def items(rules: tuple[Rule, ...], patterns: tuple[Pattern, ...]) -> list[Item]:
+    """Every proof: the selector rules' first, then every other pattern's, in file order."""
+    keys = [
+        Item(rule.vendor, "selectors", ", ".join(rule.shape.expand()), proof)
+        for rule in rules
+        for proof in rule.proofs
+    ]
+    return keys + [Item(p.vendor, p.field, p.value, p.proof) for p in patterns]
+
+
+async def check(checker: Checker, item: Item) -> tuple[Result, str]:
+    """The result for one proof, and its line of text report."""
+    seen = await CHECKS[item.field](checker, item.proof.record, item.pattern)
+    status = FOUND if seen.shows else NOT_FOUND if seen.answered else UNCHECKED
+    word = {FOUND: "found     ", NOT_FOUND: "not found ", UNCHECKED: "unchecked "}[status]
+    label = f"{item.vendor} {item.field} [{item.pattern}] {item.proof.record} ({item.proof.date})"
     result = Result(
-        vendor=rule.vendor,
-        selector=proof.record.split(".", 1)[0],
-        domain=proof.domain,
-        record=proof.record,
-        expected=EXPECTED,
-        observed=_observed(answer),
+        vendor=item.vendor,
+        field=item.field,
+        pattern=item.shown,
+        domain=item.proof.domain,
+        record=item.proof.record,
+        expected=EXPECTED[item.field].format(item.pattern),
+        observed=seen.observed,
         status=status,
     )
-    return result, line
-
-
-def _published(answer: Answer) -> str:
-    """What sits at the name when no DKIM key does."""
-    via = f" via {' -> '.join(answer.chain)}" if answer.chain else ""
-    if answer.records:
-        return f"publishes {' | '.join(answer.records)}{via}"
-    return f"{answer.status}{via}"
+    return result, f"{word} {label}: {seen.observed}"
 
 
 def _observed(answer: Answer) -> str:
@@ -87,18 +256,18 @@ def _observed(answer: Answer) -> str:
         case Status.NOANSWER:
             return "no data" + via
         case _:
-            return "lookup failed or timed out"
+            return "lookup failed"
 
 
-async def verify(resolver: Resolver, rules: tuple[Rule, ...]) -> list[tuple[Result, str]]:
+async def verify(checker: Checker, todo: list[Item]) -> list[tuple[Result, str]]:
     """Check every proof, a few at a time."""
     limit = asyncio.Semaphore(CONCURRENCY)
 
-    async def one(rule: Rule, proof: Proof) -> tuple[Result, str]:
+    async def one(item: Item) -> tuple[Result, str]:
         async with limit:
-            return await check(resolver, rule, proof)
+            return await check(checker, item)
 
-    return await asyncio.gather(*(one(rule, proof) for rule in rules for proof in rule.proofs))
+    return await asyncio.gather(*map(one, todo))
 
 
 def totals(results: list[Result]) -> str:
@@ -108,12 +277,18 @@ def totals(results: list[Result]) -> str:
     return f"{line}, {unchecked} could not be checked" if unchecked else line
 
 
-async def main(argv: list[str] | None = None) -> int:
-    parser = argparse.ArgumentParser(description="Check every selector proof against live DNS.")
+def load() -> list[Item]:
+    """Every proof in the vendor data Sendermap ships."""
+    return items(load_rules(), catalog.load().patterns)
+
+
+async def main(argv: list[str] | None = None, http: httpx.AsyncClient | None = None) -> int:
+    parser = argparse.ArgumentParser(description="Check every vendor proof against live DNS.")
     parser.add_argument("--json", action="store_true", help="print one JSON object per proof")
     args = parser.parse_args(argv)
 
-    checked = await verify(SystemResolver(timeout=TIMEOUT), load_rules())
+    async with http or httpx.AsyncClient() as client:
+        checked = await verify(Checker(SystemResolver(timeout=TIMEOUT), client), load())
     results = [result for result, _ in checked]
     for result, line in checked:
         print(json.dumps(asdict(result)) if args.json else line)

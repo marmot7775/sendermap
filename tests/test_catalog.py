@@ -47,7 +47,7 @@ def test_a_token_needs_a_value():
 
 
 def test_tracking_labels_prefer_the_tracking_table():
-    assert C.label_cname("links", "links.iterable.com") == ("Iterable", "tracking")
+    assert C.label_cname("links", "e.customeriomail.com") == ("Customer.io", "tracking")
     assert C.label_cname("bounce", "sparkpostmail.com") == ("SparkPost", "return path")
     assert C.label_cname("autodiscover", "autodiscover.outlook.com") == (
         "Microsoft 365",
@@ -57,16 +57,16 @@ def test_tracking_labels_prefer_the_tracking_table():
 
 
 def test_website_signatures_match_hosts_and_their_subdomains_only():
-    page = '<script src="https://us1.list-manage.com/x.js"></script> notlist-manage.com'
-    loaded = ["us1.list-manage.com"]
-    assert C.website_services(page, loaded) == {"Mailchimp": ("us1.list-manage.com", True)}
+    page = '<script src="https://eu1.static.zdassets.com/x.js"></script> notstatic.zdassets.com'
+    loaded = ["eu1.static.zdassets.com"]
+    assert C.website_services(page, loaded) == {"Zendesk": ("eu1.static.zdassets.com", True)}
     assert C.website_services("<p>static.klaviyo.comics</p>", []) == {}
-    assert C.website_services("", ["notlist-manage.com"]) == {}
+    assert C.website_services("", ["notstatic.zdassets.com"]) == {}
 
 
 def test_a_host_the_page_does_not_load_from_is_only_mentioned():
-    page = '<form action="https://acme.us1.list-manage.com/subscribe/post"></form>'
-    assert C.website_services(page, []) == {"Mailchimp": ("list-manage.com", False)}
+    page = '<a href="https://cdn.shopify.com/s/files/terms.pdf">Terms</a>'
+    assert C.website_services(page, []) == {"Shopify": ("cdn.shopify.com", False)}
 
 
 def test_every_service_has_a_category():
