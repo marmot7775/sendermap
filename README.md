@@ -57,8 +57,9 @@ from the vendor tables in [dns-audit](https://github.com/marmot7775/dns-audit) (
 ## Contributing
 
 Each vendor gets one block in `sendermap/data/vendors.json`, and everything known about it goes
-there. Every selector pattern carries one proof: a live domain that publishes the record, the
-record name as found, and the date checked. A pattern without a proof does not get merged.
+there. Every selector name carries one proof of its own: a live domain that publishes the record,
+the record name as found, and the date checked (a numbered series such as s1, s2 needs one for the
+series). A name without a proof does not get merged.
 
 ## Related
 

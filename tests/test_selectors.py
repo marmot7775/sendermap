@@ -200,8 +200,45 @@ def test_an_unknown_shape_kind_is_rejected(tmp_path: Path):
 
 def test_shipped_rules_split_mailchimp_by_provenance():
     mailchimp = [r for r in load_rules() if r.vendor == "Mailchimp"]
-    by_source = {r.source: list(r.shape.expand()) for r in mailchimp}
-    assert by_source == {Source.VENDOR_DOCS: ["k2"], Source.PATTERN: ["k1", "k3"]}
+    assert [(r.source, list(r.shape.expand())) for r in mailchimp] == [
+        (Source.VENDOR_DOCS, ["k2"]),
+        (Source.PATTERN, ["k1"]),
+        (Source.PATTERN, ["k3"]),
+    ]
+
+
+@pytest.mark.parametrize(
+    ("entry_proof", "message"),
+    [
+        (proof_json("k1"), "2 names need 2 proofs"),
+        ([proof_json("k1")], "2 names need 2 proofs"),
+        (
+            [proof_json("k3"), proof_json("k1")],
+            r"proof record .k3\._domainkey\.example\.test. does not name k1",
+        ),
+    ],
+)
+def test_a_fixed_shape_with_several_names_needs_one_proof_per_name(
+    tmp_path: Path, entry_proof, message
+):
+    entry = {"shape": {"kind": "fixed", "names": ["k1", "k3"]}, "source": "pattern"}
+    rules_file = vendors_file(
+        tmp_path, {"Example Vendor": {"selectors": [{**entry, "proof": entry_proof}]}}
+    )
+    with pytest.raises(ValueError, match=f"Example Vendor k1, k3: {message}"):
+        load_rules(rules_file)
+
+
+def test_each_name_in_a_fixed_shape_carries_its_own_proof(tmp_path: Path):
+    entry = {
+        "shape": {"kind": "fixed", "names": ["k1", "k3"]},
+        "source": "pattern",
+        "proof": [proof_json("k1"), proof_json("k3")],
+    }
+    rules_file = vendors_file(tmp_path, {"Example Vendor": {"selectors": [entry]}})
+    found = build_dictionary(load_rules(rules_file))
+    assert found["k1"][0].proof == proof("k1")
+    assert found["k3"][0].proof == proof("k3")
 
 
 def test_a_hints_reference_given_as_one_string_is_rejected(tmp_path: Path):

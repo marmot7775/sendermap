@@ -1,5 +1,5 @@
 {
-  "about": "Email services recognisable from a domain's own DNS. One block per vendor; imported from dns-audit (MIT) at fac9e2e. Hostname patterns match the host itself or any name under it, and the longest match wins. Networks are autonomous system numbers a service owns outright; shared clouds are listed under rules.cloud_networks and never credited to a service. Each selectors entry names a vendor's DKIM selectors with their source and a proof: a live domain that publishes the record, the record name, and the date it was checked. Hints are MX and SPF values the vendor's customers publish, with the pages that list them.",
+  "about": "Email services recognisable from a domain's own DNS. One block per vendor; imported from dns-audit (MIT) at fac9e2e. Hostname patterns match the host itself or any name under it, and the longest match wins. Networks are autonomous system numbers a service owns outright; shared clouds are listed under rules.cloud_networks and never credited to a service. Each selectors entry names a vendor's DKIM selectors with their source and a proof: a live domain that publishes the record, the record name, and the date it was checked. A fixed shape with several names takes a list of proofs, one per name in order. Hints are MX and SPF values the vendor's customers publish, with the pages that list them.",
   "categories": [
     "Mailbox",
     "Security gateway",
@@ -907,7 +907,22 @@
           "shape": {
             "kind": "fixed",
             "names": [
-              "k1",
+              "k1"
+            ]
+          },
+          "source": "pattern",
+          "reference": null,
+          "proof": {
+            "domain": "canva.com",
+            "record": "k1._domainkey.canva.com",
+            "date": "2026-10-09"
+          },
+          "note": "Not in Mailchimp's own docs. Points at dkim.mcsv.net."
+        },
+        {
+          "shape": {
+            "kind": "fixed",
+            "names": [
               "k3"
             ]
           },
@@ -918,7 +933,7 @@
             "record": "k3._domainkey.canva.com",
             "date": "2026-10-09"
           },
-          "note": "Not in Mailchimp's own docs. The proof is k3, the name third parties reported; it points at dkim3.mcsv.net."
+          "note": "Not in Mailchimp's own docs; reported by third parties. Points at dkim3.mcsv.net."
         }
       ]
     },
