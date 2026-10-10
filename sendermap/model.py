@@ -86,11 +86,13 @@ class Severity(StrEnum):
 
 @dataclass(frozen=True, slots=True)
 class Evidence:
-    """One observed public fact: a record at a name, or a line on a web page."""
+    """One observed public fact: a record at a name, or a line on a web page, and when it was
+    checked (the run's checked_at)."""
 
     name: str
     rtype: str
     value: str
+    checked_at: datetime
 
     def __str__(self) -> str:
         return f"{self.name} {self.rtype} {self.value}"

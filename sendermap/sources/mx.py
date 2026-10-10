@@ -15,7 +15,7 @@ async def collect(ctx: Context, where: str) -> Observed:
     findings: list[Finding] = []
     for record in answer.records:
         host = exchange(record)
-        evidence = Evidence(where, "MX", record)
+        evidence = Evidence(where, "MX", record, ctx.checked_at)
         if not host:  # RFC 7505 null MX
             if where == ctx.domain:
                 findings.append(

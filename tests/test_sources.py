@@ -103,7 +103,7 @@ async def test_the_website_names_its_scripts_and_subprocessors():
 
     async with httpx.AsyncClient(transport=httpx.MockTransport(handler)) as http:
         ctx = context(Zone())
-        ctx = Context(ctx.domain, ctx.dns, ctx.catalog, http)
+        ctx = Context(ctx.domain, ctx.dns, ctx.catalog, ctx.checked_at, http)
         observed = await web.collect(ctx)
     assert {c.service for c in observed.claims} == {"Klaviyo", "SendGrid", "Zendesk"}
     assert all(c.kind is Kind.WEBSITE for c in observed.claims)

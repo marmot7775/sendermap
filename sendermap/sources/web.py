@@ -40,7 +40,12 @@ async def collect(ctx: Context) -> Observed:
         return Observed(gaps=(Gap(f"the website at {home}", "it did not load"),))
     url, html = page
     claims = [
-        Claim(service, Kind.WEBSITE, ctx.domain, Evidence(url, "page", f"loads {host}"))
+        Claim(
+            service,
+            Kind.WEBSITE,
+            ctx.domain,
+            Evidence(url, "page", f"loads {host}", ctx.checked_at),
+        )
         for service, host in ctx.catalog.website_services(html).items()
     ]
     if link := _SUBPROCESSOR_LINK.search(html):
@@ -55,7 +60,12 @@ async def _subprocessors(ctx: Context, url: str) -> list[Claim]:
         return []
     text = re.sub(r"<[^>]+>", " ", page[1])
     return [
-        Claim(service, Kind.WEBSITE, ctx.domain, Evidence(page[0], "page", f"names {service}"))
+        Claim(
+            service,
+            Kind.WEBSITE,
+            ctx.domain,
+            Evidence(page[0], "page", f"names {service}", ctx.checked_at),
+        )
         for service in ctx.catalog
         if ctx.catalog.category(service) in _SENDING_CATEGORIES
         and len(service) >= 5  # short names ("Kit", "Wix") are ordinary words too

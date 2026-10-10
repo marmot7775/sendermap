@@ -11,6 +11,7 @@ import asyncio
 import base64
 from collections.abc import Iterable, Mapping
 from dataclasses import dataclass
+from datetime import datetime
 
 from ..dns import Answer
 from ..model import Claim, Evidence, Finding, Gap, Kind, Observed, Severity, Unknown
@@ -49,10 +50,13 @@ class Key:
                 return size
         return None
 
-    def evidence(self) -> Evidence:
+    def evidence(self, checked_at: datetime) -> Evidence:
+        return Evidence(self.name, "TXT", self.described(), checked_at)
+
+    def described(self) -> str:
         """The record with its key shortened to a prefix and its size, then where it led."""
         via = f" via {' -> '.join(self.chain)}" if self.chain else ""
-        return Evidence(self.name, "TXT", f"{self.summary()}{via}")
+        return f"{self.summary()}{via}"
 
     def summary(self) -> str:
         parts = []
@@ -79,7 +83,7 @@ async def collect(
             f"Every name under {base} answers with a key",
             "A wildcard record makes every selector look published, so keys there say nothing "
             "about which services sign for the domain.",
-            (Evidence(f"*.{base}", "TXT", canary.records[0]),),
+            (Evidence(f"*.{base}", "TXT", canary.records[0], ctx.checked_at),),
         )
         return Observed(findings=(wildcard,))
     names = list(dict.fromkeys(s.lower() for s in selectors))
@@ -101,18 +105,16 @@ async def collect(
         if record is None:
             continue
         key = Key(selector, answer.name, record, answer.chain)
+        evidence = key.evidence(ctx.checked_at)
         service = ctx.catalog.dkim_key(selector, key.chain, backed.get(selector))
         by_cname = service is not None and ctx.catalog.dkim_cname(key.chain) == service
         if key.retired:
             if service:
-                claims.append(Claim(service, Kind.DKIM_RETIRED, where, key.evidence()))
+                claims.append(Claim(service, Kind.DKIM_RETIRED, where, evidence))
             continue
         if service:
-            claims.append(
-                Claim(
-                    service, Kind.DKIM_CNAME if by_cname else Kind.DKIM_NAME, where, key.evidence()
-                )
-            )
+            kind = Kind.DKIM_CNAME if by_cname else Kind.DKIM_NAME
+            claims.append(Claim(service, kind, where, evidence))
         else:
             unknowns.append(Unknown("DKIM key", selector, where))
         if key.bits == 1024:
@@ -121,7 +123,7 @@ async def collect(
                     Severity.WARNING,
                     f"The {selector} key at {where} is 1024-bit",
                     "Some receivers already treat 1024-bit RSA keys as weak. Rotate to 2048-bit.",
-                    (key.evidence(),),
+                    (evidence,),
                 )
             )
     gaps = (Gap(f"{failed} DKIM selectors at {where}", "lookups failed"),) if failed else ()
@@ -132,7 +134,7 @@ def _dangling(
     ctx: Context, where: str, selector: str, answer: Answer
 ) -> tuple[list[Claim], Finding]:
     target = answer.target or ""
-    evidence = Evidence(answer.name, "CNAME", " -> ".join(answer.chain))
+    evidence = Evidence(answer.name, "CNAME", " -> ".join(answer.chain), ctx.checked_at)
     service = ctx.catalog.dkim_cname(answer.chain)
     claims = [Claim(service, Kind.DKIM_DANGLING, where, evidence)] if service else []
     finding = Finding(

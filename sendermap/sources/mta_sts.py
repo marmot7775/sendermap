@@ -26,7 +26,6 @@ async def collect(ctx: Context) -> Observed:
             continue
         host = value.strip().removeprefix("*.")
         if service := ctx.catalog.mx(host):
-            claims.append(
-                Claim(service, Kind.MTA_STS, ctx.domain, Evidence(url, "policy", line.strip()))
-            )
+            evidence = Evidence(url, "policy", line.strip(), ctx.checked_at)
+            claims.append(Claim(service, Kind.MTA_STS, ctx.domain, evidence))
     return Observed(tuple(claims))

@@ -1,16 +1,15 @@
 """The whole map, end to end, on a fake domain."""
 
-from datetime import UTC, datetime
+from datetime import datetime
 
 import pytest
-from conftest import Zone
+from conftest import CHECKED, Zone
 
 from sendermap import engine, map_domain
 from sendermap.engine import clean_domain
 from sendermap.model import Role, Tier
 from sendermap.selectors import load_rules
 
-CHECKED = datetime(2026, 10, 9, 12, 0, tzinfo=UTC)
 KEY = "v=DKIM1; k=rsa; p=" + "A" * 392
 
 
@@ -130,3 +129,10 @@ async def test_a_subdomain_whose_mx_is_google_probes_google_before_any_other_rul
     assert probed[0] == "google"
     # The budget, then the names the Google MX backs that the budget left out.
     assert set(probed[engine.SUBDOMAIN_PROBES :]) == {"ga1", "gapps", "googlemail"}
+
+
+async def test_every_piece_of_evidence_carries_the_runs_date(offline):
+    result = await acme_map(offline)
+    evidence = [c.evidence for s in result.services for c in s.claims]
+    evidence += [e for f in result.findings for e in f.evidence]
+    assert evidence and {e.checked_at for e in evidence} == {result.run.checked_at}

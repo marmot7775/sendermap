@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from collections.abc import AsyncIterator
+from datetime import UTC, datetime
 
 import httpx
 import pytest
@@ -64,8 +65,11 @@ class Zone:
         return any(n == name for n, _ in self.records) or name in self.cnames
 
 
+CHECKED = datetime(2026, 10, 9, 12, 0, tzinfo=UTC)
+
+
 def context(zone: Zone, domain: str = "example.com") -> Context:
-    return Context(domain, Lookups(zone), catalog.load())
+    return Context(domain, Lookups(zone), catalog.load(), CHECKED)
 
 
 @pytest.fixture

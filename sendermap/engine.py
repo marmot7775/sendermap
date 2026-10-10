@@ -68,6 +68,7 @@ async def map_domain(
             domain,
             Lookups(resolver or SystemResolver()),
             catalog_module.load(),
+            checked_at,
             http if (use_web or use_subdomains) else None,
         )
         rules = load_rules()

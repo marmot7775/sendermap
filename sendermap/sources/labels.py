@@ -33,6 +33,6 @@ async def collect(ctx: Context, where: str) -> Observed:
             continue
         if match := ctx.catalog.label_cname(label, target):
             service, kind = match
-            evidence = Evidence(f"{label}.{where}", "CNAME", target)
+            evidence = Evidence(f"{label}.{where}", "CNAME", target, ctx.checked_at)
             claims.append(Claim(service, _KINDS[kind], where, evidence))
     return Observed(tuple(claims))

@@ -16,6 +16,7 @@ from __future__ import annotations
 import asyncio
 import ipaddress
 from collections import Counter
+from dataclasses import replace
 
 from ..model import Claim, Evidence, Gap, Kind, Observed, Unknown
 from . import Context
@@ -35,10 +36,8 @@ async def collect(ctx: Context, where: str, ranges: list[tuple[str, Evidence]]) 
         candidates = _published_by(network, published)
         if len(candidates) == 1:
             (publisher,) = candidates
-            noted = Evidence(
-                evidence.name,
-                evidence.rtype,
-                f"{evidence.value} (inside {publisher}'s published range)",
+            noted = replace(
+                evidence, value=f"{evidence.value} (inside {publisher}'s published range)"
             )
             claims.append(Claim(publisher, Kind.SPF_NETWORK, where, noted))
         else:
@@ -49,9 +48,7 @@ async def collect(ctx: Context, where: str, ranges: list[tuple[str, Evidence]]) 
     for (cidr, evidence, _, candidates), (asn, name) in zip(picked, owners, strict=True):
         service = ctx.catalog.network(asn) or _named_in(name, candidates)
         if service:
-            noted = Evidence(
-                evidence.name, evidence.rtype, f"{evidence.value} (network {asn}, {name})"
-            )
+            noted = replace(evidence, value=f"{evidence.value} (network {asn}, {name})")
             claims.append(Claim(service, Kind.SPF_NETWORK, where, noted))
             continue
         label = ctx.catalog.clouds.get(asn) or name or "owner unknown"

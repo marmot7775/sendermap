@@ -55,7 +55,7 @@ async def check(resolver: Resolver, rule: Rule, proof: Proof) -> tuple[Result, s
         status, line = NOT_FOUND, f"not found  {label}: {_published(answer)}"
     else:
         key = Key(proof.record.split(".", 1)[0], proof.record, record, answer.chain)
-        status, line = FOUND, f"found      {label}: {key.evidence().value}"
+        status, line = FOUND, f"found      {label}: {key.described()}"
     result = Result(
         vendor=rule.vendor,
         selector=proof.record.split(".", 1)[0],
