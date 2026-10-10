@@ -38,6 +38,5 @@
   hints: {mx: [mx.sendgrid.net], spf: [sendgrid.net]}
   hints_reference: https://www.twilio.com/docs/sendgrid/ui/account-and-settings/how-to-set-up-domain-authentication
 
-- vendor: Amazon SES
-  shape: {kind: dated, prefix: ses, years_back: 2}
-  source: pattern
+# No Amazon SES rule: Easy DKIM selectors are tokens SES generates per identity, not a series.
+# https://docs.aws.amazon.com/ses/latest/APIReference-V2/API_DkimAttributes.html
