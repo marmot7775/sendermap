@@ -1,4 +1,4 @@
-"""Rule 1: every claim and every finding on a mapped domain carries the evidence that shows it."""
+"""Rule 1: every claim, unknown and finding on a mapped domain carries the evidence for it."""
 
 import httpx
 from conftest import CHECKED, Zone
@@ -89,15 +89,21 @@ async def mapped_map():
         )
 
 
-async def test_every_claim_and_finding_carries_evidence():
+async def test_every_claim_unknown_and_finding_carries_evidence():
     result = await mapped_map()
     claims = [c for s in result.services for c in s.claims]
     # The fake domain reaches every kind of claim and most kinds of finding.
     assert {c.kind for c in claims} == set(Kind)
     assert len(result.findings) >= 9
     for claim in claims:
-        e = claim.evidence
-        assert e.name and e.rtype and e.value and e.checked_at == CHECKED, claim
+        for e in (claim.evidence, *claim.supporting):
+            assert e.name and e.rtype and e.value and e.checked_at == CHECKED, claim
+    # Evidence that does not name the service carries the records that do.
+    assert {c.kind for c in claims if c.supporting} >= {Kind.SPF_NETWORK, Kind.DKIM_NAME}
+    assert result.unknowns
+    for unknown in result.unknowns:
+        e = unknown.evidence
+        assert e.name and e.rtype and e.value and e.checked_at == CHECKED, unknown
     assert result.historical
     for past in result.historical:
         e = past.evidence

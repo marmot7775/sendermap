@@ -283,7 +283,8 @@ class _Walk:
             claim = Claim(service, Kind.SPF_INCLUDE, self.where, link.evidence(self.ctx.checked_at))
             return _Walked(observed=Observed(claims=(claim,)))
         if not _is_own(link.target, self.ctx.domain):
-            unknown = Unknown("SPF include", link.target, self.where)
+            evidence = link.evidence(self.ctx.checked_at)
+            unknown = Unknown("SPF include", link.target, self.where, evidence)
             return _Walked(observed=Observed(unknowns=(unknown,)))
         return _Walked()
 

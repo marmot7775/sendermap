@@ -12,7 +12,11 @@ Everything Sendermap reports is built from a few frozen dataclasses in `senderma
   or `policy` for web content), the value, and `checked_at`, the moment of the run.
 - **Claim**: what one piece of evidence shows about one service, of one **Kind** (an MX host, an
   SPF include, a DKIM key behind a CNAME, a verification token, and so on), at one name: the
-  domain itself or one of its subdomains.
+  domain itself or one of its subdomains. When the evidence alone does not name the service, the
+  claim also carries the records that do (`supporting`): for an IP range in SPF, the term in
+  the service's own SPF record that publishes the holding range, or Team Cymru's answers for
+  the network that announces it; for a DKIM key credited through a backed selector, the SPF or
+  MX record that backed it. Every view shows them after the evidence, as "via".
 - **Service**: one row of the map: a name, a category from the vendor data, a tier, a role and
   its claims. The tier is the strongest tier among its claims, so a reader can always find the
   claim that decided it (`Service.decided_by`).
@@ -35,7 +39,8 @@ Everything Sendermap reports is built from a few frozen dataclasses in `senderma
   TLS reports. A reporting service has no tier (`null` in JSON): nothing shows that it sends.
 - **Finding**: something that needs attention (a dangling DKIM CNAME, SPF over ten lookups,
   a short key), with a severity of risk, warning or note.
-- **Unknown**: a record that clearly points at a sender no service in the vendor data matches.
+- **Unknown**: a record that clearly points at a sender no service in the vendor data matches,
+  with the Evidence that shows it, which every view prints with it.
 - **Gap**: a question that got no usable answer: what was `asked` (the record type and name,
   the page, or the check) and what `happened` (the lookup failed, HTTP 404, the check was turned
   off, the source crashed), so its silence is not read as absence.
@@ -209,16 +214,6 @@ it weekly and on any pull request that touches vendors.json.
   one domain share one build. At most six maps build at once, and each visitor may make twelve
   map requests a minute.
 
-## Known limits
-
-These are open items from the October 2026 review, listed so the description above is not read
-as more than it is.
-
-- Some claims leave out a record that decided them: a range credited by a published range or a
-  network carries the domain's `ip4:` or `ip6:` term with the reason in words, not the vendor's
-  record or Team Cymru's answer; a DKIM key credited through a backed selector does not carry
-  the SPF or MX claim that backed it; an Unknown carries no Evidence.
-
 ## Tests
 
 `tests/conftest.py` provides a fake DNS zone (`Zone`) with CNAMEs, wildcards and names that fail
@@ -228,7 +223,8 @@ only). Run `pytest`. `mypy --strict` and `ruff check` pass on `sendermap/`, and 
 on the tests; the tests and tools are not yet typed strictly.
 
 Tests that hold the rules: `test_evidence.py` maps a fake domain that reaches every kind of
-claim and requires evidence on every claim and finding; `test_gaps.py` and `test_caps.py`
+claim and requires evidence on every claim, unknown and finding, and the supporting records on
+every claim whose evidence does not name its service; `test_gaps.py` and `test_caps.py`
 require a gap for each failed question and each cap; `test_checked.py` requires the record of
 what was asked and its rendering; `test_labels_say_what_was_seen.py` holds the wording of the
 labels; `test_determinism.py` requires the same map from the same answers. `test_ct.py`

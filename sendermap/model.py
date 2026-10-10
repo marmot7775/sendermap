@@ -124,12 +124,17 @@ class CertificateEvidence(Evidence):
 
 @dataclass(frozen=True, slots=True)
 class Claim:
-    """What one piece of evidence shows about one service, at one name in the domain."""
+    """What one piece of evidence shows about one service, at one name in the domain.
+
+    `supporting` holds the records that tie the evidence to the service when the evidence alone
+    does not name it: the service's published range or the network's answer behind an IP range
+    in SPF, or the SPF or MX record behind a DKIM name the service is credited with."""
 
     service: str
     kind: Kind
     where: str
     evidence: Evidence
+    supporting: tuple[Evidence, ...] = ()
 
 
 @dataclass(frozen=True, slots=True)
@@ -160,11 +165,13 @@ def _claim_strength(claim: Claim) -> int:
 
 @dataclass(frozen=True, slots=True)
 class Unknown:
-    """Something that clearly is a sender but matches no service in the catalog."""
+    """Something that clearly is a sender but matches no service in the catalog, and the record
+    that shows it."""
 
     what: str
     value: str
     where: str
+    evidence: Evidence
 
 
 @dataclass(frozen=True, slots=True)

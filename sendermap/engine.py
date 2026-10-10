@@ -21,6 +21,7 @@ from . import catalog as catalog_module
 from .dns import Lookups, Resolver, SystemResolver
 from .infer import backed_selectors, services
 from .model import (
+    Claim,
     CtStatus,
     CtSummary,
     Evidence,
@@ -179,7 +180,7 @@ async def _probe_order(
     rules: tuple[Rule, ...],
     where: str,
     spf_includes: Iterable[str],
-    backed: Mapping[str, str],
+    backed: Mapping[str, Claim],
 ) -> tuple[str, ...]:
     """The DKIM sweep for `where`, with the rules its own MX and SPF hint at moved first."""
     # The MX source already asked, so this query is a cache hit.

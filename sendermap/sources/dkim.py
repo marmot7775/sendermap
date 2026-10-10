@@ -80,10 +80,10 @@ def tags(record: str) -> dict[str, str]:
 
 
 async def collect(
-    ctx: Context, where: str, selectors: Iterable[str], backed: Mapping[str, str]
+    ctx: Context, where: str, selectors: Iterable[str], backed: Mapping[str, Claim]
 ) -> Observed:
-    """Scan `selectors` under `where`. `backed` maps a selector to a service the domain's SPF
-    or MX already shows, whose own selector list has that name."""
+    """Scan `selectors` under `where`. `backed` maps a selector to the SPF or MX claim of a
+    service the domain already shows, whose own selector list has that name."""
     base = f"_domainkey.{where}"
     canary = await ctx.dns.txt(f"{CANARY}.{base}")
     if canary.ok and any("p" in tags(r) for r in canary.records):
@@ -125,10 +125,11 @@ def _read(
     selector: str,
     answer: Answer,
     *,
-    backed: str | None,
+    backed: Claim | None,
     echo: frozenset[str] | None,
 ) -> Observed:
-    """What one selector's answer shows. `echo` is what a wildcard answers, if anything."""
+    """What one selector's answer shows. `echo` is what a wildcard answers, if anything. A key
+    credited through `backed` carries that claim's record as well as its own."""
     if answer.dangling:
         claims, finding = _dangling(ctx, where, selector, answer)
         return Observed(tuple(claims), findings=(finding,))
@@ -139,15 +140,17 @@ def _read(
         return Observed(findings=(_malformed(ctx, where, selector, answer),))
     key = Key(selector, answer.name, record, answer.chain)
     evidence = key.evidence(ctx.checked_at)
-    service = ctx.catalog.dkim_key(selector, key.chain, backed)
+    service = ctx.catalog.dkim_key(selector, key.chain, backed.service if backed else None)
+    by_cname = service is not None and ctx.catalog.dkim_cname(key.chain) == service
+    via = (backed.evidence,) if backed and not by_cname and service == backed.service else ()
     if key.revoked:
-        return Observed((Claim(service, Kind.DKIM_REVOKED, where, evidence),) if service else ())
+        claim = Claim(service, Kind.DKIM_REVOKED, where, evidence, via) if service else None
+        return Observed((claim,) if claim else ())
     if service:
-        by_cname = ctx.catalog.dkim_cname(key.chain) == service
         kind = Kind.DKIM_CNAME if by_cname else Kind.DKIM_NAME
-        found = Observed(claims=(Claim(service, kind, where, evidence),))
+        found = Observed(claims=(Claim(service, kind, where, evidence, via),))
     else:
-        found = Observed(unknowns=(Unknown("DKIM key", selector, where),))
+        found = Observed(unknowns=(Unknown("DKIM key", selector, where, evidence),))
     if key.algorithm == "rsa" and key.bits is not None and key.bits <= 1024:
         found += Observed(findings=(_short_key(selector, where, key.bits, evidence),))
     return found

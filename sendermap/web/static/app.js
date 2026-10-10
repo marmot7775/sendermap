@@ -247,7 +247,8 @@ function card(service, domain, badgeClass, badgeText) {
     const at = claim.where === domain ? "" : ` at ${claim.where}`;
     const li = h("li", { class: i === 0 ? "decider" : "" },
       h("span", { class: "kind" }, claim.kind + at),
-      h("span", { class: "ev mono" }, evidence(claim.evidence)));
+      h("span", { class: "ev mono" }, evidence(claim.evidence)),
+      ...claim.supporting.map((e) => h("span", { class: "ev mono" }, `via ${evidence(e)}`)));
     if (i >= 3) li.hidden = true;
     ul.append(li);
   });
@@ -283,7 +284,8 @@ function renderUnknowns(unknowns, domain) {
   box.append(h("h3", { class: "section-title" }, "Not recognised"));
   const d = h("details", { class: "unknowns" }, h("summary", {}, `${unknowns.length} record${unknowns.length === 1 ? "" : "s"} that point at a sender nobody can name yet`));
   const ul = h("ul");
-  unknowns.forEach((u) => ul.append(h("li", {}, `${u.what}: `, h("span", { class: "mono" }, u.value), u.where === domain ? "" : ` at ${u.where}`)));
+  unknowns.forEach((u) => ul.append(h("li", {}, `${u.what}: `, h("span", { class: "mono" }, u.value), u.where === domain ? "" : ` at ${u.where}`,
+    h("span", { class: "ev mono" }, evidence(u.evidence)))));
   d.append(ul);
   box.append(d);
 }

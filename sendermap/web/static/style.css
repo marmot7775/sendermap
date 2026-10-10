@@ -154,6 +154,7 @@ details.asked, details.unknowns { background: var(--surface); border: 1px solid 
 details.asked summary, details.unknowns summary { cursor: pointer; font-weight: 600; min-height: 32px; display: list-item; }
 details.asked ul, details.unknowns ul { margin: 8px 0 0; padding-left: 18px; color: var(--ink-2); font-size: .9rem; }
 details.unknowns li { margin: 3px 0; word-break: break-all; }
+details.unknowns .ev { display: block; color: var(--ink-3); font-size: .82rem; }
 details.asked li { margin: 3px 0; overflow-wrap: anywhere; }
 details.asked h4 { margin: 12px 0 0; font-size: .9rem; word-break: break-all; }
 .gaps { margin: 0 0 16px; padding-left: 18px; color: var(--ink-2); font-size: .9rem; }
