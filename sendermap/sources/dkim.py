@@ -67,7 +67,6 @@ class Key:
         return "; ".join(parts)
 
 
-
 async def collect(
     ctx: Context, where: str, selectors: Iterable[str], backed: Mapping[str, str]
 ) -> Observed:
