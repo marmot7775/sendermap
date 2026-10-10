@@ -271,7 +271,12 @@
           "value": "mx.cloudflare.net"
         }
       ],
-      "checked": "2026-10-09, the vendor's own domains cloudflare.com, cloudflare.net: CNAMEs at the bounce labels; homepage not readable at cloudflare.net. None of the entries here was found."
+      "checked": "2026-10-09, the vendor's own domains cloudflare.com, cloudflare.net: CNAMEs at the bounce labels; the homepage's text; homepage not readable at cloudflare.net. None of the entries here was found.",
+      "subprocessor_names": [
+        {
+          "value": "Cloudflare Email Routing"
+        }
+      ]
     },
     "Constant Contact": {
       "category": "Marketing",
@@ -290,7 +295,7 @@
           "value": "static.ctctcdn.com"
         }
       ],
-      "checked": "2026-10-09, the vendor's own domains constantcontact.com, ccsend.com, ctctcdn.com: SPF at the apex and 70 labels, with every include and redirect below them; the CNAMEs of 184 DKIM selectors; the scripts and stylesheets the homepage loads; TXT at 184 DKIM selectors; homepage not readable at constantcontact.com, ccsend.com, ctctcdn.com. None of the entries here was found.",
+      "checked": "2026-10-09, the vendor's own domains constantcontact.com, ccsend.com, ctctcdn.com: SPF at the apex and 70 labels, with every include and redirect below them; the CNAMEs of 184 DKIM selectors; the scripts and stylesheets the homepage loads; TXT at 184 DKIM selectors; the homepage's text; homepage not readable at constantcontact.com, ccsend.com, ctctcdn.com. None of the entries here was found.",
       "selectors": [
         {
           "shape": {
@@ -315,6 +320,11 @@
               "ctct2"
             ]
           }
+        }
+      ],
+      "subprocessor_names": [
+        {
+          "value": "Constant Contact"
         }
       ]
     },
@@ -498,6 +508,15 @@
       ],
       "checked": "2026-10-09, the vendor's own domains getresponse.com: TXT at 184 DKIM selectors. None of the entries here was found."
     },
+    "GoDaddy Professional Email": {
+      "category": "Mailbox",
+      "subprocessor_names": [
+        {
+          "value": "GoDaddy Professional Email"
+        }
+      ],
+      "checked": "2026-10-09, the vendor's own domains godaddy.com, secureserver.net: the homepage's text; homepage not readable at godaddy.com, secureserver.net. None of the entries here was found."
+    },
     "GoDaddy Websites + Marketing": {
       "category": "Marketing",
       "dkim_cname": [
@@ -505,7 +524,12 @@
           "value": "em.secureserver.net"
         }
       ],
-      "checked": "2026-10-09, the vendor's own domains godaddy.com, secureserver.net: the CNAMEs of 184 DKIM selectors; homepage not readable at godaddy.com, secureserver.net. None of the entries here was found."
+      "checked": "2026-10-09, the vendor's own domains godaddy.com, secureserver.net: the CNAMEs of 184 DKIM selectors; the homepage's text; homepage not readable at godaddy.com, secureserver.net. None of the entries here was found.",
+      "subprocessor_names": [
+        {
+          "value": "GoDaddy Websites + Marketing"
+        }
+      ]
     },
     "Google Workspace": {
       "category": "Mailbox",
@@ -528,7 +552,7 @@
           "value": "googlemail.com"
         }
       ],
-      "checked": "2026-10-09, the vendor's own domains google.com, googlemail.com, gmail.com: SPF at the apex and 70 labels, with every include and redirect below them; MX at the apex and 70 labels; TXT at 184 DKIM selectors. None of the entries here was found.",
+      "checked": "2026-10-09, the vendor's own domains google.com, googlemail.com, gmail.com: SPF at the apex and 70 labels, with every include and redirect below them; MX at the apex and 70 labels; TXT at 184 DKIM selectors; the homepage's text. None of the entries here was found.",
       "selectors": [
         {
           "shape": {
@@ -553,6 +577,11 @@
               "googlemail"
             ]
           }
+        }
+      ],
+      "subprocessor_names": [
+        {
+          "value": "Google Workspace"
         }
       ]
     },
@@ -900,7 +929,7 @@
           "value": "AS396479"
         }
       ],
-      "checked": "2026-10-09, the vendor's own domains mailgun.com, mailgun.org, mailgun.net: the CNAMEs of 184 DKIM selectors; CNAMEs at the tracking labels; Team Cymru for the addresses of the apex, www, mail and the MX hosts; TXT at 184 DKIM selectors; homepage not readable at mailgun.com, mailgun.org, mailgun.net. None of the entries here was found.",
+      "checked": "2026-10-09, the vendor's own domains mailgun.com, mailgun.org, mailgun.net: the CNAMEs of 184 DKIM selectors; CNAMEs at the tracking labels; Team Cymru for the addresses of the apex, www, mail and the MX hosts; TXT at 184 DKIM selectors; the homepage's text; homepage not readable at mailgun.com, mailgun.org, mailgun.net. None of the entries here was found.",
       "selectors": [
         {
           "shape": {
@@ -934,6 +963,11 @@
             ]
           }
         }
+      ],
+      "subprocessor_names": [
+        {
+          "value": "Mailgun"
+        }
       ]
     },
     "Mailjet": {
@@ -948,7 +982,7 @@
           "value": "AS200069"
         }
       ],
-      "checked": "2026-10-09, the vendor's own domains mailjet.com: CNAMEs at the bounce labels; Team Cymru for the addresses of the apex, www, mail and the MX hosts; TXT at 184 DKIM selectors; homepage not readable at mailjet.com. None of the entries here was found.",
+      "checked": "2026-10-09, the vendor's own domains mailjet.com: CNAMEs at the bounce labels; Team Cymru for the addresses of the apex, www, mail and the MX hosts; TXT at 184 DKIM selectors; the homepage's text; homepage not readable at mailjet.com. None of the entries here was found.",
       "selectors": [
         {
           "shape": {
@@ -957,6 +991,11 @@
               "mj1"
             ]
           }
+        }
+      ],
+      "subprocessor_names": [
+        {
+          "value": "Mailjet"
         }
       ]
     },
@@ -972,7 +1011,12 @@
           }
         }
       ],
-      "checked": "2026-10-09, the vendor's own domains mailpoet.com: TXT at 184 DKIM selectors; homepage not readable at mailpoet.com. None of the entries here was found."
+      "checked": "2026-10-09, the vendor's own domains mailpoet.com: TXT at 184 DKIM selectors; the homepage's text; homepage not readable at mailpoet.com. None of the entries here was found.",
+      "subprocessor_names": [
+        {
+          "value": "MailPoet"
+        }
+      ]
     },
     "Mandrill": {
       "category": "Transactional",
@@ -1000,7 +1044,7 @@
           "value": "munchkin.marketo.net"
         }
       ],
-      "checked": "2026-10-09, the vendor's own domains marketo.com, mktomail.com, marketo.net: CNAMEs at the bounce labels; the scripts and stylesheets the homepage loads; TXT at 184 DKIM selectors; homepage not readable at marketo.com, marketo.net. None of the entries here was found.",
+      "checked": "2026-10-09, the vendor's own domains marketo.com, mktomail.com, marketo.net: CNAMEs at the bounce labels; the scripts and stylesheets the homepage loads; TXT at 184 DKIM selectors; the homepage's text; homepage not readable at marketo.com, marketo.net. None of the entries here was found.",
       "selectors": [
         {
           "shape": {
@@ -1033,6 +1077,11 @@
               "mkto2"
             ]
           }
+        }
+      ],
+      "subprocessor_names": [
+        {
+          "value": "Marketo"
         }
       ]
     },
@@ -1174,6 +1223,33 @@
         }
       ]
     },
+    "Omnivery/Mailkit": {
+      "category": "Transactional",
+      "subprocessor_names": [
+        {
+          "value": "Omnivery/Mailkit"
+        }
+      ],
+      "checked": "2026-10-09, the vendor's own domains mailkit.eu: the homepage's text. None of the entries here was found."
+    },
+    "Outlook.com (consumer)": {
+      "category": "Mailbox",
+      "subprocessor_names": [
+        {
+          "value": "Outlook.com (consumer)"
+        }
+      ],
+      "checked": "2026-10-09, the vendor's own domains outlook.com, hotmail.com, live.com: the homepage's text. None of the entries here was found."
+    },
+    "Pepipost": {
+      "category": "Transactional",
+      "subprocessor_names": [
+        {
+          "value": "Pepipost"
+        }
+      ],
+      "checked": "2026-10-09, the vendor's own domains pepipost.com, netcorecloud.com: the homepage's text; homepage not readable at pepipost.com, netcorecloud.com. None of the entries here was found."
+    },
     "Pipedrive": {
       "category": "Support and CRM",
       "selectors": [
@@ -1294,7 +1370,7 @@
           "value": "emailsrvr.com"
         }
       ],
-      "checked": "2026-10-09, the vendor's own domains rackspace.com, emailsrvr.com: SPF at the apex and 70 labels, with every include and redirect below them; TXT at 184 DKIM selectors. None of the entries here was found.",
+      "checked": "2026-10-09, the vendor's own domains rackspace.com, emailsrvr.com: SPF at the apex and 70 labels, with every include and redirect below them; TXT at 184 DKIM selectors; the homepage's text. None of the entries here was found.",
       "selectors": [
         {
           "shape": {
@@ -1311,6 +1387,11 @@
               "rackspace"
             ]
           }
+        }
+      ],
+      "subprocessor_names": [
+        {
+          "value": "Rackspace Email"
         }
       ]
     },
@@ -1404,7 +1485,7 @@
           "value": "AS22606"
         }
       ],
-      "checked": "2026-10-09, the vendor's own domains exacttarget.com, salesforce.com: Team Cymru for the addresses of the apex, www, mail and the MX hosts; TXT at 184 DKIM selectors. None of the entries here was found.",
+      "checked": "2026-10-09, the vendor's own domains exacttarget.com, salesforce.com: Team Cymru for the addresses of the apex, www, mail and the MX hosts; TXT at 184 DKIM selectors; the homepage's text. None of the entries here was found.",
       "selectors": [
         {
           "shape": {
@@ -1429,6 +1510,11 @@
               "sfmc1"
             ]
           }
+        }
+      ],
+      "subprocessor_names": [
+        {
+          "value": "Salesforce Marketing Cloud Engagement"
         }
       ]
     },
@@ -1608,7 +1694,12 @@
           }
         }
       ],
-      "checked": "2026-10-09, the vendor's own domains broadcom.com, symantec.com, messagelabs.com: TXT at 184 DKIM selectors. None of the entries here was found."
+      "checked": "2026-10-09, the vendor's own domains broadcom.com, symantec.com, messagelabs.com: TXT at 184 DKIM selectors; the homepage's text. None of the entries here was found.",
+      "subprocessor_names": [
+        {
+          "value": "Symantec MessageLabs"
+        }
+      ]
     },
     "Wix": {
       "category": "Commerce and apps",

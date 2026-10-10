@@ -1,5 +1,5 @@
 {
-  "about": "Email services recognisable from a domain's own DNS. One block per vendor; imported from dns-audit (MIT) at fac9e2e. Hostname patterns match the host itself or any name under it, and the longest match wins. Every pattern is an entry with its value and a proof: a live domain that publishes it, the record name (or, for a website host, the page) as found, and the date it was checked. Networks are autonomous system numbers a service owns outright; shared clouds are listed under rules.cloud_networks and never credited to a service. Each selectors entry names a vendor's DKIM selectors with their source and a proof; a fixed shape with several names takes a list of proofs, one per name in order. These entries are the only selector list: they credit keys by name, back generic names, and with rules.generic_selectors make the probe sweep. Hints are MX and SPF values the vendor's customers publish, with the pages that list them. Patterns not yet proven wait in vendors_pending.json, which Sendermap never reads.",
+  "about": "Email services recognisable from a domain's own DNS. One block per vendor; imported from dns-audit (MIT) at fac9e2e. Hostname patterns match the host itself or any name under it, and the longest match wins. Every pattern is an entry with its value and a proof: a live domain that publishes it, the record name (or, for a website host or a subprocessor name, the page) as found, and the date it was checked. Networks are autonomous system numbers a service owns outright; shared clouds are listed under rules.cloud_networks and never credited to a service. Each selectors entry names a vendor's DKIM selectors with their source and a proof; a fixed shape with several names takes a list of proofs, one per name in order. These entries are the only selector list: they credit keys by name, back generic names, and with rules.generic_selectors make the probe sweep. Hints are MX and SPF values the vendor's customers publish, with the pages that list them. Patterns not yet proven wait in vendors_pending.json, which Sendermap never reads.",
   "categories": [
     "Mailbox",
     "Security gateway",
@@ -184,6 +184,16 @@
             }
           ]
         }
+      ],
+      "subprocessor_names": [
+        {
+          "value": "ActiveCampaign",
+          "proof": {
+            "domain": "activecampaign.com",
+            "record": "https://activecampaign.com/",
+            "date": "2026-10-09"
+          }
+        }
       ]
     },
     "Agari": {
@@ -211,7 +221,17 @@
         }
       ],
       "category": "Transactional",
-      "selectors_note": "No selector entry: Easy DKIM selectors are tokens SES generates per identity, not a series. https://docs.aws.amazon.com/ses/latest/APIReference-V2/API_DkimAttributes.html"
+      "selectors_note": "No selector entry: Easy DKIM selectors are tokens SES generates per identity, not a series. https://docs.aws.amazon.com/ses/latest/APIReference-V2/API_DkimAttributes.html",
+      "subprocessor_names": [
+        {
+          "value": "Amazon SES",
+          "proof": {
+            "domain": "amazonses.com",
+            "record": "https://amazonses.com/",
+            "date": "2026-10-09"
+          }
+        }
+      ]
     },
     "Atlassian": {
       "spf_includes": [
@@ -234,7 +254,30 @@
           }
         }
       ],
-      "category": "Commerce and apps"
+      "category": "Commerce and apps",
+      "subprocessor_names": [
+        {
+          "value": "Atlassian",
+          "proof": {
+            "domain": "atlassian.com",
+            "record": "https://atlassian.com/",
+            "date": "2026-10-09"
+          }
+        }
+      ]
+    },
+    "Attentive": {
+      "category": "Marketing",
+      "subprocessor_names": [
+        {
+          "value": "Attentive",
+          "proof": {
+            "domain": "attentive.com",
+            "record": "https://attentive.com/",
+            "date": "2026-10-09"
+          }
+        }
+      ]
     },
     "AWeber": {
       "dkim_cname": [
@@ -278,6 +321,16 @@
             }
           ]
         }
+      ],
+      "subprocessor_names": [
+        {
+          "value": "AWeber",
+          "proof": {
+            "domain": "aweber.com",
+            "record": "https://aweber.com/",
+            "date": "2026-10-09"
+          }
+        }
       ]
     },
     "Barracuda": {
@@ -301,7 +354,30 @@
           }
         }
       ],
-      "category": "Security gateway"
+      "category": "Security gateway",
+      "subprocessor_names": [
+        {
+          "value": "Barracuda",
+          "proof": {
+            "domain": "barracuda.com",
+            "record": "https://barracuda.com/",
+            "date": "2026-10-09"
+          }
+        }
+      ]
+    },
+    "Braze": {
+      "category": "Marketing",
+      "subprocessor_names": [
+        {
+          "value": "Braze",
+          "proof": {
+            "domain": "braze.com",
+            "record": "https://braze.com/",
+            "date": "2026-10-09"
+          }
+        }
+      ]
     },
     "Brevo": {
       "spf_includes": [
@@ -332,7 +408,30 @@
           }
         }
       ],
-      "category": "Marketing"
+      "category": "Marketing",
+      "subprocessor_names": [
+        {
+          "value": "Brevo",
+          "proof": {
+            "domain": "sendinblue.com",
+            "record": "https://sendinblue.com/",
+            "date": "2026-10-09"
+          }
+        }
+      ]
+    },
+    "Calendly": {
+      "category": "Commerce and apps",
+      "subprocessor_names": [
+        {
+          "value": "Calendly",
+          "proof": {
+            "domain": "calendly.com",
+            "record": "https://calendly.com/",
+            "date": "2026-10-09"
+          }
+        }
+      ]
     },
     "Campaign Monitor": {
       "spf_includes": [
@@ -359,6 +458,16 @@
           "proof": {
             "domain": "campaignmonitor.com",
             "record": "cm._domainkey.campaignmonitor.com",
+            "date": "2026-10-09"
+          }
+        }
+      ],
+      "subprocessor_names": [
+        {
+          "value": "Campaign Monitor",
+          "proof": {
+            "domain": "campaignmonitor.com",
+            "record": "https://campaignmonitor.com/",
             "date": "2026-10-09"
           }
         }
@@ -451,7 +560,17 @@
           }
         }
       ],
-      "category": "Marketing"
+      "category": "Marketing",
+      "subprocessor_names": [
+        {
+          "value": "Customer.io",
+          "proof": {
+            "domain": "customer.io",
+            "record": "https://customer.io/",
+            "date": "2026-10-09"
+          }
+        }
+      ]
     },
     "DMARCian": {
       "reporting": [
@@ -477,7 +596,17 @@
           }
         }
       ],
-      "category": "Security gateway"
+      "category": "Security gateway",
+      "subprocessor_names": [
+        {
+          "value": "DuoCircle",
+          "proof": {
+            "domain": "duocircle.com",
+            "record": "https://duocircle.com/",
+            "date": "2026-10-09"
+          }
+        }
+      ]
     },
     "EasyDMARC": {
       "reporting": [
@@ -521,7 +650,17 @@
           }
         }
       ],
-      "category": "Marketing"
+      "category": "Marketing",
+      "subprocessor_names": [
+        {
+          "value": "Elastic Email",
+          "proof": {
+            "domain": "elasticemail.com",
+            "record": "https://elasticemail.com/",
+            "date": "2026-10-09"
+          }
+        }
+      ]
     },
     "Emma": {
       "category": "Marketing",
@@ -613,6 +752,16 @@
             }
           ]
         }
+      ],
+      "subprocessor_names": [
+        {
+          "value": "Everlytic",
+          "proof": {
+            "domain": "everlytic.com",
+            "record": "https://everlytic.com/",
+            "date": "2026-10-09"
+          }
+        }
       ]
     },
     "Fastmail": {
@@ -660,6 +809,55 @@
           "proof": {
             "domain": "fastmail.com",
             "record": "fm2._domainkey.fastmail.com",
+            "date": "2026-10-09"
+          }
+        }
+      ],
+      "subprocessor_names": [
+        {
+          "value": "Fastmail",
+          "proof": {
+            "domain": "fastmail.com",
+            "record": "https://fastmail.com/",
+            "date": "2026-10-09"
+          }
+        }
+      ]
+    },
+    "Firebase": {
+      "category": "Transactional",
+      "subprocessor_names": [
+        {
+          "value": "Firebase",
+          "proof": {
+            "domain": "firebase.com",
+            "record": "https://firebase.com/",
+            "date": "2026-10-09"
+          }
+        }
+      ]
+    },
+    "Freshdesk": {
+      "category": "Support and CRM",
+      "subprocessor_names": [
+        {
+          "value": "Freshdesk",
+          "proof": {
+            "domain": "freshdesk.com",
+            "record": "https://freshdesk.com/",
+            "date": "2026-10-09"
+          }
+        }
+      ]
+    },
+    "GetResponse": {
+      "category": "Marketing",
+      "subprocessor_names": [
+        {
+          "value": "GetResponse",
+          "proof": {
+            "domain": "getresponse.com",
+            "record": "https://getresponse.com/",
             "date": "2026-10-09"
           }
         }
@@ -838,6 +1036,16 @@
             "date": "2026-10-09"
           }
         }
+      ],
+      "subprocessor_names": [
+        {
+          "value": "Gorgias",
+          "proof": {
+            "domain": "gorgias.com",
+            "record": "https://gorgias.com/",
+            "date": "2026-10-09"
+          }
+        }
       ]
     },
     "Help Scout": {
@@ -885,6 +1093,16 @@
               "date": "2026-10-09"
             }
           ]
+        }
+      ],
+      "subprocessor_names": [
+        {
+          "value": "Help Scout",
+          "proof": {
+            "domain": "helpscout.com",
+            "record": "https://helpscout.com/",
+            "date": "2026-10-09"
+          }
         }
       ]
     },
@@ -952,6 +1170,16 @@
             }
           ]
         }
+      ],
+      "subprocessor_names": [
+        {
+          "value": "HubSpot",
+          "proof": {
+            "domain": "hubspot.com",
+            "record": "https://hubspot.com/",
+            "date": "2026-10-09"
+          }
+        }
       ]
     },
     "Intercom": {
@@ -979,6 +1207,16 @@
           "proof": {
             "domain": "intercom.com",
             "record": "intercom._domainkey.intercom.com",
+            "date": "2026-10-09"
+          }
+        }
+      ],
+      "subprocessor_names": [
+        {
+          "value": "Intercom",
+          "proof": {
+            "domain": "intercom.com",
+            "record": "https://intercom.com/",
             "date": "2026-10-09"
           }
         }
@@ -1040,6 +1278,29 @@
             }
           ]
         }
+      ],
+      "subprocessor_names": [
+        {
+          "value": "IONOS",
+          "proof": {
+            "domain": "ionos.com",
+            "record": "https://ionos.com/",
+            "date": "2026-10-09"
+          }
+        }
+      ]
+    },
+    "Iterable": {
+      "category": "Marketing",
+      "subprocessor_names": [
+        {
+          "value": "Iterable",
+          "proof": {
+            "domain": "iterable.com",
+            "record": "https://iterable.com/",
+            "date": "2026-10-09"
+          }
+        }
       ]
     },
     "Kit": {
@@ -1097,6 +1358,16 @@
       "website": [
         {
           "value": "static.klaviyo.com",
+          "proof": {
+            "domain": "klaviyo.com",
+            "record": "https://klaviyo.com/",
+            "date": "2026-10-09"
+          }
+        }
+      ],
+      "subprocessor_names": [
+        {
+          "value": "Klaviyo",
           "proof": {
             "domain": "klaviyo.com",
             "record": "https://klaviyo.com/",
@@ -1185,6 +1456,16 @@
           },
           "note": "Not in Mailchimp's own docs; reported by third parties. Points at dkim3.mcsv.net."
         }
+      ],
+      "subprocessor_names": [
+        {
+          "value": "Mailchimp",
+          "proof": {
+            "domain": "mailchimp.com",
+            "record": "https://mailchimp.com/",
+            "date": "2026-10-09"
+          }
+        }
       ]
     },
     "MailerLite": {
@@ -1202,6 +1483,16 @@
           "proof": {
             "domain": "mailerlite.com",
             "record": "litesrv._domainkey.mailerlite.com",
+            "date": "2026-10-09"
+          }
+        }
+      ],
+      "subprocessor_names": [
+        {
+          "value": "MailerLite",
+          "proof": {
+            "domain": "mailerlite.com",
+            "record": "https://mailerlite.com/",
             "date": "2026-10-09"
           }
         }
@@ -1369,6 +1660,16 @@
             }
           ]
         }
+      ],
+      "subprocessor_names": [
+        {
+          "value": "Mandrill",
+          "proof": {
+            "domain": "mandrill.com",
+            "record": "https://mandrill.com/",
+            "date": "2026-10-09"
+          }
+        }
       ]
     },
     "Marketo": {
@@ -1471,6 +1772,16 @@
       },
       "hints_reference": [
         "https://learn.microsoft.com/microsoft-365/enterprise/external-domain-name-system-records"
+      ],
+      "subprocessor_names": [
+        {
+          "value": "Microsoft 365",
+          "proof": {
+            "domain": "microsoft.com",
+            "record": "https://microsoft.com/",
+            "date": "2026-10-09"
+          }
+        }
       ]
     },
     "Mimecast": {
@@ -1504,7 +1815,17 @@
           }
         }
       ],
-      "category": "Security gateway"
+      "category": "Security gateway",
+      "subprocessor_names": [
+        {
+          "value": "Mimecast",
+          "proof": {
+            "domain": "mimecast.com",
+            "record": "https://mimecast.com/",
+            "date": "2026-10-09"
+          }
+        }
+      ]
     },
     "Mimecast DMARC Analyzer": {
       "reporting": [
@@ -1518,6 +1839,32 @@
         }
       ],
       "category": "DMARC reporting"
+    },
+    "Omnisend": {
+      "category": "Marketing",
+      "subprocessor_names": [
+        {
+          "value": "Omnisend",
+          "proof": {
+            "domain": "omnisend.com",
+            "record": "https://omnisend.com/",
+            "date": "2026-10-09"
+          }
+        }
+      ]
+    },
+    "Omnivery": {
+      "category": "Transactional",
+      "subprocessor_names": [
+        {
+          "value": "Omnivery",
+          "proof": {
+            "domain": "omnivery.com",
+            "record": "https://omnivery.com/",
+            "date": "2026-10-09"
+          }
+        }
+      ]
     },
     "Omnivery/Mailkit": {
       "spf_includes": [
@@ -1565,6 +1912,19 @@
         }
       ]
     },
+    "Pipedrive": {
+      "category": "Support and CRM",
+      "subprocessor_names": [
+        {
+          "value": "Pipedrive",
+          "proof": {
+            "domain": "pipedrive.com",
+            "record": "https://pipedrive.com/",
+            "date": "2026-10-09"
+          }
+        }
+      ]
+    },
     "Postmark": {
       "spf_includes": [
         {
@@ -1586,7 +1946,17 @@
           }
         }
       ],
-      "category": "Transactional"
+      "category": "Transactional",
+      "subprocessor_names": [
+        {
+          "value": "Postmark",
+          "proof": {
+            "domain": "postmarkapp.com",
+            "record": "https://postmarkapp.com/",
+            "date": "2026-10-09"
+          }
+        }
+      ]
     },
     "PowerDMARC": {
       "reporting": [
@@ -1632,7 +2002,17 @@
           }
         }
       ],
-      "category": "Security gateway"
+      "category": "Security gateway",
+      "subprocessor_names": [
+        {
+          "value": "Proofpoint",
+          "proof": {
+            "domain": "proofpoint.com",
+            "record": "https://proofpoint.com/",
+            "date": "2026-10-09"
+          }
+        }
+      ]
     },
     "Proton Mail": {
       "spf_includes": [
@@ -1706,6 +2086,16 @@
             }
           ]
         }
+      ],
+      "subprocessor_names": [
+        {
+          "value": "Proton Mail",
+          "proof": {
+            "domain": "proton.me",
+            "record": "https://proton.me/",
+            "date": "2026-10-09"
+          }
+        }
       ]
     },
     "Rackspace Email": {
@@ -1762,6 +2152,16 @@
             "date": "2026-10-09"
           }
         }
+      ],
+      "subprocessor_names": [
+        {
+          "value": "Resend",
+          "proof": {
+            "domain": "resend.com",
+            "record": "https://resend.com/",
+            "date": "2026-10-09"
+          }
+        }
       ]
     },
     "Sailthru": {
@@ -1799,6 +2199,16 @@
           "proof": {
             "domain": "sailthru.com",
             "record": "sailthru._domainkey.sailthru.com",
+            "date": "2026-10-09"
+          }
+        }
+      ],
+      "subprocessor_names": [
+        {
+          "value": "Sailthru",
+          "proof": {
+            "domain": "sailthru.com",
+            "record": "https://sailthru.com/",
             "date": "2026-10-09"
           }
         }
@@ -1849,6 +2259,16 @@
               "date": "2026-10-09"
             }
           ]
+        }
+      ],
+      "subprocessor_names": [
+        {
+          "value": "Salesforce",
+          "proof": {
+            "domain": "salesforce.com",
+            "record": "https://salesforce.com/",
+            "date": "2026-10-09"
+          }
         }
       ]
     },
@@ -1907,6 +2327,16 @@
               "date": "2026-10-09"
             }
           ]
+        }
+      ],
+      "subprocessor_names": [
+        {
+          "value": "Salesforce Account Engagement",
+          "proof": {
+            "domain": "pardot.com",
+            "record": "https://pardot.com/",
+            "date": "2026-10-09"
+          }
         }
       ]
     },
@@ -1985,13 +2415,33 @@
       "hints_reference": [
         "https://www.twilio.com/docs/sendgrid/ui/account-and-settings/how-to-set-up-domain-authentication"
       ],
-      "hints_note": "The docs put these MX and SPF values on the em#### return-path subdomain, not the apex, so an apex scan does not match them."
+      "hints_note": "The docs put these MX and SPF values on the em#### return-path subdomain, not the apex, so an apex scan does not match them.",
+      "subprocessor_names": [
+        {
+          "value": "SendGrid",
+          "proof": {
+            "domain": "sendgrid.com",
+            "record": "https://sendgrid.com/",
+            "date": "2026-10-09"
+          }
+        }
+      ]
     },
     "Shopify": {
       "category": "Commerce and apps",
       "website": [
         {
           "value": "cdn.shopify.com",
+          "proof": {
+            "domain": "shopify.com",
+            "record": "https://shopify.com/",
+            "date": "2026-10-09"
+          }
+        }
+      ],
+      "subprocessor_names": [
+        {
+          "value": "Shopify",
           "proof": {
             "domain": "shopify.com",
             "record": "https://shopify.com/",
@@ -2031,6 +2481,29 @@
             "date": "2026-10-09"
           }
         }
+      ],
+      "subprocessor_names": [
+        {
+          "value": "SparkPost",
+          "proof": {
+            "domain": "sparkpost.com",
+            "record": "https://sparkpost.com/",
+            "date": "2026-10-09"
+          }
+        }
+      ]
+    },
+    "Square": {
+      "category": "Commerce and apps",
+      "subprocessor_names": [
+        {
+          "value": "Square",
+          "proof": {
+            "domain": "squareup.com",
+            "record": "https://squareup.com/",
+            "date": "2026-10-09"
+          }
+        }
       ]
     },
     "Squarespace": {
@@ -2058,6 +2531,29 @@
           "proof": {
             "domain": "squarespace.com",
             "record": "squarespace._domainkey.squarespace.com",
+            "date": "2026-10-09"
+          }
+        }
+      ],
+      "subprocessor_names": [
+        {
+          "value": "Squarespace",
+          "proof": {
+            "domain": "squarespace.com",
+            "record": "https://squarespace.com/",
+            "date": "2026-10-09"
+          }
+        }
+      ]
+    },
+    "Stripe": {
+      "category": "Commerce and apps",
+      "subprocessor_names": [
+        {
+          "value": "Stripe",
+          "proof": {
+            "domain": "stripe.com",
+            "record": "https://stripe.com/",
             "date": "2026-10-09"
           }
         }
@@ -2176,6 +2672,16 @@
             }
           ]
         }
+      ],
+      "subprocessor_names": [
+        {
+          "value": "Zendesk",
+          "proof": {
+            "domain": "zendesk.com",
+            "record": "https://zendesk.com/",
+            "date": "2026-10-09"
+          }
+        }
       ]
     },
     "Zoho Campaigns": {
@@ -2189,7 +2695,17 @@
           }
         }
       ],
-      "category": "Marketing"
+      "category": "Marketing",
+      "subprocessor_names": [
+        {
+          "value": "Zoho Campaigns",
+          "proof": {
+            "domain": "zcsend.net",
+            "record": "https://zcsend.net/",
+            "date": "2026-10-09"
+          }
+        }
+      ]
     },
     "Zoho Mail": {
       "spf_includes": [
@@ -2228,7 +2744,17 @@
           }
         }
       ],
-      "category": "Mailbox"
+      "category": "Mailbox",
+      "subprocessor_names": [
+        {
+          "value": "Zoho Mail",
+          "proof": {
+            "domain": "zohomail.com",
+            "record": "https://zohomail.com/",
+            "date": "2026-10-09"
+          }
+        }
+      ]
     }
   }
 }

@@ -75,13 +75,15 @@ PATTERNS = (
     pattern("spf_includes", "other.net", "vendor.test", "vendor.test"),
     pattern("website", "cdn.vendor.net", "vendor.test", "https://vendor.test/gone"),
     pattern("website", "cdn.vendor.net", "vendor.test", "https://vendor.test/blocked"),
+    pattern("subprocessor_names", "Vendor", "vendor.test", "https://vendor.test/"),
+    pattern("subprocessor_names", "Vendor Mail", "vendor.test", "https://vendor.test/"),
 )
 
 
 def web(request: httpx.Request) -> httpx.Response:
     match request.url.path:
         case "/":
-            page = '<script src="https://eu.cdn.vendor.net/forms.js"></script>'
+            page = '<script src="https://eu.cdn.vendor.net/forms.js"></script><h1>Vendor</h1>'
             return httpx.Response(200, text=page, headers={"content-type": "text/html"})
         case "/gone":
             return httpx.Response(404)
@@ -134,7 +136,7 @@ async def test_json_prints_one_object_per_proof(monkeypatch, capsys):
         "not found",
         "could not check",
     ]
-    assert err == "9 of 16 proofs found, 2 could not be checked\n"
+    assert err == "10 of 18 proofs found, 2 could not be checked\n"
     assert code == 1
 
 
@@ -152,6 +154,8 @@ async def test_each_kind_of_pattern_is_found_where_its_record_shows_it(monkeypat
         ("spf_includes", "other.net", "not found"),
         ("website", "cdn.vendor.net", "not found"),  # the page is gone
         ("website", "cdn.vendor.net", "could not check"),  # the page refused the request
+        ("subprocessor_names", "Vendor", "found"),
+        ("subprocessor_names", "Vendor Mail", "not found"),
     ]
     assert rows[5]["observed"] == "192.0.2.7 AS64500"
     assert rows[6]["observed"] == "loads eu.cdn.vendor.net"
@@ -167,7 +171,7 @@ async def test_text_stays_the_default(monkeypatch, capsys):
     assert lines[5] == (
         "unchecked  Down selectors [slow] slow._domainkey.down.test (2026-10-09): lookup failed"
     )
-    assert lines[-1] == "9 of 16 proofs found, 2 could not be checked"
+    assert lines[-1] == "10 of 18 proofs found, 2 could not be checked"
 
 
 async def test_could_not_check_does_not_fail_the_run(monkeypatch, capsys):

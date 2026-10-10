@@ -4,7 +4,9 @@ subprocessor page names.
 A script or stylesheet the homepage loads from a service's host is that service running there,
 often collecting addresses it will mail later. A service's host appearing anywhere else in the
 HTML, in a link, a form or text, is only mentioned. A subprocessor list is the company's own
-statement of which services handle its data. Each is "Likely" evidence, never more.
+statement of which services handle its data; a service counts as named when one of its
+subprocessor names in vendors.json appears there as a whole word. Each is "Likely" evidence,
+never more.
 """
 
 from __future__ import annotations
@@ -19,16 +21,6 @@ from . import Context, http_failure
 
 USER_AGENT = "Sendermap/0.1 (+https://github.com/marmot7775/sendermap)"
 MAX_BYTES = 2_000_000
-_SENDING_CATEGORIES = frozenset(
-    {
-        "Mailbox",
-        "Marketing",
-        "Transactional",
-        "Support and CRM",
-        "Security gateway",
-        "Commerce and apps",
-    }
-)
 _SUBPROCESSOR_LINK = re.compile(r'href="([^"]*sub-?processors?[^"]*)"', re.IGNORECASE)
 _LOADED = re.compile(
     r"<(?:script\b[^>]*?\ssrc|link\b[^>]*?\shref)\s*=\s*[\"']?([^\"'\s>]+)", re.IGNORECASE
@@ -69,17 +61,19 @@ async def _subprocessors(ctx: Context, url: str) -> Observed:
         return Observed(gaps=(gap,), checked=_page(ctx, url))
     final, html, cut = page
     text = re.sub(r"<[^>]+>", " ", html)
+    found = {
+        service: name
+        for name, service in ctx.catalog.subprocessor_names.items()
+        if re.search(rf"\b{re.escape(name)}\b", text)
+    }
     claims = (
         Claim(
             service,
             Kind.SUBPROCESSOR,
             ctx.domain,
-            Evidence(final, "page", f"names {service}", ctx.checked_at),
+            Evidence(final, "page", f"names {name}", ctx.checked_at),
         )
-        for service in ctx.catalog
-        if ctx.catalog.category(service) in _SENDING_CATEGORIES
-        and len(service) >= 5  # short names ("Kit", "Wix") are ordinary words too
-        and re.search(rf"\b{re.escape(service)}\b", text)
+        for service, name in found.items()
     )
     gaps = _cut(f"the subprocessor page: GET {url}", cut)
     return Observed(tuple(claims), gaps=gaps, checked=_page(ctx, url))

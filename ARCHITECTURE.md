@@ -187,16 +187,19 @@ times with random delays on every answer and requires identical output.
 All vendor knowledge is in `sendermap/data/vendors.json`: one block per service with its
 category and the patterns that identify it (SPF includes, MX hosts, DKIM CNAME targets and
 selector names, bounce and tracking CNAMEs, report addresses, verification tokens, networks,
-website hosts), plus shared `rules` (generic selectors, hosted SPF services, cloud networks,
+website hosts, the names a subprocessor page would list it by), plus shared `rules` (generic selectors, hosted SPF services, cloud networks,
 the labels to probe). `catalog.load` reads the file once per process, selector rules included.
 
 Every SPF include, MX host, DKIM CNAME target, bounce, tracking and other CNAME, report address,
-verification token, network and website host is an entry with its value and a proof: a domain
-that publishes it, the record (a DNS name, or a page's URL) and the date checked. `catalog.build`
+verification token, network, website host and subprocessor name is an entry with its value and
+a proof: a domain that publishes it, the record (a DNS name, or a page's URL) and the date
+checked. A subprocessor name's proof is a page on the vendor's own site that uses the name; only
+sending services list one, and a name that is also an ordinary word ("Kit", "Wix") is not
+listed, so the web source has no rule of its own about which names count. `catalog.build`
 refuses an entry without one, and checks that the record could show the pattern: a report
 address at `_dmarc.` or `_smtp._tls.` of the domain, a token at the domain itself, a DKIM CNAME
-under its `_domainkey`, a website host on an https page of the domain, anything else at or under
-the domain. `proofs.py` holds those checks.
+under its `_domainkey`, a website host or subprocessor name on an https page of the domain,
+anything else at or under the domain. `proofs.py` holds those checks.
 
 A `selectors` entry names a vendor's DKIM selectors with how they are known (the vendor's docs,
 a pattern, an aggregate report, or the vendor's own domain) and a proof per name: a live domain
