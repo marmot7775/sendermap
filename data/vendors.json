@@ -1,0 +1,1198 @@
+{
+  "about": "Email services recognisable from a domain's own DNS. One block per vendor; imported from dns-audit (MIT) at fac9e2e. Hostname patterns match the host itself or any name under it, and the longest match wins.",
+  "categories": [
+    "Mailbox",
+    "Security gateway",
+    "Marketing",
+    "Transactional",
+    "Support and CRM",
+    "Commerce and apps",
+    "DMARC reporting"
+  ],
+  "rules": {
+    "generic_selectors": [
+      "api",
+      "default",
+      "dk",
+      "dkim",
+      "dkim1",
+      "dkim2",
+      "email",
+      "k",
+      "key",
+      "key1",
+      "key2",
+      "mail",
+      "mta",
+      "mx",
+      "pm",
+      "s",
+      "selector",
+      "smtp",
+      "sp"
+    ],
+    "short_selectors_allowed": [
+      "cm",
+      "k1",
+      "k2",
+      "k3",
+      "kl",
+      "s1",
+      "s2"
+    ],
+    "cname_only_selectors": [
+      "selector1",
+      "selector2"
+    ],
+    "hosted_spf": [
+      "Red Sift OnDMARC",
+      "Valimail"
+    ],
+    "cname_labels": [
+      "bounce",
+      "bounces",
+      "em",
+      "email",
+      "mail",
+      "send",
+      "mta",
+      "rp",
+      "pm-bounces",
+      "links",
+      "link",
+      "click",
+      "track",
+      "tracking",
+      "url",
+      "go",
+      "autodiscover",
+      "cf-bounce",
+      "eversrv",
+      "fwdkim1",
+      "bnc3",
+      "bounces.cloud.em",
+      "bounces.cloud2.em"
+    ],
+    "tracking_labels": [
+      "click",
+      "go",
+      "link",
+      "links",
+      "track",
+      "tracking",
+      "url"
+    ],
+    "probe_selectors": [
+      "200608",
+      "ac1",
+      "acdkim1",
+      "acdkim2",
+      "activecampaign",
+      "amazonses",
+      "api",
+      "appboy",
+      "aweber",
+      "aweber_key_a",
+      "aweber_key_b",
+      "aweber_key_c",
+      "barracuda",
+      "bcuda",
+      "braze",
+      "brevo",
+      "brevo1",
+      "brevo2",
+      "calendly",
+      "campaignmonitor",
+      "cf2024-1",
+      "cka",
+      "cm",
+      "constantcontact",
+      "convertkit",
+      "ctct1",
+      "ctct2",
+      "customerio",
+      "default",
+      "dkim",
+      "e2ma-k1",
+      "e2ma-k2",
+      "e2ma-k3",
+      "elasticemail",
+      "emma",
+      "everlytickey1",
+      "everlytickey2",
+      "exacttarget",
+      "fastmail",
+      "fm1",
+      "fm2",
+      "fm3",
+      "freshdesk",
+      "ga1",
+      "gapps",
+      "getresponse",
+      "google",
+      "googlemail",
+      "gor",
+      "gor2",
+      "gorgias",
+      "helpscout",
+      "hs1",
+      "hs2",
+      "hubspot",
+      "ic1",
+      "intercom",
+      "iterable",
+      "k1",
+      "k2",
+      "k3",
+      "kl",
+      "kl1",
+      "kl2",
+      "klaviyo",
+      "km1",
+      "km2",
+      "krs",
+      "ks1",
+      "ks2",
+      "kt1",
+      "kt2",
+      "litesrv",
+      "mail",
+      "mailchimp",
+      "mailerlite",
+      "mailgun",
+      "mailjet",
+      "mailkit",
+      "mailpoet1",
+      "mailpoet2",
+      "mailtrust",
+      "mandrill",
+      "marketo",
+      "mc1",
+      "mc2",
+      "mc3",
+      "mesmtp",
+      "messagebird",
+      "messagelabs",
+      "mg",
+      "mg1",
+      "mimecast",
+      "mimecast20190719",
+      "mimecast20200619",
+      "mj1",
+      "mkt",
+      "mkto",
+      "mkto1",
+      "mkto2",
+      "mte1",
+      "mte2",
+      "myemma",
+      "myshopify",
+      "omnisend",
+      "omnivery",
+      "pardot",
+      "pardot1",
+      "pdk1",
+      "pdk2",
+      "pepipost",
+      "pipedrive",
+      "pm1",
+      "postmark",
+      "pp02",
+      "pp1",
+      "pphosted",
+      "proofpoint",
+      "proofpoint1",
+      "proofpoint2",
+      "proofpoint3",
+      "protonmail",
+      "protonmail2",
+      "protonmail3",
+      "rackspace",
+      "resend",
+      "s1",
+      "s1-ionos",
+      "s2",
+      "s2-ionos",
+      "s42582890",
+      "sailthru",
+      "salesforce",
+      "salesforce1",
+      "salesforce2",
+      "scph",
+      "scph0819",
+      "secureserver1",
+      "secureserver2",
+      "selector1",
+      "selector2",
+      "sendgrid",
+      "sendinblue",
+      "ses",
+      "ses1",
+      "ses2",
+      "sf",
+      "sf1",
+      "sf2",
+      "sfdc",
+      "sfmc",
+      "sfmc1",
+      "shopify",
+      "sib",
+      "smtpapi",
+      "sparkpost",
+      "sqsp",
+      "square",
+      "squarespace",
+      "stripe",
+      "strong1",
+      "strong2",
+      "symantec",
+      "wix",
+      "zendesk",
+      "zendesk1",
+      "zendesk2",
+      "zoho",
+      "zohomail"
+    ]
+  },
+  "vendors": {
+    "ActiveCampaign": {
+      "spf_includes": [
+        "emsd1.com"
+      ],
+      "dkim_selectors": [
+        "ac1",
+        "acdkim1",
+        "acdkim2",
+        "activecampaign"
+      ],
+      "category": "Marketing"
+    },
+    "Agari": {
+      "reporting": [
+        "agari.com"
+      ],
+      "category": "DMARC reporting"
+    },
+    "Amazon SES": {
+      "spf_includes": [
+        "amazonses.com"
+      ],
+      "dkim_cname": [
+        "dkim.amazonses.com"
+      ],
+      "dkim_selectors": [
+        "amazonses",
+        "ses",
+        "ses1",
+        "ses2"
+      ],
+      "return_path": [
+        "amazonses.com"
+      ],
+      "verification_txt": [
+        "amazonses:"
+      ],
+      "category": "Transactional"
+    },
+    "Atlassian": {
+      "spf_includes": [
+        "_spf.atlassian.net"
+      ],
+      "verification_txt": [
+        "atlassian-sending-domain-verification="
+      ],
+      "category": "Commerce and apps"
+    },
+    "AWeber": {
+      "spf_includes": [
+        "send.aweber.com"
+      ],
+      "dkim_cname": [
+        "send.aweber.com"
+      ],
+      "dkim_selectors": [
+        "aweber",
+        "aweber_key_a",
+        "aweber_key_b",
+        "aweber_key_c"
+      ],
+      "category": "Marketing"
+    },
+    "Barracuda": {
+      "spf_includes": [
+        "spf.ess.barracudanetworks.com"
+      ],
+      "mx": [
+        "barracudanetworks.com"
+      ],
+      "dkim_selectors": [
+        "barracuda",
+        "bcuda"
+      ],
+      "category": "Security gateway"
+    },
+    "Braze": {
+      "dkim_selectors": [
+        "appboy",
+        "braze"
+      ],
+      "category": "Marketing"
+    },
+    "Brevo": {
+      "spf_includes": [
+        "sendinblue.com",
+        "spf.brevo.com"
+      ],
+      "dkim_cname": [
+        "dkim.brevo.com"
+      ],
+      "dkim_selectors": [
+        "brevo",
+        "brevo1",
+        "brevo2",
+        "sendinblue",
+        "sib"
+      ],
+      "verification_txt": [
+        "(brevo|sendinblue)-code:"
+      ],
+      "category": "Marketing"
+    },
+    "Calendly": {
+      "dkim_selectors": [
+        "calendly"
+      ],
+      "category": "Commerce and apps"
+    },
+    "Campaign Monitor": {
+      "spf_includes": [
+        "_spf.createsend.com"
+      ],
+      "dkim_selectors": [
+        "campaignmonitor",
+        "cm"
+      ],
+      "category": "Marketing"
+    },
+    "Cloudflare DMARC Management": {
+      "reporting": [
+        "dmarc-reports.cloudflare.net"
+      ],
+      "category": "DMARC reporting"
+    },
+    "Cloudflare Email Routing": {
+      "spf_includes": [
+        "_spf.mx.cloudflare.net"
+      ],
+      "mx": [
+        "mx.cloudflare.net"
+      ],
+      "dkim_selectors": [
+        "cf2024-1"
+      ],
+      "return_path": [
+        "mx.cloudflare.net"
+      ],
+      "category": "Mailbox"
+    },
+    "Constant Contact": {
+      "spf_includes": [
+        "ccsend.com",
+        "constantcontact.com"
+      ],
+      "dkim_cname": [
+        "ccsend.com"
+      ],
+      "dkim_selectors": [
+        "constantcontact",
+        "ctct1",
+        "ctct2"
+      ],
+      "category": "Marketing"
+    },
+    "Customer.io": {
+      "dkim_selectors": [
+        "customerio",
+        "krs"
+      ],
+      "tracking": [
+        "customeriomail.com"
+      ],
+      "category": "Marketing"
+    },
+    "DMARCian": {
+      "reporting": [
+        "dmarcian.com"
+      ],
+      "category": "DMARC reporting"
+    },
+    "DuoCircle": {
+      "spf_includes": [
+        "outbound.mailhop.org"
+      ],
+      "category": "Security gateway"
+    },
+    "EasyDMARC": {
+      "reporting": [
+        "easydmarc.com",
+        "easydmarc.eu",
+        "easydmarc.us"
+      ],
+      "category": "DMARC reporting"
+    },
+    "Elastic Email": {
+      "spf_includes": [
+        "_spf.elasticemail.com"
+      ],
+      "dkim_selectors": [
+        "elasticemail"
+      ],
+      "tracking": [
+        "elasticemail.com"
+      ],
+      "category": "Marketing"
+    },
+    "Emma": {
+      "dkim_selectors": [
+        "e2ma-k1",
+        "e2ma-k2",
+        "e2ma-k3",
+        "emma",
+        "myemma"
+      ],
+      "category": "Marketing"
+    },
+    "Everlytic": {
+      "spf_includes": [
+        "eversrv.com"
+      ],
+      "dkim_cname": [
+        "eversrv.com"
+      ],
+      "dkim_selectors": [
+        "everlytickey1",
+        "everlytickey2"
+      ],
+      "return_path": [
+        "eversrv.com"
+      ],
+      "category": "Marketing"
+    },
+    "Fastmail": {
+      "spf_includes": [
+        "spf.fastmail.com",
+        "spf.messagingengine.com"
+      ],
+      "mx": [
+        "messagingengine.com"
+      ],
+      "dkim_cname": [
+        "dkim.fmhosted.com",
+        "messagingengine.com"
+      ],
+      "dkim_selectors": [
+        "fastmail",
+        "fm1",
+        "fm2",
+        "fm3",
+        "mesmtp"
+      ],
+      "category": "Mailbox"
+    },
+    "Firebase": {
+      "spf_includes": [
+        "_spf.firebasemail.com"
+      ],
+      "category": "Transactional"
+    },
+    "Freshdesk": {
+      "spf_includes": [
+        "email.freshdesk.com"
+      ],
+      "dkim_selectors": [
+        "freshdesk"
+      ],
+      "return_path": [
+        "freshdesk.com"
+      ],
+      "category": "Support and CRM"
+    },
+    "GetResponse": {
+      "dkim_selectors": [
+        "getresponse"
+      ],
+      "category": "Marketing"
+    },
+    "GlockApps": {
+      "reporting": [
+        "glockapps.com"
+      ],
+      "category": "DMARC reporting"
+    },
+    "GoDaddy Professional Email": {
+      "spf_includes": [
+        "secureserver.net"
+      ],
+      "mx": [
+        "secureserver.net"
+      ],
+      "dkim_selectors": [
+        "secureserver1",
+        "secureserver2"
+      ],
+      "category": "Mailbox"
+    },
+    "GoDaddy Websites + Marketing": {
+      "spf_includes": [
+        "spf.em.secureserver.net"
+      ],
+      "dkim_cname": [
+        "em.secureserver.net"
+      ],
+      "return_path": [
+        "em.secureserver.net"
+      ],
+      "category": "Marketing"
+    },
+    "Google Workspace": {
+      "spf_includes": [
+        "_netblocks.google.com",
+        "_netblocks2.google.com",
+        "_netblocks3.google.com",
+        "_spf.google.com",
+        "aspmx.googlemail.com"
+      ],
+      "mx": [
+        "google.com",
+        "googlemail.com"
+      ],
+      "dkim_selectors": [
+        "ga1",
+        "gapps",
+        "google",
+        "googlemail"
+      ],
+      "category": "Mailbox"
+    },
+    "Gorgias": {
+      "dkim_selectors": [
+        "gor",
+        "gor2",
+        "gorgias"
+      ],
+      "category": "Support and CRM"
+    },
+    "Help Scout": {
+      "spf_includes": [
+        "helpscoutemail.com"
+      ],
+      "dkim_cname": [
+        "helpscout.net"
+      ],
+      "dkim_selectors": [
+        "helpscout",
+        "strong1",
+        "strong2"
+      ],
+      "category": "Support and CRM"
+    },
+    "HubSpot": {
+      "spf_includes": [
+        "_spf.hubspot.com",
+        "hubspot.com",
+        "hubspotemail.net"
+      ],
+      "dkim_cname": [
+        "hubspotemail.net"
+      ],
+      "dkim_selectors": [
+        "hs1",
+        "hs2",
+        "hubspot"
+      ],
+      "category": "Marketing"
+    },
+    "Intercom": {
+      "spf_includes": [
+        "intercom-mail.com",
+        "intercom.io"
+      ],
+      "dkim_cname": [
+        "dkim.intercom.io"
+      ],
+      "dkim_selectors": [
+        "ic1",
+        "intercom"
+      ],
+      "category": "Support and CRM"
+    },
+    "IONOS": {
+      "spf_includes": [
+        "_spf-us.ionos.com"
+      ],
+      "mx": [
+        "ionos.com",
+        "kundenserver.de"
+      ],
+      "dkim_cname": [
+        "dkim.ionos.com"
+      ],
+      "dkim_selectors": [
+        "s1-ionos",
+        "s2-ionos",
+        "s42582890"
+      ],
+      "category": "Mailbox"
+    },
+    "Iterable": {
+      "dkim_selectors": [
+        "iterable"
+      ],
+      "tracking": [
+        "iterable.com"
+      ],
+      "category": "Marketing"
+    },
+    "Keap": {
+      "spf_includes": [
+        "infusionmail.com"
+      ],
+      "category": "Marketing"
+    },
+    "Kit": {
+      "dkim_selectors": [
+        "cka",
+        "convertkit"
+      ],
+      "category": "Marketing"
+    },
+    "Klaviyo": {
+      "spf_includes": [
+        "send.klaviyo.com"
+      ],
+      "dkim_cname": [
+        "klaviyo.com",
+        "klaviyodns.com",
+        "u161779.wl030.sendgrid.net"
+      ],
+      "dkim_selectors": [
+        "kl",
+        "kl1",
+        "kl2",
+        "klaviyo",
+        "km1",
+        "km2",
+        "ks1",
+        "ks2",
+        "kt1",
+        "kt2"
+      ],
+      "return_path": [
+        "klaviyodns.com"
+      ],
+      "verification_txt": [
+        "klaviyo-site-verification="
+      ],
+      "category": "Marketing"
+    },
+    "Mailchimp": {
+      "spf_includes": [
+        "servers.mcsv.net"
+      ],
+      "dkim_cname": [
+        "mcsv.net"
+      ],
+      "dkim_selectors": [
+        "k1",
+        "k2",
+        "k3",
+        "mailchimp"
+      ],
+      "category": "Marketing"
+    },
+    "MailerLite": {
+      "dkim_selectors": [
+        "litesrv",
+        "mailerlite"
+      ],
+      "category": "Marketing"
+    },
+    "Mailgun": {
+      "spf_includes": [
+        "mailgun.org"
+      ],
+      "dkim_cname": [
+        "mailgun.com"
+      ],
+      "dkim_selectors": [
+        "mailgun",
+        "mg",
+        "mg1",
+        "pdk1",
+        "pdk2"
+      ],
+      "tracking": [
+        "mailgun.org"
+      ],
+      "verification_txt": [
+        "mgverify="
+      ],
+      "category": "Transactional"
+    },
+    "Mailjet": {
+      "spf_includes": [
+        "spf.mailjet.com"
+      ],
+      "dkim_selectors": [
+        "mailjet",
+        "mj1"
+      ],
+      "return_path": [
+        "mailjet.com"
+      ],
+      "tracking": [
+        "mailjet.com"
+      ],
+      "category": "Transactional"
+    },
+    "MailPoet": {
+      "dkim_selectors": [
+        "mailpoet1",
+        "mailpoet2"
+      ],
+      "category": "Marketing"
+    },
+    "Mandrill": {
+      "spf_includes": [
+        "mandrillapp.com"
+      ],
+      "dkim_cname": [
+        "mandrillapp.com"
+      ],
+      "dkim_selectors": [
+        "mandrill",
+        "mte1",
+        "mte2"
+      ],
+      "return_path": [
+        "mandrillapp.com"
+      ],
+      "tracking": [
+        "mandrillapp.com"
+      ],
+      "category": "Transactional"
+    },
+    "Marketo": {
+      "spf_includes": [
+        "mktomail.com"
+      ],
+      "dkim_selectors": [
+        "marketo",
+        "mkto",
+        "mkto1",
+        "mkto2"
+      ],
+      "return_path": [
+        "mktomail.com"
+      ],
+      "category": "Marketing"
+    },
+    "Microsoft 365": {
+      "spf_includes": [
+        "spf.protection.outlook.com"
+      ],
+      "mx": [
+        "mx.microsoft",
+        "outlook.com",
+        "protection.outlook.com"
+      ],
+      "dkim_cname": [
+        "dkim.mail.microsoft",
+        "onmicrosoft.com"
+      ],
+      "verification_txt": [
+        "ms=(?=(ms)?[0-9a-f]{6,}$)"
+      ],
+      "other_cname": [
+        {
+          "label": "autodiscover",
+          "target": "autodiscover.outlook.com"
+        }
+      ],
+      "category": "Mailbox"
+    },
+    "Mimecast": {
+      "spf_includes": [
+        "mim.ec",
+        "mimecast.com"
+      ],
+      "mx": [
+        "mimecast-offshore.com",
+        "mimecast.co.za",
+        "mimecast.com"
+      ],
+      "dkim_selectors": [
+        "mc1",
+        "mc2",
+        "mc3",
+        "mimecast",
+        "mimecast20190719",
+        "mimecast20200619"
+      ],
+      "reporting": [
+        "mimecast.com"
+      ],
+      "category": "Security gateway"
+    },
+    "Mimecast DMARC Analyzer": {
+      "reporting": [
+        "dmarcanalyzer.com"
+      ],
+      "category": "DMARC reporting"
+    },
+    "Omnisend": {
+      "dkim_selectors": [
+        "omnisend"
+      ],
+      "category": "Marketing"
+    },
+    "Omnivery": {
+      "spf_includes": [
+        "omnivery.com"
+      ],
+      "dkim_selectors": [
+        "mailkit",
+        "mkt",
+        "omnivery"
+      ],
+      "category": "Transactional"
+    },
+    "Omnivery/Mailkit": {
+      "spf_includes": [
+        "mailkit.eu"
+      ],
+      "category": "Transactional"
+    },
+    "Outlook.com (consumer)": {
+      "mx": [
+        "olc.protection.outlook.com"
+      ],
+      "category": "Mailbox"
+    },
+    "Pepipost": {
+      "dkim_selectors": [
+        "pepipost"
+      ],
+      "category": "Transactional"
+    },
+    "Pipedrive": {
+      "dkim_selectors": [
+        "pipedrive"
+      ],
+      "category": "Support and CRM"
+    },
+    "Postmark": {
+      "spf_includes": [
+        "spf.mtasv.net"
+      ],
+      "dkim_selectors": [
+        "pm1",
+        "postmark"
+      ],
+      "reporting": [
+        "dmarc.postmarkapp.com"
+      ],
+      "return_path": [
+        "mtasv.net"
+      ],
+      "category": "Transactional"
+    },
+    "PowerDMARC": {
+      "reporting": [
+        "powerdmarc.com"
+      ],
+      "category": "DMARC reporting"
+    },
+    "Proofpoint": {
+      "spf_includes": [
+        "ppe-hosted.com",
+        "pphosted.com"
+      ],
+      "mx": [
+        "ppe-hosted.com",
+        "pphosted.com"
+      ],
+      "dkim_selectors": [
+        "pp02",
+        "pp1",
+        "pphosted",
+        "proofpoint",
+        "proofpoint1",
+        "proofpoint2",
+        "proofpoint3"
+      ],
+      "reporting": [
+        "proofpoint.com"
+      ],
+      "category": "Security gateway"
+    },
+    "Proton Mail": {
+      "spf_includes": [
+        "_spf.protonmail.ch"
+      ],
+      "mx": [
+        "protonmail.ch"
+      ],
+      "dkim_cname": [
+        "domains.proton.ch"
+      ],
+      "dkim_selectors": [
+        "protonmail",
+        "protonmail2",
+        "protonmail3"
+      ],
+      "verification_txt": [
+        "protonmail-verification="
+      ],
+      "category": "Mailbox"
+    },
+    "Rackspace Email": {
+      "spf_includes": [
+        "emailsrvr.com"
+      ],
+      "mx": [
+        "emailsrvr.com"
+      ],
+      "dkim_selectors": [
+        "mailtrust",
+        "rackspace"
+      ],
+      "category": "Mailbox"
+    },
+    "Red Sift OnDMARC": {
+      "spf_includes": [
+        "smart.ondmarc.com"
+      ],
+      "reporting": [
+        "ondmarc.com"
+      ],
+      "category": "DMARC reporting"
+    },
+    "Resend": {
+      "dkim_selectors": [
+        "resend"
+      ],
+      "tracking": [
+        "resend-dns.com"
+      ],
+      "category": "Transactional"
+    },
+    "Sailthru": {
+      "dkim_cname": [
+        "sailthrudkim.com"
+      ],
+      "dkim_selectors": [
+        "sailthru"
+      ],
+      "return_path": [
+        "sailthrudkim.com"
+      ],
+      "tracking": [
+        "sailthru.com"
+      ],
+      "category": "Marketing"
+    },
+    "Salesforce": {
+      "spf_includes": [
+        "_spf.salesforce.com"
+      ],
+      "dkim_cname": [
+        "custdkim.salesforce.com"
+      ],
+      "dkim_selectors": [
+        "salesforce",
+        "salesforce1",
+        "salesforce2",
+        "sf",
+        "sf1",
+        "sf2",
+        "sfdc"
+      ],
+      "category": "Support and CRM"
+    },
+    "Salesforce Account Engagement": {
+      "spf_includes": [
+        "aspmx.pardot.com"
+      ],
+      "dkim_selectors": [
+        "200608",
+        "pardot",
+        "pardot1"
+      ],
+      "tracking": [
+        "pardot.com"
+      ],
+      "verification_txt": [
+        "pardot\\d+="
+      ],
+      "category": "Marketing"
+    },
+    "Salesforce Marketing Cloud Engagement": {
+      "dkim_selectors": [
+        "exacttarget",
+        "sfmc",
+        "sfmc1"
+      ],
+      "category": "Marketing"
+    },
+    "SendGrid": {
+      "spf_includes": [
+        "sendgrid.net"
+      ],
+      "dkim_cname": [
+        "sendgrid.net"
+      ],
+      "dkim_selectors": [
+        "s1",
+        "s2",
+        "sendgrid",
+        "smtpapi"
+      ],
+      "return_path": [
+        "sendgrid.net"
+      ],
+      "tracking": [
+        "sendgrid.net"
+      ],
+      "category": "Transactional"
+    },
+    "Shopify": {
+      "spf_includes": [
+        "shops.shopify.com"
+      ],
+      "dkim_selectors": [
+        "myshopify",
+        "shopify"
+      ],
+      "category": "Commerce and apps"
+    },
+    "SparkPost": {
+      "spf_includes": [
+        "sparkpostmail.com"
+      ],
+      "dkim_selectors": [
+        "messagebird",
+        "scph",
+        "scph0819",
+        "sparkpost"
+      ],
+      "return_path": [
+        "mail.e.sparkpost.com",
+        "sparkpostmail.com"
+      ],
+      "tracking": [
+        "et.e.sparkpost.com",
+        "spgo.io"
+      ],
+      "category": "Transactional"
+    },
+    "Square": {
+      "dkim_selectors": [
+        "square"
+      ],
+      "category": "Commerce and apps"
+    },
+    "Squarespace": {
+      "dkim_cname": [
+        "squarespace-mail.com"
+      ],
+      "dkim_selectors": [
+        "sqsp",
+        "squarespace"
+      ],
+      "category": "Commerce and apps"
+    },
+    "Stripe": {
+      "dkim_selectors": [
+        "stripe"
+      ],
+      "category": "Commerce and apps"
+    },
+    "Symantec MessageLabs": {
+      "spf_includes": [
+        "spf.messagelabs.com"
+      ],
+      "mx": [
+        "messagelabs.com"
+      ],
+      "dkim_selectors": [
+        "messagelabs",
+        "symantec"
+      ],
+      "category": "Security gateway"
+    },
+    "URIports": {
+      "reporting": [
+        "uriports.com"
+      ],
+      "category": "DMARC reporting"
+    },
+    "Valimail": {
+      "spf_includes": [
+        "vali.email"
+      ],
+      "reporting": [
+        "vali.email",
+        "valimail.com"
+      ],
+      "category": "DMARC reporting"
+    },
+    "Wix": {
+      "dkim_selectors": [
+        "wix"
+      ],
+      "category": "Commerce and apps"
+    },
+    "Zendesk": {
+      "spf_includes": [
+        "mail.zendesk.com"
+      ],
+      "dkim_cname": [
+        "zendesk.com"
+      ],
+      "dkim_selectors": [
+        "zendesk",
+        "zendesk1",
+        "zendesk2"
+      ],
+      "category": "Support and CRM"
+    },
+    "Zoho Campaigns": {
+      "spf_includes": [
+        "zcsend.net"
+      ],
+      "category": "Marketing"
+    },
+    "Zoho Mail": {
+      "spf_includes": [
+        "one.zoho.com",
+        "zoho.com",
+        "zohomail.com"
+      ],
+      "mx": [
+        "zoho.com",
+        "zoho.com.au",
+        "zoho.eu",
+        "zoho.in"
+      ],
+      "dkim_selectors": [
+        "zoho",
+        "zohomail"
+      ],
+      "verification_txt": [
+        "zoho-verification="
+      ],
+      "category": "Mailbox"
+    }
+  }
+}
