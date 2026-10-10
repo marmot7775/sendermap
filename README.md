@@ -37,7 +37,7 @@ npx sendermap example.com
 
 ## The vendor data
 
-All vendor knowledge lives in one file, [`data/vendors.json`](data/vendors.json), one block per
+All vendor knowledge lives in one file, [`sendermap/data/vendors.json`](sendermap/data/vendors.json), one block per
 service, so adding or correcting a vendor is a small pull request. The first version was imported
 from the vendor tables in [dns-audit](https://github.com/marmot7775/dns-audit) (MIT).
 
