@@ -15,10 +15,9 @@ from __future__ import annotations
 
 import asyncio
 import ipaddress
-import time
 from collections import Counter
 
-from ..model import Claim, Evidence, Kind, Observed, Unknown
+from ..model import Claim, Evidence, Gap, Kind, Observed, Unknown
 from . import Context
 from .spf import spf_records, terms
 
@@ -29,7 +28,7 @@ async def collect(ctx: Context, where: str, ranges: list[tuple[str, Evidence]]) 
     networks = [(r, e, n) for r, e in ranges if (n := _network(r))]
     if not networks:
         return Observed()
-    published = await published_ranges.get(ctx)
+    published, gaps = await published_ranges(ctx)
     claims: list[Claim] = []
     rest: list[tuple[str, Evidence, ipaddress.IPv4Network, frozenset[str]]] = []
     for cidr, evidence, network in networks:
@@ -59,7 +58,7 @@ async def collect(ctx: Context, where: str, ranges: list[tuple[str, Evidence]]) 
         listed = f"; listed by {' and '.join(sorted(candidates))}" if candidates else ""
         what = "IP address in SPF" if cidr.endswith("/32") or "/" not in cidr else "IP range in SPF"
         unknowns.append(Unknown(what, f"{cidr} ({asn or 'no network'}, {label}{listed})", where))
-    return Observed(tuple(claims), tuple(unknowns))
+    return Observed(tuple(claims), tuple(unknowns), gaps=gaps)
 
 
 async def range_owner(ctx: Context, network: ipaddress.IPv4Network) -> tuple[str, str]:
@@ -96,52 +95,42 @@ def _network(cidr: str) -> ipaddress.IPv4Network | None:
 # ---------------------------------------------------------------- published ranges
 
 
-class PublishedRanges:
-    """{network: the services that publish it}, from every service's own SPF record. Fetched
-    once and kept for six hours: services change their ranges rarely."""
-
-    TTL = 6 * 3600
-
-    def __init__(self) -> None:
-        self._table: dict[ipaddress.IPv4Network, frozenset[str]] = {}
-        self._fetched = 0.0
-        self._lock = asyncio.Lock()
-
-    async def get(self, ctx: Context) -> dict[ipaddress.IPv4Network, frozenset[str]]:
-        async with self._lock:
-            if not self._table or time.monotonic() - self._fetched > self.TTL:
-                self._table = await self._fetch(ctx)
-                self._fetched = time.monotonic()
-            return self._table
-
-    @staticmethod
-    async def _fetch(ctx: Context) -> dict[ipaddress.IPv4Network, frozenset[str]]:
-        # A hosted SPF service's own record is its company mail, not its customers' senders.
-        sources = [
-            (name, host)
-            for name, hosts in ctx.catalog.spf_sources().items()
-            if not ctx.catalog.is_hosted_spf(name)
-            for host in hosts
-        ]
-        found = await asyncio.gather(*(_ranges_of(ctx, host, name, 0) for name, host in sources))
-        owners: dict[ipaddress.IPv4Network, set[str]] = {}
-        for (name, _), networks in zip(sources, found, strict=True):
-            for network in networks:
-                owners.setdefault(network, set()).add(name)
-        return {network: frozenset(names) for network, names in owners.items()}
-
-
-published_ranges = PublishedRanges()
+async def published_ranges(
+    ctx: Context,
+) -> tuple[dict[ipaddress.IPv4Network, frozenset[str]], tuple[Gap, ...]]:
+    """{network: the services that publish it}, read from every service's own SPF record through
+    this map's lookups, and a gap for each service whose ranges could not be read."""
+    # A hosted SPF service's own record is its company mail, not its customers' senders.
+    sources = [
+        (name, host)
+        for name, hosts in ctx.catalog.spf_sources().items()
+        if not ctx.catalog.is_hosted_spf(name)
+        for host in hosts
+    ]
+    found = await asyncio.gather(*(_ranges_of(ctx, host, name, 0) for name, host in sources))
+    owners: dict[ipaddress.IPv4Network, set[str]] = {}
+    unread: list[str] = []
+    for (name, _), (networks, complete) in zip(sources, found, strict=True):
+        for network in networks:
+            owners.setdefault(network, set()).add(name)
+        if not complete and name not in unread:
+            unread.append(name)
+    gaps = tuple(Gap(f"the published ranges of {name}", "lookups failed") for name in unread)
+    return {network: frozenset(names) for network, names in owners.items()}, gaps
 
 
 async def _ranges_of(
     ctx: Context, host: str, owner: str, depth: int
-) -> list[ipaddress.IPv4Network]:
+) -> tuple[list[ipaddress.IPv4Network], bool]:
+    """The IPv4 ranges a service's record authorizes, and whether every lookup answered."""
     if depth > 3:
-        return []
-    records = spf_records(await ctx.dns.txt(host))
+        return [], True
+    answer = await ctx.dns.txt(host)
+    if not answer.answered:
+        return [], False
+    records = spf_records(answer)
     if len(records) != 1:
-        return []
+        return [], True
     found: list[ipaddress.IPv4Network] = []
     nested: list[str] = []
     for term in terms(records[0]):
@@ -151,9 +140,13 @@ async def _ranges_of(
             found.append(network)
         elif _follows(term.mechanism, term.value) and ctx.catalog.spf(term.value) in (None, owner):
             nested.append(term.value)  # another service's ranges stay theirs
-    for more in await asyncio.gather(*(_ranges_of(ctx, n, owner, depth + 1) for n in nested)):
+    complete = True
+    for more, answered in await asyncio.gather(
+        *(_ranges_of(ctx, n, owner, depth + 1) for n in nested)
+    ):
         found += more
-    return found
+        complete = complete and answered
+    return found, complete
 
 
 def _published_by(
