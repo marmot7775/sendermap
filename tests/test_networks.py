@@ -34,7 +34,7 @@ async def test_only_a_services_own_ranges_count():
     assert [c.service for c in observed.claims] == ["SendGrid"]
 
 
-async def test_a_shared_range_goes_to_the_network_owner_it_names():
+async def test_a_shared_range_on_a_cloud_network_is_unknown_and_lists_its_publishers():
     # 74.125.0.0/16 is listed by Google Workspace and HubSpot, announced by Google.
     zone = (
         Zone()
@@ -44,7 +44,10 @@ async def test_a_shared_range_goes_to_the_network_owner_it_names():
     for ip in ("74.125.0.1", "74.125.128.1", "74.125.192.1"):
         owner(zone, ip, "AS15169", "GOOGLE - Google LLC, US")
     observed = await networks.collect(context(zone), "example.com", [("74.125.0.0/16", EV)])
-    assert [c.service for c in observed.claims] == ["Google Workspace"]
+    assert observed.claims == ()
+    assert [u.value for u in observed.unknowns] == [
+        "74.125.0.0/16 (AS15169, Google; listed by Google Workspace and HubSpot)"
+    ]
 
 
 async def test_a_services_own_network_names_it():

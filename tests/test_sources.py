@@ -105,5 +105,29 @@ async def test_the_website_names_its_scripts_and_subprocessors():
         ctx = context(Zone())
         ctx = Context(ctx.domain, ctx.dns, ctx.catalog, ctx.checked_at, http)
         observed = await web.collect(ctx)
-    assert {c.service for c in observed.claims} == {"Klaviyo", "SendGrid", "Zendesk"}
-    assert all(c.kind is Kind.WEBSITE for c in observed.claims)
+    assert {(c.service, c.kind, c.evidence.value) for c in observed.claims} == {
+        ("Klaviyo", Kind.WEBSITE, "loads static.klaviyo.com"),
+        ("SendGrid", Kind.SUBPROCESSOR, "names SendGrid"),
+        ("Zendesk", Kind.SUBPROCESSOR, "names Zendesk"),
+    }
+
+
+async def test_a_link_form_or_text_on_the_website_is_a_mention_not_a_load():
+    html = (
+        '<link rel="stylesheet" href="//static.zdassets.com/x.css">'
+        '<a href="https://www.klaviyo.com/">x</a> <script>var s="https://static.klaviyo.com"</script>'
+        '<form action="https://acme.us1.list-manage.com/subscribe/post"></form>'
+    )
+
+    def handler(request: httpx.Request) -> httpx.Response:
+        return httpx.Response(200, text=html, headers={"content-type": "text/html"})
+
+    async with httpx.AsyncClient(transport=httpx.MockTransport(handler)) as http:
+        ctx = context(Zone())
+        ctx = Context(ctx.domain, ctx.dns, ctx.catalog, ctx.checked_at, http)
+        observed = await web.collect(ctx)
+    assert {(c.service, c.kind, c.evidence.value) for c in observed.claims} == {
+        ("Zendesk", Kind.WEBSITE, "loads static.zdassets.com"),
+        ("Klaviyo", Kind.WEBSITE_MENTION, "mentions static.klaviyo.com"),
+        ("Mailchimp", Kind.WEBSITE_MENTION, "mentions list-manage.com"),
+    }

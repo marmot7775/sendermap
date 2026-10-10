@@ -66,10 +66,10 @@ async def test_a_key_nobody_can_name_is_listed():
     assert [u.value for u in observed.unknowns] == ["default"]
 
 
-async def test_a_retired_key_is_an_account_trace():
+async def test_a_revoked_key_is_an_account_trace():
     zone = Zone().add("mandrill._domainkey.example.com", "TXT", "v=DKIM1; p=")
     observed = await scan(zone, ["mandrill"])
-    assert [c.kind for c in observed.claims] == [Kind.DKIM_RETIRED]
+    assert [c.kind for c in observed.claims] == [Kind.DKIM_REVOKED]
 
 
 async def test_a_cname_to_nowhere_is_a_risk():

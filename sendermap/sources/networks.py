@@ -1,14 +1,20 @@
 """Who is behind the IP ranges a domain lists in SPF.
 
 Many records name raw addresses instead of a service's include, often because a tool flattened
-the record. Two checks name them:
+the record. Each range, IPv4 or IPv6, is named in this order:
 
 1. Published ranges. Each service publishes its sending ranges in its own SPF record. A range
-   inside one of them is that service, exactly: this is how a flattened copy of Amazon SES's or
-   Google Workspace's ranges is recognised.
-2. The network that announces the address. Mailchimp, SendGrid, Mailgun, Salesforce and others
-   run their own; Team Cymru's public IP to ASN mapping, served over DNS, says whose it is.
-   Shared clouds are named as clouds and never credited to a service.
+   inside a range that exactly one service publishes is that service: this is how a flattened
+   copy of Amazon SES's ranges is recognised. When several services publish the holding range,
+   this check names none of them.
+2. The network that announces the address. Team Cymru's public IP to ASN mapping, served over
+   DNS, says whose network it is. The range goes to a service only when vendors.json lists that
+   network as the service's own (Mailchimp, SendGrid, Mailgun and a few others run their own).
+3. Anything else is listed as unknown, with the network, the cloud's name when vendors.json
+   lists the network as a shared cloud, and the services that publish the range, if any. A
+   cloud is never credited to a service: 74.125.0.0/16 is published by both Google Workspace
+   and HubSpot and announced by Google's network, which vendors.json lists as a cloud, so it is
+   unknown, listed by both.
 """
 
 from __future__ import annotations
@@ -63,7 +69,7 @@ async def collect(ctx: Context, where: str, ranges: list[tuple[str, Evidence]]) 
             unknowns.append(Unknown(what, f"{cidr} (network lookup failed{listed})", where))
             continue
         asn, name = announced
-        service = ctx.catalog.network(asn) or _named_in(name, candidates)
+        service = ctx.catalog.network(asn)
         if service:
             noted = replace(evidence, value=f"{evidence.value} (network {asn}, {name})")
             claims.append(Claim(service, Kind.SPF_NETWORK, where, noted))
@@ -192,14 +198,6 @@ def _inside(network: Network, outer: Network) -> bool:
     if isinstance(network, ipaddress.IPv4Network):
         return isinstance(outer, ipaddress.IPv4Network) and network.subnet_of(outer)
     return isinstance(outer, ipaddress.IPv6Network) and network.subnet_of(outer)
-
-
-def _named_in(owner: str, candidates: frozenset[str]) -> str | None:
-    """The one candidate whose name the network owner carries: 74.125.0.0/16 is listed by Google
-    Workspace and HubSpot, and announced by "GOOGLE - Google LLC"."""
-    owner_words = set(owner.lower().replace(",", " ").split())
-    named = [c for c in candidates if c.split()[0].lower() in owner_words]
-    return named[0] if len(named) == 1 else None
 
 
 def _follows(mechanism: str, value: str) -> bool:

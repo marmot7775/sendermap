@@ -21,7 +21,7 @@ services that receive its reports. Each one comes with:
 It looks beyond the main domain: brands often send from subdomains such as `email.`, `mg.` or
 `bounce.`, which a check of the main domain never sees. It also points out what needs attention:
 DKIM records that point at names that no longer exist, SPF records past the 10 lookup limit,
-retired keys, and senders nobody can name.
+revoked keys, and senders nobody can name.
 
 ## How it works
 
@@ -34,7 +34,8 @@ that supports it, so you can check it yourself.
 - **Raw IP ranges** in SPF are named by matching them against the ranges each service publishes,
   then by who owns the network.
 - **Sending subdomains** come from the names services ask for and from certificate logs.
-- **The website** shows the signup forms and widgets it loads, and its subprocessor list.
+- **The website** shows the scripts and stylesheets it loads, the services it mentions, and the
+  services its subprocessor page names.
 
 Run it from the command line:
 

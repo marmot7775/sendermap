@@ -61,6 +61,8 @@ class SpfTree:
     lookups: int = 0
     ranges: list[tuple[str, Evidence]] = field(default_factory=list)
     hosted_by: str | None = None
+    # Flattening services whose record the walk read, so what it lists was credited.
+    flattened: list[str] = field(default_factory=list)
     macros: list[str] = field(default_factory=list)
     # Include and redirect targets in the domain's record and one level below, lowercase.
     # A hint for ordering the DKIM scan, not evidence: qualifiers are not checked.
@@ -99,6 +101,7 @@ async def collect(ctx: Context, where: str) -> tuple[Observed, SpfTree]:
         lookups=walked.lookups,
         ranges=list(walked.ranges),
         hosted_by=walked.hosted[0] if walked.hosted else None,
+        flattened=list(walked.flattened),
         macros=list(walked.macros),
         includes=list(walked.includes),
     )
@@ -172,6 +175,7 @@ class _Walked:
     macros: tuple[str, ...] = ()
     hosted: tuple[str, ...] = ()  # hosted SPF services on authorizing links
     too_deep: tuple[str, ...] = ()  # targets past MAX_DEPTH, not walked
+    flattened: tuple[str, ...] = ()  # flattening services whose record was read
 
     def __add__(self, other: _Walked) -> _Walked:
         return _Walked(
@@ -182,6 +186,7 @@ class _Walked:
             self.macros + other.macros,
             self.hosted + other.hosted,
             self.too_deep + other.too_deep,
+            self.flattened + other.flattened,
         )
 
 
@@ -244,6 +249,8 @@ class _Walk:
         # so what is inside still speaks for the domain. Any other service's record is its own.
         flattened = service in self.ctx.catalog.flattening_spf
         owner = link.inside or (None if flattened else service)
+        if flattened and service and link.live:
+            walked += _Walked(flattened=(service,))
         return walked + await self.visit(link.target, records[0], link.depth + 1, owner, link.live)
 
     def _credit(self, link: _Link, service: str | None) -> _Walked:
@@ -282,14 +289,23 @@ def _findings(ctx: Context, where: str, tree: SpfTree) -> Observed:
         )
     if tree.hosted_by or tree.macros:
         by = tree.hosted_by or "a macro include"
-        findings.append(
-            Finding(
-                Severity.NOTE,
-                f"SPF at {where} is managed through {by}",
-                "A hosted or macro record can authorize services without naming them, so the "
-                "services it covers do not show in the record itself.",
-                (root,),
+        if by in tree.flattened:
+            detail = (
+                f"{by} copies the domain's senders into its own record. The walk read that "
+                "record, so the services and ranges it lists are reported here as the domain's."
             )
+        elif by in ctx.catalog.flattening_spf:
+            detail = (
+                f"{by} copies the domain's senders into its own record, and the walk could not "
+                "read it, so the services it lists are not reported here."
+            )
+        else:
+            detail = (
+                "A hosted or macro record can authorize services without naming them, so the "
+                "services it covers do not show in the record itself."
+            )
+        findings.append(
+            Finding(Severity.NOTE, f"SPF at {where} is managed through {by}", detail, (root,))
         )
     return Observed(findings=tuple(findings))
 

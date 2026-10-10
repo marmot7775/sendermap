@@ -127,13 +127,20 @@ class Catalog:
                 return service, kind
         return None
 
-    def website_services(self, html: str) -> dict[str, str]:
-        """{service: host} for every service whose script or form host appears in the page."""
+    def website_services(self, html: str, loaded: Iterable[str]) -> dict[str, tuple[str, bool]]:
+        """{service: (host, loaded)} for every service whose website host the page loads a
+        script or stylesheet from (loaded is True), or otherwise mentions anywhere in its HTML
+        (loaded is False). `loaded` is the hosts of the page's script src and link href URLs."""
+        hosts = [norm(h) for h in loaded]
         page = html.lower()
-        found: dict[str, str] = {}
-        for host, service in self.website.items():
-            if service not in found and re.search(rf"(?<![a-z0-9-]){re.escape(host)}\b", page):
-                found[service] = host
+        found: dict[str, tuple[str, bool]] = {}
+        for pattern, service in self.website.items():
+            if found.get(service, ("", False))[1]:
+                continue
+            if host := next((h for h in hosts if h == pattern or h.endswith("." + pattern)), None):
+                found[service] = (host, True)
+            elif service not in found and re.search(rf"(?<![a-z0-9-]){re.escape(pattern)}\b", page):
+                found[service] = (pattern, False)
         return found
 
     def selectors_of(self, service: str) -> frozenset[str]:
