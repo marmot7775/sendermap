@@ -1,16 +1,23 @@
 """The whole map, end to end, on a fake domain."""
 
+from dataclasses import replace
 from datetime import datetime
 
 import pytest
 from conftest import CHECKED, Zone
 
-from sendermap import engine, map_domain
+from sendermap import catalog, engine, map_domain
 from sendermap.engine import clean_domain
 from sendermap.model import Role, Tier
-from sendermap.selectors import load_rules
 
 KEY = "v=DKIM1; k=rsa; p=" + "A" * 392
+
+
+def reverse_rules(monkeypatch: pytest.MonkeyPatch) -> None:
+    """Load the selector rules in reverse, so a rule moves up only if a hint moves it."""
+    loaded = catalog.load()
+    flipped = replace(loaded, rules=tuple(reversed(loaded.rules)))
+    monkeypatch.setattr(catalog, "load", lambda: flipped)
 
 
 def acme() -> Zone:
@@ -78,7 +85,7 @@ async def test_a_map_is_dated_by_its_caller_in_a_known_timezone(offline):
 
 async def test_mx_and_spf_hints_put_google_and_microsoft_selectors_first(offline, monkeypatch):
     # Reversed, so Google and Microsoft start last and only their hints can move them up.
-    monkeypatch.setattr(engine, "load_rules", lambda: tuple(reversed(load_rules())))
+    reverse_rules(monkeypatch)
     zone = (
         Zone()
         .add("hinted.test", "MX", "1 smtp.google.com")
@@ -92,7 +99,8 @@ async def test_mx_and_spf_hints_put_google_and_microsoft_selectors_first(offline
         if rtype == "TXT" and name.endswith("._domainkey.hinted.test")
     ][1:]  # the first is the wildcard canary
     assert set(probed[:3]) == {"google", "selector1", "selector2"}
-    assert len(probed) == len(set(probed)) > 100  # the full sweep, each name once
+    # The full sweep, each name once.
+    assert len(probed) == len(set(probed)) == len(catalog.load().probe_selectors)
 
 
 @pytest.mark.parametrize(
@@ -118,8 +126,12 @@ async def test_a_subdomain_whose_mx_is_google_probes_google_before_any_other_rul
     offline, monkeypatch
 ):
     # Reversed, so Google starts last and only the subdomain's own MX can move it up.
-    monkeypatch.setattr(engine, "load_rules", lambda: tuple(reversed(load_rules())))
-    zone = Zone().add("mail.subhint.test", "MX", "1 smtp.google.com")
+    reverse_rules(monkeypatch)
+    zone = (
+        Zone()
+        .add("mail.subhint.test", "MX", "1 smtp.google.com")
+        .add("mail.subhint.test", "TXT", "v=spf1 include:hubspotemail.net ~all")
+    )
     await map_domain("subhint.test", checked_at=CHECKED, resolver=zone, http=offline, use_web=False)
     probed = [
         name.removesuffix("._domainkey.mail.subhint.test")
@@ -127,8 +139,8 @@ async def test_a_subdomain_whose_mx_is_google_probes_google_before_any_other_rul
         if rtype == "TXT" and name.endswith("._domainkey.mail.subhint.test")
     ][1:]  # the first is the wildcard canary
     assert probed[0] == "google"
-    # The budget, then the names the Google MX backs that the budget left out.
-    assert set(probed[engine.SUBDOMAIN_PROBES :]) == {"ga1", "gapps", "googlemail"}
+    # The budget, then the names the HubSpot include backs that the budget left out.
+    assert set(probed[engine.SUBDOMAIN_PROBES :]) == {"hs1", "hs2"}
 
 
 async def test_every_piece_of_evidence_carries_the_runs_date(offline):
