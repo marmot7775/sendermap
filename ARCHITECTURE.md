@@ -181,6 +181,9 @@ it weekly and on any pull request that touches vendors.json.
   over HTTPS).
 - **Web site**: a FastAPI app. `GET /api/map?d=` returns the map as JSON, `GET /api/map.md?d=`
   as Markdown, and `GET /api/map/stream?d=` streams progress then the map as server-sent events.
+  Uvicorn's access log is turned off when the app starts, so no query string is logged; a test
+  runs a real server and checks that a request logs nothing. Visitor addresses are held in
+  memory for one minute for the rate limit.
   Results are kept in memory for ten minutes, keyed by domain only, and concurrent requests for
   one domain share one build. At most six maps build at once, and each visitor may make twelve
   map requests a minute.
