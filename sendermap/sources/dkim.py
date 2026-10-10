@@ -51,12 +51,21 @@ class Key:
         return None
 
     def evidence(self) -> Evidence:
+        """The record with its key shortened to a prefix and its size, then where it led."""
         via = f" via {' -> '.join(self.chain)}" if self.chain else ""
-        return Evidence(self.name, "TXT", f"{_short(self.record)}{via}")
+        return Evidence(self.name, "TXT", f"{self.summary()}{via}")
 
+    def summary(self) -> str:
+        parts = []
+        for part in self.record.split(";"):
+            key, sep, value = part.strip().partition("=")
+            if sep and key.strip().lower() == "p" and value.strip():
+                size = f", {self.bits}-bit" if self.bits else ""
+                parts.append(f"p={value.strip()[:12]}...{size}")
+            elif part.strip():
+                parts.append(part.strip())
+        return "; ".join(parts)
 
-def _short(record: str, width: int = 72) -> str:
-    return record if len(record) <= width else record[: width - 3] + "..."
 
 
 async def collect(

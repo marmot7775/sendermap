@@ -25,15 +25,28 @@ retired keys, and senders nobody can name.
 
 ## How it works
 
-Everything comes from public sources: DNS (read through DNS over HTTPS), certificate
-transparency logs and the domain's own public pages. On the website the DNS lookups run in your
-browser, so the domains you look up are not sent to a Sendermap server.
+Everything comes from public sources: DNS, certificate transparency logs, the domain's own
+website, and public records of who owns each network. Each finding is shown with the record
+that supports it, so you can check it yourself.
 
-The same engine will run from the command line:
+- **SPF** is walked as a tree, crediting only links that actually authorize senders.
+- **DKIM** keys are found by scanning the names services use, and credited by where they point.
+- **Raw IP ranges** in SPF are named by matching them against the ranges each service publishes,
+  then by who owns the network.
+- **Sending subdomains** come from the names services ask for and from certificate logs.
+- **The website** shows the signup forms and widgets it loads, and its subprocessor list.
+
+Run it from the command line:
 
 ```
-npx sendermap example.com
+pip install git+https://github.com/marmot7775/sendermap
+sendermap example.com
+sendermap example.com --evidence     # every piece of evidence
+sendermap example.com --markdown     # a summary to paste
+sendermap example.com --json         # everything, for scripts
 ```
+
+The website keeps no record of the domains looked up.
 
 ## The vendor data
 
