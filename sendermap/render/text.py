@@ -29,7 +29,7 @@ def render(result: SenderMap, console: Console, *, evidence: bool = False) -> No
     headline = Text.assemble(
         (result.domain, "bold"),
         f"   {len(senders)} sending service{'s' if len(senders) != 1 else ''}",
-        (f"   {result.lookups} lookups in {result.elapsed:.1f} s", "bright_black"),
+        (f"   {result.run.lookups} lookups in {result.run.elapsed:.1f} s", "bright_black"),
     )
     console.print(Panel(headline, border_style="bright_black", expand=False))
     for tier, group in groupby(senders, key=lambda s: s.tier):

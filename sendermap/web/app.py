@@ -12,6 +12,7 @@ import time
 from collections.abc import AsyncIterator
 from contextlib import asynccontextmanager
 from dataclasses import dataclass, field
+from datetime import UTC, datetime
 from importlib import resources
 
 import httpx
@@ -126,7 +127,9 @@ async def _map(domain: str, progress: Progress) -> SenderMap:
 
 async def _build(domain: str, progress: Progress) -> SenderMap:
     async with state.slots:
-        result = await map_domain(domain, http=state.http, progress=progress)
+        result = await map_domain(
+            domain, checked_at=datetime.now(UTC), http=state.http, progress=progress
+        )
     state.cache[domain] = (time.monotonic(), result)
     for old in [d for d, (at, _) in state.cache.items() if time.monotonic() - at > CACHE_SECONDS]:
         del state.cache[old]

@@ -7,6 +7,7 @@ shows it. Inference groups claims into Services and ranks them. Nothing here doe
 from __future__ import annotations
 
 from dataclasses import asdict, dataclass, field
+from datetime import datetime
 from enum import StrEnum
 from typing import Any
 
@@ -172,16 +173,26 @@ class Observed:
 
 
 @dataclass(frozen=True, slots=True)
+class Run:
+    """When and how one map was made. Two runs over the same DNS answers differ here only."""
+
+    checked_at: datetime
+    elapsed: float
+    lookups: int
+
+
+@dataclass(frozen=True, slots=True)
 class SenderMap:
+    """The map of one domain. Equal maps compare equal whatever their runs."""
+
     domain: str
     services: tuple[Service, ...]
+    run: Run = field(compare=False)
     findings: tuple[Finding, ...] = ()
     unknowns: tuple[Unknown, ...] = ()
     gaps: tuple[Gap, ...] = ()
     subdomains_checked: tuple[str, ...] = ()
     logo: str | None = None
-    lookups: int = 0
-    elapsed: float = 0.0
     schema: str = field(default=SCHEMA)
 
     @property
@@ -193,4 +204,9 @@ class SenderMap:
         return tuple(s for s in self.services if s.role is Role.REPORTING)
 
     def to_dict(self) -> dict[str, Any]:
-        return asdict(self)
+        """Plain JSON values: times as ISO 8601 strings."""
+        return asdict(self, dict_factory=_json_ready)
+
+
+def _json_ready(pairs: list[tuple[str, Any]]) -> dict[str, Any]:
+    return {k: v.isoformat() if isinstance(v, datetime) else v for k, v in pairs}

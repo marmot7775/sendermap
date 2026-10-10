@@ -6,6 +6,7 @@ import argparse
 import asyncio
 import json
 import sys
+from datetime import UTC, datetime
 
 import httpx
 from rich.console import Console
@@ -38,6 +39,7 @@ async def _run(args: argparse.Namespace) -> int:
 
             result = await map_domain(
                 args.domain,
+                checked_at=datetime.now(UTC),
                 resolver=resolver,
                 http=http,
                 use_web=not args.no_web,

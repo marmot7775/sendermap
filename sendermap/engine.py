@@ -12,13 +12,14 @@ import asyncio
 import time
 from collections.abc import Awaitable, Callable, Iterable, Mapping
 from contextlib import AsyncExitStack
+from datetime import datetime
 
 import httpx
 
 from . import catalog as catalog_module
 from .dns import Lookups, Resolver, SystemResolver
 from .infer import backed_selectors, services
-from .model import Finding, Gap, Kind, Observed, SenderMap, Severity
+from .model import Finding, Gap, Kind, Observed, Run, SenderMap, Severity
 from .selectors import Rule, load_rules, probe_order, rank_rules
 from .sources import (
     Context,
@@ -44,13 +45,20 @@ SUBDOMAIN_PROBES = 27
 async def map_domain(
     domain: str,
     *,
+    checked_at: datetime,
     resolver: Resolver | None = None,
     http: httpx.AsyncClient | None = None,
     use_web: bool = True,
     use_subdomains: bool = True,
     progress: Progress | None = None,
 ) -> SenderMap:
-    """Map the services that send email as `domain`, with the evidence for each."""
+    """Map the services that send email as `domain`, with the evidence for each.
+
+    `checked_at` is the moment the map is dated by, timezone-aware; the caller says when, so the
+    same DNS answers and the same moment give the same map.
+    """
+    if checked_at.tzinfo is None:
+        raise ValueError("checked_at needs a timezone")
     domain = clean_domain(domain)
     started = time.perf_counter()
     async with AsyncExitStack() as stack:
@@ -102,13 +110,16 @@ async def map_domain(
         result = SenderMap(
             domain=domain,
             services=services(observed.claims, ctx.catalog, domain),
+            run=Run(
+                checked_at=checked_at,
+                elapsed=round(time.perf_counter() - started, 2),
+                lookups=ctx.dns.count,
+            ),
             findings=_sorted(observed.findings + _cross_findings(ctx, observed)),
             unknowns=tuple(dict.fromkeys(observed.unknowns)),
             gaps=tuple(dict.fromkeys(observed.gaps + (() if ct_read else (_ct_gap(),)))),
             subdomains_checked=tuple(picked),
             logo=logo,
-            lookups=ctx.dns.count,
-            elapsed=round(time.perf_counter() - started, 2),
         )
         await say("Done")
         return result
