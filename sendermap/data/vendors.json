@@ -194,6 +194,16 @@
             "date": "2026-10-09"
           }
         }
+      ],
+      "spf_includes": [
+        {
+          "value": "emsd1.com",
+          "proof": {
+            "domain": "iso.org",
+            "record": "hello.iso.org",
+            "date": "2026-10-10"
+          }
+        }
       ]
     },
     "Agari": {
@@ -229,6 +239,33 @@
             "domain": "amazonses.com",
             "record": "https://amazonses.com/",
             "date": "2026-10-09"
+          }
+        }
+      ],
+      "verification_txt": [
+        {
+          "value": "amazonses:",
+          "proof": {
+            "domain": "hicloudcam.com",
+            "record": "hicloudcam.com",
+            "date": "2026-10-10"
+          }
+        }
+      ],
+      "selectors": [
+        {
+          "shape": {
+            "kind": "fixed",
+            "names": [
+              "ses"
+            ]
+          },
+          "source": "pattern",
+          "reference": null,
+          "proof": {
+            "domain": "twitter.com",
+            "record": "ses._domainkey.twitter.com",
+            "date": "2026-10-10"
           }
         }
       ]
@@ -331,6 +368,16 @@
             "date": "2026-10-09"
           }
         }
+      ],
+      "spf_includes": [
+        {
+          "value": "send.aweber.com",
+          "proof": {
+            "domain": "index.hr",
+            "record": "index.hr",
+            "date": "2026-10-10"
+          }
+        }
       ]
     },
     "Barracuda": {
@@ -416,6 +463,73 @@
             "domain": "sendinblue.com",
             "record": "https://sendinblue.com/",
             "date": "2026-10-09"
+          }
+        }
+      ],
+      "dkim_cname": [
+        {
+          "value": "dkim.brevo.com",
+          "proof": {
+            "domain": "amplitude.com",
+            "record": "brevo1._domainkey.amplitude.com",
+            "date": "2026-10-10"
+          }
+        }
+      ],
+      "networks": [
+        {
+          "value": "AS200484",
+          "proof": {
+            "domain": "gandi.net",
+            "record": "info.gandi.net",
+            "date": "2026-10-10"
+          }
+        }
+      ],
+      "selectors": [
+        {
+          "shape": {
+            "kind": "fixed",
+            "names": [
+              "brevo"
+            ]
+          },
+          "source": "pattern",
+          "reference": null,
+          "proof": {
+            "domain": "frontiersin.org",
+            "record": "brevo._domainkey.frontiersin.org",
+            "date": "2026-10-10"
+          }
+        },
+        {
+          "shape": {
+            "kind": "fixed",
+            "names": [
+              "brevo1"
+            ]
+          },
+          "source": "pattern",
+          "reference": null,
+          "proof": {
+            "domain": "amplitude.com",
+            "record": "brevo1._domainkey.amplitude.com",
+            "date": "2026-10-10"
+          }
+        },
+        {
+          "shape": {
+            "kind": "fixed",
+            "names": [
+              "brevo2"
+            ]
+          },
+          "source": "pattern",
+          "reference": null,
+          "proof": {
+            "domain": "amplitude.com",
+            "record": "brevo2._domainkey.amplitude.com",
+            "date": "2026-10-10"
           }
         }
       ]
@@ -547,6 +661,58 @@
             "date": "2026-10-09"
           }
         }
+      ],
+      "dkim_cname": [
+        {
+          "value": "ccsend.com",
+          "proof": {
+            "domain": "nih.gov",
+            "record": "ctct1._domainkey.nih.gov",
+            "date": "2026-10-10"
+          }
+        }
+      ],
+      "subprocessor_names": [
+        {
+          "value": "Constant Contact",
+          "proof": {
+            "domain": "jotform.com",
+            "record": "https://jotform.com/",
+            "date": "2026-10-10"
+          }
+        }
+      ],
+      "selectors": [
+        {
+          "shape": {
+            "kind": "fixed",
+            "names": [
+              "ctct1"
+            ]
+          },
+          "source": "pattern",
+          "reference": null,
+          "proof": {
+            "domain": "nih.gov",
+            "record": "ctct1._domainkey.nih.gov",
+            "date": "2026-10-10"
+          }
+        },
+        {
+          "shape": {
+            "kind": "fixed",
+            "names": [
+              "ctct2"
+            ]
+          },
+          "source": "pattern",
+          "reference": null,
+          "proof": {
+            "domain": "nih.gov",
+            "record": "ctct2._domainkey.nih.gov",
+            "date": "2026-10-10"
+          }
+        }
       ]
     },
     "Customer.io": {
@@ -568,6 +734,23 @@
             "domain": "customer.io",
             "record": "https://customer.io/",
             "date": "2026-10-09"
+          }
+        }
+      ],
+      "selectors": [
+        {
+          "shape": {
+            "kind": "fixed",
+            "names": [
+              "krs"
+            ]
+          },
+          "source": "pattern",
+          "reference": null,
+          "proof": {
+            "domain": "cloudflare.com",
+            "record": "krs._domainkey.cloudflare.com",
+            "date": "2026-10-10"
           }
         }
       ]
@@ -625,6 +808,14 @@
             "record": "_dmarc.easydmarc.us",
             "date": "2026-10-09"
           }
+        },
+        {
+          "value": "easydmarc.eu",
+          "proof": {
+            "domain": "oup.com",
+            "record": "_dmarc.oup.com",
+            "date": "2026-10-10"
+          }
         }
       ],
       "category": "DMARC reporting",
@@ -635,6 +826,14 @@
             "domain": "easydmarc.com",
             "record": "easydmarc.com",
             "date": "2026-10-09"
+          }
+        },
+        {
+          "value": "easydmarc.com",
+          "proof": {
+            "domain": "sedo.com",
+            "record": "sedo.com",
+            "date": "2026-10-10"
           }
         }
       ]
@@ -658,6 +857,16 @@
             "domain": "elasticemail.com",
             "record": "https://elasticemail.com/",
             "date": "2026-10-09"
+          }
+        }
+      ],
+      "tracking": [
+        {
+          "value": "elasticemail.com",
+          "proof": {
+            "domain": "princeton.edu",
+            "record": "tracking.princeton.edu",
+            "date": "2026-10-10"
           }
         }
       ]
@@ -811,6 +1020,51 @@
             "record": "fm2._domainkey.fastmail.com",
             "date": "2026-10-09"
           }
+        },
+        {
+          "shape": {
+            "kind": "fixed",
+            "names": [
+              "fm1"
+            ]
+          },
+          "source": "pattern",
+          "reference": null,
+          "proof": {
+            "domain": "un.org",
+            "record": "fm1._domainkey.un.org",
+            "date": "2026-10-10"
+          }
+        },
+        {
+          "shape": {
+            "kind": "fixed",
+            "names": [
+              "fm3"
+            ]
+          },
+          "source": "pattern",
+          "reference": null,
+          "proof": {
+            "domain": "doctolib.fr",
+            "record": "fm3._domainkey.doctolib.fr",
+            "date": "2026-10-10"
+          }
+        },
+        {
+          "shape": {
+            "kind": "fixed",
+            "names": [
+              "mesmtp"
+            ]
+          },
+          "source": "pattern",
+          "reference": null,
+          "proof": {
+            "domain": "ipinfo.io",
+            "record": "mesmtp._domainkey.ipinfo.io",
+            "date": "2026-10-10"
+          }
         }
       ],
       "subprocessor_names": [
@@ -835,6 +1089,16 @@
             "date": "2026-10-09"
           }
         }
+      ],
+      "spf_includes": [
+        {
+          "value": "_spf.firebasemail.com",
+          "proof": {
+            "domain": "time.com",
+            "record": "accounts.time.com",
+            "date": "2026-10-10"
+          }
+        }
       ]
     },
     "Freshdesk": {
@@ -846,6 +1110,16 @@
             "domain": "freshdesk.com",
             "record": "https://freshdesk.com/",
             "date": "2026-10-09"
+          }
+        }
+      ],
+      "spf_includes": [
+        {
+          "value": "email.freshdesk.com",
+          "proof": {
+            "domain": "opera.com",
+            "record": "mail.opera.com",
+            "date": "2026-10-10"
           }
         }
       ]
@@ -956,6 +1230,38 @@
             "record": "google.com",
             "date": "2026-10-09"
           }
+        },
+        {
+          "value": "_netblocks.google.com",
+          "proof": {
+            "domain": "github.com",
+            "record": "github.com",
+            "date": "2026-10-10"
+          }
+        },
+        {
+          "value": "_netblocks2.google.com",
+          "proof": {
+            "domain": "github.com",
+            "record": "github.com",
+            "date": "2026-10-10"
+          }
+        },
+        {
+          "value": "_netblocks3.google.com",
+          "proof": {
+            "domain": "bit.ly",
+            "record": "bit.ly",
+            "date": "2026-10-10"
+          }
+        },
+        {
+          "value": "aspmx.googlemail.com",
+          "proof": {
+            "domain": "telegram.org",
+            "record": "accounts.telegram.org",
+            "date": "2026-10-10"
+          }
         }
       ],
       "mx": [
@@ -965,6 +1271,14 @@
             "domain": "google.com",
             "record": "google.com",
             "date": "2026-10-09"
+          }
+        },
+        {
+          "value": "googlemail.com",
+          "proof": {
+            "domain": "netflix.com",
+            "record": "netflix.com",
+            "date": "2026-10-10"
           }
         }
       ],
@@ -984,6 +1298,21 @@
             "record": "google._domainkey.gitlab.com",
             "date": "2026-10-09"
           }
+        },
+        {
+          "shape": {
+            "kind": "fixed",
+            "names": [
+              "gapps"
+            ]
+          },
+          "source": "pattern",
+          "reference": null,
+          "proof": {
+            "domain": "ebay.de",
+            "record": "gapps._domainkey.ebay.de",
+            "date": "2026-10-10"
+          }
         }
       ],
       "hints": {
@@ -998,7 +1327,17 @@
         "https://knowledge.workspace.google.com/admin/domains/set-up-mx-records-for-google-workspace",
         "https://knowledge.workspace.google.com/admin/security/set-up-spf"
       ],
-      "hints_note": "The MX page names only smtp.google.com. Domains set up before 2023 use legacy hosts it describes only as starting with aspmx, so those do not match yet."
+      "hints_note": "The MX page names only smtp.google.com. Domains set up before 2023 use legacy hosts it describes only as starting with aspmx, so those do not match yet.",
+      "subprocessor_names": [
+        {
+          "value": "Google Workspace",
+          "proof": {
+            "domain": "doubleclick.net",
+            "record": "https://doubleclick.net/",
+            "date": "2026-10-10"
+          }
+        }
+      ]
     },
     "Gorgias": {
       "category": "Support and CRM",
@@ -1144,6 +1483,22 @@
             "record": "https://hubspot.com/",
             "date": "2026-10-09"
           }
+        },
+        {
+          "value": "js.hs-scripts.com",
+          "proof": {
+            "domain": "klaviyo.com",
+            "record": "https://klaviyo.com/",
+            "date": "2026-10-10"
+          }
+        },
+        {
+          "value": "js.hsforms.net",
+          "proof": {
+            "domain": "doubleverify.com",
+            "record": "https://doubleverify.com/",
+            "date": "2026-10-10"
+          }
         }
       ],
       "selectors": [
@@ -1218,6 +1573,16 @@
             "domain": "intercom.com",
             "record": "https://intercom.com/",
             "date": "2026-10-09"
+          }
+        }
+      ],
+      "spf_includes": [
+        {
+          "value": "intercom.io",
+          "proof": {
+            "domain": "one.com",
+            "record": "one.com",
+            "date": "2026-10-10"
           }
         }
       ]
@@ -1301,6 +1666,16 @@
             "date": "2026-10-09"
           }
         }
+      ],
+      "tracking": [
+        {
+          "value": "iterable.com",
+          "proof": {
+            "domain": "weebly.com",
+            "record": "links.weebly.com",
+            "date": "2026-10-10"
+          }
+        }
       ]
     },
     "Kit": {
@@ -1332,6 +1707,14 @@
             "record": "s1._domainkey.klaviyo.com",
             "date": "2026-10-09"
           }
+        },
+        {
+          "value": "klaviyodns.com",
+          "proof": {
+            "domain": "nature.com",
+            "record": "kl1._domainkey.nature.com",
+            "date": "2026-10-10"
+          }
         }
       ],
       "return_path": [
@@ -1341,6 +1724,14 @@
             "domain": "klaviyo.com",
             "record": "send.klaviyo.com",
             "date": "2026-10-09"
+          }
+        },
+        {
+          "value": "klaviyodns.com",
+          "proof": {
+            "domain": "netkeiba.com",
+            "record": "send.netkeiba.com",
+            "date": "2026-10-10"
           }
         }
       ],
@@ -1372,6 +1763,53 @@
             "domain": "klaviyo.com",
             "record": "https://klaviyo.com/",
             "date": "2026-10-09"
+          }
+        }
+      ],
+      "selectors": [
+        {
+          "shape": {
+            "kind": "fixed",
+            "names": [
+              "kl"
+            ]
+          },
+          "source": "pattern",
+          "reference": null,
+          "proof": {
+            "domain": "netflix.com",
+            "record": "kl._domainkey.netflix.com",
+            "date": "2026-10-10"
+          }
+        },
+        {
+          "shape": {
+            "kind": "fixed",
+            "names": [
+              "kl1"
+            ]
+          },
+          "source": "pattern",
+          "reference": null,
+          "proof": {
+            "domain": "nature.com",
+            "record": "kl1._domainkey.nature.com",
+            "date": "2026-10-10"
+          }
+        },
+        {
+          "shape": {
+            "kind": "fixed",
+            "names": [
+              "kl2"
+            ]
+          },
+          "source": "pattern",
+          "reference": null,
+          "proof": {
+            "domain": "netflix.com",
+            "record": "kl2._domainkey.netflix.com",
+            "date": "2026-10-10"
           }
         }
       ]
@@ -1545,6 +1983,96 @@
             "record": "mg._domainkey.mailgun.com",
             "date": "2026-10-09"
           }
+        },
+        {
+          "shape": {
+            "kind": "fixed",
+            "names": [
+              "mailgun"
+            ]
+          },
+          "source": "pattern",
+          "reference": null,
+          "proof": {
+            "domain": "stanford.edu",
+            "record": "mailgun._domainkey.stanford.edu",
+            "date": "2026-10-10"
+          }
+        },
+        {
+          "shape": {
+            "kind": "fixed",
+            "names": [
+              "mg1"
+            ]
+          },
+          "source": "pattern",
+          "reference": null,
+          "proof": {
+            "domain": "checkpoint.com",
+            "record": "mg1._domainkey.checkpoint.com",
+            "date": "2026-10-10"
+          }
+        },
+        {
+          "shape": {
+            "kind": "fixed",
+            "names": [
+              "pdk1"
+            ]
+          },
+          "source": "pattern",
+          "reference": null,
+          "proof": {
+            "domain": "ipinfo.io",
+            "record": "pdk1._domainkey.ipinfo.io",
+            "date": "2026-10-10"
+          }
+        },
+        {
+          "shape": {
+            "kind": "fixed",
+            "names": [
+              "pdk2"
+            ]
+          },
+          "source": "pattern",
+          "reference": null,
+          "proof": {
+            "domain": "ipinfo.io",
+            "record": "pdk2._domainkey.ipinfo.io",
+            "date": "2026-10-10"
+          }
+        }
+      ],
+      "tracking": [
+        {
+          "value": "mailgun.org",
+          "proof": {
+            "domain": "checkpoint.com",
+            "record": "link.checkpoint.com",
+            "date": "2026-10-10"
+          }
+        }
+      ],
+      "networks": [
+        {
+          "value": "AS396479",
+          "proof": {
+            "domain": "docker.com",
+            "record": "notify.docker.com",
+            "date": "2026-10-10"
+          }
+        }
+      ],
+      "subprocessor_names": [
+        {
+          "value": "Mailgun",
+          "proof": {
+            "domain": "statuspage.io",
+            "record": "https://statuspage.io/",
+            "date": "2026-10-10"
+          }
         }
       ]
     },
@@ -1586,6 +2114,26 @@
             "date": "2026-10-09"
           }
         }
+      ],
+      "return_path": [
+        {
+          "value": "mailjet.com",
+          "proof": {
+            "domain": "etsy.com",
+            "record": "bnc3.etsy.com",
+            "date": "2026-10-10"
+          }
+        }
+      ],
+      "networks": [
+        {
+          "value": "AS200069",
+          "proof": {
+            "domain": "frontiersin.org",
+            "record": "mg.frontiersin.org",
+            "date": "2026-10-10"
+          }
+        }
       ]
     },
     "MailPoet": {
@@ -1604,6 +2152,21 @@
             "domain": "mailpoet.com",
             "record": "mailpoet2._domainkey.mailpoet.com",
             "date": "2026-10-09"
+          }
+        },
+        {
+          "shape": {
+            "kind": "fixed",
+            "names": [
+              "mailpoet1"
+            ]
+          },
+          "source": "pattern",
+          "reference": null,
+          "proof": {
+            "domain": "checkpoint.com",
+            "record": "mailpoet1._domainkey.checkpoint.com",
+            "date": "2026-10-10"
           }
         }
       ]
@@ -1670,6 +2233,26 @@
             "date": "2026-10-09"
           }
         }
+      ],
+      "return_path": [
+        {
+          "value": "mandrillapp.com",
+          "proof": {
+            "domain": "bidmachine.io",
+            "record": "mail.bidmachine.io",
+            "date": "2026-10-10"
+          }
+        }
+      ],
+      "tracking": [
+        {
+          "value": "mandrillapp.com",
+          "proof": {
+            "domain": "nature.com",
+            "record": "track.nature.com",
+            "date": "2026-10-10"
+          }
+        }
       ]
     },
     "Marketo": {
@@ -1683,7 +2266,74 @@
           }
         }
       ],
-      "category": "Marketing"
+      "category": "Marketing",
+      "website": [
+        {
+          "value": "munchkin.marketo.net",
+          "proof": {
+            "domain": "gitlab.com",
+            "record": "https://gitlab.com/",
+            "date": "2026-10-10"
+          }
+        }
+      ],
+      "subprocessor_names": [
+        {
+          "value": "Marketo",
+          "proof": {
+            "domain": "appsflyer.com",
+            "record": "https://appsflyer.com/",
+            "date": "2026-10-10"
+          }
+        }
+      ],
+      "selectors": [
+        {
+          "shape": {
+            "kind": "fixed",
+            "names": [
+              "marketo"
+            ]
+          },
+          "source": "pattern",
+          "reference": null,
+          "proof": {
+            "domain": "launchdarkly.com",
+            "record": "marketo._domainkey.launchdarkly.com",
+            "date": "2026-10-10"
+          }
+        },
+        {
+          "shape": {
+            "kind": "fixed",
+            "names": [
+              "mkto"
+            ]
+          },
+          "source": "pattern",
+          "reference": null,
+          "proof": {
+            "domain": "adobe.com",
+            "record": "mkto._domainkey.adobe.com",
+            "date": "2026-10-10"
+          }
+        },
+        {
+          "shape": {
+            "kind": "fixed",
+            "names": [
+              "mkto1"
+            ]
+          },
+          "source": "pattern",
+          "reference": null,
+          "proof": {
+            "domain": "nvidia.com",
+            "record": "mkto1._domainkey.nvidia.com",
+            "date": "2026-10-10"
+          }
+        }
+      ]
     },
     "Microsoft 365": {
       "spf_includes": [
@@ -1712,6 +2362,14 @@
             "record": "microsoft.com",
             "date": "2026-10-09"
           }
+        },
+        {
+          "value": "mx.microsoft",
+          "proof": {
+            "domain": "criteo.com",
+            "record": "criteo.com",
+            "date": "2026-10-10"
+          }
         }
       ],
       "dkim_cname": [
@@ -1721,6 +2379,14 @@
             "domain": "microsoft.com",
             "record": "selector1._domainkey.microsoft.com",
             "date": "2026-10-09"
+          }
+        },
+        {
+          "value": "dkim.mail.microsoft",
+          "proof": {
+            "domain": "cnn.com",
+            "record": "selector1._domainkey.cnn.com",
+            "date": "2026-10-10"
           }
         }
       ],
@@ -1793,6 +2459,14 @@
             "record": "mimecast.com",
             "date": "2026-10-09"
           }
+        },
+        {
+          "value": "mimecast.com",
+          "proof": {
+            "domain": "hp.com",
+            "record": "hp.com",
+            "date": "2026-10-10"
+          }
         }
       ],
       "mx": [
@@ -1802,6 +2476,14 @@
             "domain": "mimecast.com",
             "record": "mimecast.com",
             "date": "2026-10-09"
+          }
+        },
+        {
+          "value": "mimecast.co.za",
+          "proof": {
+            "domain": "hollywoodbets.net",
+            "record": "hollywoodbets.net",
+            "date": "2026-10-10"
           }
         }
       ],
@@ -1823,6 +2505,38 @@
             "domain": "mimecast.com",
             "record": "https://mimecast.com/",
             "date": "2026-10-09"
+          }
+        }
+      ],
+      "selectors": [
+        {
+          "shape": {
+            "kind": "fixed",
+            "names": [
+              "mimecast"
+            ]
+          },
+          "source": "pattern",
+          "reference": null,
+          "proof": {
+            "domain": "tesla.com",
+            "record": "mimecast._domainkey.tesla.com",
+            "date": "2026-10-10"
+          }
+        },
+        {
+          "shape": {
+            "kind": "fixed",
+            "names": [
+              "mimecast20190719"
+            ]
+          },
+          "source": "pattern",
+          "reference": null,
+          "proof": {
+            "domain": "redhat.com",
+            "record": "mimecast20190719._domainkey.redhat.com",
+            "date": "2026-10-10"
           }
         }
       ]
@@ -1956,6 +2670,16 @@
             "date": "2026-10-09"
           }
         }
+      ],
+      "return_path": [
+        {
+          "value": "mtasv.net",
+          "proof": {
+            "domain": "digicert.com",
+            "record": "pm-bounces.digicert.com",
+            "date": "2026-10-10"
+          }
+        }
       ]
     },
     "PowerDMARC": {
@@ -1980,6 +2704,14 @@
             "record": "marketing.proofpoint.com",
             "date": "2026-10-09"
           }
+        },
+        {
+          "value": "ppe-hosted.com",
+          "proof": {
+            "domain": "aboutads.info",
+            "record": "aboutads.info",
+            "date": "2026-10-10"
+          }
         }
       ],
       "mx": [
@@ -1989,6 +2721,14 @@
             "domain": "proofpoint.com",
             "record": "proofpoint.com",
             "date": "2026-10-09"
+          }
+        },
+        {
+          "value": "ppe-hosted.com",
+          "proof": {
+            "domain": "aboutads.info",
+            "record": "aboutads.info",
+            "date": "2026-10-10"
           }
         }
       ],
@@ -2010,6 +2750,23 @@
             "domain": "proofpoint.com",
             "record": "https://proofpoint.com/",
             "date": "2026-10-09"
+          }
+        }
+      ],
+      "selectors": [
+        {
+          "shape": {
+            "kind": "fixed",
+            "names": [
+              "pp1"
+            ]
+          },
+          "source": "pattern",
+          "reference": null,
+          "proof": {
+            "domain": "ibm.com",
+            "record": "pp1._domainkey.ibm.com",
+            "date": "2026-10-10"
           }
         }
       ]
@@ -2109,7 +2866,17 @@
           }
         }
       ],
-      "category": "Mailbox"
+      "category": "Mailbox",
+      "spf_includes": [
+        {
+          "value": "emailsrvr.com",
+          "proof": {
+            "domain": "ip-api.com",
+            "record": "ip-api.com",
+            "date": "2026-10-10"
+          }
+        }
+      ]
     },
     "Red Sift OnDMARC": {
       "spf_includes": [
@@ -2212,6 +2979,16 @@
             "date": "2026-10-09"
           }
         }
+      ],
+      "return_path": [
+        {
+          "value": "sailthrudkim.com",
+          "proof": {
+            "domain": "techcrunch.com",
+            "record": "bounce.techcrunch.com",
+            "date": "2026-10-10"
+          }
+        }
       ]
     },
     "Salesforce": {
@@ -2259,6 +3036,81 @@
               "date": "2026-10-09"
             }
           ]
+        },
+        {
+          "shape": {
+            "kind": "fixed",
+            "names": [
+              "salesforce1"
+            ]
+          },
+          "source": "pattern",
+          "reference": null,
+          "proof": {
+            "domain": "tumblr.com",
+            "record": "salesforce1._domainkey.tumblr.com",
+            "date": "2026-10-10"
+          }
+        },
+        {
+          "shape": {
+            "kind": "fixed",
+            "names": [
+              "sf"
+            ]
+          },
+          "source": "pattern",
+          "reference": null,
+          "proof": {
+            "domain": "checkpoint.com",
+            "record": "sf._domainkey.checkpoint.com",
+            "date": "2026-10-10"
+          }
+        },
+        {
+          "shape": {
+            "kind": "fixed",
+            "names": [
+              "sf1"
+            ]
+          },
+          "source": "pattern",
+          "reference": null,
+          "proof": {
+            "domain": "roblox.com",
+            "record": "sf1._domainkey.roblox.com",
+            "date": "2026-10-10"
+          }
+        },
+        {
+          "shape": {
+            "kind": "fixed",
+            "names": [
+              "sf2"
+            ]
+          },
+          "source": "pattern",
+          "reference": null,
+          "proof": {
+            "domain": "roblox.com",
+            "record": "sf2._domainkey.roblox.com",
+            "date": "2026-10-10"
+          }
+        },
+        {
+          "shape": {
+            "kind": "fixed",
+            "names": [
+              "sfdc"
+            ]
+          },
+          "source": "pattern",
+          "reference": null,
+          "proof": {
+            "domain": "f5.com",
+            "record": "sfdc._domainkey.f5.com",
+            "date": "2026-10-10"
+          }
         }
       ],
       "subprocessor_names": [
@@ -2336,6 +3188,26 @@
             "domain": "pardot.com",
             "record": "https://pardot.com/",
             "date": "2026-10-09"
+          }
+        }
+      ]
+    },
+    "Salesforce Marketing Cloud Engagement": {
+      "category": "Marketing",
+      "selectors": [
+        {
+          "shape": {
+            "kind": "fixed",
+            "names": [
+              "sfmc"
+            ]
+          },
+          "source": "pattern",
+          "reference": null,
+          "proof": {
+            "domain": "tesla.com",
+            "record": "sfmc._domainkey.tesla.com",
+            "date": "2026-10-10"
           }
         }
       ]
@@ -2425,6 +3297,26 @@
             "date": "2026-10-09"
           }
         }
+      ],
+      "return_path": [
+        {
+          "value": "sendgrid.net",
+          "proof": {
+            "domain": "microsoft.com",
+            "record": "em.microsoft.com",
+            "date": "2026-10-10"
+          }
+        }
+      ],
+      "tracking": [
+        {
+          "value": "sendgrid.net",
+          "proof": {
+            "domain": "applovin.com",
+            "record": "links.applovin.com",
+            "date": "2026-10-10"
+          }
+        }
       ]
     },
     "Shopify": {
@@ -2448,6 +3340,16 @@
             "date": "2026-10-09"
           }
         }
+      ],
+      "spf_includes": [
+        {
+          "value": "shops.shopify.com",
+          "proof": {
+            "domain": "ui.com",
+            "record": "ui.com",
+            "date": "2026-10-10"
+          }
+        }
       ]
     },
     "SparkPost": {
@@ -2459,6 +3361,14 @@
             "record": "email.sparkpost.com",
             "date": "2026-10-09"
           }
+        },
+        {
+          "value": "mail.e.sparkpost.com",
+          "proof": {
+            "domain": "nytimes.com",
+            "record": "bounce.nytimes.com",
+            "date": "2026-10-10"
+          }
         }
       ],
       "tracking": [
@@ -2468,6 +3378,14 @@
             "domain": "sparkpost.com",
             "record": "track.sparkpost.com",
             "date": "2026-10-09"
+          }
+        },
+        {
+          "value": "et.e.sparkpost.com",
+          "proof": {
+            "domain": "azure.com",
+            "record": "track.azure.com",
+            "date": "2026-10-10"
           }
         }
       ],
@@ -2489,6 +3407,48 @@
             "domain": "sparkpost.com",
             "record": "https://sparkpost.com/",
             "date": "2026-10-09"
+          }
+        }
+      ],
+      "spf_includes": [
+        {
+          "value": "sparkpostmail.com",
+          "proof": {
+            "domain": "cloudflare.com",
+            "record": "notify.cloudflare.com",
+            "date": "2026-10-10"
+          }
+        }
+      ],
+      "selectors": [
+        {
+          "shape": {
+            "kind": "fixed",
+            "names": [
+              "scph0819"
+            ]
+          },
+          "source": "pattern",
+          "reference": null,
+          "proof": {
+            "domain": "mit.edu",
+            "record": "scph0819._domainkey.mit.edu",
+            "date": "2026-10-10"
+          }
+        },
+        {
+          "shape": {
+            "kind": "fixed",
+            "names": [
+              "sparkpost"
+            ]
+          },
+          "source": "pattern",
+          "reference": null,
+          "proof": {
+            "domain": "statuspage.io",
+            "record": "sparkpost._domainkey.statuspage.io",
+            "date": "2026-10-10"
           }
         }
       ]
@@ -2542,6 +3502,16 @@
             "domain": "squarespace.com",
             "record": "https://squarespace.com/",
             "date": "2026-10-09"
+          }
+        }
+      ],
+      "dkim_cname": [
+        {
+          "value": "squarespace-mail.com",
+          "proof": {
+            "domain": "stanford.edu",
+            "record": "squarespace._domainkey.stanford.edu",
+            "date": "2026-10-10"
           }
         }
       ]
@@ -2682,6 +3652,16 @@
             "date": "2026-10-09"
           }
         }
+      ],
+      "dkim_cname": [
+        {
+          "value": "zendesk.com",
+          "proof": {
+            "domain": "github.com",
+            "record": "zendesk1._domainkey.github.com",
+            "date": "2026-10-10"
+          }
+        }
       ]
     },
     "Zoho Campaigns": {
@@ -2724,6 +3704,14 @@
             "record": "zoho.com",
             "date": "2026-10-09"
           }
+        },
+        {
+          "value": "one.zoho.com",
+          "proof": {
+            "domain": "iscorp.com",
+            "record": "iscorp.com",
+            "date": "2026-10-10"
+          }
         }
       ],
       "mx": [
@@ -2742,6 +3730,14 @@
             "record": "zoho.eu",
             "date": "2026-10-09"
           }
+        },
+        {
+          "value": "zoho.in",
+          "proof": {
+            "domain": "indown.io",
+            "record": "indown.io",
+            "date": "2026-10-10"
+          }
         }
       ],
       "category": "Mailbox",
@@ -2752,6 +3748,33 @@
             "domain": "zohomail.com",
             "record": "https://zohomail.com/",
             "date": "2026-10-09"
+          }
+        }
+      ],
+      "verification_txt": [
+        {
+          "value": "zoho-verification=",
+          "proof": {
+            "domain": "vimeo.com",
+            "record": "vimeo.com",
+            "date": "2026-10-10"
+          }
+        }
+      ],
+      "selectors": [
+        {
+          "shape": {
+            "kind": "fixed",
+            "names": [
+              "zoho"
+            ]
+          },
+          "source": "pattern",
+          "reference": null,
+          "proof": {
+            "domain": "itch.io",
+            "record": "zoho._domainkey.itch.io",
+            "date": "2026-10-10"
           }
         }
       ]
