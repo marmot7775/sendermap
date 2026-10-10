@@ -9,6 +9,10 @@ import httpx
 from ..catalog import Catalog
 from ..dns import Lookups
 
+# Asked before a wave of probes: a name nobody publishes, so an answer here is a wildcard. Fixed,
+# not random, so the same DNS answers give the same map.
+CANARY = "sendermap-wildcard-check"
+
 
 @dataclass(frozen=True, slots=True)
 class Context:
