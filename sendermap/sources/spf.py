@@ -15,7 +15,7 @@ import asyncio
 from dataclasses import dataclass, field
 from datetime import datetime
 
-from ..dns import Answer
+from ..dns import Answer, norm
 from ..model import Claim, Evidence, Finding, Gap, Kind, Observed, Severity, Unknown
 from . import Context
 
@@ -53,7 +53,7 @@ def spf_records(answer: Answer) -> list[str]:
     return [r for r in answer.records if r.lower() == "v=spf1" or r.lower().startswith("v=spf1 ")]
 
 
-@dataclass(slots=True)
+@dataclass(frozen=True, slots=True)
 class SpfTree:
     """What the walk learned beyond claims: inputs for other sources and for findings."""
 
@@ -69,12 +69,11 @@ class SpfTree:
 
 async def collect(ctx: Context, where: str) -> tuple[Observed, SpfTree]:
     answer = await ctx.dns.txt(where)
-    tree = SpfTree()
     if not answer.answered:
-        return Observed(gaps=(Gap(f"SPF at {where}", answer.status.value),)), tree
+        return Observed(gaps=(Gap(f"SPF at {where}", answer.status.value),)), SpfTree()
     records = spf_records(answer)
     if not records:
-        return Observed(), tree
+        return Observed(), SpfTree()
     if len(records) > 1:
         evidence = tuple(Evidence(where, "TXT", r, ctx.checked_at) for r in records)
         return Observed(
@@ -87,11 +86,59 @@ async def collect(ctx: Context, where: str) -> tuple[Observed, SpfTree]:
                     evidence,
                 ),
             )
-        ), tree
-    tree.record = records[0]
-    walk = _Walk(ctx, where, tree)
-    await walk.visit(where, tree.record, depth=0, inside=None, authorized=True)
-    return walk.observed(), tree
+        ), SpfTree()
+    record = records[0]
+    await _prefetch(ctx, record, depth=0, nearest={norm(where): 0})
+    walked = await _Walk(ctx, where).visit(where, record, depth=0, inside=None, authorized=True)
+    tree = SpfTree(
+        record=record,
+        lookups=walked.lookups,
+        ranges=list(walked.ranges),
+        hosted_by=walked.hosted[0] if walked.hosted else None,
+        macros=list(walked.macros),
+        includes=list(walked.includes),
+    )
+    return walked.observed + _findings(ctx, where, tree), tree
+
+
+def _evaluated(record: str) -> list[Term]:
+    """The terms a receiver evaluates, in order: everything before "all", and a redirect only
+    when the record has no "all"."""
+    parsed = terms(record)
+    has_all = any(t.mechanism == "all" for t in parsed)
+    evaluated: list[Term] = []
+    for term in parsed:
+        if term.mechanism == "all":
+            break
+        if term.mechanism == "redirect" and has_all:
+            continue
+        evaluated.append(term)
+    return evaluated
+
+
+def _followable(term: Term) -> bool:
+    return term.mechanism in ("include", "redirect") and bool(term.value)
+
+
+async def _prefetch(ctx: Context, record: str, depth: int, nearest: dict[str, int]) -> None:
+    """Ask for every record the walk can reach, all at once, so the walk can then read them in
+    the order of their terms from the lookup cache without waiting on each in turn.
+
+    `nearest` holds the shallowest depth each name was reached at, so the names asked depend
+    only on the records, never on which answer came back first.
+    """
+
+    async def fetch(target: str) -> None:
+        key = norm(target)
+        if depth + 1 > MAX_DEPTH or nearest.get(key, MAX_DEPTH + 1) <= depth + 1:
+            return
+        nearest[key] = depth + 1
+        records = spf_records(await ctx.dns.txt(target))
+        if len(records) == 1:
+            await _prefetch(ctx, records[0], depth + 1, nearest)
+
+    targets = [t.value for t in _evaluated(record) if _followable(t) and "%{" not in t.value]
+    await asyncio.gather(*map(fetch, targets))
 
 
 @dataclass(frozen=True, slots=True)
@@ -110,117 +157,137 @@ class _Link:
         return Evidence(self.parent, "TXT", f"{self.how}{sep}{self.target}", checked_at)
 
 
+@dataclass(frozen=True, slots=True)
+class _Walked:
+    """What one record and every record below it contributed, in the order of their terms."""
+
+    observed: Observed = field(default_factory=Observed)
+    lookups: int = 0
+    ranges: tuple[tuple[str, Evidence], ...] = ()
+    includes: tuple[str, ...] = ()
+    macros: tuple[str, ...] = ()
+    hosted: tuple[str, ...] = ()  # hosted SPF services on authorizing links
+
+    def __add__(self, other: _Walked) -> _Walked:
+        return _Walked(
+            self.observed + other.observed,
+            self.lookups + other.lookups,
+            self.ranges + other.ranges,
+            self.includes + other.includes,
+            self.macros + other.macros,
+            self.hosted + other.hosted,
+        )
+
+
 class _Walk:
-    def __init__(self, ctx: Context, where: str, tree: SpfTree) -> None:
-        self.ctx, self.where, self.tree = ctx, where, tree
-        self.claims: list[Claim] = []
-        self.unknowns: list[Unknown] = []
-        self.gaps: list[Gap] = []
-        self.seen: set[str] = {where}
+    """Walks the tree one term at a time, depth first, so a name met twice is always walked at
+    its first place in the record and every list comes out in the same order."""
+
+    def __init__(self, ctx: Context, where: str) -> None:
+        self.ctx, self.where = ctx, where
+        self.seen: set[str] = {norm(where)}
 
     async def visit(
         self, name: str, record: str, depth: int, inside: str | None, authorized: bool
-    ) -> None:
+    ) -> _Walked:
         """Walk one record. `inside` is the service whose own record this is, if any;
         `authorized` is whether every link from the domain down to here authorizes."""
-        parsed = terms(record)
-        has_all = any(t.mechanism == "all" for t in parsed)
-        links: list[_Link] = []
-        for term in parsed:
-            if term.mechanism == "all":
-                break  # nothing after "all" is ever evaluated
-            if term.mechanism == "redirect" and has_all:
-                continue  # a redirect is ignored when the record has "all"
-            if term.mechanism in _LOOKUP_MECHANISMS:
-                self.tree.lookups += 1
+        walked = _Walked()
+        for term in _evaluated(record):
             live = authorized and term.authorizes and inside is None
-            if term.mechanism in ("ip4", "ip6") and live:
-                evidence = Evidence(
-                    name, "TXT", f"{term.mechanism}:{term.value}", self.ctx.checked_at
-                )
-                self.tree.ranges.append((term.value, evidence))
-            if term.mechanism in ("include", "redirect") and term.value:
-                if depth <= 1 and "%{" not in term.value:
-                    self.tree.includes.append(term.value.lower().rstrip("."))
-                links.append(_Link(name, term.value, term.mechanism, depth, inside, live))
-        await asyncio.gather(*map(self.follow, links))
+            walked += self._term(name, term, depth, live)
+            if _followable(term):
+                link = _Link(name, term.value, term.mechanism, depth, inside, live)
+                walked += await self.follow(link)
+        return walked
 
-    async def follow(self, link: _Link) -> None:
+    def _term(self, name: str, term: Term, depth: int, live: bool) -> _Walked:
+        """What one term says by itself: a lookup it costs, a range it lists, an include hint."""
+        ranges: tuple[tuple[str, Evidence], ...] = ()
+        if term.mechanism in ("ip4", "ip6") and live:
+            evidence = Evidence(name, "TXT", f"{term.mechanism}:{term.value}", self.ctx.checked_at)
+            ranges = ((term.value, evidence),)
+        hint = _followable(term) and depth <= 1 and "%{" not in term.value
+        return _Walked(
+            lookups=int(term.mechanism in _LOOKUP_MECHANISMS),
+            ranges=ranges,
+            includes=(norm(term.value),) if hint else (),
+        )
+
+    async def follow(self, link: _Link) -> _Walked:
         if "%{" in link.target:
-            self.tree.macros.append(link.target)
-            if link.live and (service := self.ctx.catalog.spf(_macro_tail(link.target))):
-                self.tree.hosted_by = self.tree.hosted_by or service
-            return
+            service = self.ctx.catalog.spf(_macro_tail(link.target))
+            hosted = (service,) if link.live and service else ()
+            return _Walked(macros=(link.target,), hosted=hosted)
         service = self.ctx.catalog.spf(link.target)
-        if link.live:
-            self._credit(link, service)
-        key = link.target.lower().rstrip(".")
+        walked = self._credit(link, service) if link.live else _Walked()
+        key = norm(link.target)
         if key in self.seen or link.depth + 1 > MAX_DEPTH:
-            return
+            return walked
         self.seen.add(key)
         answer = await self.ctx.dns.txt(link.target)
         if not answer.answered:
-            self.gaps.append(Gap(f"SPF at {link.target}", answer.status.value))
-            return
+            gap = Gap(f"SPF at {link.target}", answer.status.value)
+            return walked + _Walked(observed=Observed(gaps=(gap,)))
         records = spf_records(answer)
-        if len(records) == 1:
-            # A flattening service (EasyDMARC) copies the domain's own senders into its record,
-            # so what is inside still speaks for the domain. Any other service's record is its own.
-            flattened = service in self.ctx.catalog.flattening_spf
-            owner = link.inside or (None if flattened else service)
-            await self.visit(link.target, records[0], link.depth + 1, owner, link.live)
+        if len(records) != 1:
+            return walked
+        # A flattening service (EasyDMARC) copies the domain's own senders into its record,
+        # so what is inside still speaks for the domain. Any other service's record is its own.
+        flattened = service in self.ctx.catalog.flattening_spf
+        owner = link.inside or (None if flattened else service)
+        return walked + await self.visit(link.target, records[0], link.depth + 1, owner, link.live)
 
-    def _credit(self, link: _Link, service: str | None) -> None:
-        if self.ctx.catalog.is_hosted_spf(service):
-            self.tree.hosted_by = self.tree.hosted_by or service
-        elif service:
-            self.claims.append(
-                Claim(service, Kind.SPF_INCLUDE, self.where, link.evidence(self.ctx.checked_at))
+    def _credit(self, link: _Link, service: str | None) -> _Walked:
+        if service and self.ctx.catalog.is_hosted_spf(service):
+            return _Walked(hosted=(service,))
+        if service:
+            claim = Claim(service, Kind.SPF_INCLUDE, self.where, link.evidence(self.ctx.checked_at))
+            return _Walked(observed=Observed(claims=(claim,)))
+        if not _is_own(link.target, self.ctx.domain):
+            unknown = Unknown("SPF include", link.target, self.where)
+            return _Walked(observed=Observed(unknowns=(unknown,)))
+        return _Walked()
+
+
+def _findings(ctx: Context, where: str, tree: SpfTree) -> Observed:
+    findings: list[Finding] = []
+    root = Evidence(where, "TXT", tree.record or "", ctx.checked_at)
+    if tree.lookups > LOOKUP_LIMIT:
+        findings.append(
+            Finding(
+                Severity.RISK,
+                f"SPF at {where} needs {tree.lookups} DNS lookups",
+                f"Receivers stop at {LOOKUP_LIMIT} and return an error (RFC 7208, section "
+                "4.6.4), so some or all mail fails SPF, depending on the order of the record.",
+                (root,),
             )
-        elif not _is_own(link.target, self.ctx.domain):
-            self.unknowns.append(Unknown("SPF include", link.target, self.where))
-
-    def observed(self) -> Observed:
-        findings: list[Finding] = []
-        tree, root = (
-            self.tree,
-            Evidence(self.where, "TXT", self.tree.record or "", self.ctx.checked_at),
         )
-        if tree.lookups > LOOKUP_LIMIT:
-            findings.append(
-                Finding(
-                    Severity.RISK,
-                    f"SPF at {self.where} needs {tree.lookups} DNS lookups",
-                    f"Receivers stop at {LOOKUP_LIMIT} and return an error (RFC 7208, section "
-                    "4.6.4), so some or all mail fails SPF, depending on the order of the record.",
-                    (root,),
-                )
+    if any(t.mechanism == "all" and t.qualifier == "+" for t in terms(tree.record or "")):
+        findings.append(
+            Finding(
+                Severity.RISK,
+                f"SPF at {where} authorizes every server",
+                "It ends in +all, so any server on the internet passes SPF as this domain.",
+                (root,),
             )
-        if any(t.mechanism == "all" and t.qualifier == "+" for t in terms(tree.record or "")):
-            findings.append(
-                Finding(
-                    Severity.RISK,
-                    f"SPF at {self.where} authorizes every server",
-                    "It ends in +all, so any server on the internet passes SPF as this domain.",
-                    (root,),
-                )
+        )
+    if tree.hosted_by or tree.macros:
+        by = tree.hosted_by or "a macro include"
+        findings.append(
+            Finding(
+                Severity.NOTE,
+                f"SPF at {where} is managed through {by}",
+                "A hosted or macro record can authorize services without naming them, so the "
+                "services it covers do not show in the record itself.",
+                (root,),
             )
-        if tree.hosted_by or tree.macros:
-            by = tree.hosted_by or "a macro include"
-            findings.append(
-                Finding(
-                    Severity.NOTE,
-                    f"SPF at {self.where} is managed through {by}",
-                    "A hosted or macro record can authorize services without naming them, so the "
-                    "services it covers do not show in the record itself.",
-                    (root,),
-                )
-            )
-        return Observed(tuple(self.claims), tuple(self.unknowns), tuple(findings), tuple(self.gaps))
+        )
+    return Observed(findings=tuple(findings))
 
 
 def _is_own(target: str, domain: str) -> bool:
-    t = target.lower().rstrip(".")
+    t = norm(target)
     return t == domain or t.endswith("." + domain)
 
 
