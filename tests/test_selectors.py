@@ -1,4 +1,6 @@
+import json
 from pathlib import Path
+from typing import Any
 
 import pytest
 
@@ -6,6 +8,7 @@ from sendermap.selectors import (
     Fixed,
     Hints,
     Numbered,
+    Proof,
     Rule,
     Source,
     build_dictionary,
@@ -13,6 +16,24 @@ from sendermap.selectors import (
     probe_order,
     rank_rules,
 )
+
+
+def proof(name: str, domain: str = "example.test") -> Proof:
+    return Proof(domain, f"{name}._domainkey.{domain}", "2026-10-09")
+
+
+def proof_json(name: str) -> dict[str, str]:
+    return {
+        "domain": "example.test",
+        "record": f"{name}._domainkey.example.test",
+        "date": "2026-10-09",
+    }
+
+
+def vendors_file(tmp_path: Path, vendors: dict[str, Any]) -> Path:
+    path = tmp_path / "vendors.json"
+    path.write_text(json.dumps({"vendors": vendors}), encoding="utf-8")
+    return path
 
 
 def test_fixed_expands_to_its_names():
@@ -25,36 +46,64 @@ def test_numbered_counts_from_one():
 
 def test_vendor_docs_without_reference_is_rejected():
     with pytest.raises(ValueError):
-        Rule("X", Fixed(("x",)), Source.VENDOR_DOCS)
+        Rule("X", Fixed(("x",)), Source.VENDOR_DOCS, proof("x"))
 
 
 def test_a_name_claimed_by_two_vendors_keeps_both_claims():
     rules = (
-        Rule("A", Fixed(("s1",)), Source.PATTERN),
-        Rule("B", Numbered("s", 1), Source.PATTERN),
+        Rule("A", Fixed(("s1",)), Source.PATTERN, proof("s1")),
+        Rule("B", Numbered("s", 1), Source.PATTERN, proof("s1")),
     )
     found = build_dictionary(rules)
     assert {c.vendor for c in found["s1"]} == {"A", "B"}
 
 
-def test_rules_load_from_a_yaml_file(tmp_path: Path):
-    rules_file = tmp_path / "rules.yaml"
-    rules_file.write_text(
-        "- vendor: Google Workspace\n"
-        "  shape: {kind: fixed, names: [google]}\n"
-        "  source: vendor_docs\n"
-        "  reference: https://example.test/docs\n",
-        encoding="utf-8",
+def test_rules_load_from_the_vendor_blocks(tmp_path: Path):
+    rules_file = vendors_file(
+        tmp_path,
+        {
+            "Google Workspace": {
+                "category": "Mailbox",
+                "selectors": [
+                    {
+                        "shape": {"kind": "fixed", "names": ["google"]},
+                        "source": "vendor_docs",
+                        "reference": "https://example.test/docs",
+                        "proof": proof_json("google"),
+                    }
+                ],
+            },
+            "No Selectors": {"category": "Marketing"},
+        },
     )
     rules = load_rules(rules_file)
     found = build_dictionary(rules)
     assert found["google"][0].vendor == "Google Workspace"
+    assert found["google"][0].proof == proof("google")
+    assert len(rules) == 1
+
+
+@pytest.mark.parametrize(
+    ("entry_proof", "message"),
+    [
+        (None, "Example Vendor example: no proof"),
+        ({**proof_json("example"), "record": "  "}, "Example Vendor example: proof has no record"),
+    ],
+)
+def test_a_selector_entry_without_a_proof_is_rejected(tmp_path: Path, entry_proof, message):
+    entry = {"shape": {"kind": "fixed", "names": ["example"]}, "source": "pattern"}
+    if entry_proof is not None:
+        entry["proof"] = entry_proof
+    rules_file = vendors_file(tmp_path, {"Example Vendor": {"selectors": [entry]}})
+    with pytest.raises(ValueError, match=message):
+        load_rules(rules_file)
 
 
 GOOGLE = Rule(
     "Google Workspace",
     Fixed(("google",)),
     Source.PATTERN,
+    proof("google"),
     hints=Hints(mx=("google.com",), spf=("_spf.google.com",)),
     hints_reference=("https://example.test/google",),
 )
@@ -62,10 +111,11 @@ MICROSOFT = Rule(
     "Microsoft 365",
     Numbered("selector", 2),
     Source.PATTERN,
+    proof("selector1"),
     hints=Hints(mx=("mail.protection.outlook.com",), spf=("spf.protection.outlook.com",)),
     hints_reference=("https://example.test/microsoft",),
 )
-NO_HINTS = Rule("Example Vendor", Fixed(("example",)), Source.PATTERN)
+NO_HINTS = Rule("Example Vendor", Fixed(("example",)), Source.PATTERN, proof("example"))
 RULES = (MICROSOFT, NO_HINTS, GOOGLE)
 
 
@@ -98,18 +148,23 @@ def test_a_rule_without_hints_never_moves():
     assert rank_rules((NO_HINTS,), ["aspmx.l.google.com"], ["_spf.google.com"]) == (NO_HINTS,)
 
 
+def pattern_entry(shape: dict[str, Any], name: str) -> dict[str, Any]:
+    return {"shape": shape, "source": "pattern", "proof": proof_json(name)}
+
+
 def test_hints_are_normalised_on_load(tmp_path: Path):
-    rules_file = tmp_path / "rules.yaml"
-    rules_file.write_text(
-        "- vendor: Google Workspace\n"
-        "  shape: {kind: fixed, names: [google]}\n"
-        "  source: pattern\n"
-        "  hints: {mx: [Google.com.], spf: [_spf.google.com]}\n"
-        "  hints_reference: [https://example.test/hints]\n"
-        "- vendor: Example Vendor\n"
-        "  shape: {kind: fixed, names: [example]}\n"
-        "  source: pattern\n",
-        encoding="utf-8",
+    rules_file = vendors_file(
+        tmp_path,
+        {
+            "Google Workspace": {
+                "selectors": [pattern_entry({"kind": "fixed", "names": ["google"]}, "google")],
+                "hints": {"mx": ["Google.com."], "spf": ["_spf.google.com"]},
+                "hints_reference": ["https://example.test/hints"],
+            },
+            "Example Vendor": {
+                "selectors": [pattern_entry({"kind": "fixed", "names": ["example"]}, "example")],
+            },
+        },
     )
     google, example = load_rules(rules_file)
     assert google.hints == Hints(mx=("google.com",), spf=("_spf.google.com",))
@@ -118,26 +173,26 @@ def test_hints_are_normalised_on_load(tmp_path: Path):
 
 
 def test_selector_names_are_lowercased_on_load(tmp_path: Path):
-    rules_file = tmp_path / "rules.yaml"
-    rules_file.write_text(
-        "- vendor: A\n"
-        "  shape: {kind: fixed, names: [Google]}\n"
-        "  source: pattern\n"
-        "- vendor: B\n"
-        "  shape: {kind: numbered, prefix: Selector, stop: 1}\n"
-        "  source: pattern\n",
-        encoding="utf-8",
+    rules_file = vendors_file(
+        tmp_path,
+        {
+            "A": {"selectors": [pattern_entry({"kind": "fixed", "names": ["Google"]}, "google")]},
+            "B": {
+                "selectors": [
+                    pattern_entry(
+                        {"kind": "numbered", "prefix": "Selector", "stop": 1}, "selector1"
+                    )
+                ]
+            },
+        },
     )
     assert list(build_dictionary(load_rules(rules_file))) == ["google", "selector1"]
 
 
 def test_an_unknown_shape_kind_is_rejected(tmp_path: Path):
-    rules_file = tmp_path / "rules.yaml"
-    rules_file.write_text(
-        "- vendor: Example Vendor\n"
-        "  shape: {kind: dated, prefix: ex, years_back: 1}\n"
-        "  source: pattern\n",
-        encoding="utf-8",
+    shape = {"kind": "dated", "prefix": "ex", "years_back": 1}
+    rules_file = vendors_file(
+        tmp_path, {"Example Vendor": {"selectors": [pattern_entry(shape, "ex")]}}
     )
     with pytest.raises(ValueError, match="Example Vendor: unknown shape kind 'dated'"):
         load_rules(rules_file)
@@ -150,14 +205,15 @@ def test_shipped_rules_split_mailchimp_by_provenance():
 
 
 def test_a_hints_reference_given_as_one_string_is_rejected(tmp_path: Path):
-    rules_file = tmp_path / "rules.yaml"
-    rules_file.write_text(
-        "- vendor: Google Workspace\n"
-        "  shape: {kind: fixed, names: [google]}\n"
-        "  source: pattern\n"
-        "  hints: {mx: [google.com]}\n"
-        "  hints_reference: https://example.test/hints\n",
-        encoding="utf-8",
+    rules_file = vendors_file(
+        tmp_path,
+        {
+            "Google Workspace": {
+                "selectors": [pattern_entry({"kind": "fixed", "names": ["google"]}, "google")],
+                "hints": {"mx": ["google.com"]},
+                "hints_reference": "https://example.test/hints",
+            }
+        },
     )
     with pytest.raises(ValueError, match="must be a list"):
         load_rules(rules_file)
@@ -165,11 +221,11 @@ def test_a_hints_reference_given_as_one_string_is_rejected(tmp_path: Path):
 
 def test_hints_without_hints_reference_are_rejected():
     with pytest.raises(ValueError, match="hints_reference"):
-        Rule("X", Fixed(("x",)), Source.PATTERN, hints=Hints(mx=("x.test",)))
+        Rule("X", Fixed(("x",)), Source.PATTERN, proof("x"), hints=Hints(mx=("x.test",)))
 
 
 def test_hints_reference_without_hints_is_accepted():
-    assert Rule("X", Fixed(("x",)), Source.PATTERN, hints_reference=("https://x.test",))
+    assert Rule("X", Fixed(("x",)), Source.PATTERN, proof("x"), hints_reference=("https://x.test",))
 
 
 def test_probe_order_moves_rule_names_ahead_and_keeps_the_sweep():
