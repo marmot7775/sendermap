@@ -13,6 +13,7 @@ from __future__ import annotations
 
 import asyncio
 from dataclasses import dataclass, field
+from datetime import datetime
 
 from ..dns import Answer
 from ..model import Claim, Evidence, Finding, Gap, Kind, Observed, Severity, Unknown
@@ -75,7 +76,7 @@ async def collect(ctx: Context, where: str) -> tuple[Observed, SpfTree]:
     if not records:
         return Observed(), tree
     if len(records) > 1:
-        evidence = tuple(Evidence(where, "TXT", r) for r in records)
+        evidence = tuple(Evidence(where, "TXT", r, ctx.checked_at) for r in records)
         return Observed(
             findings=(
                 Finding(
@@ -104,10 +105,9 @@ class _Link:
     inside: str | None  # the service whose own record this is, if any
     live: bool  # every link from the domain down to here authorizes
 
-    @property
-    def evidence(self) -> Evidence:
+    def evidence(self, checked_at: datetime) -> Evidence:
         sep = ":" if self.how == "include" else "="
-        return Evidence(self.parent, "TXT", f"{self.how}{sep}{self.target}")
+        return Evidence(self.parent, "TXT", f"{self.how}{sep}{self.target}", checked_at)
 
 
 class _Walk:
@@ -135,7 +135,9 @@ class _Walk:
                 self.tree.lookups += 1
             live = authorized and term.authorizes and inside is None
             if term.mechanism in ("ip4", "ip6") and live:
-                evidence = Evidence(name, "TXT", f"{term.mechanism}:{term.value}")
+                evidence = Evidence(
+                    name, "TXT", f"{term.mechanism}:{term.value}", self.ctx.checked_at
+                )
                 self.tree.ranges.append((term.value, evidence))
             if term.mechanism in ("include", "redirect") and term.value:
                 if depth <= 1 and "%{" not in term.value:
@@ -172,13 +174,18 @@ class _Walk:
         if self.ctx.catalog.is_hosted_spf(service):
             self.tree.hosted_by = self.tree.hosted_by or service
         elif service:
-            self.claims.append(Claim(service, Kind.SPF_INCLUDE, self.where, link.evidence))
+            self.claims.append(
+                Claim(service, Kind.SPF_INCLUDE, self.where, link.evidence(self.ctx.checked_at))
+            )
         elif not _is_own(link.target, self.ctx.domain):
             self.unknowns.append(Unknown("SPF include", link.target, self.where))
 
     def observed(self) -> Observed:
         findings: list[Finding] = []
-        tree, root = self.tree, Evidence(self.where, "TXT", self.tree.record or "")
+        tree, root = (
+            self.tree,
+            Evidence(self.where, "TXT", self.tree.record or "", self.ctx.checked_at),
+        )
         if tree.lookups > LOOKUP_LIMIT:
             findings.append(
                 Finding(

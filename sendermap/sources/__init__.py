@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+from datetime import datetime
 
 import httpx
 
@@ -19,4 +20,5 @@ class Context:
     domain: str
     dns: Lookups
     catalog: Catalog
+    checked_at: datetime  # every Evidence a source records is dated by it
     http: httpx.AsyncClient | None = None

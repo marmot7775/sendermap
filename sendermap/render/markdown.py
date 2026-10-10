@@ -2,13 +2,16 @@
 
 from __future__ import annotations
 
+from datetime import UTC
+
 from ..model import SenderMap, Service
 
 
 def render(result: SenderMap) -> str:
     lines = [f"# Sendermap: {result.domain}", ""]
+    checked = result.run.checked_at.astimezone(UTC).strftime("%Y-%m-%d %H:%M UTC")
     lines.append(
-        f"{len(result.senders)} sending services found from public records "
+        f"{len(result.senders)} sending services found from public records checked {checked} "
         f"({result.run.lookups} lookups)."
     )
     lines += ["", "| Service | Category | How sure | Evidence |", "|---|---|---|---|"]

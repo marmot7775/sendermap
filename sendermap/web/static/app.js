@@ -289,8 +289,10 @@ function renderUnknowns(unknowns, domain) {
 
 function renderFootnote(map) {
   const subs = map.subdomains_checked.length;
+  const checked = map.run.checked_at.slice(0, 16).replace("T", " ");
   let text = `${map.run.lookups} DNS lookups in ${map.run.elapsed.toFixed(1)} s. Checked ${map.domain}`;
-  text += subs ? ` and ${subs} sending subdomain${subs === 1 ? "" : "s"}.` : ".";
+  text += subs ? ` and ${subs} sending subdomain${subs === 1 ? "" : "s"}` : "";
+  text += ` on ${checked} UTC.`;
   for (const gap of map.gaps) text += ` Not checked: ${gap.what} (${gap.why}).`;
   $("footnote").textContent = text;
 }

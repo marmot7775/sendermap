@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from datetime import UTC
 from itertools import groupby
 
 from rich.console import Console, Group
@@ -48,7 +49,8 @@ def render(result: SenderMap, console: Console, *, evidence: bool = False) -> No
         for u in result.unknowns:
             where = "" if u.where == result.domain else f"  at {u.where}"
             console.print(Text(f"  {u.what}: {u.value}{where}", style="bright_black"))
-    footer = [f"Checked {result.domain}"]
+    checked = result.run.checked_at.astimezone(UTC).strftime("%Y-%m-%d %H:%M UTC")
+    footer = [f"Checked {result.domain} on {checked}"]
     if result.subdomains_checked:
         footer.append(f"and {len(result.subdomains_checked)} sending subdomains")
     for gap in result.gaps:

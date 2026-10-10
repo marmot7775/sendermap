@@ -10,7 +10,7 @@ from . import Context
 async def collect(ctx: Context) -> Observed:
     answer = await ctx.dns.txt(ctx.domain)
     claims = tuple(
-        Claim(service, Kind.TOKEN, ctx.domain, Evidence(ctx.domain, "TXT", record))
+        Claim(service, Kind.TOKEN, ctx.domain, Evidence(ctx.domain, "TXT", record, ctx.checked_at))
         for record in answer.records
         if (service := ctx.catalog.token(record))
     )

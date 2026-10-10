@@ -40,7 +40,7 @@ async def collect(ctx: Context) -> Observed:
     ):
         for record in (r for r in answer.records if r.lower().replace(" ", "").startswith(prefix)):
             for host in report_domains(record, tags):
-                evidence = Evidence(answer.name, "TXT", record)
+                evidence = Evidence(answer.name, "TXT", record, ctx.checked_at)
                 if service := ctx.catalog.reporting(host):
                     claims.append(Claim(service, kind, ctx.domain, evidence))
                 elif not (host == ctx.domain or host.endswith("." + ctx.domain)):

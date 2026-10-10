@@ -1,11 +1,11 @@
 """Naming the services behind raw IP ranges in SPF."""
 
-from conftest import Zone, context
+from conftest import CHECKED, Zone, context
 
 from sendermap.model import Evidence, Kind
 from sendermap.sources import networks
 
-EV = Evidence("example.com", "TXT", "ip4:...")
+EV = Evidence("example.com", "TXT", "ip4:...", CHECKED)
 
 
 def owner(zone: Zone, ip: str, asn: str, name: str) -> Zone:
