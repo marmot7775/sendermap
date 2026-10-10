@@ -1,5 +1,5 @@
 {
-  "about": "Email services recognisable from a domain's own DNS. One block per vendor; imported from dns-audit (MIT) at fac9e2e. Hostname patterns match the host itself or any name under it, and the longest match wins. Every pattern is an entry with its value and a proof: a live domain that publishes it, the record name (or, for a website host, the page) as found, and the date it was checked. Networks are autonomous system numbers a service owns outright; shared clouds are listed under rules.cloud_networks and never credited to a service. Each selectors entry names a vendor's DKIM selectors with their source and a proof; a fixed shape with several names takes a list of proofs, one per name in order. Hints are MX and SPF values the vendor's customers publish, with the pages that list them. Patterns not yet proven wait in vendors_pending.json, which Sendermap never reads.",
+  "about": "Email services recognisable from a domain's own DNS. One block per vendor; imported from dns-audit (MIT) at fac9e2e. Hostname patterns match the host itself or any name under it, and the longest match wins. Every pattern is an entry with its value and a proof: a live domain that publishes it, the record name (or, for a website host, the page) as found, and the date it was checked. Networks are autonomous system numbers a service owns outright; shared clouds are listed under rules.cloud_networks and never credited to a service. Each selectors entry names a vendor's DKIM selectors with their source and a proof; a fixed shape with several names takes a list of proofs, one per name in order. These entries are the only selector list: they credit keys by name, back generic names, and with rules.generic_selectors make the probe sweep. Hints are MX and SPF values the vendor's customers publish, with the pages that list them. Patterns not yet proven wait in vendors_pending.json, which Sendermap never reads.",
   "categories": [
     "Mailbox",
     "Security gateway",
@@ -83,177 +83,6 @@
       "tracking",
       "url"
     ],
-    "probe_selectors": [
-      "200608",
-      "ac1",
-      "acdkim1",
-      "acdkim2",
-      "activecampaign",
-      "amazonses",
-      "api",
-      "appboy",
-      "aweber",
-      "aweber_key_a",
-      "aweber_key_b",
-      "aweber_key_c",
-      "barracuda",
-      "bcuda",
-      "braze",
-      "brevo",
-      "brevo1",
-      "brevo2",
-      "calendly",
-      "campaignmonitor",
-      "cf2024-1",
-      "cka",
-      "cm",
-      "constantcontact",
-      "convertkit",
-      "ctct1",
-      "ctct2",
-      "customerio",
-      "default",
-      "dkim",
-      "e2ma-k1",
-      "e2ma-k2",
-      "e2ma-k3",
-      "elasticemail",
-      "emma",
-      "everlytickey1",
-      "everlytickey2",
-      "exacttarget",
-      "fastmail",
-      "fm1",
-      "fm2",
-      "fm3",
-      "freshdesk",
-      "ga1",
-      "gapps",
-      "getresponse",
-      "google",
-      "googlemail",
-      "gor",
-      "gor2",
-      "gorgias",
-      "helpscout",
-      "hs1",
-      "hs2",
-      "hubspot",
-      "ic1",
-      "intercom",
-      "iterable",
-      "k1",
-      "k2",
-      "k3",
-      "kl",
-      "kl1",
-      "kl2",
-      "klaviyo",
-      "km1",
-      "km2",
-      "krs",
-      "ks1",
-      "ks2",
-      "kt1",
-      "kt2",
-      "litesrv",
-      "mail",
-      "mailchimp",
-      "mailerlite",
-      "mailgun",
-      "mailjet",
-      "mailkit",
-      "mailpoet1",
-      "mailpoet2",
-      "mailtrust",
-      "mandrill",
-      "marketo",
-      "mc1",
-      "mc2",
-      "mc3",
-      "mesmtp",
-      "messagebird",
-      "messagelabs",
-      "mg",
-      "mg1",
-      "mimecast",
-      "mimecast20190719",
-      "mimecast20200619",
-      "mj1",
-      "mkt",
-      "mkto",
-      "mkto1",
-      "mkto2",
-      "mte1",
-      "mte2",
-      "myemma",
-      "myshopify",
-      "omnisend",
-      "omnivery",
-      "pardot",
-      "pardot1",
-      "pdk1",
-      "pdk2",
-      "pepipost",
-      "pipedrive",
-      "pm1",
-      "postmark",
-      "pp02",
-      "pp1",
-      "pphosted",
-      "proofpoint",
-      "proofpoint1",
-      "proofpoint2",
-      "proofpoint3",
-      "protonmail",
-      "protonmail2",
-      "protonmail3",
-      "rackspace",
-      "resend",
-      "s1",
-      "s1-ionos",
-      "s2",
-      "s2-ionos",
-      "s42582890",
-      "sailthru",
-      "salesforce",
-      "salesforce1",
-      "salesforce2",
-      "scph",
-      "scph0819",
-      "secureserver1",
-      "secureserver2",
-      "selector1",
-      "selector2",
-      "sendgrid",
-      "sendinblue",
-      "ses",
-      "ses1",
-      "ses2",
-      "sf",
-      "sf1",
-      "sf2",
-      "sfdc",
-      "sfmc",
-      "sfmc1",
-      "shopify",
-      "sib",
-      "smtpapi",
-      "sparkpost",
-      "sqsp",
-      "square",
-      "squarespace",
-      "stripe",
-      "strong1",
-      "strong2",
-      "symantec",
-      "wix",
-      "zendesk",
-      "zendesk1",
-      "zendesk2",
-      "zoho",
-      "zohomail"
-    ],
     "cloud_networks": {
       "AS16509": "Amazon Web Services",
       "AS14618": "Amazon Web Services",
@@ -330,13 +159,32 @@
   },
   "vendors": {
     "ActiveCampaign": {
-      "dkim_selectors": [
-        "ac1",
-        "acdkim1",
-        "acdkim2",
-        "activecampaign"
-      ],
-      "category": "Marketing"
+      "category": "Marketing",
+      "selectors": [
+        {
+          "shape": {
+            "kind": "fixed",
+            "names": [
+              "acdkim1",
+              "acdkim2"
+            ]
+          },
+          "source": "vendor_domain",
+          "reference": null,
+          "proof": [
+            {
+              "domain": "activecampaign.com",
+              "record": "acdkim1._domainkey.activecampaign.com",
+              "date": "2026-10-09"
+            },
+            {
+              "domain": "activecampaign.com",
+              "record": "acdkim2._domainkey.activecampaign.com",
+              "date": "2026-10-09"
+            }
+          ]
+        }
+      ]
     },
     "Agari": {
       "reporting": [
@@ -361,12 +209,6 @@
             "date": "2026-10-09"
           }
         }
-      ],
-      "dkim_selectors": [
-        "amazonses",
-        "ses",
-        "ses1",
-        "ses2"
       ],
       "category": "Transactional",
       "selectors_note": "No selector entry: Easy DKIM selectors are tokens SES generates per identity, not a series. https://docs.aws.amazon.com/ses/latest/APIReference-V2/API_DkimAttributes.html"
@@ -405,13 +247,38 @@
           }
         }
       ],
-      "dkim_selectors": [
-        "aweber",
-        "aweber_key_a",
-        "aweber_key_b",
-        "aweber_key_c"
-      ],
-      "category": "Marketing"
+      "category": "Marketing",
+      "selectors": [
+        {
+          "shape": {
+            "kind": "fixed",
+            "names": [
+              "aweber_key_a",
+              "aweber_key_b",
+              "aweber_key_c"
+            ]
+          },
+          "source": "vendor_domain",
+          "reference": null,
+          "proof": [
+            {
+              "domain": "aweber.com",
+              "record": "aweber_key_a._domainkey.aweber.com",
+              "date": "2026-10-09"
+            },
+            {
+              "domain": "aweber.com",
+              "record": "aweber_key_b._domainkey.aweber.com",
+              "date": "2026-10-09"
+            },
+            {
+              "domain": "aweber.com",
+              "record": "aweber_key_c._domainkey.aweber.com",
+              "date": "2026-10-09"
+            }
+          ]
+        }
+      ]
     },
     "Barracuda": {
       "spf_includes": [
@@ -434,18 +301,7 @@
           }
         }
       ],
-      "dkim_selectors": [
-        "barracuda",
-        "bcuda"
-      ],
       "category": "Security gateway"
-    },
-    "Braze": {
-      "dkim_selectors": [
-        "appboy",
-        "braze"
-      ],
-      "category": "Marketing"
     },
     "Brevo": {
       "spf_includes": [
@@ -466,13 +322,6 @@
           }
         }
       ],
-      "dkim_selectors": [
-        "brevo",
-        "brevo1",
-        "brevo2",
-        "sendinblue",
-        "sib"
-      ],
       "verification_txt": [
         {
           "value": "(brevo|sendinblue)-code:",
@@ -485,12 +334,6 @@
       ],
       "category": "Marketing"
     },
-    "Calendly": {
-      "dkim_selectors": [
-        "calendly"
-      ],
-      "category": "Commerce and apps"
-    },
     "Campaign Monitor": {
       "spf_includes": [
         {
@@ -502,11 +345,24 @@
           }
         }
       ],
-      "dkim_selectors": [
-        "campaignmonitor",
-        "cm"
-      ],
-      "category": "Marketing"
+      "category": "Marketing",
+      "selectors": [
+        {
+          "shape": {
+            "kind": "fixed",
+            "names": [
+              "cm"
+            ]
+          },
+          "source": "vendor_domain",
+          "reference": null,
+          "proof": {
+            "domain": "campaignmonitor.com",
+            "record": "cm._domainkey.campaignmonitor.com",
+            "date": "2026-10-09"
+          }
+        }
+      ]
     },
     "Cloudflare DMARC Management": {
       "reporting": [
@@ -542,10 +398,24 @@
           }
         }
       ],
-      "dkim_selectors": [
-        "cf2024-1"
-      ],
-      "category": "Mailbox"
+      "category": "Mailbox",
+      "selectors": [
+        {
+          "shape": {
+            "kind": "fixed",
+            "names": [
+              "cf2024-1"
+            ]
+          },
+          "source": "vendor_domain",
+          "reference": null,
+          "proof": {
+            "domain": "cloudflare.net",
+            "record": "cf2024-1._domainkey.cloudflare.net",
+            "date": "2026-10-09"
+          }
+        }
+      ]
     },
     "Constant Contact": {
       "spf_includes": [
@@ -557,11 +427,6 @@
             "date": "2026-10-09"
           }
         }
-      ],
-      "dkim_selectors": [
-        "constantcontact",
-        "ctct1",
-        "ctct2"
       ],
       "category": "Marketing",
       "networks": [
@@ -576,10 +441,6 @@
       ]
     },
     "Customer.io": {
-      "dkim_selectors": [
-        "customerio",
-        "krs"
-      ],
       "tracking": [
         {
           "value": "customeriomail.com",
@@ -660,20 +521,41 @@
           }
         }
       ],
-      "dkim_selectors": [
-        "elasticemail"
-      ],
       "category": "Marketing"
     },
     "Emma": {
-      "dkim_selectors": [
-        "e2ma-k1",
-        "e2ma-k2",
-        "e2ma-k3",
-        "emma",
-        "myemma"
-      ],
-      "category": "Marketing"
+      "category": "Marketing",
+      "selectors": [
+        {
+          "shape": {
+            "kind": "fixed",
+            "names": [
+              "e2ma-k1",
+              "e2ma-k2",
+              "e2ma-k3"
+            ]
+          },
+          "source": "vendor_domain",
+          "reference": null,
+          "proof": [
+            {
+              "domain": "myemma.com",
+              "record": "e2ma-k1._domainkey.myemma.com",
+              "date": "2026-10-09"
+            },
+            {
+              "domain": "myemma.com",
+              "record": "e2ma-k2._domainkey.myemma.com",
+              "date": "2026-10-09"
+            },
+            {
+              "domain": "myemma.com",
+              "record": "e2ma-k3._domainkey.myemma.com",
+              "date": "2026-10-09"
+            }
+          ]
+        }
+      ]
     },
     "Everlytic": {
       "spf_includes": [
@@ -696,10 +578,6 @@
           }
         }
       ],
-      "dkim_selectors": [
-        "everlytickey1",
-        "everlytickey2"
-      ],
       "return_path": [
         {
           "value": "eversrv.com",
@@ -710,7 +588,32 @@
           }
         }
       ],
-      "category": "Marketing"
+      "category": "Marketing",
+      "selectors": [
+        {
+          "shape": {
+            "kind": "fixed",
+            "names": [
+              "everlytickey1",
+              "everlytickey2"
+            ]
+          },
+          "source": "vendor_domain",
+          "reference": null,
+          "proof": [
+            {
+              "domain": "everlytic.com",
+              "record": "everlytickey1._domainkey.everlytic.com",
+              "date": "2026-10-09"
+            },
+            {
+              "domain": "everlytic.com",
+              "record": "everlytickey2._domainkey.everlytic.com",
+              "date": "2026-10-09"
+            }
+          ]
+        }
+      ]
     },
     "Fastmail": {
       "spf_includes": [
@@ -743,26 +646,24 @@
           }
         }
       ],
-      "dkim_selectors": [
-        "fastmail",
-        "fm1",
-        "fm2",
-        "fm3",
-        "mesmtp"
-      ],
-      "category": "Mailbox"
-    },
-    "Freshdesk": {
-      "dkim_selectors": [
-        "freshdesk"
-      ],
-      "category": "Support and CRM"
-    },
-    "GetResponse": {
-      "dkim_selectors": [
-        "getresponse"
-      ],
-      "category": "Marketing"
+      "category": "Mailbox",
+      "selectors": [
+        {
+          "shape": {
+            "kind": "fixed",
+            "names": [
+              "fm2"
+            ]
+          },
+          "source": "vendor_domain",
+          "reference": null,
+          "proof": {
+            "domain": "fastmail.com",
+            "record": "fm2._domainkey.fastmail.com",
+            "date": "2026-10-09"
+          }
+        }
+      ]
     },
     "GlockApps": {
       "reporting": [
@@ -798,11 +699,32 @@
           }
         }
       ],
-      "dkim_selectors": [
-        "secureserver1",
-        "secureserver2"
-      ],
-      "category": "Mailbox"
+      "category": "Mailbox",
+      "selectors": [
+        {
+          "shape": {
+            "kind": "fixed",
+            "names": [
+              "secureserver1",
+              "secureserver2"
+            ]
+          },
+          "source": "vendor_domain",
+          "reference": null,
+          "proof": [
+            {
+              "domain": "godaddy.com",
+              "record": "secureserver1._domainkey.godaddy.com",
+              "date": "2026-10-09"
+            },
+            {
+              "domain": "godaddy.com",
+              "record": "secureserver2._domainkey.godaddy.com",
+              "date": "2026-10-09"
+            }
+          ]
+        }
+      ]
     },
     "GoDaddy Websites + Marketing": {
       "spf_includes": [
@@ -848,12 +770,6 @@
           }
         }
       ],
-      "dkim_selectors": [
-        "ga1",
-        "gapps",
-        "google",
-        "googlemail"
-      ],
       "category": "Mailbox",
       "selectors": [
         {
@@ -887,11 +803,6 @@
       "hints_note": "The MX page names only smtp.google.com. Domains set up before 2023 use legacy hosts it describes only as starting with aspmx, so those do not match yet."
     },
     "Gorgias": {
-      "dkim_selectors": [
-        "gor",
-        "gor2",
-        "gorgias"
-      ],
       "category": "Support and CRM",
       "website": [
         {
@@ -907,6 +818,23 @@
           "proof": {
             "domain": "gorgias.com",
             "record": "https://gorgias.com/",
+            "date": "2026-10-09"
+          }
+        }
+      ],
+      "selectors": [
+        {
+          "shape": {
+            "kind": "fixed",
+            "names": [
+              "gor"
+            ]
+          },
+          "source": "vendor_domain",
+          "reference": null,
+          "proof": {
+            "domain": "gorgias.com",
+            "record": "gor._domainkey.gorgias.com",
             "date": "2026-10-09"
           }
         }
@@ -933,12 +861,32 @@
           }
         }
       ],
-      "dkim_selectors": [
-        "helpscout",
-        "strong1",
-        "strong2"
-      ],
-      "category": "Support and CRM"
+      "category": "Support and CRM",
+      "selectors": [
+        {
+          "shape": {
+            "kind": "fixed",
+            "names": [
+              "strong1",
+              "strong2"
+            ]
+          },
+          "source": "vendor_domain",
+          "reference": null,
+          "proof": [
+            {
+              "domain": "helpscout.com",
+              "record": "strong1._domainkey.helpscout.com",
+              "date": "2026-10-09"
+            },
+            {
+              "domain": "helpscout.com",
+              "record": "strong2._domainkey.helpscout.com",
+              "date": "2026-10-09"
+            }
+          ]
+        }
+      ]
     },
     "HubSpot": {
       "spf_includes": [
@@ -969,11 +917,6 @@
           }
         }
       ],
-      "dkim_selectors": [
-        "hs1",
-        "hs2",
-        "hubspot"
-      ],
       "category": "Marketing",
       "website": [
         {
@@ -983,6 +926,31 @@
             "record": "https://hubspot.com/",
             "date": "2026-10-09"
           }
+        }
+      ],
+      "selectors": [
+        {
+          "shape": {
+            "kind": "fixed",
+            "names": [
+              "hs1",
+              "hs2"
+            ]
+          },
+          "source": "vendor_domain",
+          "reference": null,
+          "proof": [
+            {
+              "domain": "hubspot.com",
+              "record": "hs1._domainkey.hubspot.com",
+              "date": "2026-10-09"
+            },
+            {
+              "domain": "hubspot.com",
+              "record": "hs2._domainkey.hubspot.com",
+              "date": "2026-10-09"
+            }
+          ]
         }
       ]
     },
@@ -997,11 +965,24 @@
           }
         }
       ],
-      "dkim_selectors": [
-        "ic1",
-        "intercom"
-      ],
-      "category": "Support and CRM"
+      "category": "Support and CRM",
+      "selectors": [
+        {
+          "shape": {
+            "kind": "fixed",
+            "names": [
+              "intercom"
+            ]
+          },
+          "source": "vendor_domain",
+          "reference": null,
+          "proof": {
+            "domain": "intercom.com",
+            "record": "intercom._domainkey.intercom.com",
+            "date": "2026-10-09"
+          }
+        }
+      ]
     },
     "IONOS": {
       "spf_includes": [
@@ -1034,25 +1015,52 @@
           }
         }
       ],
-      "dkim_selectors": [
-        "s1-ionos",
-        "s2-ionos",
-        "s42582890"
-      ],
-      "category": "Mailbox"
-    },
-    "Iterable": {
-      "dkim_selectors": [
-        "iterable"
-      ],
-      "category": "Marketing"
+      "category": "Mailbox",
+      "selectors": [
+        {
+          "shape": {
+            "kind": "fixed",
+            "names": [
+              "s1-ionos",
+              "s42582890"
+            ]
+          },
+          "source": "vendor_domain",
+          "reference": null,
+          "proof": [
+            {
+              "domain": "ionos.com",
+              "record": "s1-ionos._domainkey.ionos.com",
+              "date": "2026-10-09"
+            },
+            {
+              "domain": "kundenserver.de",
+              "record": "s42582890._domainkey.kundenserver.de",
+              "date": "2026-10-09"
+            }
+          ]
+        }
+      ]
     },
     "Kit": {
-      "dkim_selectors": [
-        "cka",
-        "convertkit"
-      ],
-      "category": "Marketing"
+      "category": "Marketing",
+      "selectors": [
+        {
+          "shape": {
+            "kind": "fixed",
+            "names": [
+              "cka"
+            ]
+          },
+          "source": "vendor_domain",
+          "reference": null,
+          "proof": {
+            "domain": "kit.com",
+            "record": "cka._domainkey.kit.com",
+            "date": "2026-10-09"
+          }
+        }
+      ]
     },
     "Klaviyo": {
       "dkim_cname": [
@@ -1064,18 +1072,6 @@
             "date": "2026-10-09"
           }
         }
-      ],
-      "dkim_selectors": [
-        "kl",
-        "kl1",
-        "kl2",
-        "klaviyo",
-        "km1",
-        "km2",
-        "ks1",
-        "ks2",
-        "kt1",
-        "kt2"
       ],
       "return_path": [
         {
@@ -1129,12 +1125,6 @@
             "date": "2026-10-09"
           }
         }
-      ],
-      "dkim_selectors": [
-        "k1",
-        "k2",
-        "k3",
-        "mailchimp"
       ],
       "category": "Marketing",
       "networks": [
@@ -1198,11 +1188,24 @@
       ]
     },
     "MailerLite": {
-      "dkim_selectors": [
-        "litesrv",
-        "mailerlite"
-      ],
-      "category": "Marketing"
+      "category": "Marketing",
+      "selectors": [
+        {
+          "shape": {
+            "kind": "fixed",
+            "names": [
+              "litesrv"
+            ]
+          },
+          "source": "vendor_domain",
+          "reference": null,
+          "proof": {
+            "domain": "mailerlite.com",
+            "record": "litesrv._domainkey.mailerlite.com",
+            "date": "2026-10-09"
+          }
+        }
+      ]
     },
     "Mailgun": {
       "spf_includes": [
@@ -1214,13 +1217,6 @@
             "date": "2026-10-09"
           }
         }
-      ],
-      "dkim_selectors": [
-        "mailgun",
-        "mg",
-        "mg1",
-        "pdk1",
-        "pdk2"
       ],
       "verification_txt": [
         {
@@ -1242,6 +1238,23 @@
             "date": "2026-10-09"
           }
         }
+      ],
+      "selectors": [
+        {
+          "shape": {
+            "kind": "fixed",
+            "names": [
+              "mg"
+            ]
+          },
+          "source": "vendor_domain",
+          "reference": null,
+          "proof": {
+            "domain": "mailgun.com",
+            "record": "mg._domainkey.mailgun.com",
+            "date": "2026-10-09"
+          }
+        }
       ]
     },
     "Mailjet": {
@@ -1255,10 +1268,6 @@
           }
         }
       ],
-      "dkim_selectors": [
-        "mailjet",
-        "mj1"
-      ],
       "tracking": [
         {
           "value": "mailjet.com",
@@ -1269,14 +1278,44 @@
           }
         }
       ],
-      "category": "Transactional"
+      "category": "Transactional",
+      "selectors": [
+        {
+          "shape": {
+            "kind": "fixed",
+            "names": [
+              "mailjet"
+            ]
+          },
+          "source": "vendor_domain",
+          "reference": null,
+          "proof": {
+            "domain": "mailjet.com",
+            "record": "mailjet._domainkey.mailjet.com",
+            "date": "2026-10-09"
+          }
+        }
+      ]
     },
     "MailPoet": {
-      "dkim_selectors": [
-        "mailpoet1",
-        "mailpoet2"
-      ],
-      "category": "Marketing"
+      "category": "Marketing",
+      "selectors": [
+        {
+          "shape": {
+            "kind": "fixed",
+            "names": [
+              "mailpoet2"
+            ]
+          },
+          "source": "vendor_domain",
+          "reference": null,
+          "proof": {
+            "domain": "mailpoet.com",
+            "record": "mailpoet2._domainkey.mailpoet.com",
+            "date": "2026-10-09"
+          }
+        }
+      ]
     },
     "Mandrill": {
       "spf_includes": [
@@ -1299,12 +1338,38 @@
           }
         }
       ],
-      "dkim_selectors": [
-        "mandrill",
-        "mte1",
-        "mte2"
-      ],
-      "category": "Transactional"
+      "category": "Transactional",
+      "selectors": [
+        {
+          "shape": {
+            "kind": "fixed",
+            "names": [
+              "mandrill",
+              "mte1",
+              "mte2"
+            ]
+          },
+          "source": "vendor_domain",
+          "reference": null,
+          "proof": [
+            {
+              "domain": "mandrill.com",
+              "record": "mandrill._domainkey.mandrill.com",
+              "date": "2026-10-09"
+            },
+            {
+              "domain": "mandrill.com",
+              "record": "mte1._domainkey.mandrill.com",
+              "date": "2026-10-09"
+            },
+            {
+              "domain": "mandrill.com",
+              "record": "mte2._domainkey.mandrill.com",
+              "date": "2026-10-09"
+            }
+          ]
+        }
+      ]
     },
     "Marketo": {
       "spf_includes": [
@@ -1316,12 +1381,6 @@
             "date": "2026-10-09"
           }
         }
-      ],
-      "dkim_selectors": [
-        "marketo",
-        "mkto",
-        "mkto1",
-        "mkto2"
       ],
       "category": "Marketing"
     },
@@ -1435,14 +1494,6 @@
           }
         }
       ],
-      "dkim_selectors": [
-        "mc1",
-        "mc2",
-        "mc3",
-        "mimecast",
-        "mimecast20190719",
-        "mimecast20200619"
-      ],
       "reporting": [
         {
           "value": "mimecast.com",
@@ -1467,20 +1518,6 @@
         }
       ],
       "category": "DMARC reporting"
-    },
-    "Omnisend": {
-      "dkim_selectors": [
-        "omnisend"
-      ],
-      "category": "Marketing"
-    },
-    "Omnivery": {
-      "dkim_selectors": [
-        "mailkit",
-        "mkt",
-        "omnivery"
-      ],
-      "category": "Transactional"
     },
     "Omnivery/Mailkit": {
       "spf_includes": [
@@ -1509,16 +1546,24 @@
       "category": "Mailbox"
     },
     "Pepipost": {
-      "dkim_selectors": [
-        "pepipost"
-      ],
-      "category": "Transactional"
-    },
-    "Pipedrive": {
-      "dkim_selectors": [
-        "pipedrive"
-      ],
-      "category": "Support and CRM"
+      "category": "Transactional",
+      "selectors": [
+        {
+          "shape": {
+            "kind": "fixed",
+            "names": [
+              "pepipost"
+            ]
+          },
+          "source": "vendor_domain",
+          "reference": null,
+          "proof": {
+            "domain": "pepipost.com",
+            "record": "pepipost._domainkey.pepipost.com",
+            "date": "2026-10-09"
+          }
+        }
+      ]
     },
     "Postmark": {
       "spf_includes": [
@@ -1530,10 +1575,6 @@
             "date": "2026-10-09"
           }
         }
-      ],
-      "dkim_selectors": [
-        "pm1",
-        "postmark"
       ],
       "reporting": [
         {
@@ -1581,15 +1622,6 @@
           }
         }
       ],
-      "dkim_selectors": [
-        "pp02",
-        "pp1",
-        "pphosted",
-        "proofpoint",
-        "proofpoint1",
-        "proofpoint2",
-        "proofpoint3"
-      ],
       "reporting": [
         {
           "value": "proofpoint.com",
@@ -1633,11 +1665,6 @@
           }
         }
       ],
-      "dkim_selectors": [
-        "protonmail",
-        "protonmail2",
-        "protonmail3"
-      ],
       "verification_txt": [
         {
           "value": "protonmail-verification=",
@@ -1648,7 +1675,38 @@
           }
         }
       ],
-      "category": "Mailbox"
+      "category": "Mailbox",
+      "selectors": [
+        {
+          "shape": {
+            "kind": "fixed",
+            "names": [
+              "protonmail",
+              "protonmail2",
+              "protonmail3"
+            ]
+          },
+          "source": "vendor_domain",
+          "reference": null,
+          "proof": [
+            {
+              "domain": "proton.me",
+              "record": "protonmail._domainkey.proton.me",
+              "date": "2026-10-09"
+            },
+            {
+              "domain": "proton.me",
+              "record": "protonmail2._domainkey.proton.me",
+              "date": "2026-10-09"
+            },
+            {
+              "domain": "protonmail.com",
+              "record": "protonmail3._domainkey.protonmail.com",
+              "date": "2026-10-09"
+            }
+          ]
+        }
+      ]
     },
     "Rackspace Email": {
       "mx": [
@@ -1660,10 +1718,6 @@
             "date": "2026-10-09"
           }
         }
-      ],
-      "dkim_selectors": [
-        "mailtrust",
-        "rackspace"
       ],
       "category": "Mailbox"
     },
@@ -1691,10 +1745,24 @@
       "category": "DMARC reporting"
     },
     "Resend": {
-      "dkim_selectors": [
-        "resend"
-      ],
-      "category": "Transactional"
+      "category": "Transactional",
+      "selectors": [
+        {
+          "shape": {
+            "kind": "fixed",
+            "names": [
+              "resend"
+            ]
+          },
+          "source": "vendor_domain",
+          "reference": null,
+          "proof": {
+            "domain": "resend.com",
+            "record": "resend._domainkey.resend.com",
+            "date": "2026-10-09"
+          }
+        }
+      ]
     },
     "Sailthru": {
       "dkim_cname": [
@@ -1707,9 +1775,6 @@
           }
         }
       ],
-      "dkim_selectors": [
-        "sailthru"
-      ],
       "tracking": [
         {
           "value": "sailthru.com",
@@ -1720,7 +1785,24 @@
           }
         }
       ],
-      "category": "Marketing"
+      "category": "Marketing",
+      "selectors": [
+        {
+          "shape": {
+            "kind": "fixed",
+            "names": [
+              "sailthru"
+            ]
+          },
+          "source": "vendor_domain",
+          "reference": null,
+          "proof": {
+            "domain": "sailthru.com",
+            "record": "sailthru._domainkey.sailthru.com",
+            "date": "2026-10-09"
+          }
+        }
+      ]
     },
     "Salesforce": {
       "spf_includes": [
@@ -1743,16 +1825,32 @@
           }
         }
       ],
-      "dkim_selectors": [
-        "salesforce",
-        "salesforce1",
-        "salesforce2",
-        "sf",
-        "sf1",
-        "sf2",
-        "sfdc"
-      ],
-      "category": "Support and CRM"
+      "category": "Support and CRM",
+      "selectors": [
+        {
+          "shape": {
+            "kind": "fixed",
+            "names": [
+              "salesforce",
+              "salesforce2"
+            ]
+          },
+          "source": "vendor_domain",
+          "reference": null,
+          "proof": [
+            {
+              "domain": "salesforce.com",
+              "record": "salesforce._domainkey.salesforce.com",
+              "date": "2026-10-09"
+            },
+            {
+              "domain": "salesforce.com",
+              "record": "salesforce2._domainkey.salesforce.com",
+              "date": "2026-10-09"
+            }
+          ]
+        }
+      ]
     },
     "Salesforce Account Engagement": {
       "spf_includes": [
@@ -1764,11 +1862,6 @@
             "date": "2026-10-09"
           }
         }
-      ],
-      "dkim_selectors": [
-        "200608",
-        "pardot",
-        "pardot1"
       ],
       "tracking": [
         {
@@ -1790,15 +1883,32 @@
           }
         }
       ],
-      "category": "Marketing"
-    },
-    "Salesforce Marketing Cloud Engagement": {
-      "dkim_selectors": [
-        "exacttarget",
-        "sfmc",
-        "sfmc1"
-      ],
-      "category": "Marketing"
+      "category": "Marketing",
+      "selectors": [
+        {
+          "shape": {
+            "kind": "fixed",
+            "names": [
+              "200608",
+              "pardot"
+            ]
+          },
+          "source": "vendor_domain",
+          "reference": null,
+          "proof": [
+            {
+              "domain": "pardot.com",
+              "record": "200608._domainkey.pardot.com",
+              "date": "2026-10-09"
+            },
+            {
+              "domain": "pardot.com",
+              "record": "pardot._domainkey.pardot.com",
+              "date": "2026-10-09"
+            }
+          ]
+        }
+      ]
     },
     "SendGrid": {
       "spf_includes": [
@@ -1820,12 +1930,6 @@
             "date": "2026-10-09"
           }
         }
-      ],
-      "dkim_selectors": [
-        "s1",
-        "s2",
-        "sendgrid",
-        "smtpapi"
       ],
       "category": "Transactional",
       "mx": [
@@ -1853,6 +1957,21 @@
             "date": "2026-10-09"
           },
           "note": "Customers can choose a custom three character selector, so s1 and s2 are not guaranteed."
+        },
+        {
+          "shape": {
+            "kind": "fixed",
+            "names": [
+              "smtpapi"
+            ]
+          },
+          "source": "vendor_domain",
+          "reference": null,
+          "proof": {
+            "domain": "sendgrid.com",
+            "record": "smtpapi._domainkey.sendgrid.com",
+            "date": "2026-10-09"
+          }
         }
       ],
       "hints": {
@@ -1869,10 +1988,6 @@
       "hints_note": "The docs put these MX and SPF values on the em#### return-path subdomain, not the apex, so an apex scan does not match them."
     },
     "Shopify": {
-      "dkim_selectors": [
-        "myshopify",
-        "shopify"
-      ],
       "category": "Commerce and apps",
       "website": [
         {
@@ -1886,12 +2001,6 @@
       ]
     },
     "SparkPost": {
-      "dkim_selectors": [
-        "messagebird",
-        "scph",
-        "scph0819",
-        "sparkpost"
-      ],
       "return_path": [
         {
           "value": "sparkpostmail.com",
@@ -1924,17 +2033,7 @@
         }
       ]
     },
-    "Square": {
-      "dkim_selectors": [
-        "square"
-      ],
-      "category": "Commerce and apps"
-    },
     "Squarespace": {
-      "dkim_selectors": [
-        "sqsp",
-        "squarespace"
-      ],
       "category": "Commerce and apps",
       "website": [
         {
@@ -1945,13 +2044,24 @@
             "date": "2026-10-09"
           }
         }
-      ]
-    },
-    "Stripe": {
-      "dkim_selectors": [
-        "stripe"
       ],
-      "category": "Commerce and apps"
+      "selectors": [
+        {
+          "shape": {
+            "kind": "fixed",
+            "names": [
+              "squarespace"
+            ]
+          },
+          "source": "vendor_domain",
+          "reference": null,
+          "proof": {
+            "domain": "squarespace.com",
+            "record": "squarespace._domainkey.squarespace.com",
+            "date": "2026-10-09"
+          }
+        }
+      ]
     },
     "Symantec MessageLabs": {
       "spf_includes": [
@@ -1973,10 +2083,6 @@
             "date": "2026-10-09"
           }
         }
-      ],
-      "dkim_selectors": [
-        "messagelabs",
-        "symantec"
       ],
       "category": "Security gateway"
     },
@@ -2024,12 +2130,6 @@
       ],
       "category": "DMARC reporting"
     },
-    "Wix": {
-      "dkim_selectors": [
-        "wix"
-      ],
-      "category": "Commerce and apps"
-    },
     "Zendesk": {
       "spf_includes": [
         {
@@ -2041,11 +2141,6 @@
           }
         }
       ],
-      "dkim_selectors": [
-        "zendesk",
-        "zendesk1",
-        "zendesk2"
-      ],
       "category": "Support and CRM",
       "website": [
         {
@@ -2055,6 +2150,31 @@
             "record": "https://zendesk.com/",
             "date": "2026-10-09"
           }
+        }
+      ],
+      "selectors": [
+        {
+          "shape": {
+            "kind": "fixed",
+            "names": [
+              "zendesk1",
+              "zendesk2"
+            ]
+          },
+          "source": "vendor_domain",
+          "reference": null,
+          "proof": [
+            {
+              "domain": "zendesk.com",
+              "record": "zendesk1._domainkey.zendesk.com",
+              "date": "2026-10-09"
+            },
+            {
+              "domain": "zendesk.com",
+              "record": "zendesk2._domainkey.zendesk.com",
+              "date": "2026-10-09"
+            }
+          ]
         }
       ]
     },
@@ -2107,10 +2227,6 @@
             "date": "2026-10-09"
           }
         }
-      ],
-      "dkim_selectors": [
-        "zoho",
-        "zohomail"
       ],
       "category": "Mailbox"
     }

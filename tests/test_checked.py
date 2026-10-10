@@ -4,7 +4,7 @@ import httpx
 from conftest import CHECKED, Zone
 from rich.console import Console
 
-from sendermap import engine, map_domain
+from sendermap import catalog, engine, map_domain
 from sendermap.render import markdown, text
 
 
@@ -35,7 +35,8 @@ async def test_each_name_records_the_dkim_names_labels_and_pages_asked():
     assert apex.where == "acme.test" and sub.where == "email.acme.test"
     assert apex.pages == ("https://acme.test/", "https://acme.test/subprocessors")
     assert "bounce" in apex.labels and "links" in apex.labels
-    assert "google" in apex.dkim_selectors and len(apex.dkim_selectors) > 100
+    sweep = catalog.load().probe_selectors
+    assert "google" in apex.dkim_selectors and set(apex.dkim_selectors) == set(sweep)
     assert len(sub.dkim_selectors) >= engine.SUBDOMAIN_PROBES and sub.labels == ()
 
 

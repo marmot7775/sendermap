@@ -21,6 +21,7 @@ from typing import Any
 from . import proofs
 from .dns import norm
 from .proofs import Proof
+from .selectors import Rule, build_dictionary, parse_rules
 
 _HOST_FIELDS = ("spf_includes", "mx", "dkim_cname", "reporting", "return_path", "tracking")
 # Every field whose entries are a value and its proof. other_cname entries are a label, a
@@ -63,8 +64,9 @@ class HostTable:
 class Catalog:
     services: dict[str, dict[str, Any]]
     patterns: tuple[Pattern, ...]
+    rules: tuple[Rule, ...]  # every vendor's DKIM selector rules, in file order
     tables: dict[str, HostTable]
-    selectors: dict[str, str]
+    selectors: dict[str, str]  # a selector name to the first rule's vendor that claims it
     tokens: tuple[tuple[re.Pattern[str], str], ...]
     other_cnames: dict[str, HostTable]
     networks: dict[str, str]
@@ -76,7 +78,6 @@ class Catalog:
     flattening_spf: frozenset[str]
     cname_labels: tuple[str, ...]
     tracking_labels: frozenset[str]
-    probe_selectors: tuple[str, ...]
     sending_labels: tuple[str, ...]
     website: dict[str, str]
 
@@ -166,7 +167,15 @@ class Catalog:
         return found
 
     def selectors_of(self, service: str) -> frozenset[str]:
-        return frozenset(self.services.get(service, {}).get("dkim_selectors", ()))
+        return frozenset(n for r in self.rules if r.vendor == service for n in r.shape.expand())
+
+    @property
+    def probe_selectors(self) -> tuple[str, ...]:
+        """The DKIM sweep: every name the selector rules claim, in rule order, then the generic
+        names, which credit nobody by name but show a key is there."""
+        return tuple(
+            dict.fromkeys((*build_dictionary(self.rules), *sorted(self.generic_selectors)))
+        )
 
     def category(self, service: str) -> str:
         return str(self.services.get(service, {}).get("category", "Other"))
@@ -196,10 +205,11 @@ def load() -> Catalog:
 def build(raw: dict[str, Any]) -> Catalog:
     """Index the vendor data. ValueError if any pattern lacks a valid proof."""
     patterns = tuple(p for name, block in raw["vendors"].items() for p in _patterns(name, block))
+    selector_rules = parse_rules(raw["vendors"])
     services = {name: _values(block) for name, block in raw["vendors"].items()}
     rules: dict[str, Any] = raw["rules"]
     tables = {f: HostTable({}) for f in _HOST_FIELDS}
-    selectors: dict[str, str] = {}
+    selectors = {n: claims[0].vendor for n, claims in build_dictionary(selector_rules).items()}
     tokens: list[tuple[re.Pattern[str], str]] = []
     other: dict[str, HostTable] = {}
     networks: dict[str, str] = {}
@@ -210,8 +220,6 @@ def build(raw: dict[str, Any]) -> Catalog:
         for f in _HOST_FIELDS:
             for pattern in block.get(f, ()):
                 tables[f].patterns[norm(pattern)] = name
-        for selector in block.get("dkim_selectors", ()):
-            selectors[selector.lower()] = name
         for pattern in block.get("verification_txt", ()):
             tokens.append((re.compile(pattern, re.IGNORECASE), name))
         for entry in block.get("other_cname", ()):
@@ -221,6 +229,7 @@ def build(raw: dict[str, Any]) -> Catalog:
     return Catalog(
         services=services,
         patterns=patterns,
+        rules=selector_rules,
         tables=tables,
         selectors=selectors,
         tokens=tuple(tokens),
@@ -234,7 +243,6 @@ def build(raw: dict[str, Any]) -> Catalog:
         flattening_spf=frozenset(rules.get("flattening_spf", ())),
         cname_labels=tuple(rules["cname_labels"]),
         tracking_labels=frozenset(rules["tracking_labels"]),
-        probe_selectors=tuple(rules["probe_selectors"]),
         sending_labels=tuple(rules["sending_labels"]),
         website=website,
     )

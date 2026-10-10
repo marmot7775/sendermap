@@ -33,7 +33,7 @@ from .model import (
     SenderMap,
     Severity,
 )
-from .selectors import Rule, load_rules, probe_order, rank_rules
+from .selectors import Rule, probe_order, rank_rules
 from .sources import (
     Context,
     bimi,
@@ -89,7 +89,7 @@ async def map_domain(
             checked_at,
             http if online else None,
         )
-        rules = load_rules()
+        rules = ctx.catalog.rules
         say = progress or _quiet
 
         await say("Reading MX, SPF, DMARC and the website")

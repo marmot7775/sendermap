@@ -5,19 +5,18 @@ dictionary of candidates. Every candidate carries its provenance:
 the vendor it points to, how that knowledge was obtained, and a live
 domain that publishes it. Rules are data, kept in each vendor's block
 of data/vendors.json, so the dictionary can be reviewed and
-contributed to without touching Python.
+contributed to without touching Python. These rules are the only
+list of vendor selectors: they credit keys by name, back a generic
+name for a service SPF or MX shows, and make the probe sweep. The
+catalog reads them, with the rest of the file, in one place.
 """
 
 from __future__ import annotations
 
-import json
 from collections import defaultdict
 from collections.abc import Iterable, Iterator, Mapping
 from dataclasses import dataclass
 from enum import Enum
-from functools import cache
-from importlib import resources
-from importlib.resources.abc import Traversable
 from typing import Any, Protocol
 
 from . import proofs
@@ -30,6 +29,7 @@ class Source(Enum):
     VENDOR_DOCS = "vendor_docs"
     AGGREGATE_REPORT = "aggregate_report"
     PATTERN = "pattern"
+    VENDOR_DOMAIN = "vendor_domain"  # the vendor's own domain publishes it
 
 
 class Shape(Protocol):
@@ -203,18 +203,9 @@ def _where(vendor: str, shape: Shape) -> str:
     return f"{vendor} {', '.join(shape.expand())}"
 
 
-# Found by package path, not the working directory, so the rules load the same from an
-# installed wheel as from a checkout.
-VENDORS_FILE = resources.files("sendermap").joinpath("data/vendors.json")
-
-
-@cache
-def load_rules(path: Traversable = VENDORS_FILE) -> tuple[Rule, ...]:
-    """Read every vendor's selector rules; the vendors shipped with Sendermap by default.
-
-    Cached per path, so a process reads each file once. Rules are frozen, so sharing is safe.
-    """
-    vendors: dict[str, Mapping[str, Any]] = json.loads(path.read_text(encoding="utf-8"))["vendors"]
+def parse_rules(vendors: Mapping[str, Mapping[str, Any]]) -> tuple[Rule, ...]:
+    """Every vendor's selector rules, in file order. ValueError on any rule without a valid
+    proof."""
     return tuple(rule for vendor, block in vendors.items() for rule in _parse_vendor(vendor, block))
 
 

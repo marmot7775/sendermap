@@ -42,7 +42,7 @@ from sendermap import catalog
 from sendermap.catalog import Pattern
 from sendermap.dns import Answer, Resolver, Status, SystemResolver, norm
 from sendermap.proofs import Proof
-from sendermap.selectors import Rule, load_rules
+from sendermap.selectors import Rule
 from sendermap.sources.reports import report_domains
 from sendermap.sources.spf import spf_records, terms
 from sendermap.sources.web import _LOADED, USER_AGENT
@@ -279,7 +279,8 @@ def totals(results: list[Result]) -> str:
 
 def load() -> list[Item]:
     """Every proof in the vendor data Sendermap ships."""
-    return items(load_rules(), catalog.load().patterns)
+    loaded = catalog.load()
+    return items(loaded.rules, loaded.patterns)
 
 
 async def main(argv: list[str] | None = None, http: httpx.AsyncClient | None = None) -> int:

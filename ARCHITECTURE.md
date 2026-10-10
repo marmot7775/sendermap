@@ -73,7 +73,7 @@ Phase 1, concurrent
   ct.collect (--ct)     -> crt.sh names, each resolved for CNAME, A and MX and matched
 Phase 2, the domain itself
   backed = generic DKIM names that belong to services SPF or MX already shows
-  probe order = selector rules ranked by MX and SPF hints, then the sweep list
+  probe order = selector rules ranked by MX and SPF hints, then the generic names
   dkim.collect  ||  networks.collect (SPF IP ranges: published vendor ranges, then ASN)
 Phase 3, each sending subdomain (first 30)
   spf + mx -> backed -> dkim (27 names + backed)  ||  networks
@@ -108,7 +108,7 @@ published ranges, 2,000,000 bytes of a web page, and 200 names from crt.sh.
 | `dns.py` | The Resolver interface, the system and DNS-over-HTTPS resolvers, and `Lookups`: the per-map cache that asks each name and type once and counts the queries |
 | `catalog.py` | Loading vendors.json into match tables, refusing any pattern without a proof; matching a host, token or selector to a service |
 | `proofs.py` | The Proof type and the checks every proof must pass on loading |
-| `selectors.py` | DKIM selector rules with proofs: loading and checking them, and ordering the probes |
+| `selectors.py` | DKIM selector rules with proofs: parsing and checking them, and ordering the probes |
 | `infer.py` | Turning claims into ranked services; the map of backed selectors |
 | `engine.py` | `map_domain`: input cleaning, the phase order, subdomain scans, limits, the gateway note |
 | `sources/spf.py` | Walking the SPF tree: credited includes, IP ranges, the lookup count, SPF findings |
@@ -188,7 +188,7 @@ All vendor knowledge is in `sendermap/data/vendors.json`: one block per service 
 category and the patterns that identify it (SPF includes, MX hosts, DKIM CNAME targets and
 selector names, bounce and tracking CNAMEs, report addresses, verification tokens, networks,
 website hosts), plus shared `rules` (generic selectors, hosted SPF services, cloud networks,
-the labels and selectors to probe).
+the labels to probe). `catalog.load` reads the file once per process, selector rules included.
 
 Every SPF include, MX host, DKIM CNAME target, bounce, tracking and other CNAME, report address,
 verification token, network and website host is an entry with its value and a proof: a domain
@@ -198,10 +198,14 @@ address at `_dmarc.` or `_smtp._tls.` of the domain, a token at the domain itsel
 under its `_domainkey`, a website host on an https page of the domain, anything else at or under
 the domain. `proofs.py` holds those checks.
 
-A `selectors` entry names a vendor's DKIM selectors with how they are known and a proof: a live
-domain that publishes the record, the record name and the date checked. Loading refuses an entry
-without one. Four vendors have such entries so far; they set the order of DKIM probes. The
-`dkim_selectors` lists used to credit keys carry no proof yet.
+A `selectors` entry names a vendor's DKIM selectors with how they are known (the vendor's docs,
+a pattern, an aggregate report, or the vendor's own domain) and a proof per name: a live domain
+that publishes the record, the record name and the date checked. Loading refuses an entry
+without one. These entries are the only list of vendor selectors: they credit a key by its
+name, give the names a service shown by SPF or MX backs, and make the probe sweep, which is
+every name they claim, in rule order with the rules the domain's MX and SPF hint at first, then
+the generic names (`default`, `dkim`, `mail` and the rest), which credit nobody by name but show
+that a key is there.
 
 `sendermap/data/vendors_pending.json` holds the patterns with no proof yet, in the same block
 shape, each block with a note of where they were looked for. Nothing in the package reads it, so
