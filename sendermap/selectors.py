@@ -76,6 +76,31 @@ SHAPES: Mapping[str, type] = {
 
 
 @dataclass(frozen=True, slots=True)
+class Hints:
+    """What a vendor's customers publish elsewhere in DNS.
+
+    mx holds hostname suffixes found in the vendor's MX records; spf holds
+    include domains the vendor tells customers to add. Both are lowercase.
+    """
+
+    mx: tuple[str, ...] = ()
+    spf: tuple[str, ...] = ()
+
+    def matches(self, mx_hosts: frozenset[str], spf_includes: frozenset[str]) -> bool:
+        """True when any MX host ends in a hint suffix or any include is a hint domain.
+
+        Both arguments must already be lowercase with no trailing dot. A suffix
+        matches on a label boundary, so google.com matches aspmx.l.google.com
+        but not notgoogle.com.
+        """
+        for host in mx_hosts:
+            for suffix in self.mx:
+                if host == suffix or host.endswith("." + suffix):
+                    return True
+        return not spf_includes.isdisjoint(self.spf)
+
+
+@dataclass(frozen=True, slots=True)
 class Rule:
     """What a vendor names its selectors, and how we know."""
 
@@ -83,6 +108,7 @@ class Rule:
     shape: Shape
     source: Source
     reference: str = ""
+    hints: Hints = Hints()
 
     def __post_init__(self) -> None:
         if self.source is Source.VENDOR_DOCS and not self.reference:
@@ -106,12 +132,20 @@ def parse_rule(raw: Mapping[str, Any]) -> Rule:
     if kind == "fixed":
         shape_spec["names"] = tuple(shape_spec["names"])
     shape = SHAPES[kind](**shape_spec)
+    hint_spec = raw.get("hints") or {}
+    hints = Hints(**{key: tuple(map(_normalise, names)) for key, names in hint_spec.items()})
     return Rule(
         vendor=raw["vendor"],
         shape=shape,
         source=Source(raw["source"]),
         reference=raw.get("reference", ""),
+        hints=hints,
     )
+
+
+def _normalise(name: str) -> str:
+    """Lowercase a DNS name and drop any trailing dot."""
+    return name.lower().rstrip(".")
 
 
 # Found by package path, not the working directory, so the rules load the same from an
@@ -141,3 +175,22 @@ def build_dictionary(
         for name in rule.shape.expand(today):
             claims[name].append(Selector(name, rule.vendor, rule.source, rule.reference))
     return {name: tuple(found) for name, found in claims.items()}
+
+
+def rank_rules(
+    rules: Iterable[Rule],
+    mx_hosts: Iterable[str],
+    spf_includes: Iterable[str],
+) -> tuple[Rule, ...]:
+    """Move rules whose hints match the domain's MX or SPF to the front.
+
+    Matched rules keep their original order, then every other rule in its
+    original order. Nothing is dropped; a match only changes position.
+    """
+    mx = frozenset(_normalise(h) for h in mx_hosts)
+    spf = frozenset(_normalise(d) for d in spf_includes)
+    matched: list[Rule] = []
+    rest: list[Rule] = []
+    for rule in rules:
+        (matched if rule.hints.matches(mx, spf) else rest).append(rule)
+    return (*matched, *rest)

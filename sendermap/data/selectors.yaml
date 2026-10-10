@@ -9,13 +9,23 @@
   reference: https://learn.microsoft.com/defender-office-365/email-authentication-dkim-configure
 
 - vendor: Mailchimp
-  shape: {kind: fixed, names: [k1, k2, k3]}
+  shape: {kind: fixed, names: [k2]}
+  source: vendor_docs
+  reference: https://mailchimp.com/help/set-up-email-domain-authentication/
+
+# k3 is reported by third parties pointing at dkim3.mcsv.net but is not in Mailchimp's own docs.
+- vendor: Mailchimp
+  shape: {kind: fixed, names: [k1, k3]}
   source: pattern
 
+# Customers can choose a custom three character selector, so s1 and s2 are not guaranteed.
+# The MX and SPF values below are the ones the docs put on the em return-path subdomain,
+# not the apex.
 - vendor: SendGrid
   shape: {kind: numbered, prefix: s, stop: 2}
   source: vendor_docs
   reference: https://www.twilio.com/docs/sendgrid/ui/account-and-settings/how-to-set-up-domain-authentication
+  hints: {mx: [mx.sendgrid.net], spf: [sendgrid.net]}
 
 - vendor: Amazon SES
   shape: {kind: dated, prefix: ses, years_back: 2}
