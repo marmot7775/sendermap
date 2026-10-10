@@ -54,6 +54,12 @@ All vendor knowledge lives in one file, [`sendermap/data/vendors.json`](senderma
 service, so adding or correcting a vendor is a small pull request. The first version was imported
 from the vendor tables in [dns-audit](https://github.com/marmot7775/dns-audit) (MIT).
 
+## Contributing
+
+Each vendor gets one block in `sendermap/data/vendors.json`, and everything known about it goes
+there. Every selector pattern carries one proof: a live domain that publishes the record, the
+record name as found, and the date checked. A pattern without a proof does not get merged.
+
 ## Related
 
 - [dns-audit.com](https://dns-audit.com): a full email security audit of a domain.
