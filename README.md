@@ -21,7 +21,32 @@ services that receive its reports. Each one comes with:
 It looks beyond the main domain: brands often send from subdomains such as `email.`, `mg.` or
 `bounce.`, which a check of the main domain never sees. It also points out what needs attention:
 DKIM records that point at names that no longer exist, SPF records past the 10 lookup limit,
-revoked keys, and senders nobody can name.
+revoked keys, and senders nobody can name. Raw IP ranges nobody can name are grouped by the
+network that announces them, so a dozen ranges from one provider read as one line.
+
+Each DKIM key is shown with the tags that change what it does: `t=y` (testing, so verifiers
+treat mail signed with it as unsigned), `t=s` (strict), `h=` (hash algorithms), `s=` (service
+types) and `k=` (key type). A tag that weakens the key, such as testing mode or SHA-1 only, is
+raised as a finding. Each key also gets a fingerprint, `fp` and 16 hex characters, so the same
+key published at two selectors is easy to spot, and the map points it out when it is.
+
+## Checked and not there
+
+The map also lists what it looked for and did not find, with the DNS answers that show it. Today
+that covers DKIM keys. Whether "not there" can be trusted depends on how the domain's DNS answers
+for a name that does not exist, so at each name Sendermap first asks for a selector nobody
+publishes and reads the answer as one of four classes:
+
+- **Classic**: the zone says "no such name". Answers can be trusted. If `_domainkey` itself does
+  not exist, no selector exists under it. The map checks only the few names the domain's SPF and
+  MX point to, rather than its full list, and says so. If `_domainkey` exists but every name asked is missing, the map says selectors exist but
+  none of the names it tried is one.
+- **None by rcode**: the zone gives an empty answer for every missing name (compact denial), so
+  the answer says nothing about what exists. The map asks its full list and claims no absence.
+- **Wildcard**: every name answers. The map ignores what the wildcard repeats and asks its full
+  list.
+- **Unknown**: the test lookup failed, so nothing is read from it, and the map lists it as not
+  checked.
 
 ## How it works
 
@@ -35,7 +60,9 @@ that supports it, so you can check it yourself.
   then by who owns the network.
 - **Sending subdomains** come from the names services ask for and from certificate logs.
 - **The website** shows the scripts and stylesheets it loads, the services it mentions, and the
-  services its subprocessor page names.
+  services its subprocessor page names. Every page fetch goes through one guard: https only,
+  with the host's addresses checked first, so a domain cannot point a fetch at a private or
+  internal address. A refused fetch is listed as not checked.
 - **Certificate transparency** (`--ct`, off by default): every name crt.sh has logged a
   certificate for is resolved now and matched like any DNS record, so a branded tracking link
   such as `link.example.com` pointing at an email platform shows up. A logged name that no
@@ -55,6 +82,21 @@ sendermap example.com --ct           # add names from certificate logs (crt.sh)
 ```
 
 The website keeps no record of the domains looked up.
+
+## Honest limits
+
+- **No volume.** Public records show which services are set up to send, not how much mail each
+  one sends, or whether it sent any this month.
+- **No proof a key is in use.** A DKIM key in DNS shows it was published, not that anything
+  signs with it. Only real mail shows that, and Sendermap reads no mail.
+- **No sight of vendors sending from their own domain.** A service that mails your customers from
+  its own domain, such as a receipt from a payment platform, leaves nothing in your DNS.
+- **Selector discovery is never complete.** DNS cannot list DKIM selectors. Sendermap asks the
+  names services are known to use and some common ones, and says how many it asked. A key under
+  any other name stays unseen.
+- **Absence is read from how the zone answers, and said as such.** "Not there" is claimed only
+  where the zone's denial class makes the answer trustworthy, and every such line carries the
+  answers it rests on.
 
 ## The vendor data
 

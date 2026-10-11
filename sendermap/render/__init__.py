@@ -2,7 +2,71 @@
 
 from __future__ import annotations
 
-from ..model import CertificateEvidence, Checked, CtStatus, SenderMap
+import re
+from dataclasses import dataclass
+
+from ..model import CertificateEvidence, Checked, CtStatus, SenderMap, Unknown
+
+# How sources/networks.py writes a range whose network it named: "<range> (<ASN>, <name>)",
+# with "; listed by <services>" before the closing bracket when services publish the range.
+# app.js reads the same shape with the same pattern.
+NETWORK_VALUE = r"^(\S+) \((AS\d+), (.+?)(?:; listed by (.+))?\)$"
+_NETWORK_VALUE = re.compile(NETWORK_VALUE)
+_IP_KINDS = {"IP range in SPF": 0, "IP address in SPF": 1}
+
+
+@dataclass(frozen=True, slots=True)
+class NetworkGroup:
+    """The unrecognised IP ranges and addresses at one name that one network announces, under one
+    owner name and one list of publishers. Each Unknown is kept whole, with its evidence."""
+
+    asn: str
+    name: str
+    listed: str
+    where: str
+    members: tuple[tuple[str, Unknown], ...]  # (the range or address, the Unknown that shows it)
+
+    def heading(self) -> str:
+        """The group's line: "2 ranges and 1 address in AS16509 (Amazon Web Services)", with
+        the services that publish them after a semicolon."""
+        counts = [0, 0]
+        for _, u in self.members:
+            counts[_IP_KINDS[u.what]] += 1
+        ranges, addresses = counts
+        parts = [f"{ranges} range{'s' if ranges != 1 else ''}"] if ranges else []
+        if addresses:
+            parts.append(f"{addresses} address{'es' if addresses != 1 else ''}")
+        listed = f"; listed by {self.listed}" if self.listed else ""
+        return f"{' and '.join(parts)} in {self.asn} ({self.name}){listed}"
+
+
+def grouped_unknowns(unknowns: tuple[Unknown, ...]) -> list[Unknown | NetworkGroup]:
+    """The unknowns in their order, with the IP ranges and addresses that share a network, an
+    owner name, a list of publishers and a name gathered into one group where the first of them
+    stood. A range with no network, one alone in its network, and anything that is not an IP
+    range stay as they are."""
+    keyed: dict[tuple[str, str, str, str], list[tuple[str, Unknown]]] = {}
+    order: list[Unknown | tuple[str, str, str, str]] = []
+    for u in unknowns:
+        match = _NETWORK_VALUE.match(u.value) if u.what in _IP_KINDS else None
+        if match is None:
+            order.append(u)
+            continue
+        cidr, asn, name, listed = match.groups()
+        key = (asn, name, listed or "", u.where)
+        if key not in keyed:
+            keyed[key] = []
+            order.append(key)
+        keyed[key].append((cidr, u))
+    out: list[Unknown | NetworkGroup] = []
+    for item in order:
+        if isinstance(item, Unknown):
+            out.append(item)
+        elif len(members := keyed[item]) == 1:
+            out.append(members[0][1])
+        else:
+            out.append(NetworkGroup(*item, members=tuple(members)))
+    return out
 
 
 def asked(checked: Checked) -> str:
