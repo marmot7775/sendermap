@@ -15,7 +15,9 @@ what is published there now. What counts as found depends on the kind of pattern
   every origin network of that address the vendor's, read by the map's own networks.owner and
   credited by its rule, so an address two networks announce counts the same in any order;
 - a website host: the page at the URL loads a script or stylesheet from the pattern's host;
-- a subprocessor name: the page at the URL has the name as a whole word in its text.
+- a subprocessor name: the page at the URL has the name as a whole word in its text;
+- a setup item: the vendor's documentation page at the URL contains every value the item names
+  (an item that names none needs only the page).
 
 Anything else at the name, such as a wildcard SPF record where a key should be, is not found. A
 lookup or request that fails, or a page that answers with anything but 200, 404 or 410, is could
@@ -44,7 +46,7 @@ from urllib.parse import urljoin, urlsplit
 import httpx
 
 from sendermap import catalog
-from sendermap.catalog import Pattern
+from sendermap.catalog import Pattern, SetupRule
 from sendermap.dns import Answer, Lookups, Resolver, Status, SystemResolver, norm
 from sendermap.proofs import Proof
 from sendermap.selectors import Rule
@@ -72,6 +74,7 @@ EXPECTED = {
     "networks": "an address announced by {}",
     "website": "a page that loads a script or stylesheet from {}",
     "subprocessor_names": "a page that names {}",
+    "setup": "a documentation page that contains {}",  # with no values, the page alone
 }
 
 
@@ -224,6 +227,18 @@ async def _named(checker: Checker, url: str, name: str) -> Seen:
     return Seen(shows, f"names {name}" if shows else f"does not name {name}")
 
 
+async def _setup(checker: Checker, url: str, values: str) -> Seen:
+    """The page contains every value, as written anywhere in it, ignoring case."""
+    page = await _page(checker, url)
+    if isinstance(page, Seen):
+        return page
+    text = page.text.lower()
+    lacking = [v for v in values.split() if v.lower() not in text]
+    if lacking:
+        return Seen(False, f"does not contain {', '.join(lacking)}")
+    return Seen(True, f"contains {', '.join(values.split())}" if values else "page read")
+
+
 CHECKS: dict[str, Check] = {
     "selectors": _key,
     "spf_includes": _spf,
@@ -237,6 +252,7 @@ CHECKS: dict[str, Check] = {
     "networks": _network,
     "website": _website,
     "subprocessor_names": _named,
+    "setup": _setup,
 }
 
 
@@ -248,6 +264,7 @@ class Item:
     field: str
     pattern: str
     proof: Proof
+    setup_record: str = ""  # for a setup item, the record it describes (spf, dkim and so on)
 
     @property
     def shown(self) -> str:
@@ -255,14 +272,18 @@ class Item:
         return self.proof.record.split(".", 1)[0] if self.field == "selectors" else self.pattern
 
 
-def items(rules: tuple[Rule, ...], patterns: tuple[Pattern, ...]) -> list[Item]:
-    """Every proof: the selector rules' first, then every other pattern's, in file order."""
+def items(
+    rules: tuple[Rule, ...], patterns: tuple[Pattern, ...], setups: tuple[SetupRule, ...] = ()
+) -> list[Item]:
+    """Every proof: the selector rules' first, then every other pattern's, in file order, then
+    each setup item's, whose pattern is its values separated by spaces."""
     keys = [
         Item(rule.vendor, "selectors", ", ".join(rule.shape.expand()), proof)
         for rule in rules
         for proof in rule.proofs
     ]
-    return keys + [Item(p.vendor, p.field, p.value, p.proof) for p in patterns]
+    documented = [Item(s.vendor, "setup", " ".join(s.values), s.proof, s.record) for s in setups]
+    return keys + [Item(p.vendor, p.field, p.value, p.proof) for p in patterns] + documented
 
 
 async def check(checker: Checker, item: Item) -> tuple[Result, str]:
@@ -270,14 +291,15 @@ async def check(checker: Checker, item: Item) -> tuple[Result, str]:
     seen = await CHECKS[item.field](checker, item.proof.record, item.pattern)
     status = FOUND if seen.shows else NOT_FOUND if seen.answered else UNCHECKED
     word = {FOUND: "found     ", NOT_FOUND: "not found ", UNCHECKED: "unchecked "}[status]
-    label = f"{item.vendor} {item.field} [{item.pattern}] {item.proof.record} ({item.proof.date})"
+    field = f"{item.field} {item.setup_record}" if item.setup_record else item.field
+    label = f"{item.vendor} {field} [{item.pattern}] {item.proof.record} ({item.proof.date})"
     result = Result(
         vendor=item.vendor,
-        field=item.field,
+        field=field,
         pattern=item.shown,
         domain=item.proof.domain,
         record=item.proof.record,
-        expected=EXPECTED[item.field].format(item.pattern),
+        expected=EXPECTED[item.field].format(item.pattern).strip(),
         observed=seen.observed,
         status=status,
     )
@@ -319,7 +341,8 @@ def totals(results: list[Result]) -> str:
 def load() -> list[Item]:
     """Every proof in the vendor data Sendermap ships."""
     loaded = catalog.load()
-    return items(loaded.rules, loaded.patterns)
+    setups = tuple(rule for rules in loaded.setups.values() for rule in rules)
+    return items(loaded.rules, loaded.patterns, setups)
 
 
 async def main(argv: list[str] | None = None, http: httpx.AsyncClient | None = None) -> int:

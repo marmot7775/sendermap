@@ -5,6 +5,7 @@ from __future__ import annotations
 from datetime import UTC
 
 from ..model import SenderMap, Service, Unknown
+from ..setup import line
 from . import NetworkGroup, asked, asked_in_full, ct_lines, grouped_unknowns
 
 
@@ -17,6 +18,11 @@ def render(result: SenderMap, *, evidence: bool = False) -> str:
     )
     lines += ["", "| Service | Category | How sure | Evidence |", "|---|---|---|---|"]
     lines += [_row(s, result.domain) for s in result.senders]
+    if setups := [s for s in result.senders if s.setups]:
+        lines += ["", "## Setups", ""]
+        for service in setups:
+            lines.append(f"- **{service.name}**")
+            lines += [f"  - {line(setup)}" for setup in service.setups]
     if result.reporting:
         lines += ["", "**Reports go to:** " + ", ".join(s.name for s in result.reporting)]
     if result.findings:

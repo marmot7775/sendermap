@@ -33,6 +33,8 @@ from ..model import (
     KeyPrint,
     Kind,
     Observed,
+    Outcome,
+    Read,
     Severity,
     Unknown,
 )
@@ -173,7 +175,16 @@ async def collect(
             "about which services sign for the domain.",
             (Evidence(f"*.{base}", "TXT", canary.records[0], ctx.checked_at),),
         )
-        return Observed(findings=(wildcard,), checked=(Checked(where, denial=denial),))
+        read = Read(
+            "dkim",
+            where,
+            Outcome.UNREADABLE,
+            wildcard.evidence,
+            reason=f"every name under {base} answers with a key (a wildcard)",
+        )
+        return Observed(
+            findings=(wildcard,), checked=(Checked(where, denial=denial),), reads=(read,)
+        )
     names = list(dict.fromkeys(s.lower() for s in selectors))
     classic = denial is Denial.CLASSIC
     contradicted = Observed()
@@ -255,6 +266,8 @@ def _scan(
             observed += _read(ctx, where, selector, answer, backed=backed.get(selector), echo=echo)
         else:
             failed.append(selector)
+        if read := _setup_read(ctx, where, selector, answer, echo):
+            observed += Observed(reads=(read,))
     gaps: list[Gap] = []
     if not canary.answered:
         gaps.append(
@@ -269,6 +282,31 @@ def _scan(
         gaps.append(Gap(asked, "lookup failed"))
     checked = Checked(where, tuple(names), denial=denial)
     return observed + Observed(gaps=tuple(gaps), checked=(checked,))
+
+
+def _setup_read(
+    ctx: Context, where: str, selector: str, answer: Answer, echo: frozenset[str] | None
+) -> Read | None:
+    """One selector's answer as a setup reads it, when it holds no usable key: nothing there, a
+    failed lookup, or a broken record (a dangling CNAME, no p= tag, or an empty p=). A usable key
+    is read from its claim instead, and a wildcard's echo says nothing."""
+    if not answer.answered:
+        return Read("dkim", where, Outcome.FAILED, name=selector, reason=answer.status.value)
+    if answer.dangling:
+        evidence = Evidence(answer.name, "CNAME", " -> ".join(answer.chain), ctx.checked_at)
+        return Read("dkim", where, Outcome.BROKEN, (evidence,), name=selector)
+    if not answer.records:
+        return Read("dkim", where, Outcome.NONE, (negative(answer, ctx.checked_at),), selector)
+    if frozenset(answer.records) == echo:
+        return None
+    record = next((r for r in answer.records if "p" in tags(r)), None)
+    if record is not None and tags(record)["p"]:
+        return None
+    if record is None:
+        shown = tuple(Evidence(answer.name, "TXT", r, ctx.checked_at) for r in answer.records)
+    else:
+        shown = (Key(selector, answer.name, record, answer.chain).evidence(ctx.checked_at),)
+    return Read("dkim", where, Outcome.BROKEN, shown, name=selector)
 
 
 def _read(

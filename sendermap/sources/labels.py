@@ -12,8 +12,8 @@ from __future__ import annotations
 import asyncio
 
 from ..dns import norm
-from ..model import Checked, Claim, Evidence, Gap, Kind, Observed, Unknown
-from . import CANARY, Context
+from ..model import Checked, Claim, Evidence, Gap, Kind, Observed, Outcome, Read, Unknown
+from . import CANARY, Context, negative
 
 KINDS = {
     "return path": Kind.RETURN_PATH,
@@ -32,14 +32,24 @@ async def collect(ctx: Context, where: str) -> Observed:
     claims: list[Claim] = []
     unknowns: list[Unknown] = []
     failed: list[str] = []
+    reads: list[Read] = []
     for label, answer in zip(labels, answers, strict=True):
         if not answer.answered:
             failed.append(label)
+            reads.append(Read("label", where, Outcome.FAILED, name=label, reason="lookup failed"))
             continue
         target = answer.records[0] if answer.ok else answer.target
-        if not target or target == wildcard:
+        if not target:
+            reads.append(
+                Read("label", where, Outcome.NONE, (negative(answer, ctx.checked_at),), label)
+            )
             continue
         evidence = Evidence(f"{label}.{where}", "CNAME", target, ctx.checked_at)
+        if target == wildcard:
+            reason = f"a wildcard CNAME answers every label under {where}"
+            reads.append(Read("label", where, Outcome.UNREADABLE, (evidence,), label, reason))
+            continue
+        reads.append(Read("label", where, Outcome.FOUND, (evidence,), label))
         if match := ctx.catalog.label_cname(label, target):
             service, kind = match
             claims.append(Claim(service, KINDS[kind], where, evidence))
@@ -57,7 +67,9 @@ async def collect(ctx: Context, where: str) -> Observed:
         names = ", ".join(f"{label}.{where}" for label in failed)
         gaps.append(Gap(f"bounce and tracking CNAMEs: CNAME at {names}", "lookup failed"))
     checked = (Checked(where, labels=labels),)
-    return Observed(tuple(claims), tuple(unknowns), gaps=tuple(gaps), checked=checked)
+    return Observed(
+        tuple(claims), tuple(unknowns), gaps=tuple(gaps), checked=checked, reads=tuple(reads)
+    )
 
 
 def _inside(target: str, domain: str) -> bool:

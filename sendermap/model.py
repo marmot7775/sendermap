@@ -137,16 +137,64 @@ class Claim:
     supporting: tuple[Evidence, ...] = ()
 
 
+class Need(StrEnum):
+    """Whether a vendor's setup needs a record, by the vendor's own documentation."""
+
+    REQUIRED = "required"
+    OPTIONAL = "optional"
+    NONE = "none"
+
+
+class State(StrEnum):
+    """What the map shows of one setup item at one name."""
+
+    PRESENT = "present"
+    BROKEN = "broken"
+    MISSING = "missing"
+    NOT_CHECKED = "not checked"
+    NOT_NEEDED = "not needed"
+
+
+@dataclass(frozen=True, slots=True)
+class SetupItem:
+    """One record a vendor's setup publishes, and what the map shows of it at one name: the
+    records that show it present or broken, or the negative answers that show it missing.
+    `asked` is the question those answers came from; `detail` says what a reader needs beside
+    the state: the names that answered nothing, the gap that left it unchecked, or that the key
+    found is at an older selector."""
+
+    record: str
+    need: Need
+    state: State
+    evidence: tuple[Evidence, ...] = ()
+    asked: str = ""
+    detail: str = ""
+
+
+@dataclass(frozen=True, slots=True)
+class Setup:
+    """A vendor's documented setup at one name where the map has claims for it. `complete` is
+    True when every required item is present, False when a required item is missing or broken,
+    and None when a required item could not be checked."""
+
+    service: str
+    where: str
+    items: tuple[SetupItem, ...]
+    complete: bool | None
+
+
 @dataclass(frozen=True, slots=True)
 class Service:
     """One row of the map. A reporting service, known only from report addresses, has no tier:
-    nothing shows that it sends."""
+    nothing shows that it sends. `setups` holds its setup at each name it has claims at, when
+    the vendor data describes one."""
 
     name: str
     category: str
     tier: Tier | None
     role: Role
     claims: tuple[Claim, ...]
+    setups: tuple[Setup, ...] = ()
 
     @property
     def decided_by(self) -> Claim:
@@ -286,6 +334,32 @@ class Checked:
         )
 
 
+class Outcome(StrEnum):
+    """What one question a setup reads came back with."""
+
+    FOUND = "found"
+    NONE = "not there"
+    FAILED = "lookup failed"
+    BROKEN = "broken"
+    UNREADABLE = "unreadable"
+
+
+@dataclass(frozen=True, slots=True)
+class Read:
+    """One answer a source got that a setup reads later, kept so a setup asks DNS nothing more:
+    the SPF record or MX records at a name (`record` "spf" or "mx"), a DKIM selector that
+    answered with no usable key ("dkim", `name` the selector), or a CNAME label ("label").
+    `reason` says why an unreadable answer cannot be read. Reads stay inside the engine; the
+    map's JSON shows them only as the evidence of the setup items that use them."""
+
+    record: str
+    where: str
+    outcome: Outcome
+    evidence: tuple[Evidence, ...] = ()
+    name: str = ""
+    reason: str = ""
+
+
 @dataclass(frozen=True, slots=True)
 class Observed:
     """What one source returns."""
@@ -298,6 +372,7 @@ class Observed:
     historical: tuple[Historical, ...] = ()
     absences: tuple[Absence, ...] = ()
     keys: tuple[KeyPrint, ...] = ()
+    reads: tuple[Read, ...] = ()
 
     def __add__(self, other: Observed) -> Observed:
         return Observed(
@@ -309,6 +384,7 @@ class Observed:
             self.historical + other.historical,
             self.absences + other.absences,
             self.keys + other.keys,
+            self.reads + other.reads,
         )
 
     def checked_by_name(self) -> tuple[Checked, ...]:

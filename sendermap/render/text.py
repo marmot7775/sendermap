@@ -11,6 +11,7 @@ from rich.table import Table
 from rich.text import Text
 
 from ..model import Claim, SenderMap, Service, Severity, Tier, Unknown
+from ..setup import line
 from . import NetworkGroup, asked, asked_in_full, ct_lines, grouped_unknowns
 
 _TIER_STYLE = {
@@ -107,6 +108,7 @@ def _services(services: list[Service], domain: str, evidence: bool) -> Table:
         lines = [_claim_line(c, domain) for c in claims]
         if not evidence and len(service.claims) > 1:
             lines.append(Text(f"+ {len(service.claims) - 1} more", style="bright_black"))
+        lines += [Text(line(setup)) for setup in service.setups]
         table.add_row(Text(f"  {service.name}", style="bold"), service.category, Group(*lines))
     return table
 

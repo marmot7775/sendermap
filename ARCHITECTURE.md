@@ -17,9 +17,12 @@ Everything Sendermap reports is built from a few frozen dataclasses in `senderma
   the service's own SPF record that publishes the holding range, or Team Cymru's answers for
   the network that announces it; for a DKIM key credited through a backed selector, the SPF or
   MX record that backed it. Every view shows them after the evidence, as "via".
-- **Service**: one row of the map: a name, a category from the vendor data, a tier, a role and
-  its claims. The tier is the strongest tier among its claims, so a reader can always find the
-  claim that decided it (`Service.decided_by`).
+- **Service**: one row of the map: a name, a category from the vendor data, a tier, a role,
+  its claims and its setups. The tier is the strongest tier among its claims, so a reader can
+  always find the claim that decided it (`Service.decided_by`).
+- **Setup**: a vendor's documented setup at one name where the service has claims: one
+  **SetupItem** per record the setup lists (its need, its state, the evidence for that state,
+  what was asked and a detail), and `complete`. See "Setups" below.
 - **Tier**: how sure the map is that a service sends, in words, strongest first:
   - **In use**: an MX record at the domain.
   - **Configured**: an authorizing SPF include, a range in SPF that a service publishes or
@@ -91,7 +94,10 @@ Phase 3, each sending subdomain (first 30)
 Assembly
   all Observed summed -> infer.services: group by service,
      tier = strongest Kind, report-only services -> role "reporting"
-  findings sorted by severity, + gateway note + same key notes; unknowns and gaps deduplicated
+  setup.build: each service's setups from the claims, the Reads the sources kept, Checked,
+     absences and gaps; no query
+  findings sorted by severity, + gateway note + same key notes + setup findings; unknowns and
+     gaps deduplicated
   -> SenderMap + Run -> render.text | render.markdown | to_dict JSON | web stream
 ```
 
@@ -149,6 +155,7 @@ for the check and a private one a moment later (DNS rebinding) is not caught.
 | `proofs.py` | The Proof type and the checks every proof must pass on loading |
 | `selectors.py` | DKIM selector rules with proofs: parsing and checking them, and ordering the probes |
 | `infer.py` | Turning claims into ranked services; the map of backed selectors |
+| `setup.py` | Setups: each item's state from what the map already asked, `complete`, the findings a setup raises, and the setup line every view shows |
 | `engine.py` | `map_domain`: input cleaning, the phase order, subdomain scans, limits, the gateway note |
 | `sources/spf.py` | Walking the SPF tree: credited includes, IP ranges, the lookup count, SPF findings |
 | `sources/mx.py`, `sources/mta_sts.py` | Where the domain receives mail |
@@ -280,6 +287,65 @@ Checked's class as `denial`.
   read its record; other hosted services and macro includes are a note that they can authorize
   services without naming them.
 
+## Setups
+
+The rule: a setup costs no query and names only what was asked. `setup.py` is pure. It reads
+the map's claims, the answers the sources kept while asking (`Read`: the SPF record and the MX
+records at each name, each DKIM selector that answered with no usable key, each CNAME label),
+what was asked at each name (`Checked`), the absences, the gaps and the catalog. Reads stay in the
+engine; JSON shows them only as the evidence of the items that use them. A test maps a domain with
+and without the vendor setups and requires the same questions in the same order.
+
+A vendor block may carry a `setup` list. Each item has a `record` (`spf`, `dkim`,
+`return_path`, `tracking` or `mx`), a `need` (`required`, `optional` or `none`), the `values` a
+complete setup publishes, which must be the block's own patterns for that record (an SPF
+include, a selector name or DKIM CNAME target, a bounce or tracking target, an MX host), and a
+proof whose record is an https page on the vendor's own documentation site, dated. Loading
+refuses an item whose values are not patterns of its block, a needed item with no values, an item
+that is not needed with any, a record listed twice, and a proof that is not an https page of its
+domain. `tools/verify_proofs.py` fetches each page and the proof holds when it contains every
+value; a page that cannot be fetched is could not check. Microsoft 365, Google Workspace,
+SendGrid, Mailchimp and Klaviyo carry one; the others none yet, so they have no setups.
+
+For each service with setup data, one Setup per name it has claims at, the domain first, except
+a bounce domain: a name below another of the service's names where its MX takes the replies and
+bounces (a SendGrid `send.` subdomain under a domain whose keys are SendGrid's). That name is the
+return path of the setup above it, so its MX counts as that setup's bounce item and its own DKIM
+is never judged. The states:
+
+- **present**: a claim shows it, and its evidence is the item's. For SPF, an SPF include or a
+  range in SPF the service owns (and any later SPF evaluation claim); for DKIM, a key through
+  the service's CNAME or by a selector name credited to it; for MX, its MX at the name; for a
+  bounce or tracking item, its CNAME, or for the bounce item a bounce domain's MX. A key at a
+  selector the block lists that the setup does not name reads present with an older setup
+  detail naming the current selectors (Mailchimp's `k1` beside the documented `k2`).
+- **broken**: the only key is revoked or dangling (its claim) or malformed at a selector the
+  setup names (the record), or the name publishes more than one SPF record.
+- **missing**: the names were asked and nothing answered: the SPF record read with no claim for
+  the service, or no SPF record at all; every selector the setup names asked and each a negative
+  answer, worded by the zone's denial class (`no such name` in a classic zone; `no record of
+  this type` where the zone gives that answer for every name, said so), with the absence's own
+  evidence when there is one; where `_domainkey` itself does not exist, that no selector does;
+  no CNAME into the vendor at any of the labels asked, with each label's answer.
+- **not checked**: the lookup failed, a cap left the names unasked, a wildcard answers every
+  name, the SPF record is hosted or a macro (the reason is named), no label was asked at a
+  subdomain (labels are asked at the domain only), or the setup names no selector to ask
+  (Klaviyo's current selectors are not yet in its block). The gap or reason is the detail.
+- **not needed**: the vendor's docs need no such record.
+
+`complete` is False when a required item is missing or broken, otherwise None when a required
+item is not checked, otherwise True.
+
+Findings, each with the item's evidence: a Mailbox or Security gateway service in the domain's
+MX whose DKIM is missing is a risk ("<vendor> receives the domain's mail and does not sign it"),
+and with SPF missing a risk too; any other service with a required item missing is a warning for
+DKIM or SPF and a note for a bounce or tracking CNAME. A service whose only claims are Account
+only is one note asking whether the account is still used, and nothing about what its setup
+lacks. Broken raises nothing new: the key and SPF findings already exist. Every view shows one
+line per setup under its service, "Setup at <where>: SPF present, DKIM missing (selector1 and
+selector2 no such name), bounce CNAME not needed.", built by `setup.line` and, on the web page,
+by the same words in app.js.
+
 ## Determinism
 
 The same DNS answers (and the same web pages and certificate logs, when those are read) and the
@@ -381,7 +447,9 @@ guard. Run `pytest`. `mypy` (strict, over `sendermap/`, `tests/` and `tools/`), 
 
 Tests that hold the rules: `test_evidence.py` maps a fake domain that reaches every kind of
 claim and requires evidence on every claim, unknown and finding, and the supporting records on
-every claim whose evidence does not name its service; `test_dkim_denial.py` holds the
+every claim whose evidence does not name its service; `test_setup.py` holds each setup state
+with its evidence, the findings, the bounce domain, `complete`, the views, the loading rules and
+that a setup asks nothing more; `test_dkim_denial.py` holds the
 _domainkey triage for each denial class, the absences with their evidence, and their rendering;
 `test_gaps.py` and `test_caps.py`
 require a gap for each failed question and each cap; `test_web_guard.py` requires that a

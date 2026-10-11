@@ -16,8 +16,19 @@ from dataclasses import dataclass, field
 from datetime import datetime
 
 from ..dns import Answer, norm
-from ..model import Claim, Evidence, Finding, Gap, Kind, Observed, Severity, Unknown
-from . import Context
+from ..model import (
+    Claim,
+    Evidence,
+    Finding,
+    Gap,
+    Kind,
+    Observed,
+    Outcome,
+    Read,
+    Severity,
+    Unknown,
+)
+from . import Context, negative
 
 LOOKUP_LIMIT = 10  # RFC 7208 section 4.6.4
 MAX_DEPTH = 10
@@ -72,13 +83,21 @@ class SpfTree:
 async def collect(ctx: Context, where: str) -> tuple[Observed, SpfTree]:
     answer = await ctx.dns.txt(where)
     if not answer.answered:
-        return Observed(gaps=(Gap(f"SPF: TXT at {where}", answer.status.value),)), SpfTree()
+        gap = Gap(f"SPF: TXT at {where}", answer.status.value)
+        read = Read("spf", where, Outcome.FAILED, reason=f"{gap.asked}: {gap.happened}")
+        return Observed(gaps=(gap,), reads=(read,)), SpfTree()
     records = spf_records(answer)
     if not records:
-        return Observed(), SpfTree()
+        none = (
+            Evidence(where, "TXT", "no SPF record (v=spf1)", ctx.checked_at)
+            if answer.ok
+            else negative(answer, ctx.checked_at)
+        )
+        return Observed(reads=(Read("spf", where, Outcome.NONE, (none,)),)), SpfTree()
     if len(records) > 1:
         evidence = tuple(Evidence(where, "TXT", r, ctx.checked_at) for r in records)
         return Observed(
+            reads=(Read("spf", where, Outcome.BROKEN, evidence),),
             findings=(
                 Finding(
                     Severity.RISK,
@@ -87,7 +106,7 @@ async def collect(ctx: Context, where: str) -> tuple[Observed, SpfTree]:
                     "section 4.5), so no service listed in any of them is authorized.",
                     evidence,
                 ),
-            )
+            ),
         ), SpfTree()
     record = records[0]
     await _prefetch(ctx, record, depth=0, nearest={norm(where): 0})
@@ -105,7 +124,18 @@ async def collect(ctx: Context, where: str) -> tuple[Observed, SpfTree]:
         macros=list(walked.macros),
         includes=list(walked.includes),
     )
-    return walked.observed + _findings(ctx, where, tree), tree
+    return walked.observed + _findings(ctx, where, tree) + _read(ctx, where, tree), tree
+
+
+def _read(ctx: Context, where: str, tree: SpfTree) -> Observed:
+    """The record as a setup reads it: found, or unreadable when a hosted record the walk did not
+    read or a macro can authorize services without naming them."""
+    root = (Evidence(where, "TXT", tree.record or "", ctx.checked_at),)
+    by = tree.hosted_by or ("a macro include" if tree.macros else None)
+    if by and by not in tree.flattened:
+        reason = f"managed through {by}, which can authorize services without naming them"
+        return Observed(reads=(Read("spf", where, Outcome.UNREADABLE, root, reason=reason),))
+    return Observed(reads=(Read("spf", where, Outcome.FOUND, root),))
 
 
 def _evaluated(record: str) -> list[Term]:
