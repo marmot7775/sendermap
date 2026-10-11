@@ -15,6 +15,8 @@ def acme() -> Zone:
         .public("acme.test")
         .add("acme.test", "TXT", "v=spf1 include:_spf.google.com ~all")
         .add("email.acme.test", "TXT", "v=spf1 include:mailgun.org ~all")
+        .selectors_exist("acme.test")
+        .selectors_exist("email.acme.test")
     )
 
 

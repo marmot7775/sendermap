@@ -55,6 +55,7 @@ def render(result: SenderMap, console: Console, *, evidence: bool = False) -> No
         console.print(Text("\nCERTIFICATE TRANSPARENCY", style="bold"))
         for line in lines:
             console.print(Text(f"  {line}", style="bright_black"))
+    _absences(result, console)
     checked = result.run.checked_at.astimezone(UTC).strftime("%Y-%m-%d %H:%M UTC")
     footer = [f"Checked {result.domain} on {checked}"]
     if result.subdomains_checked:
@@ -68,6 +69,17 @@ def render(result: SenderMap, console: Console, *, evidence: bool = False) -> No
                 f"\n  {heading}: {', '.join(names)}" for heading, names in asked_in_full(record)
             ]
     console.print(Text("\n" + " ".join(footer), style="bright_black"))
+
+
+def _absences(result: SenderMap, console: Console) -> None:
+    """What was asked and shown not to be there, each with the negative answers that show it."""
+    if not result.absences:
+        return
+    console.print(Text("\nCHECKED AND NOT THERE", style="bold"))
+    for a in result.absences:
+        console.print(Text(f"  {a.asked}: {a.happened}"))
+        for e in a.evidence:
+            console.print(Text(f"    {e}", style="bright_black"))
 
 
 def _services(services: list[Service], domain: str, evidence: bool) -> Table:

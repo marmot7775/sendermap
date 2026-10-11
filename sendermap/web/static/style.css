@@ -159,6 +159,7 @@ details.asked li { margin: 3px 0; overflow-wrap: anywhere; }
 details.asked h4 { margin: 12px 0 0; font-size: .9rem; word-break: break-all; }
 .gaps { margin: 0 0 16px; padding-left: 18px; color: var(--ink-2); font-size: .9rem; }
 .gaps li { margin: 3px 0; overflow-wrap: anywhere; }
+.absences .ev { display: block; color: var(--ink-3); font-size: .82rem; }
 .footnote { color: var(--ink-3); font-size: .88rem; margin-top: 24px; }
 
 .how { border-top: 1px solid var(--line); margin-top: 40px; padding: 36px 0 20px; }

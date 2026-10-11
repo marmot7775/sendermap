@@ -44,9 +44,15 @@ Everything Sendermap reports is built from a few frozen dataclasses in `senderma
 - **Gap**: a question that got no usable answer: what was `asked` (the record type and name,
   the page, or the check) and what `happened` (the lookup failed, HTTP 404, the check was turned
   off, the source crashed), so its silence is not read as absence.
+- **Absence**: a question answered "not there": what was `asked`, what `happened`, and the
+  negative answers that show it as `evidence` (each an Evidence whose value is the status in
+  words, such as `no such name`). Unlike a gap, it can be read as absent. Today only the DKIM
+  source records one; see "The _domainkey triage" below.
 - **Checked**: what was asked at one name: the DKIM selectors probed, the labels whose CNAMEs
-  were asked, and the pages requested (homepage, subprocessor page, MTA-STS policy). With the
-  gaps, it says what the map's silence covers.
+  were asked, the pages requested (homepage, subprocessor page, MTA-STS policy), and the
+  `denial`: how the zone under the name's `_domainkey` answers for names that do not exist
+  (`classic`, `none by rcode`, `wildcard`, or `unknown`, the default where DKIM was not read).
+  With the gaps and absences, it says what the map's silence covers.
 - **CertificateEvidence**: the evidence type of the CT source: an Evidence (`rtype`
   `certificate`, `name` the hostname) that also carries the latest certificate's `not_before`
   and `not_after`, and the CNAME `target` that matched, when a CNAME did.
@@ -56,7 +62,7 @@ Everything Sendermap reports is built from a few frozen dataclasses in `senderma
   counts of names logged, resolved, and gone without naming a service.
 - **Run**: when and how one map was made: `checked_at`, `elapsed` seconds and DNS `lookups`.
 - **SenderMap**: the domain, its services, findings, unknowns, gaps, the sending subdomains
-  checked, one Checked per name, the BIMI logo if any, and the Run. `to_dict()` gives JSON with
+  checked, one Checked per name, the BIMI logo if any, the absences, and the Run. `to_dict()` gives JSON with
   schema `sendermap/1`.
 
 ## From domain to result
@@ -170,6 +176,41 @@ These live in `catalog.py` and the sources, and each has a test.
 - A wildcard answers every name, so DKIM probes and label CNAMEs first ask a fixed name nobody
   publishes (`sendermap-wildcard-check`). A wildcard DKIM key ends the DKIM scan at that name
   with a note; a label CNAME that matches the wildcard target is ignored.
+
+## The _domainkey triage
+
+Beside the wildcard check at `sendermap-wildcard-check._domainkey.<where>`, the DKIM source asks
+TXT at `_domainkey.<where>` itself and reads the two answers together. The wildcard check's
+answer is the zone's denial class, recorded on Checked:
+
+- **classic**: no such name. The zone denies names that do not exist with NXDOMAIN, so no such
+  name at `_domainkey` means no selector exists below it (RFC 8020 section 2, RFC 4592 section
+  2.2.3), and an empty answer there (no record of this type) means at least one does.
+- **none by rcode**: an empty answer. The zone answers NOERROR for names that do not exist
+  (compact denial or black lies, RFC 9824), so the answer code says nothing about existence.
+  The sweep runs as it always has.
+- **wildcard**: an answer. A key there is the wildcard path above; anything else is ignored
+  wherever it echoes, and the sweep runs.
+- **unknown**: the check failed. The sweep runs, with the gap it has always had.
+
+In a classic zone whose `_domainkey` is no such name, the full sweep is not run. Only the names
+the domain's MX and SPF back or hint at are asked (every backed name and the first 8 of the
+ranked order), as a check on servers that answer no such name for a name with names below it
+(RFC 8020 section 5). If none of them exists, the result is an Absence, "DKIM keys at <where>:
+no selectors exist", whose text says the sweep was not run and why, so the unasked names are
+explained the way a cap explains them, and whose evidence is the two negative answers. For a
+sending subdomain this also replaces the gap for the 27-name budget, which did not apply. If one
+of them exists, there is no Absence: a gap says the server answered no such name at the node
+but a key (or a record) exists at that name, so existence could not be read from it, and the
+full sweep runs.
+
+In a classic zone whose `_domainkey` is an empty answer, the sweep runs, and when every name it
+asked is no such name the result is an Absence, "selectors exist but none of the N names asked
+is one", with the node's answer as evidence. A name that answers anything (a key, a revoked
+key, a malformed record, a dangling CNAME) is a selector, so then there is no Absence, and a
+failed lookup leaves the gap it has always left. Absences are shown in every view under
+"Checked and not there", each with its evidence; JSON carries them as `absences` and each
+Checked's class as `denial`.
 - An IP range in SPF, IPv4 or IPv6, is named by the narrowest range a service publishes in its own SPF record
   that contains it, when exactly one service publishes that range. Otherwise the network that
   announces it decides, from Team Cymru's IP to ASN data over DNS (`origin` for IPv4, `origin6`
@@ -277,8 +318,9 @@ pattern becomes its proof; `--move` moves proven patterns into vendors.json.
 
 ## Tests
 
-`tests/conftest.py` provides a fake DNS zone (`Zone`) with CNAMEs, wildcards and names that fail
-on purpose, and an HTTP client that answers the certificate log with nothing and fails the test
+`tests/conftest.py` provides a fake DNS zone (`Zone`) with CNAMEs, wildcards, names that fail
+on purpose, empty non-terminals that exist (RFC 8020), a compact denial mode and names forced to
+no such name, and an HTTP client that answers the certificate log with nothing and fails the test
 on any other request, so the suite never reaches the network (the web test serves on loopback
 only). `Zone.public` gives a host a public address, which a fake page needs to pass the fetch
 guard. Run `pytest`. `mypy` (strict, over `sendermap/`, `tests/` and `tools/`), `ruff check` and
@@ -286,7 +328,9 @@ guard. Run `pytest`. `mypy` (strict, over `sendermap/`, `tests/` and `tools/`), 
 
 Tests that hold the rules: `test_evidence.py` maps a fake domain that reaches every kind of
 claim and requires evidence on every claim, unknown and finding, and the supporting records on
-every claim whose evidence does not name its service; `test_gaps.py` and `test_caps.py`
+every claim whose evidence does not name its service; `test_dkim_denial.py` holds the
+_domainkey triage for each denial class, the absences with their evidence, and their rendering;
+`test_gaps.py` and `test_caps.py`
 require a gap for each failed question and each cap; `test_web_guard.py` requires that a
 refused fetch sends nothing and is a gap, for each reason the guard refuses, on every redirect
 and on the subprocessor and MTA-STS pages; `test_checked.py` requires the record of

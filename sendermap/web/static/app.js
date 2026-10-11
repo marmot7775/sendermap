@@ -80,7 +80,7 @@ function render(map) {
   renderReporting(reporting, map.domain);
   renderAttention(map.findings);
   renderUnknowns(map.unknowns, map.domain);
-  renderChecked(map.gaps, map.checked);
+  renderChecked(map.gaps, map.checked, map.absences || []);
   renderFootnote(map);
   show("result");
   $("result").scrollIntoView({ behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" });
@@ -299,9 +299,16 @@ function renderFootnote(map) {
   $("footnote").textContent = text;
 }
 
-function renderChecked(gaps, checked) {
+function renderChecked(gaps, checked, absences = []) {
   const box = $("checked");
   box.replaceChildren();
+  if (absences.length) {
+    box.append(h("h3", { class: "section-title" }, "Checked and not there"));
+    const ul = h("ul", { class: "gaps absences" });
+    absences.forEach((a) => ul.append(h("li", {}, h("span", { class: "mono" }, a.asked), `: ${a.happened}`,
+      ...a.evidence.map((e) => h("span", { class: "ev mono" }, evidence(e))))));
+    box.append(ul);
+  }
   if (gaps.length) {
     box.append(h("h3", { class: "section-title" }, "Not checked"));
     const ul = h("ul", { class: "gaps" });

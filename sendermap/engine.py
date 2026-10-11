@@ -150,6 +150,7 @@ async def map_domain(
             ct=ct_summary,
             historical=tuple(dict.fromkeys(observed.historical)),
             logo=logo,
+            absences=tuple(dict.fromkeys(observed.absences)),
         )
         await say("Done")
         return result
@@ -166,7 +167,8 @@ async def _subdomain(ctx: Context, rules: tuple[Rule, ...], name: str) -> Observ
         networks.collect(ctx, name, tree.ranges),
     )
     budget = Observed()
-    if unasked := len(set(order) - set(probed)):
+    swept = not any(a.happened.startswith(dkim.NO_SELECTORS) for a in keys.absences)
+    if swept and (unasked := len(set(order) - set(probed))):
         happened = (
             f"{unasked} of {len(order)} not asked: only the first {SUBDOMAIN_PROBES} and the "
             "names its own SPF or MX backs were (cap)"
