@@ -258,7 +258,16 @@ function card(service, domain, badgeClass, badgeText) {
     more.addEventListener("click", () => { ul.querySelectorAll("li").forEach((li) => { li.hidden = false; }); more.remove(); });
     c.append(more);
   }
+  (service.setups || []).forEach((s) => c.append(h("p", { class: "meta setup" }, setupLine(s))));
   return c;
+}
+
+// The words of each setup record; setup.py's WORDS and line() build the same line.
+const SETUP_WORDS = { spf: "SPF", dkim: "DKIM", return_path: "bounce CNAME", tracking: "tracking CNAME", mx: "MX" };
+
+function setupLine(setup) {
+  const parts = setup.items.map((i) => `${SETUP_WORDS[i.record]} ${i.state}${i.detail ? ` (${i.detail})` : ""}`);
+  return `Setup at ${setup.where}: ${parts.join(", ")}.`;
 }
 
 function evidence(e) {

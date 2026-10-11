@@ -11,7 +11,8 @@ import httpx
 import pytest
 from conftest import Zone
 
-from sendermap.catalog import Pattern
+from sendermap.catalog import Pattern, SetupRule
+from sendermap.model import Need
 from sendermap.proofs import Proof
 from sendermap.selectors import Fixed, Rule, Source
 
@@ -213,3 +214,38 @@ async def test_a_network_proof_needs_every_origin_to_be_the_vendors_in_either_or
         both = tool.Checker(dns, http, {"AS64500": "Vendor", "as64501": "Vendor"})
         seen = await tool.CHECKS["networks"](both, "shared.vendor.test", "AS64500")
         assert seen.shows
+
+
+async def test_a_setup_proof_holds_when_the_page_contains_every_value(
+    monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
+) -> None:
+    proof = Proof("vendor.test", "https://vendor.test/", DAY)
+    setups = (
+        SetupRule("Vendor", "dkim", Need.REQUIRED, ("forms.js", "cdn.vendor.net"), proof),
+        SetupRule("Vendor", "spf", Need.REQUIRED, ("cdn.vendor.net", "_spf.vendor.net"), proof),
+        SetupRule("Vendor", "return_path", Need.NONE, (), proof),
+        SetupRule(
+            "Vendor", "mx", Need.REQUIRED, ("x",), Proof("vendor.test", f"{proof.record}gone", DAY)
+        ),
+        SetupRule(
+            "Vendor",
+            "tracking",
+            Need.REQUIRED,
+            ("x",),
+            Proof("vendor.test", f"{proof.record}blocked", DAY),
+        ),
+    )
+    tool = load_tool()
+    monkeypatch.setattr(tool, "SystemResolver", lambda timeout: zone())
+    monkeypatch.setattr(tool, "load", lambda: tool.items((), (), setups))
+    http = httpx.AsyncClient(transport=httpx.MockTransport(web))
+    code = await tool.main(["--json"], http=http)
+    rows = [json.loads(line) for line in capsys.readouterr().out.splitlines()]
+    assert [(row["field"], row["status"], row["observed"]) for row in rows] == [
+        ("setup dkim", "found", "contains forms.js, cdn.vendor.net"),
+        ("setup spf", "not found", "does not contain _spf.vendor.net"),
+        ("setup return_path", "found", "page read"),  # names nothing, so the page is enough
+        ("setup mx", "not found", "HTTP 404"),
+        ("setup tracking", "could not check", "HTTP 403"),
+    ]
+    assert code == 1

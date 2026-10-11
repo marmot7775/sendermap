@@ -1,5 +1,5 @@
 {
-  "about": "Email services recognisable from a domain's own DNS. One block per vendor; imported from dns-audit (MIT) at fac9e2e. Hostname patterns match the host itself or any name under it, and the longest match wins. Every pattern is an entry with its value and a proof: a live domain that publishes it, the record name (or, for a website host or a subprocessor name, the page) as found, and the date it was checked. Networks are autonomous system numbers a service owns outright; shared clouds are listed under rules.cloud_networks and never credited to a service. Each selectors entry names a vendor's DKIM selectors with their source and a proof; a fixed shape with several names takes a list of proofs, one per name in order. These entries are the only selector list: they credit keys by name, back generic names, and with rules.generic_selectors make the probe sweep. Hints are MX and SPF values the vendor's customers publish, with the pages that list them. Patterns not yet proven wait in vendors_pending.json, which Sendermap never reads.",
+  "about": "Email services recognisable from a domain's own DNS. One block per vendor; imported from dns-audit (MIT) at fac9e2e. Hostname patterns match the host itself or any name under it, and the longest match wins. Every pattern is an entry with its value and a proof: a live domain that publishes it, the record name (or, for a website host or a subprocessor name, the page) as found, and the date it was checked. Networks are autonomous system numbers a service owns outright; shared clouds are listed under rules.cloud_networks and never credited to a service. Each selectors entry names a vendor's DKIM selectors with their source and a proof; a fixed shape with several names takes a list of proofs, one per name in order. These entries are the only selector list: they credit keys by name, back generic names, and with rules.generic_selectors make the probe sweep. Hints are MX and SPF values the vendor's customers publish, with the pages that list them. Patterns not yet proven wait in vendors_pending.json, which Sendermap never reads. A setup list names the records the vendor's documentation says a complete setup publishes: each item's record, whether it is needed, its values (patterns of the same block) and a proof whose record is the documentation page that names them all.",
   "categories": [
     "Mailbox",
     "Security gateway",
@@ -1347,6 +1347,54 @@
             "date": "2026-10-10"
           }
         }
+      ],
+      "setup": [
+        {
+          "record": "spf",
+          "need": "required",
+          "values": [
+            "_spf.google.com"
+          ],
+          "proof": {
+            "domain": "google.com",
+            "record": "https://knowledge.workspace.google.com/admin/security/set-up-spf",
+            "date": "2026-10-11"
+          }
+        },
+        {
+          "record": "dkim",
+          "need": "required",
+          "values": [
+            "google"
+          ],
+          "proof": {
+            "domain": "google.com",
+            "record": "https://knowledge.workspace.google.com/admin/security/set-up-dkim",
+            "date": "2026-10-11"
+          }
+        },
+        {
+          "record": "mx",
+          "need": "optional",
+          "values": [
+            "google.com"
+          ],
+          "proof": {
+            "domain": "google.com",
+            "record": "https://knowledge.workspace.google.com/admin/domains/set-up-mx-records-for-google-workspace",
+            "date": "2026-10-11"
+          },
+          "note": "Optional here because a security gateway in front of Google Workspace takes its place in MX."
+        },
+        {
+          "record": "return_path",
+          "need": "none",
+          "proof": {
+            "domain": "google.com",
+            "record": "https://knowledge.workspace.google.com/admin/domains/set-up-mx-records-for-google-workspace",
+            "date": "2026-10-11"
+          }
+        }
       ]
     },
     "Gorgias": {
@@ -1832,6 +1880,43 @@
             "date": "2026-10-10"
           }
         }
+      ],
+      "setup": [
+        {
+          "record": "dkim",
+          "need": "required",
+          "values": [
+            "klaviyodns.com"
+          ],
+          "proof": {
+            "domain": "klaviyo.com",
+            "record": "https://help.klaviyo.com/hc/en-us/articles/115000357752",
+            "date": "2026-10-11"
+          },
+          "note": "The current selectors (km1 and km2 for marketing, kt1 and kt2, ks1 and ks2) are not yet in this block's selectors, so the setup names the CNAME target only and a missing key reads not checked."
+        },
+        {
+          "record": "return_path",
+          "need": "optional",
+          "values": [
+            "klaviyodns.com"
+          ],
+          "proof": {
+            "domain": "klaviyo.com",
+            "record": "https://help.klaviyo.com/hc/en-us/articles/115000357752",
+            "date": "2026-10-11"
+          },
+          "note": "Optional here because dynamic routing, which the page recommends, delegates the sending subdomain by NS instead of a CNAME."
+        },
+        {
+          "record": "spf",
+          "need": "none",
+          "proof": {
+            "domain": "klaviyo.com",
+            "record": "https://help.klaviyo.com/hc/en-us/articles/115000357752",
+            "date": "2026-10-11"
+          }
+        }
       ]
     },
     "Mailchimp": {
@@ -1922,6 +2007,39 @@
             "domain": "mailchimp.com",
             "record": "https://mailchimp.com/",
             "date": "2026-10-09"
+          }
+        }
+      ],
+      "setup": [
+        {
+          "record": "dkim",
+          "need": "required",
+          "values": [
+            "k2"
+          ],
+          "proof": {
+            "domain": "mailchimp.com",
+            "record": "https://mailchimp.com/help/set-up-email-domain-authentication/",
+            "date": "2026-10-11"
+          },
+          "note": "The page names k2 only; k3 is a pattern from customer domains, and k1 the older single key."
+        },
+        {
+          "record": "spf",
+          "need": "none",
+          "proof": {
+            "domain": "mailchimp.com",
+            "record": "https://mailchimp.com/help/set-up-email-domain-authentication/",
+            "date": "2026-10-11"
+          }
+        },
+        {
+          "record": "return_path",
+          "need": "none",
+          "proof": {
+            "domain": "mailchimp.com",
+            "record": "https://mailchimp.com/help/set-up-email-domain-authentication/",
+            "date": "2026-10-11"
           }
         }
       ]
@@ -2466,6 +2584,56 @@
             "domain": "microsoft.com",
             "record": "https://microsoft.com/",
             "date": "2026-10-09"
+          }
+        }
+      ],
+      "setup": [
+        {
+          "record": "spf",
+          "need": "required",
+          "values": [
+            "spf.protection.outlook.com"
+          ],
+          "proof": {
+            "domain": "microsoft.com",
+            "record": "https://learn.microsoft.com/microsoft-365/enterprise/external-domain-name-system-records",
+            "date": "2026-10-11"
+          }
+        },
+        {
+          "record": "dkim",
+          "need": "required",
+          "values": [
+            "selector1",
+            "selector2",
+            "dkim.mail.microsoft"
+          ],
+          "proof": {
+            "domain": "microsoft.com",
+            "record": "https://learn.microsoft.com/defender-office-365/email-authentication-dkim-configure",
+            "date": "2026-10-11"
+          }
+        },
+        {
+          "record": "mx",
+          "need": "optional",
+          "values": [
+            "protection.outlook.com"
+          ],
+          "proof": {
+            "domain": "microsoft.com",
+            "record": "https://learn.microsoft.com/microsoft-365/enterprise/external-domain-name-system-records",
+            "date": "2026-10-11"
+          },
+          "note": "Optional here because a security gateway in front of Microsoft 365 takes its place in MX."
+        },
+        {
+          "record": "return_path",
+          "need": "none",
+          "proof": {
+            "domain": "microsoft.com",
+            "record": "https://learn.microsoft.com/microsoft-365/enterprise/external-domain-name-system-records",
+            "date": "2026-10-11"
           }
         }
       ]
@@ -3355,6 +3523,57 @@
             "domain": "applovin.com",
             "record": "links.applovin.com",
             "date": "2026-10-10"
+          }
+        }
+      ],
+      "setup": [
+        {
+          "record": "dkim",
+          "need": "required",
+          "values": [
+            "s1",
+            "s2",
+            "sendgrid.net"
+          ],
+          "proof": {
+            "domain": "twilio.com",
+            "record": "https://www.twilio.com/docs/sendgrid/ui/account-and-settings/how-to-set-up-domain-authentication",
+            "date": "2026-10-11"
+          }
+        },
+        {
+          "record": "return_path",
+          "need": "optional",
+          "values": [
+            "sendgrid.net"
+          ],
+          "proof": {
+            "domain": "twilio.com",
+            "record": "https://www.twilio.com/docs/sendgrid/ui/account-and-settings/how-to-set-up-domain-authentication",
+            "date": "2026-10-11"
+          },
+          "note": "The docs put it at em plus digits chosen per account, a label the map does not ask, so it is optional here: missing means only that none of the labels asked has one."
+        },
+        {
+          "record": "spf",
+          "need": "none",
+          "proof": {
+            "domain": "twilio.com",
+            "record": "https://www.twilio.com/docs/sendgrid/ui/account-and-settings/how-to-set-up-domain-authentication",
+            "date": "2026-10-11"
+          },
+          "note": "The SPF record sits at the return path subdomain the bounce CNAME points into SendGrid, not at the name itself."
+        },
+        {
+          "record": "tracking",
+          "need": "optional",
+          "values": [
+            "sendgrid.net"
+          ],
+          "proof": {
+            "domain": "twilio.com",
+            "record": "https://www.twilio.com/docs/sendgrid/ui/account-and-settings/how-to-set-up-link-branding",
+            "date": "2026-10-11"
           }
         }
       ]

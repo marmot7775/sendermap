@@ -67,8 +67,9 @@ def check_record(where: str, field: str, proof: Proof) -> None:
         raise ValueError(f"{where}: proof record {record!r} is not {rule}")
 
 
-# Patterns whose proof is a page: the record is its URL.
-PAGE_FIELDS = frozenset({"website", "subprocessor_names"})
+# Patterns whose proof is a page: the record is its URL. A setup's page is the vendor's own
+# documentation, so its domain is the vendor's.
+PAGE_FIELDS = frozenset({"website", "subprocessor_names", "setup"})
 
 
 def normalise(name: str) -> str:

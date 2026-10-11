@@ -55,7 +55,8 @@
      },
      "supporting": []
     }
-   ]
+   ],
+   "setups": []
   },
   {
    "name": "Freshdesk",
@@ -82,7 +83,8 @@
       }
      ]
     }
-   ]
+   ],
+   "setups": []
   },
   {
    "name": "Microsoft 365",
@@ -126,6 +128,80 @@
      },
      "supporting": []
     }
+   ],
+   "setups": [
+    {
+     "service": "Microsoft 365",
+     "where": "mills-reeve.com",
+     "items": [
+      {
+       "record": "spf",
+       "need": "required",
+       "state": "present",
+       "evidence": [
+        {
+         "name": "mills-reeve.com",
+         "rtype": "TXT",
+         "value": "include:spf.protection.outlook.com",
+         "checked_at": "2026-10-11T19:47:09+00:00"
+        }
+       ],
+       "asked": "TXT at mills-reeve.com",
+       "detail": ""
+      },
+      {
+       "record": "dkim",
+       "need": "required",
+       "state": "missing",
+       "evidence": [
+        {
+         "name": "selector1._domainkey.mills-reeve.com",
+         "rtype": "TXT",
+         "value": "no record of this type",
+         "checked_at": "2026-10-11T19:47:09+00:00"
+        },
+        {
+         "name": "selector2._domainkey.mills-reeve.com",
+         "rtype": "TXT",
+         "value": "no record of this type",
+         "checked_at": "2026-10-11T19:47:09+00:00"
+        }
+       ],
+       "asked": "TXT at selector1._domainkey.mills-reeve.com and TXT at selector2._domainkey.mills-reeve.com",
+       "detail": "selector1 and selector2 no record of this type (this zone gives that answer for every name that does not exist)"
+      },
+      {
+       "record": "mx",
+       "need": "optional",
+       "state": "missing",
+       "evidence": [
+        {
+         "name": "mills-reeve.com",
+         "rtype": "MX",
+         "value": "10 eu-smtp-inbound-1.mimecast.com",
+         "checked_at": "2026-10-11T19:47:09+00:00"
+        },
+        {
+         "name": "mills-reeve.com",
+         "rtype": "MX",
+         "value": "10 eu-smtp-inbound-2.mimecast.com",
+         "checked_at": "2026-10-11T19:47:09+00:00"
+        }
+       ],
+       "asked": "MX at mills-reeve.com",
+       "detail": "no MX host under protection.outlook.com"
+      },
+      {
+       "record": "return_path",
+       "need": "none",
+       "state": "not needed",
+       "evidence": [],
+       "asked": "",
+       "detail": ""
+      }
+     ],
+     "complete": false
+    }
    ]
   },
   {
@@ -158,6 +234,338 @@
      },
      "supporting": []
     }
+   ],
+   "setups": [
+    {
+     "service": "SendGrid",
+     "where": "mills-reeve.com",
+     "items": [
+      {
+       "record": "dkim",
+       "need": "required",
+       "state": "present",
+       "evidence": [
+        {
+         "name": "s1._domainkey.mills-reeve.com",
+         "rtype": "TXT",
+         "value": "k=rsa; t=s (strict); p=MIIBIjANBgkq..., 2048-bit, fp ae8406c18072b4fc via s1.domainkey.u10198980.wl231.sendgrid.net",
+         "checked_at": "2026-10-11T19:47:09+00:00"
+        },
+        {
+         "name": "s2._domainkey.mills-reeve.com",
+         "rtype": "TXT",
+         "value": "k=rsa; t=s (strict); p=MIGfMA0GCSqG..., 1024-bit, fp 1d0c1f3114d84753 via s2.domainkey.u10198980.wl231.sendgrid.net",
+         "checked_at": "2026-10-11T19:47:09+00:00"
+        }
+       ],
+       "asked": "TXT at s1._domainkey.mills-reeve.com and TXT at s2._domainkey.mills-reeve.com",
+       "detail": ""
+      },
+      {
+       "record": "return_path",
+       "need": "optional",
+       "state": "missing",
+       "evidence": [
+        {
+         "name": "bounce.mills-reeve.com",
+         "rtype": "CNAME",
+         "value": "no record of this type",
+         "checked_at": "2026-10-11T19:47:09+00:00"
+        },
+        {
+         "name": "bounces.mills-reeve.com",
+         "rtype": "CNAME",
+         "value": "no record of this type",
+         "checked_at": "2026-10-11T19:47:09+00:00"
+        },
+        {
+         "name": "em.mills-reeve.com",
+         "rtype": "CNAME",
+         "value": "no record of this type",
+         "checked_at": "2026-10-11T19:47:09+00:00"
+        },
+        {
+         "name": "email.mills-reeve.com",
+         "rtype": "CNAME",
+         "value": "no record of this type",
+         "checked_at": "2026-10-11T19:47:09+00:00"
+        },
+        {
+         "name": "mail.mills-reeve.com",
+         "rtype": "CNAME",
+         "value": "no record of this type",
+         "checked_at": "2026-10-11T19:47:09+00:00"
+        },
+        {
+         "name": "send.mills-reeve.com",
+         "rtype": "CNAME",
+         "value": "no record of this type",
+         "checked_at": "2026-10-11T19:47:09+00:00"
+        },
+        {
+         "name": "mta.mills-reeve.com",
+         "rtype": "CNAME",
+         "value": "no record of this type",
+         "checked_at": "2026-10-11T19:47:09+00:00"
+        },
+        {
+         "name": "rp.mills-reeve.com",
+         "rtype": "CNAME",
+         "value": "no record of this type",
+         "checked_at": "2026-10-11T19:47:09+00:00"
+        },
+        {
+         "name": "pm-bounces.mills-reeve.com",
+         "rtype": "CNAME",
+         "value": "no record of this type",
+         "checked_at": "2026-10-11T19:47:09+00:00"
+        },
+        {
+         "name": "links.mills-reeve.com",
+         "rtype": "CNAME",
+         "value": "no record of this type",
+         "checked_at": "2026-10-11T19:47:09+00:00"
+        },
+        {
+         "name": "link.mills-reeve.com",
+         "rtype": "CNAME",
+         "value": "no record of this type",
+         "checked_at": "2026-10-11T19:47:09+00:00"
+        },
+        {
+         "name": "click.mills-reeve.com",
+         "rtype": "CNAME",
+         "value": "no record of this type",
+         "checked_at": "2026-10-11T19:47:09+00:00"
+        },
+        {
+         "name": "track.mills-reeve.com",
+         "rtype": "CNAME",
+         "value": "no record of this type",
+         "checked_at": "2026-10-11T19:47:09+00:00"
+        },
+        {
+         "name": "tracking.mills-reeve.com",
+         "rtype": "CNAME",
+         "value": "no record of this type",
+         "checked_at": "2026-10-11T19:47:09+00:00"
+        },
+        {
+         "name": "url.mills-reeve.com",
+         "rtype": "CNAME",
+         "value": "no record of this type",
+         "checked_at": "2026-10-11T19:47:09+00:00"
+        },
+        {
+         "name": "go.mills-reeve.com",
+         "rtype": "CNAME",
+         "value": "no record of this type",
+         "checked_at": "2026-10-11T19:47:09+00:00"
+        },
+        {
+         "name": "autodiscover.mills-reeve.com",
+         "rtype": "CNAME",
+         "value": "autodiscover.outlook.com",
+         "checked_at": "2026-10-11T19:47:09+00:00"
+        },
+        {
+         "name": "cf-bounce.mills-reeve.com",
+         "rtype": "CNAME",
+         "value": "no record of this type",
+         "checked_at": "2026-10-11T19:47:09+00:00"
+        },
+        {
+         "name": "eversrv.mills-reeve.com",
+         "rtype": "CNAME",
+         "value": "no record of this type",
+         "checked_at": "2026-10-11T19:47:09+00:00"
+        },
+        {
+         "name": "fwdkim1.mills-reeve.com",
+         "rtype": "CNAME",
+         "value": "no record of this type",
+         "checked_at": "2026-10-11T19:47:09+00:00"
+        },
+        {
+         "name": "bnc3.mills-reeve.com",
+         "rtype": "CNAME",
+         "value": "no record of this type",
+         "checked_at": "2026-10-11T19:47:09+00:00"
+        },
+        {
+         "name": "bounces.cloud.em.mills-reeve.com",
+         "rtype": "CNAME",
+         "value": "no record of this type",
+         "checked_at": "2026-10-11T19:47:09+00:00"
+        },
+        {
+         "name": "bounces.cloud2.em.mills-reeve.com",
+         "rtype": "CNAME",
+         "value": "no record of this type",
+         "checked_at": "2026-10-11T19:47:09+00:00"
+        }
+       ],
+       "asked": "CNAME at 23 labels under mills-reeve.com",
+       "detail": "no CNAME into sendgrid.net at the 23 labels asked"
+      },
+      {
+       "record": "spf",
+       "need": "none",
+       "state": "not needed",
+       "evidence": [],
+       "asked": "",
+       "detail": ""
+      },
+      {
+       "record": "tracking",
+       "need": "optional",
+       "state": "missing",
+       "evidence": [
+        {
+         "name": "bounce.mills-reeve.com",
+         "rtype": "CNAME",
+         "value": "no record of this type",
+         "checked_at": "2026-10-11T19:47:09+00:00"
+        },
+        {
+         "name": "bounces.mills-reeve.com",
+         "rtype": "CNAME",
+         "value": "no record of this type",
+         "checked_at": "2026-10-11T19:47:09+00:00"
+        },
+        {
+         "name": "em.mills-reeve.com",
+         "rtype": "CNAME",
+         "value": "no record of this type",
+         "checked_at": "2026-10-11T19:47:09+00:00"
+        },
+        {
+         "name": "email.mills-reeve.com",
+         "rtype": "CNAME",
+         "value": "no record of this type",
+         "checked_at": "2026-10-11T19:47:09+00:00"
+        },
+        {
+         "name": "mail.mills-reeve.com",
+         "rtype": "CNAME",
+         "value": "no record of this type",
+         "checked_at": "2026-10-11T19:47:09+00:00"
+        },
+        {
+         "name": "send.mills-reeve.com",
+         "rtype": "CNAME",
+         "value": "no record of this type",
+         "checked_at": "2026-10-11T19:47:09+00:00"
+        },
+        {
+         "name": "mta.mills-reeve.com",
+         "rtype": "CNAME",
+         "value": "no record of this type",
+         "checked_at": "2026-10-11T19:47:09+00:00"
+        },
+        {
+         "name": "rp.mills-reeve.com",
+         "rtype": "CNAME",
+         "value": "no record of this type",
+         "checked_at": "2026-10-11T19:47:09+00:00"
+        },
+        {
+         "name": "pm-bounces.mills-reeve.com",
+         "rtype": "CNAME",
+         "value": "no record of this type",
+         "checked_at": "2026-10-11T19:47:09+00:00"
+        },
+        {
+         "name": "links.mills-reeve.com",
+         "rtype": "CNAME",
+         "value": "no record of this type",
+         "checked_at": "2026-10-11T19:47:09+00:00"
+        },
+        {
+         "name": "link.mills-reeve.com",
+         "rtype": "CNAME",
+         "value": "no record of this type",
+         "checked_at": "2026-10-11T19:47:09+00:00"
+        },
+        {
+         "name": "click.mills-reeve.com",
+         "rtype": "CNAME",
+         "value": "no record of this type",
+         "checked_at": "2026-10-11T19:47:09+00:00"
+        },
+        {
+         "name": "track.mills-reeve.com",
+         "rtype": "CNAME",
+         "value": "no record of this type",
+         "checked_at": "2026-10-11T19:47:09+00:00"
+        },
+        {
+         "name": "tracking.mills-reeve.com",
+         "rtype": "CNAME",
+         "value": "no record of this type",
+         "checked_at": "2026-10-11T19:47:09+00:00"
+        },
+        {
+         "name": "url.mills-reeve.com",
+         "rtype": "CNAME",
+         "value": "no record of this type",
+         "checked_at": "2026-10-11T19:47:09+00:00"
+        },
+        {
+         "name": "go.mills-reeve.com",
+         "rtype": "CNAME",
+         "value": "no record of this type",
+         "checked_at": "2026-10-11T19:47:09+00:00"
+        },
+        {
+         "name": "autodiscover.mills-reeve.com",
+         "rtype": "CNAME",
+         "value": "autodiscover.outlook.com",
+         "checked_at": "2026-10-11T19:47:09+00:00"
+        },
+        {
+         "name": "cf-bounce.mills-reeve.com",
+         "rtype": "CNAME",
+         "value": "no record of this type",
+         "checked_at": "2026-10-11T19:47:09+00:00"
+        },
+        {
+         "name": "eversrv.mills-reeve.com",
+         "rtype": "CNAME",
+         "value": "no record of this type",
+         "checked_at": "2026-10-11T19:47:09+00:00"
+        },
+        {
+         "name": "fwdkim1.mills-reeve.com",
+         "rtype": "CNAME",
+         "value": "no record of this type",
+         "checked_at": "2026-10-11T19:47:09+00:00"
+        },
+        {
+         "name": "bnc3.mills-reeve.com",
+         "rtype": "CNAME",
+         "value": "no record of this type",
+         "checked_at": "2026-10-11T19:47:09+00:00"
+        },
+        {
+         "name": "bounces.cloud.em.mills-reeve.com",
+         "rtype": "CNAME",
+         "value": "no record of this type",
+         "checked_at": "2026-10-11T19:47:09+00:00"
+        },
+        {
+         "name": "bounces.cloud2.em.mills-reeve.com",
+         "rtype": "CNAME",
+         "value": "no record of this type",
+         "checked_at": "2026-10-11T19:47:09+00:00"
+        }
+       ],
+       "asked": "CNAME at 23 labels under mills-reeve.com",
+       "detail": "no CNAME into sendgrid.net at the 23 labels asked"
+      }
+     ],
+     "complete": true
+    }
    ]
   },
   {
@@ -178,7 +586,8 @@
      },
      "supporting": []
     }
-   ]
+   ],
+   "setups": []
   }
  ],
  "run": {
@@ -194,6 +603,25 @@
      "name": "s2._domainkey.mills-reeve.com",
      "rtype": "TXT",
      "value": "k=rsa; t=s (strict); p=MIGfMA0GCSqG..., 1024-bit, fp 1d0c1f3114d84753 via s2.domainkey.u10198980.wl231.sendgrid.net",
+     "checked_at": "2026-10-11T19:47:09+00:00"
+    }
+   ]
+  },
+  {
+   "severity": "warning",
+   "title": "Microsoft 365 at mills-reeve.com has no DKIM",
+   "detail": "Its documented setup needs it and the map shows it missing: selector1 and selector2 no record of this type (this zone gives that answer for every name that does not exist).",
+   "evidence": [
+    {
+     "name": "selector1._domainkey.mills-reeve.com",
+     "rtype": "TXT",
+     "value": "no record of this type",
+     "checked_at": "2026-10-11T19:47:09+00:00"
+    },
+    {
+     "name": "selector2._domainkey.mills-reeve.com",
+     "rtype": "TXT",
+     "value": "no record of this type",
      "checked_at": "2026-10-11T19:47:09+00:00"
     }
    ]

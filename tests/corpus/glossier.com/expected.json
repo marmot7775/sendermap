@@ -146,6 +146,176 @@
       }
      ]
     }
+   ],
+   "setups": [
+    {
+     "service": "Google Workspace",
+     "where": "glossier.com",
+     "items": [
+      {
+       "record": "spf",
+       "need": "required",
+       "state": "not checked",
+       "evidence": [
+        {
+         "name": "glossier.com",
+         "rtype": "TXT",
+         "value": "v=spf1 include:%{i}._ip.%{h}._ehlo.%{d}._spf.vali.email ~all",
+         "checked_at": "2026-10-11T19:47:18+00:00"
+        }
+       ],
+       "asked": "TXT at glossier.com",
+       "detail": "managed through Valimail, which can authorize services without naming them"
+      },
+      {
+       "record": "dkim",
+       "need": "required",
+       "state": "present",
+       "evidence": [
+        {
+         "name": "google._domainkey.glossier.com",
+         "rtype": "TXT",
+         "value": "v=DKIM1; k=rsa; p=MIIBIjANBgkq..., 2048-bit, fp 40785b4787f0f30f",
+         "checked_at": "2026-10-11T19:47:18+00:00"
+        }
+       ],
+       "asked": "TXT at google._domainkey.glossier.com",
+       "detail": ""
+      },
+      {
+       "record": "mx",
+       "need": "optional",
+       "state": "present",
+       "evidence": [
+        {
+         "name": "glossier.com",
+         "rtype": "MX",
+         "value": "10 aspmx.l.google.com",
+         "checked_at": "2026-10-11T19:47:18+00:00"
+        },
+        {
+         "name": "glossier.com",
+         "rtype": "MX",
+         "value": "20 alt1.aspmx.l.google.com",
+         "checked_at": "2026-10-11T19:47:18+00:00"
+        },
+        {
+         "name": "glossier.com",
+         "rtype": "MX",
+         "value": "20 alt2.aspmx.l.google.com",
+         "checked_at": "2026-10-11T19:47:18+00:00"
+        },
+        {
+         "name": "glossier.com",
+         "rtype": "MX",
+         "value": "30 aspmx2.googlemail.com",
+         "checked_at": "2026-10-11T19:47:18+00:00"
+        },
+        {
+         "name": "glossier.com",
+         "rtype": "MX",
+         "value": "30 aspmx3.googlemail.com",
+         "checked_at": "2026-10-11T19:47:18+00:00"
+        }
+       ],
+       "asked": "MX at glossier.com",
+       "detail": ""
+      },
+      {
+       "record": "return_path",
+       "need": "none",
+       "state": "not needed",
+       "evidence": [],
+       "asked": "",
+       "detail": ""
+      }
+     ],
+     "complete": null
+    },
+    {
+     "service": "Google Workspace",
+     "where": "receipts.glossier.com",
+     "items": [
+      {
+       "record": "spf",
+       "need": "required",
+       "state": "not checked",
+       "evidence": [
+        {
+         "name": "receipts.glossier.com",
+         "rtype": "TXT",
+         "value": "v=spf1 include:receipts.glossier.com._nspf.vali.email include:%{i}._ip.%{h}._ehlo.%{d}._spf.vali.email ~all",
+         "checked_at": "2026-10-11T19:47:18+00:00"
+        }
+       ],
+       "asked": "TXT at receipts.glossier.com",
+       "detail": "managed through Valimail, which can authorize services without naming them"
+      },
+      {
+       "record": "dkim",
+       "need": "required",
+       "state": "missing",
+       "evidence": [
+        {
+         "name": "google._domainkey.receipts.glossier.com",
+         "rtype": "TXT",
+         "value": "no record of this type",
+         "checked_at": "2026-10-11T19:47:18+00:00"
+        }
+       ],
+       "asked": "TXT at google._domainkey.receipts.glossier.com",
+       "detail": "google no record of this type (this zone gives that answer for every name that does not exist)"
+      },
+      {
+       "record": "mx",
+       "need": "optional",
+       "state": "present",
+       "evidence": [
+        {
+         "name": "receipts.glossier.com",
+         "rtype": "MX",
+         "value": "1 aspmx.l.google.com",
+         "checked_at": "2026-10-11T19:47:18+00:00"
+        },
+        {
+         "name": "receipts.glossier.com",
+         "rtype": "MX",
+         "value": "5 alt1.aspmx.l.google.com",
+         "checked_at": "2026-10-11T19:47:18+00:00"
+        },
+        {
+         "name": "receipts.glossier.com",
+         "rtype": "MX",
+         "value": "5 alt2.aspmx.l.google.com",
+         "checked_at": "2026-10-11T19:47:18+00:00"
+        },
+        {
+         "name": "receipts.glossier.com",
+         "rtype": "MX",
+         "value": "10 alt3.aspmx.l.google.com",
+         "checked_at": "2026-10-11T19:47:18+00:00"
+        },
+        {
+         "name": "receipts.glossier.com",
+         "rtype": "MX",
+         "value": "10 alt4.aspmx.l.google.com",
+         "checked_at": "2026-10-11T19:47:18+00:00"
+        }
+       ],
+       "asked": "MX at receipts.glossier.com",
+       "detail": ""
+      },
+      {
+       "record": "return_path",
+       "need": "none",
+       "state": "not needed",
+       "evidence": [],
+       "asked": "",
+       "detail": ""
+      }
+     ],
+     "complete": false
+    }
    ]
   },
   {
@@ -178,7 +348,8 @@
      },
      "supporting": []
     }
-   ]
+   ],
+   "setups": []
   },
   {
    "name": "Klaviyo",
@@ -234,6 +405,59 @@
      },
      "supporting": []
     }
+   ],
+   "setups": [
+    {
+     "service": "Klaviyo",
+     "where": "glossier.com",
+     "items": [
+      {
+       "record": "dkim",
+       "need": "required",
+       "state": "present",
+       "evidence": [
+        {
+         "name": "kl._domainkey.glossier.com",
+         "rtype": "TXT",
+         "value": "k=rsa; t=s (strict); p=MIIBIjANBgkq..., 2048-bit, fp 8f7c4abc32a3149e via kl.domainkey.u161779.wl030.sendgrid.net",
+         "checked_at": "2026-10-11T19:47:18+00:00"
+        },
+        {
+         "name": "kl2._domainkey.glossier.com",
+         "rtype": "TXT",
+         "value": "k=rsa; t=s (strict); p=MIIBIjANBgkq..., 2048-bit, fp a8e9604b93b01972 via kl2.domainkey.u161779.wl030.sendgrid.net",
+         "checked_at": "2026-10-11T19:47:18+00:00"
+        }
+       ],
+       "asked": "TXT at kl._domainkey.glossier.com and TXT at kl2._domainkey.glossier.com",
+       "detail": ""
+      },
+      {
+       "record": "return_path",
+       "need": "optional",
+       "state": "present",
+       "evidence": [
+        {
+         "name": "send.glossier.com",
+         "rtype": "CNAME",
+         "value": "u161779.wl030.sendgrid.net",
+         "checked_at": "2026-10-11T19:47:18+00:00"
+        }
+       ],
+       "asked": "CNAME at send.glossier.com",
+       "detail": ""
+      },
+      {
+       "record": "spf",
+       "need": "none",
+       "state": "not needed",
+       "evidence": [],
+       "asked": "",
+       "detail": ""
+      }
+     ],
+     "complete": true
+    }
    ]
   },
   {
@@ -254,7 +478,8 @@
      },
      "supporting": []
     }
-   ]
+   ],
+   "setups": []
   },
   {
    "name": "Salesforce",
@@ -286,7 +511,8 @@
      },
      "supporting": []
     }
-   ]
+   ],
+   "setups": []
   },
   {
    "name": "SendGrid",
@@ -791,6 +1017,86 @@
       }
      ]
     }
+   ],
+   "setups": [
+    {
+     "service": "SendGrid",
+     "where": "glossier.com",
+     "items": [
+      {
+       "record": "dkim",
+       "need": "required",
+       "state": "present",
+       "evidence": [
+        {
+         "name": "s1._domainkey.glossier.com",
+         "rtype": "TXT",
+         "value": "k=rsa; t=s (strict); p=MIIBIjANBgkq..., 2048-bit, fp 3d0654c2b22f63e6 via s1.domainkey.u246655.wl156.sendgrid.net",
+         "checked_at": "2026-10-11T19:47:18+00:00"
+        },
+        {
+         "name": "s2._domainkey.glossier.com",
+         "rtype": "TXT",
+         "value": "k=rsa; t=s (strict); p=MIGfMA0GCSqG..., 1024-bit, fp 493ef754cca287c6 via s2.domainkey.u246655.wl156.sendgrid.net",
+         "checked_at": "2026-10-11T19:47:18+00:00"
+        }
+       ],
+       "asked": "TXT at s1._domainkey.glossier.com and TXT at s2._domainkey.glossier.com",
+       "detail": ""
+      },
+      {
+       "record": "return_path",
+       "need": "optional",
+       "state": "present",
+       "evidence": [
+        {
+         "name": "marketing.glossier.com",
+         "rtype": "MX",
+         "value": "10 mx.sendgrid.net",
+         "checked_at": "2026-10-11T19:47:18+00:00"
+        },
+        {
+         "name": "marketing.glossier.com",
+         "rtype": "MX",
+         "value": "20 mx2.sendgrid.net",
+         "checked_at": "2026-10-11T19:47:18+00:00"
+        },
+        {
+         "name": "send.glossier.com",
+         "rtype": "MX",
+         "value": "20 mx.sendgrid.net",
+         "checked_at": "2026-10-11T19:47:18+00:00"
+        }
+       ],
+       "asked": "MX at marketing.glossier.com, MX at marketing.glossier.com, MX at send.glossier.com",
+       "detail": ""
+      },
+      {
+       "record": "spf",
+       "need": "none",
+       "state": "not needed",
+       "evidence": [],
+       "asked": "",
+       "detail": ""
+      },
+      {
+       "record": "tracking",
+       "need": "optional",
+       "state": "present",
+       "evidence": [
+        {
+         "name": "link.glossier.com",
+         "rtype": "CNAME",
+         "value": "sendgrid.net",
+         "checked_at": "2026-10-11T19:47:18+00:00"
+        }
+       ],
+       "asked": "CNAME at link.glossier.com",
+       "detail": ""
+      }
+     ],
+     "complete": true
+    }
    ]
   },
   {
@@ -823,7 +1129,8 @@
      },
      "supporting": []
     }
-   ]
+   ],
+   "setups": []
   },
   {
    "name": "Cloudflare Email Routing",
@@ -843,7 +1150,8 @@
      },
      "supporting": []
     }
-   ]
+   ],
+   "setups": []
   },
   {
    "name": "Mandrill",
@@ -863,7 +1171,8 @@
      },
      "supporting": []
     }
-   ]
+   ],
+   "setups": []
   },
   {
    "name": "Amazon SES",
@@ -883,7 +1192,8 @@
      },
      "supporting": []
     }
-   ]
+   ],
+   "setups": []
   },
   {
    "name": "Valimail",
@@ -903,7 +1213,8 @@
      },
      "supporting": []
     }
-   ]
+   ],
+   "setups": []
   }
  ],
  "run": {
@@ -932,6 +1243,19 @@
      "name": "s2._domainkey.glossier.com",
      "rtype": "TXT",
      "value": "k=rsa; t=s (strict); p=MIGfMA0GCSqG..., 1024-bit, fp 493ef754cca287c6 via s2.domainkey.u246655.wl156.sendgrid.net",
+     "checked_at": "2026-10-11T19:47:18+00:00"
+    }
+   ]
+  },
+  {
+   "severity": "warning",
+   "title": "Google Workspace at receipts.glossier.com has no DKIM",
+   "detail": "Its documented setup needs it and the map shows it missing: google no record of this type (this zone gives that answer for every name that does not exist).",
+   "evidence": [
+    {
+     "name": "google._domainkey.receipts.glossier.com",
+     "rtype": "TXT",
+     "value": "no record of this type",
      "checked_at": "2026-10-11T19:47:18+00:00"
     }
    ]

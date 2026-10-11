@@ -20,6 +20,7 @@ from typing import Any
 
 from . import proofs
 from .dns import norm
+from .model import Need
 from .proofs import Proof
 from .selectors import Rule, build_dictionary, parse_rules
 
@@ -45,6 +46,36 @@ class Pattern:
     value: str
     proof: Proof
     label: str | None = None
+
+
+# A setup item's record, and the block fields whose values it may name.
+SETUP_RECORDS: dict[str, tuple[str, ...]] = {
+    "spf": ("spf_includes",),
+    "dkim": ("selectors", "dkim_cname"),
+    "return_path": ("return_path",),
+    "tracking": ("tracking",),
+    "mx": ("mx",),
+}
+
+
+@dataclass(frozen=True, slots=True)
+class SetupRule:
+    """One record a vendor's documentation says a complete setup publishes: which record, whether
+    it is needed, the block's own pattern values the setup publishes (an include host, the
+    current selector names, a CNAME target, an MX host), and the documentation page that names
+    every one of them."""
+
+    vendor: str
+    record: str
+    need: Need
+    values: tuple[str, ...]
+    proof: Proof
+    note: str | None = None
+
+    @property
+    def selectors(self) -> tuple[str, ...]:
+        """For a DKIM item, the values that are selector names, in order."""
+        return tuple(v for v in self.values if "." not in v) if self.record == "dkim" else ()
 
 
 @dataclass(frozen=True, slots=True)
@@ -89,6 +120,8 @@ class Catalog:
     # The names a sending service goes by, as a subprocessor page would list it, to the service.
     # A name that is also an ordinary word ("Kit", "Wix") is simply not listed.
     subprocessor_names: dict[str, str]
+    # Each vendor's documented setup, one rule per record, in file order.
+    setups: dict[str, tuple[SetupRule, ...]] = field(default_factory=dict)
 
     # ------------------------------------------------------------ lookups by record
 
@@ -258,7 +291,59 @@ def build(raw: dict[str, Any]) -> Catalog:
         sending_labels=tuple(rules["sending_labels"]),
         website=website,
         subprocessor_names=named,
+        setups={
+            name: setup
+            for name, block in raw["vendors"].items()
+            if (setup := _setup(name, block, selector_rules))
+        },
     )
+
+
+def _setup(vendor: str, block: dict[str, Any], rules: tuple[Rule, ...]) -> tuple[SetupRule, ...]:
+    """The block's setup list, each item checked: a known record, a known need, values that are
+    patterns of this block for that record (none when nothing is needed, at least one
+    otherwise), at most one item per record, and a dated proof on an https page of the proof's
+    domain."""
+    found: list[SetupRule] = []
+    for raw in block.get("setup", ()):
+        record = raw.get("record")
+        where = f"{vendor} setup {record}"
+        if record not in SETUP_RECORDS:
+            raise ValueError(f"{where}: record is not one of {', '.join(SETUP_RECORDS)}")
+        if any(rule.record == record for rule in found):
+            raise ValueError(f"{where}: listed twice")
+        try:
+            need = Need(raw.get("need"))
+        except ValueError:
+            raise ValueError(f"{where}: need is not required, optional or none") from None
+        values = tuple(str(v) for v in raw.get("values", ()))
+        if need is Need.NONE and values:
+            raise ValueError(f"{where}: a record that is not needed names no values")
+        if need is not Need.NONE and not values:
+            raise ValueError(f"{where}: a needed record names its values")
+        own = _own_values(vendor, block, record, rules)
+        if strays := [v for v in values if v.lower() not in own]:
+            raise ValueError(f"{where}: {', '.join(strays)} is not a pattern of this block")
+        if not raw.get("proof"):
+            raise ValueError(f"{where}: no proof")
+        proof = proofs.parse(raw["proof"])
+        proofs.check(where, proof)
+        proofs.check_record(where, "setup", proof)
+        found.append(SetupRule(vendor, record, need, values, proof, raw.get("note")))
+    return tuple(found)
+
+
+def _own_values(
+    vendor: str, block: dict[str, Any], record: str, rules: tuple[Rule, ...]
+) -> set[str]:
+    """The values this block's patterns hold for one setup record, lowercase."""
+    own: set[str] = set()
+    for f in SETUP_RECORDS[record]:
+        if f == "selectors":
+            own |= {n for r in rules if r.vendor == vendor for n in r.shape.expand()}
+        else:
+            own |= {str(e["value"]).lower() for e in block.get(f, ())}
+    return own
 
 
 def _patterns(vendor: str, block: dict[str, Any]) -> list[Pattern]:

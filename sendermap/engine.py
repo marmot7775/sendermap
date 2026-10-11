@@ -18,6 +18,7 @@ from pathlib import Path
 import httpx
 
 from . import catalog as catalog_module
+from . import setup as setup_module
 from .dns import Lookups, Resolver, SystemResolver
 from .infer import backed_selectors, services
 from .model import (
@@ -142,25 +143,40 @@ async def map_domain(
         under = await asyncio.gather(*(_subdomain(ctx, rules, name) for name in picked))
 
         observed = sum((*deep, *under), apex) + logged
+        checked = observed.checked_by_name()
+        absences = tuple(dict.fromkeys(observed.absences))
+        gaps = tuple(dict.fromkeys(observed.gaps))
+        mapped, setup_findings = setup_module.build(
+            services(observed.claims, ctx.catalog, domain),
+            ctx.catalog,
+            domain=domain,
+            reads=observed.reads,
+            checked=checked,
+            absences=absences,
+            gaps=gaps,
+        )
         result = SenderMap(
             domain=domain,
-            services=services(observed.claims, ctx.catalog, domain),
+            services=mapped,
             run=Run(
                 checked_at=checked_at,
                 elapsed=round(time.perf_counter() - started, 2),
                 lookups=ctx.dns.count,
             ),
             findings=_sorted(
-                observed.findings + _cross_findings(ctx, observed) + dkim.same_keys(observed.keys)
+                observed.findings
+                + _cross_findings(ctx, observed)
+                + dkim.same_keys(observed.keys)
+                + setup_findings
             ),
             unknowns=tuple(dict.fromkeys(observed.unknowns)),
-            gaps=tuple(dict.fromkeys(observed.gaps)),
+            gaps=gaps,
             subdomains_checked=tuple(picked),
-            checked=observed.checked_by_name(),
+            checked=checked,
             ct=ct_summary,
             historical=tuple(dict.fromkeys(observed.historical)),
             logo=logo,
-            absences=tuple(dict.fromkeys(observed.absences)),
+            absences=absences,
         )
         await say("Done")
         return result

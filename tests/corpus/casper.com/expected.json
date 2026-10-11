@@ -297,6 +297,344 @@
       }
      ]
     }
+   ],
+   "setups": [
+    {
+     "service": "Google Workspace",
+     "where": "casper.com",
+     "items": [
+      {
+       "record": "spf",
+       "need": "required",
+       "state": "present",
+       "evidence": [
+        {
+         "name": "casper.com",
+         "rtype": "TXT",
+         "value": "include:_spf.google.com",
+         "checked_at": "2026-10-11T19:47:14+00:00"
+        }
+       ],
+       "asked": "TXT at casper.com",
+       "detail": ""
+      },
+      {
+       "record": "dkim",
+       "need": "required",
+       "state": "present",
+       "evidence": [
+        {
+         "name": "google._domainkey.casper.com",
+         "rtype": "TXT",
+         "value": "v=DKIM1; k=rsa; p=MIGfMA0GCSqG..., 1024-bit, fp e6d74f2ed99fdbb5",
+         "checked_at": "2026-10-11T19:47:14+00:00"
+        }
+       ],
+       "asked": "TXT at google._domainkey.casper.com",
+       "detail": ""
+      },
+      {
+       "record": "mx",
+       "need": "optional",
+       "state": "present",
+       "evidence": [
+        {
+         "name": "casper.com",
+         "rtype": "MX",
+         "value": "1 aspmx.l.google.com",
+         "checked_at": "2026-10-11T19:47:14+00:00"
+        },
+        {
+         "name": "casper.com",
+         "rtype": "MX",
+         "value": "5 alt1.aspmx.l.google.com",
+         "checked_at": "2026-10-11T19:47:14+00:00"
+        },
+        {
+         "name": "casper.com",
+         "rtype": "MX",
+         "value": "5 alt2.aspmx.l.google.com",
+         "checked_at": "2026-10-11T19:47:14+00:00"
+        },
+        {
+         "name": "casper.com",
+         "rtype": "MX",
+         "value": "10 aspmx2.googlemail.com",
+         "checked_at": "2026-10-11T19:47:14+00:00"
+        },
+        {
+         "name": "casper.com",
+         "rtype": "MX",
+         "value": "10 aspmx3.googlemail.com",
+         "checked_at": "2026-10-11T19:47:14+00:00"
+        }
+       ],
+       "asked": "MX at casper.com",
+       "detail": ""
+      },
+      {
+       "record": "return_path",
+       "need": "none",
+       "state": "not needed",
+       "evidence": [],
+       "asked": "",
+       "detail": ""
+      }
+     ],
+     "complete": true
+    },
+    {
+     "service": "Google Workspace",
+     "where": "e.casper.com",
+     "items": [
+      {
+       "record": "spf",
+       "need": "required",
+       "state": "missing",
+       "evidence": [
+        {
+         "name": "e.casper.com",
+         "rtype": "TXT",
+         "value": "v=spf1 include:mailgun.org ~all",
+         "checked_at": "2026-10-11T19:47:14+00:00"
+        }
+       ],
+       "asked": "TXT at e.casper.com",
+       "detail": "the record does not authorize _spf.google.com"
+      },
+      {
+       "record": "dkim",
+       "need": "required",
+       "state": "missing",
+       "evidence": [
+        {
+         "name": "google._domainkey.e.casper.com",
+         "rtype": "TXT",
+         "value": "no such name",
+         "checked_at": "2026-10-11T19:47:14+00:00"
+        }
+       ],
+       "asked": "TXT at google._domainkey.e.casper.com",
+       "detail": "google no such name"
+      },
+      {
+       "record": "mx",
+       "need": "optional",
+       "state": "present",
+       "evidence": [
+        {
+         "name": "e.casper.com",
+         "rtype": "MX",
+         "value": "1 aspmx.l.google.com",
+         "checked_at": "2026-10-11T19:47:14+00:00"
+        },
+        {
+         "name": "e.casper.com",
+         "rtype": "MX",
+         "value": "5 alt1.aspmx.l.google.com",
+         "checked_at": "2026-10-11T19:47:14+00:00"
+        },
+        {
+         "name": "e.casper.com",
+         "rtype": "MX",
+         "value": "5 alt2.aspmx.l.google.com",
+         "checked_at": "2026-10-11T19:47:14+00:00"
+        },
+        {
+         "name": "e.casper.com",
+         "rtype": "MX",
+         "value": "10 alt3.aspmx.l.google.com",
+         "checked_at": "2026-10-11T19:47:14+00:00"
+        },
+        {
+         "name": "e.casper.com",
+         "rtype": "MX",
+         "value": "10 alt4.aspmx.l.google.com",
+         "checked_at": "2026-10-11T19:47:14+00:00"
+        }
+       ],
+       "asked": "MX at e.casper.com",
+       "detail": ""
+      },
+      {
+       "record": "return_path",
+       "need": "none",
+       "state": "not needed",
+       "evidence": [],
+       "asked": "",
+       "detail": ""
+      }
+     ],
+     "complete": false
+    },
+    {
+     "service": "Google Workspace",
+     "where": "mail.casper.com",
+     "items": [
+      {
+       "record": "spf",
+       "need": "required",
+       "state": "missing",
+       "evidence": [
+        {
+         "name": "mail.casper.com",
+         "rtype": "TXT",
+         "value": "v=spf1 include:cust-spf.exacttarget.com -all",
+         "checked_at": "2026-10-11T19:47:14+00:00"
+        }
+       ],
+       "asked": "TXT at mail.casper.com",
+       "detail": "the record does not authorize _spf.google.com"
+      },
+      {
+       "record": "dkim",
+       "need": "required",
+       "state": "missing",
+       "evidence": [
+        {
+         "name": "google._domainkey.mail.casper.com",
+         "rtype": "TXT",
+         "value": "no such name",
+         "checked_at": "2026-10-11T19:47:14+00:00"
+        }
+       ],
+       "asked": "TXT at google._domainkey.mail.casper.com",
+       "detail": "google no such name"
+      },
+      {
+       "record": "mx",
+       "need": "optional",
+       "state": "present",
+       "evidence": [
+        {
+         "name": "mail.casper.com",
+         "rtype": "MX",
+         "value": "1 aspmx.l.google.com",
+         "checked_at": "2026-10-11T19:47:14+00:00"
+        },
+        {
+         "name": "mail.casper.com",
+         "rtype": "MX",
+         "value": "5 alt1.aspmx.l.google.com",
+         "checked_at": "2026-10-11T19:47:14+00:00"
+        },
+        {
+         "name": "mail.casper.com",
+         "rtype": "MX",
+         "value": "5 alt2.aspmx.l.google.com",
+         "checked_at": "2026-10-11T19:47:14+00:00"
+        },
+        {
+         "name": "mail.casper.com",
+         "rtype": "MX",
+         "value": "10 alt3.aspmx.l.google.com",
+         "checked_at": "2026-10-11T19:47:14+00:00"
+        },
+        {
+         "name": "mail.casper.com",
+         "rtype": "MX",
+         "value": "10 alt4.aspmx.l.google.com",
+         "checked_at": "2026-10-11T19:47:14+00:00"
+        }
+       ],
+       "asked": "MX at mail.casper.com",
+       "detail": ""
+      },
+      {
+       "record": "return_path",
+       "need": "none",
+       "state": "not needed",
+       "evidence": [],
+       "asked": "",
+       "detail": ""
+      }
+     ],
+     "complete": false
+    },
+    {
+     "service": "Google Workspace",
+     "where": "orders.casper.com",
+     "items": [
+      {
+       "record": "spf",
+       "need": "required",
+       "state": "missing",
+       "evidence": [
+        {
+         "name": "orders.casper.com",
+         "rtype": "TXT",
+         "value": "no record of this type",
+         "checked_at": "2026-10-11T19:47:14+00:00"
+        }
+       ],
+       "asked": "TXT at orders.casper.com",
+       "detail": "no SPF record"
+      },
+      {
+       "record": "dkim",
+       "need": "required",
+       "state": "present",
+       "evidence": [
+        {
+         "name": "google._domainkey.orders.casper.com",
+         "rtype": "TXT",
+         "value": "v=DKIM1; k=rsa; p=MIIBIjANBgkq..., 2048-bit, fp 66efacf170b65970",
+         "checked_at": "2026-10-11T19:47:14+00:00"
+        }
+       ],
+       "asked": "TXT at google._domainkey.orders.casper.com",
+       "detail": ""
+      },
+      {
+       "record": "mx",
+       "need": "optional",
+       "state": "present",
+       "evidence": [
+        {
+         "name": "orders.casper.com",
+         "rtype": "MX",
+         "value": "25 aspmx.l.google.com",
+         "checked_at": "2026-10-11T19:47:14+00:00"
+        },
+        {
+         "name": "orders.casper.com",
+         "rtype": "MX",
+         "value": "30 alt1.aspmx.l.google.com",
+         "checked_at": "2026-10-11T19:47:14+00:00"
+        },
+        {
+         "name": "orders.casper.com",
+         "rtype": "MX",
+         "value": "30 alt2.aspmx.l.google.com",
+         "checked_at": "2026-10-11T19:47:14+00:00"
+        },
+        {
+         "name": "orders.casper.com",
+         "rtype": "MX",
+         "value": "35 aspmx2.googlemail.com",
+         "checked_at": "2026-10-11T19:47:14+00:00"
+        },
+        {
+         "name": "orders.casper.com",
+         "rtype": "MX",
+         "value": "35 aspmx3.googlemail.com",
+         "checked_at": "2026-10-11T19:47:14+00:00"
+        }
+       ],
+       "asked": "MX at orders.casper.com",
+       "detail": ""
+      },
+      {
+       "record": "return_path",
+       "need": "none",
+       "state": "not needed",
+       "evidence": [],
+       "asked": "",
+       "detail": ""
+      }
+     ],
+     "complete": false
+    }
    ]
   },
   {
@@ -336,7 +674,8 @@
       }
      ]
     }
-   ]
+   ],
+   "setups": []
   },
   {
    "name": "Iterable",
@@ -356,7 +695,8 @@
      },
      "supporting": []
     }
-   ]
+   ],
+   "setups": []
   },
   {
    "name": "Mailchimp",
@@ -375,6 +715,46 @@
       "checked_at": "2026-10-11T19:47:14+00:00"
      },
      "supporting": []
+    }
+   ],
+   "setups": [
+    {
+     "service": "Mailchimp",
+     "where": "casper.com",
+     "items": [
+      {
+       "record": "dkim",
+       "need": "required",
+       "state": "present",
+       "evidence": [
+        {
+         "name": "k1._domainkey.casper.com",
+         "rtype": "TXT",
+         "value": "k=rsa; p=MIGfMA0GCSqG..., 1024-bit, fp 53d7bb0466c8346d via dkim.mcsv.net",
+         "checked_at": "2026-10-11T19:47:14+00:00"
+        }
+       ],
+       "asked": "TXT at k1._domainkey.casper.com",
+       "detail": "older setup: a key at k1; the current setup names k2"
+      },
+      {
+       "record": "spf",
+       "need": "none",
+       "state": "not needed",
+       "evidence": [],
+       "asked": "",
+       "detail": ""
+      },
+      {
+       "record": "return_path",
+       "need": "none",
+       "state": "not needed",
+       "evidence": [],
+       "asked": "",
+       "detail": ""
+      }
+     ],
+     "complete": true
     }
    ]
   },
@@ -456,7 +836,8 @@
      },
      "supporting": []
     }
-   ]
+   ],
+   "setups": []
   },
   {
    "name": "Mandrill",
@@ -536,7 +917,8 @@
      },
      "supporting": []
     }
-   ]
+   ],
+   "setups": []
   },
   {
    "name": "Postmark",
@@ -556,7 +938,8 @@
      },
      "supporting": []
     }
-   ]
+   ],
+   "setups": []
   },
   {
    "name": "Salesforce",
@@ -595,7 +978,8 @@
       }
      ]
     }
-   ]
+   ],
+   "setups": []
   },
   {
    "name": "Salesforce Account Engagement",
@@ -641,7 +1025,8 @@
       }
      ]
     }
-   ]
+   ],
+   "setups": []
   },
   {
    "name": "SendGrid",
@@ -685,6 +1070,344 @@
      },
      "supporting": []
     }
+   ],
+   "setups": [
+    {
+     "service": "SendGrid",
+     "where": "casper.com",
+     "items": [
+      {
+       "record": "dkim",
+       "need": "required",
+       "state": "present",
+       "evidence": [
+        {
+         "name": "s1._domainkey.casper.com",
+         "rtype": "TXT",
+         "value": "k=rsa; t=s (strict); p=MIIBIjANBgkq..., 2048-bit, fp fdc0f9d77c779856 via s1.domainkey.u895984.wl235.sendgrid.net",
+         "checked_at": "2026-10-11T19:47:14+00:00"
+        },
+        {
+         "name": "s2._domainkey.casper.com",
+         "rtype": "TXT",
+         "value": "k=rsa; t=s (strict); p=MIGfMA0GCSqG..., 1024-bit, fp ea13ef38e66c6769 via s2.domainkey.u895984.wl235.sendgrid.net",
+         "checked_at": "2026-10-11T19:47:14+00:00"
+        },
+        {
+         "name": "smtpapi._domainkey.casper.com",
+         "rtype": "TXT",
+         "value": "k=rsa; t=s (strict); p=MIGfMA0GCSqG..., 1024-bit, fp 303963420cfee1c6",
+         "checked_at": "2026-10-11T19:47:14+00:00"
+        }
+       ],
+       "asked": "TXT at s1._domainkey.casper.com and TXT at s2._domainkey.casper.com and TXT at smtpapi._domainkey.casper.com",
+       "detail": ""
+      },
+      {
+       "record": "return_path",
+       "need": "optional",
+       "state": "missing",
+       "evidence": [
+        {
+         "name": "bounce.casper.com",
+         "rtype": "CNAME",
+         "value": "no record of this type",
+         "checked_at": "2026-10-11T19:47:14+00:00"
+        },
+        {
+         "name": "bounces.casper.com",
+         "rtype": "CNAME",
+         "value": "no record of this type",
+         "checked_at": "2026-10-11T19:47:14+00:00"
+        },
+        {
+         "name": "em.casper.com",
+         "rtype": "CNAME",
+         "value": "no record of this type",
+         "checked_at": "2026-10-11T19:47:14+00:00"
+        },
+        {
+         "name": "email.casper.com",
+         "rtype": "CNAME",
+         "value": "no record of this type",
+         "checked_at": "2026-10-11T19:47:14+00:00"
+        },
+        {
+         "name": "mail.casper.com",
+         "rtype": "CNAME",
+         "value": "no record of this type",
+         "checked_at": "2026-10-11T19:47:14+00:00"
+        },
+        {
+         "name": "send.casper.com",
+         "rtype": "CNAME",
+         "value": "no record of this type",
+         "checked_at": "2026-10-11T19:47:14+00:00"
+        },
+        {
+         "name": "mta.casper.com",
+         "rtype": "CNAME",
+         "value": "no record of this type",
+         "checked_at": "2026-10-11T19:47:14+00:00"
+        },
+        {
+         "name": "rp.casper.com",
+         "rtype": "CNAME",
+         "value": "no record of this type",
+         "checked_at": "2026-10-11T19:47:14+00:00"
+        },
+        {
+         "name": "pm-bounces.casper.com",
+         "rtype": "CNAME",
+         "value": "pm.mtasv.net",
+         "checked_at": "2026-10-11T19:47:14+00:00"
+        },
+        {
+         "name": "links.casper.com",
+         "rtype": "CNAME",
+         "value": "links.iterable.com",
+         "checked_at": "2026-10-11T19:47:14+00:00"
+        },
+        {
+         "name": "link.casper.com",
+         "rtype": "CNAME",
+         "value": "no record of this type",
+         "checked_at": "2026-10-11T19:47:14+00:00"
+        },
+        {
+         "name": "click.casper.com",
+         "rtype": "CNAME",
+         "value": "no record of this type",
+         "checked_at": "2026-10-11T19:47:14+00:00"
+        },
+        {
+         "name": "track.casper.com",
+         "rtype": "CNAME",
+         "value": "no record of this type",
+         "checked_at": "2026-10-11T19:47:14+00:00"
+        },
+        {
+         "name": "tracking.casper.com",
+         "rtype": "CNAME",
+         "value": "no record of this type",
+         "checked_at": "2026-10-11T19:47:14+00:00"
+        },
+        {
+         "name": "url.casper.com",
+         "rtype": "CNAME",
+         "value": "no record of this type",
+         "checked_at": "2026-10-11T19:47:14+00:00"
+        },
+        {
+         "name": "go.casper.com",
+         "rtype": "CNAME",
+         "value": "no record of this type",
+         "checked_at": "2026-10-11T19:47:14+00:00"
+        },
+        {
+         "name": "autodiscover.casper.com",
+         "rtype": "CNAME",
+         "value": "no record of this type",
+         "checked_at": "2026-10-11T19:47:14+00:00"
+        },
+        {
+         "name": "cf-bounce.casper.com",
+         "rtype": "CNAME",
+         "value": "no record of this type",
+         "checked_at": "2026-10-11T19:47:14+00:00"
+        },
+        {
+         "name": "eversrv.casper.com",
+         "rtype": "CNAME",
+         "value": "no record of this type",
+         "checked_at": "2026-10-11T19:47:14+00:00"
+        },
+        {
+         "name": "fwdkim1.casper.com",
+         "rtype": "CNAME",
+         "value": "no record of this type",
+         "checked_at": "2026-10-11T19:47:14+00:00"
+        },
+        {
+         "name": "bnc3.casper.com",
+         "rtype": "CNAME",
+         "value": "no record of this type",
+         "checked_at": "2026-10-11T19:47:14+00:00"
+        },
+        {
+         "name": "bounces.cloud.em.casper.com",
+         "rtype": "CNAME",
+         "value": "no record of this type",
+         "checked_at": "2026-10-11T19:47:14+00:00"
+        },
+        {
+         "name": "bounces.cloud2.em.casper.com",
+         "rtype": "CNAME",
+         "value": "no record of this type",
+         "checked_at": "2026-10-11T19:47:14+00:00"
+        }
+       ],
+       "asked": "CNAME at 23 labels under casper.com",
+       "detail": "no CNAME into sendgrid.net at the 23 labels asked"
+      },
+      {
+       "record": "spf",
+       "need": "none",
+       "state": "not needed",
+       "evidence": [],
+       "asked": "",
+       "detail": ""
+      },
+      {
+       "record": "tracking",
+       "need": "optional",
+       "state": "missing",
+       "evidence": [
+        {
+         "name": "bounce.casper.com",
+         "rtype": "CNAME",
+         "value": "no record of this type",
+         "checked_at": "2026-10-11T19:47:14+00:00"
+        },
+        {
+         "name": "bounces.casper.com",
+         "rtype": "CNAME",
+         "value": "no record of this type",
+         "checked_at": "2026-10-11T19:47:14+00:00"
+        },
+        {
+         "name": "em.casper.com",
+         "rtype": "CNAME",
+         "value": "no record of this type",
+         "checked_at": "2026-10-11T19:47:14+00:00"
+        },
+        {
+         "name": "email.casper.com",
+         "rtype": "CNAME",
+         "value": "no record of this type",
+         "checked_at": "2026-10-11T19:47:14+00:00"
+        },
+        {
+         "name": "mail.casper.com",
+         "rtype": "CNAME",
+         "value": "no record of this type",
+         "checked_at": "2026-10-11T19:47:14+00:00"
+        },
+        {
+         "name": "send.casper.com",
+         "rtype": "CNAME",
+         "value": "no record of this type",
+         "checked_at": "2026-10-11T19:47:14+00:00"
+        },
+        {
+         "name": "mta.casper.com",
+         "rtype": "CNAME",
+         "value": "no record of this type",
+         "checked_at": "2026-10-11T19:47:14+00:00"
+        },
+        {
+         "name": "rp.casper.com",
+         "rtype": "CNAME",
+         "value": "no record of this type",
+         "checked_at": "2026-10-11T19:47:14+00:00"
+        },
+        {
+         "name": "pm-bounces.casper.com",
+         "rtype": "CNAME",
+         "value": "pm.mtasv.net",
+         "checked_at": "2026-10-11T19:47:14+00:00"
+        },
+        {
+         "name": "links.casper.com",
+         "rtype": "CNAME",
+         "value": "links.iterable.com",
+         "checked_at": "2026-10-11T19:47:14+00:00"
+        },
+        {
+         "name": "link.casper.com",
+         "rtype": "CNAME",
+         "value": "no record of this type",
+         "checked_at": "2026-10-11T19:47:14+00:00"
+        },
+        {
+         "name": "click.casper.com",
+         "rtype": "CNAME",
+         "value": "no record of this type",
+         "checked_at": "2026-10-11T19:47:14+00:00"
+        },
+        {
+         "name": "track.casper.com",
+         "rtype": "CNAME",
+         "value": "no record of this type",
+         "checked_at": "2026-10-11T19:47:14+00:00"
+        },
+        {
+         "name": "tracking.casper.com",
+         "rtype": "CNAME",
+         "value": "no record of this type",
+         "checked_at": "2026-10-11T19:47:14+00:00"
+        },
+        {
+         "name": "url.casper.com",
+         "rtype": "CNAME",
+         "value": "no record of this type",
+         "checked_at": "2026-10-11T19:47:14+00:00"
+        },
+        {
+         "name": "go.casper.com",
+         "rtype": "CNAME",
+         "value": "no record of this type",
+         "checked_at": "2026-10-11T19:47:14+00:00"
+        },
+        {
+         "name": "autodiscover.casper.com",
+         "rtype": "CNAME",
+         "value": "no record of this type",
+         "checked_at": "2026-10-11T19:47:14+00:00"
+        },
+        {
+         "name": "cf-bounce.casper.com",
+         "rtype": "CNAME",
+         "value": "no record of this type",
+         "checked_at": "2026-10-11T19:47:14+00:00"
+        },
+        {
+         "name": "eversrv.casper.com",
+         "rtype": "CNAME",
+         "value": "no record of this type",
+         "checked_at": "2026-10-11T19:47:14+00:00"
+        },
+        {
+         "name": "fwdkim1.casper.com",
+         "rtype": "CNAME",
+         "value": "no record of this type",
+         "checked_at": "2026-10-11T19:47:14+00:00"
+        },
+        {
+         "name": "bnc3.casper.com",
+         "rtype": "CNAME",
+         "value": "no record of this type",
+         "checked_at": "2026-10-11T19:47:14+00:00"
+        },
+        {
+         "name": "bounces.cloud.em.casper.com",
+         "rtype": "CNAME",
+         "value": "no record of this type",
+         "checked_at": "2026-10-11T19:47:14+00:00"
+        },
+        {
+         "name": "bounces.cloud2.em.casper.com",
+         "rtype": "CNAME",
+         "value": "no record of this type",
+         "checked_at": "2026-10-11T19:47:14+00:00"
+        }
+       ],
+       "asked": "CNAME at 23 labels under casper.com",
+       "detail": "no CNAME into sendgrid.net at the 23 labels asked"
+      }
+     ],
+     "complete": true
+    }
    ]
   },
   {
@@ -705,7 +1428,8 @@
      },
      "supporting": []
     }
-   ]
+   ],
+   "setups": []
   },
   {
    "name": "Microsoft 365",
@@ -724,6 +1448,98 @@
       "checked_at": "2026-10-11T19:47:14+00:00"
      },
      "supporting": []
+    }
+   ],
+   "setups": [
+    {
+     "service": "Microsoft 365",
+     "where": "casper.com",
+     "items": [
+      {
+       "record": "spf",
+       "need": "required",
+       "state": "missing",
+       "evidence": [
+        {
+         "name": "casper.com",
+         "rtype": "TXT",
+         "value": "v=spf1 ip4:208.89.14.209  include:_spf.google.com include:_spf.q4press.com include:docebosaas.com include:_spf.createsend.com include:_spf.salesforce.com ~all",
+         "checked_at": "2026-10-11T19:47:14+00:00"
+        }
+       ],
+       "asked": "TXT at casper.com",
+       "detail": "the record does not authorize spf.protection.outlook.com"
+      },
+      {
+       "record": "dkim",
+       "need": "required",
+       "state": "missing",
+       "evidence": [
+        {
+         "name": "selector1._domainkey.casper.com",
+         "rtype": "TXT",
+         "value": "no record of this type",
+         "checked_at": "2026-10-11T19:47:14+00:00"
+        },
+        {
+         "name": "selector2._domainkey.casper.com",
+         "rtype": "TXT",
+         "value": "no record of this type",
+         "checked_at": "2026-10-11T19:47:14+00:00"
+        }
+       ],
+       "asked": "TXT at selector1._domainkey.casper.com and TXT at selector2._domainkey.casper.com",
+       "detail": "selector1 and selector2 no record of this type (this zone gives that answer for every name that does not exist)"
+      },
+      {
+       "record": "mx",
+       "need": "optional",
+       "state": "missing",
+       "evidence": [
+        {
+         "name": "casper.com",
+         "rtype": "MX",
+         "value": "1 aspmx.l.google.com",
+         "checked_at": "2026-10-11T19:47:14+00:00"
+        },
+        {
+         "name": "casper.com",
+         "rtype": "MX",
+         "value": "5 alt1.aspmx.l.google.com",
+         "checked_at": "2026-10-11T19:47:14+00:00"
+        },
+        {
+         "name": "casper.com",
+         "rtype": "MX",
+         "value": "5 alt2.aspmx.l.google.com",
+         "checked_at": "2026-10-11T19:47:14+00:00"
+        },
+        {
+         "name": "casper.com",
+         "rtype": "MX",
+         "value": "10 aspmx2.googlemail.com",
+         "checked_at": "2026-10-11T19:47:14+00:00"
+        },
+        {
+         "name": "casper.com",
+         "rtype": "MX",
+         "value": "10 aspmx3.googlemail.com",
+         "checked_at": "2026-10-11T19:47:14+00:00"
+        }
+       ],
+       "asked": "MX at casper.com",
+       "detail": "no MX host under protection.outlook.com"
+      },
+      {
+       "record": "return_path",
+       "need": "none",
+       "state": "not needed",
+       "evidence": [],
+       "asked": "",
+       "detail": ""
+      }
+     ],
+     "complete": false
     }
    ]
   },
@@ -745,7 +1561,8 @@
      },
      "supporting": []
     }
-   ]
+   ],
+   "setups": []
   }
  ],
  "run": {
@@ -857,6 +1674,71 @@
    ]
   },
   {
+   "severity": "warning",
+   "title": "Google Workspace at e.casper.com has no SPF",
+   "detail": "Its documented setup needs it and the map shows it missing: the record does not authorize _spf.google.com.",
+   "evidence": [
+    {
+     "name": "e.casper.com",
+     "rtype": "TXT",
+     "value": "v=spf1 include:mailgun.org ~all",
+     "checked_at": "2026-10-11T19:47:14+00:00"
+    }
+   ]
+  },
+  {
+   "severity": "warning",
+   "title": "Google Workspace at e.casper.com has no DKIM",
+   "detail": "Its documented setup needs it and the map shows it missing: google no such name.",
+   "evidence": [
+    {
+     "name": "google._domainkey.e.casper.com",
+     "rtype": "TXT",
+     "value": "no such name",
+     "checked_at": "2026-10-11T19:47:14+00:00"
+    }
+   ]
+  },
+  {
+   "severity": "warning",
+   "title": "Google Workspace at mail.casper.com has no SPF",
+   "detail": "Its documented setup needs it and the map shows it missing: the record does not authorize _spf.google.com.",
+   "evidence": [
+    {
+     "name": "mail.casper.com",
+     "rtype": "TXT",
+     "value": "v=spf1 include:cust-spf.exacttarget.com -all",
+     "checked_at": "2026-10-11T19:47:14+00:00"
+    }
+   ]
+  },
+  {
+   "severity": "warning",
+   "title": "Google Workspace at mail.casper.com has no DKIM",
+   "detail": "Its documented setup needs it and the map shows it missing: google no such name.",
+   "evidence": [
+    {
+     "name": "google._domainkey.mail.casper.com",
+     "rtype": "TXT",
+     "value": "no such name",
+     "checked_at": "2026-10-11T19:47:14+00:00"
+    }
+   ]
+  },
+  {
+   "severity": "warning",
+   "title": "Google Workspace at orders.casper.com has no SPF",
+   "detail": "Its documented setup needs it and the map shows it missing: no SPF record.",
+   "evidence": [
+    {
+     "name": "orders.casper.com",
+     "rtype": "TXT",
+     "value": "no record of this type",
+     "checked_at": "2026-10-11T19:47:14+00:00"
+    }
+   ]
+  },
+  {
    "severity": "note",
    "title": "The mte1 key at casper.com and the mte1 key at email.casper.com are the same key",
    "detail": "They publish one public key, fp 402b5aebde0f1c9f, so one private key signs for all of them, and replacing the key at one selector leaves it live at the others.",
@@ -890,6 +1772,19 @@
      "name": "mte2._domainkey.email.casper.com",
      "rtype": "TXT",
      "value": "v=DKIM1; k=rsa; p=MIIBIjANBgkq..., 2048-bit, fp bd970c8868f21f9b via dkim2.mandrillapp.com",
+     "checked_at": "2026-10-11T19:47:14+00:00"
+    }
+   ]
+  },
+  {
+   "severity": "note",
+   "title": "Microsoft 365 shows only an account at casper.com",
+   "detail": "The records name an account (a verification token, an autodiscover CNAME, or a revoked or dangling key) and nothing that sends or receives mail. Is the account still used? If not, remove its records.",
+   "evidence": [
+    {
+     "name": "casper.com",
+     "rtype": "TXT",
+     "value": "MS=ms55520198",
      "checked_at": "2026-10-11T19:47:14+00:00"
     }
    ]

@@ -2,14 +2,19 @@
 
 from __future__ import annotations
 
-from ..model import Claim, Evidence, Finding, Gap, Kind, Observed, Severity, Unknown
-from . import Context
+from ..model import Claim, Evidence, Finding, Gap, Kind, Observed, Outcome, Read, Severity, Unknown
+from . import Context, negative
 
 
 async def collect(ctx: Context, where: str) -> Observed:
     answer = await ctx.dns.query(where, "MX")
     if not answer.answered:
-        return Observed(gaps=(Gap(f"mail servers: MX at {where}", answer.status.value),))
+        gap = Gap(f"mail servers: MX at {where}", answer.status.value)
+        read = Read("mx", where, Outcome.FAILED, reason=f"{gap.asked}: {gap.happened}")
+        return Observed(gaps=(gap,), reads=(read,))
+    if not answer.ok:
+        none = Read("mx", where, Outcome.NONE, (negative(answer, ctx.checked_at),))
+        return Observed(reads=(none,))
     claims: list[Claim] = []
     unknowns: list[Unknown] = []
     findings: list[Finding] = []
@@ -31,7 +36,9 @@ async def collect(ctx: Context, where: str) -> Observed:
             claims.append(Claim(service, kind_at(ctx, service, where), where, evidence))
         else:
             unknowns.append(Unknown("mail server", host, where, evidence))
-    return Observed(tuple(claims), tuple(unknowns), tuple(findings))
+    found = tuple(Evidence(where, "MX", r, ctx.checked_at) for r in answer.records)
+    read = Read("mx", where, Outcome.FOUND, found)
+    return Observed(tuple(claims), tuple(unknowns), tuple(findings), reads=(read,))
 
 
 def exchange(record: str) -> str:
