@@ -7,7 +7,7 @@ domain it reads what the engine reads:
 
 - SPF at the domain and at each sending subdomain, following every include and redirect down the
   whole chain, so a pattern included by an include counts, with that include's record as proof;
-- MX at the same names;
+- MX at the same names, and NS at each sending label, for delegations to a service;
 - DKIM keys at every selector name, proven, pending and generic, under the domain, and at each
   sending subdomain at the first SUBDOMAIN_PROBES pending names, those of the vendors its own SPF
   or MX shows first; a name under a wildcard (a key at a name nobody publishes) proves nothing;
@@ -33,7 +33,7 @@ selectors entry once all its names are proven); a pending block keeps the rest, 
 it is empty.
 
 Usage: python tools/hunt_proofs.py [DOMAINS] [--cache DIR] [--parallel N] [--nameserver IP]
-       [--move]
+       [--doh] [--move]
 """
 
 from __future__ import annotations
@@ -56,7 +56,15 @@ from verify_proofs import CHECKS, TIMEOUT, Checker, Seen, _page, _under
 
 from sendermap import catalog
 from sendermap.catalog import PATTERN_FIELDS, Catalog
-from sendermap.dns import Answer, Resolver, Status, SystemResolver, norm
+from sendermap.dns import (
+    Answer,
+    DohResolver,
+    Resolver,
+    Status,
+    SystemResolver,
+    doh_client,
+    norm,
+)
 from sendermap.engine import MAX_SUBDOMAINS, SUBDOMAIN_PROBES
 from sendermap.proofs import Proof
 from sendermap.sources import CANARY, networks
@@ -355,15 +363,28 @@ class _Domain:
     # ------------------------------------------------------------ the sources
 
     async def sending(self) -> list[str]:
-        """The engine's sending subdomains: labels that publish SPF or MX."""
+        """The engine's sending subdomains: labels that publish SPF or MX, or are delegated by NS
+        to a service's nameservers, proven or pending."""
         found = []
         for label in self.h.catalog.sending_labels:
             name = f"{label}.{self.domain}"
             txt = await self.ask(name, "TXT")
             mx = await self.ask(name, "MX")
-            if spf_records(txt) or mx.ok:
+            if spf_records(txt) or mx.ok or await self.delegation(name):
                 found.append(name)
         return sorted(found)[:MAX_SUBDOMAINS]
+
+    async def delegation(self, name: str) -> bool:
+        """Whether `name` is delegated to a service's nameservers; confirms each pending one."""
+        ns = await self.ask(name, "NS")
+        hosts = () if ns.chain else ns.records
+        delegated = any(self.note(self.h.catalog.delegation(h)) for h in hosts)
+        for w in self.h.by_field["delegation_ns"]:
+            if any(_under(h, w.value) for h in hosts):
+                delegated = True
+                self.shows.add(w.vendor)
+                await self.confirm(w, name, "NS")
+        return delegated
 
     async def spf(self, where: str) -> set[str]:
         """Walk every include and redirect below `where`; the vendors the walk met."""
@@ -677,6 +698,7 @@ async def main(
     parser.add_argument("--cache", type=Path, default=CACHE, help="where answers are kept")
     parser.add_argument("--parallel", type=int, default=PARALLEL, help="domains at a time")
     parser.add_argument("--nameserver", action="append", help="resolver to ask (repeatable)")
+    parser.add_argument("--doh", action="store_true", help="look up DNS over HTTPS (Cloudflare)")
     parser.add_argument("--move", action="store_true", help="move proven patterns to vendors.json")
     args = parser.parse_args(argv)
 
@@ -684,9 +706,15 @@ async def main(
     pending = json.loads(PENDING.read_text())
     todo = wanted(pending)
     cache = Cache(args.cache)
-    resolver = CachedResolver(SystemResolver(timeout=TIMEOUT, nameservers=args.nameserver), cache)
+    dns_http = doh_client()
+    inner: Resolver = (
+        DohResolver(dns_http)
+        if args.doh
+        else SystemResolver(timeout=TIMEOUT, nameservers=args.nameserver)
+    )
+    resolver = CachedResolver(inner, cache)
     try:
-        async with httpx.AsyncClient(transport=CachedTransport(cache, transport)) as http:
+        async with dns_http, httpx.AsyncClient(transport=CachedTransport(cache, transport)) as http:
             loaded = catalog.load()
             # Whose each network is, proven or pending, for the map's rule in the network check.
             owners = loaded.networks | {w.value: w.vendor for w in todo if w.field == "networks"}

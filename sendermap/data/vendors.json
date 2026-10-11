@@ -2146,6 +2146,16 @@
           }
         }
       ],
+      "delegation_ns": [
+        {
+          "value": "klaviyo.com",
+          "proof": {
+            "domain": "mejuri.com",
+            "record": "send.mejuri.com",
+            "date": "2026-10-11"
+          }
+        }
+      ],
       "verification_txt": [
         {
           "value": "klaviyo-site-verification=",
@@ -4060,6 +4070,16 @@
         "Marketing Cloud",
         "SFMC",
         "ExactTarget"
+      ],
+      "delegation_ns": [
+        {
+          "value": "exacttarget.com",
+          "proof": {
+            "domain": "office.com",
+            "record": "email.office.com",
+            "date": "2026-10-11"
+          }
+        }
       ],
       "selectors": [
         {

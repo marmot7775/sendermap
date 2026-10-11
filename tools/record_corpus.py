@@ -1,6 +1,6 @@
 """Record a domain into the golden corpus, or rebuild a case's expected map offline.
 
-    python tools/record_corpus.py DOMAIN [--web]
+    python tools/record_corpus.py DOMAIN [--web] [--doh [cloudflare|google]]
     python tools/record_corpus.py DOMAIN --update
     python tools/record_corpus.py --update
     python tools/record_corpus.py DOMAIN --recheck DIR
@@ -12,6 +12,11 @@ requested: the MTA-STS policy, the Cert Spotter log the subdomain search reads a
 the homepage), case.json (checked_at and the options) and expected.json, the map's JSON without
 run.elapsed and run.lookups. expected.json is made by replaying the files just written, and the
 tool fails if the replay differs from the live map, so a case that is saved replays.
+
+--doh asks Cloudflare's DNS over HTTPS instead of the machine's resolver, for a machine whose
+resolver cannot be trusted, and --doh google asks Google's; its requests are not pages the map
+read, so they are not recorded. Resolvers can disagree: Cloudflare's answers no such name for
+cf2024-1._domainkey.glossier.com, a zone Cloudflare hosts, where Google's returns the key.
 
 --update rebuilds expected.json from the recorded answers without the network, for one case or
 every case: for when a code change rightly changes the map. The diff it causes is the review.
@@ -37,7 +42,7 @@ from typing import Any
 import httpx
 
 from sendermap import map_domain
-from sendermap.dns import SystemResolver
+from sendermap.dns import DohResolver, Resolver, SystemResolver, doh_client
 from sendermap.engine import clean_domain
 from sendermap.testing import (
     Case,
@@ -48,17 +53,20 @@ from sendermap.testing import (
 )
 
 CORPUS = Path(__file__).resolve().parent.parent / "tests" / "corpus"
+# The DNS over HTTPS endpoints --doh may name.
+DOH = {"cloudflare": DohResolver.CLOUDFLARE, "google": DohResolver.GOOGLE}
 
 
 def _write_json(path: Path, data: dict[str, Any]) -> None:
     path.write_text(json.dumps(data, indent=1, ensure_ascii=False) + "\n", encoding="utf-8")
 
 
-async def _map_live(case: Case, directory: Path) -> dict[str, Any]:
+async def _map_live(case: Case, directory: Path, *, doh: str | None = None) -> dict[str, Any]:
     """Map the case's domain live through the recorders and save what they kept in directory."""
-    resolver = RecordingResolver(SystemResolver())
     transport = RecordingTransport()
-    async with httpx.AsyncClient(transport=transport) as http:
+    async with httpx.AsyncClient(transport=transport) as http, doh_client() as dns_http:
+        inner: Resolver = DohResolver(dns_http, DOH[doh]) if doh else SystemResolver()
+        resolver = RecordingResolver(inner)
         live = await map_domain(
             case.domain,
             checked_at=case.checked_at,
@@ -83,10 +91,10 @@ def _now() -> datetime:
     return datetime.now(UTC).replace(microsecond=0)
 
 
-async def record(domain: str, *, use_web: bool) -> Path:
+async def record(domain: str, *, use_web: bool, doh: str | None = None) -> Path:
     case = Case(clean_domain(domain), _now(), use_web, use_subdomains=True)
     directory = CORPUS / case.domain
-    live = await _map_live(case, directory)
+    live = await _map_live(case, directory, doh=doh)
     replayed = await update(directory)
     if replayed != live:
         raise SystemExit(f"{case.domain}: the replay differs from the live map; not deterministic")
@@ -113,11 +121,11 @@ def drift(expected: dict[str, Any], live: dict[str, Any]) -> list[str]:
     return list(difflib.unified_diff(before, after, "expected.json", "live", lineterm=""))
 
 
-async def recheck(domain: str, out: Path) -> str:
+async def recheck(domain: str, out: Path, *, doh: str | None = None) -> str:
     """Map a recorded case live into out/<domain>/; return the drift report as markdown."""
     recorded = Case.load(CORPUS / clean_domain(domain))
     case = Case(recorded.domain, _now(), recorded.use_web, recorded.use_subdomains)
-    live = await _map_live(case, out / case.domain)
+    live = await _map_live(case, out / case.domain, doh=doh)
     expected = json.loads((CORPUS / case.domain / "expected.json").read_text(encoding="utf-8"))
     diff = drift(expected, live)
     if not diff:
@@ -142,6 +150,13 @@ async def main(argv: list[str] | None = None) -> int:
     parser.add_argument("domain", nargs="?", help="the domain to record or update")
     parser.add_argument("--web", action="store_true", help="read the homepage too")
     parser.add_argument(
+        "--doh",
+        nargs="?",
+        const="cloudflare",
+        choices=sorted(DOH),
+        help="look up DNS over HTTPS (Cloudflare unless google is named)",
+    )
+    parser.add_argument(
         "--update", action="store_true", help="rebuild expected.json offline, for one or all"
     )
     parser.add_argument(
@@ -151,7 +166,7 @@ async def main(argv: list[str] | None = None) -> int:
     if args.recheck:
         if not args.domain:
             parser.error("--recheck needs the domain of a recorded case")
-        print(await recheck(args.domain, args.recheck))
+        print(await recheck(args.domain, args.recheck, doh=args.doh))
         return 0
     if args.update:
         cases = [CORPUS / clean_domain(args.domain)] if args.domain else _cases()
@@ -161,7 +176,7 @@ async def main(argv: list[str] | None = None) -> int:
         return 0
     if not args.domain:
         parser.error("give a domain to record, or --update")
-    print(f"recorded {await record(args.domain, use_web=args.web)}")
+    print(f"recorded {await record(args.domain, use_web=args.web, doh=args.doh)}")
     return 0
 
 

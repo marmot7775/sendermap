@@ -57,6 +57,9 @@ def check_record(where: str, field: str, proof: Proof) -> None:
     elif field == "verification_txt":
         ok = name == domain
         rule = "the domain itself"
+    elif field == "delegation_ns":
+        ok = name.endswith(f".{domain}")
+        rule = f"a name under {domain}"
     elif field == "dkim_cname":
         ok = name.endswith(f"._domainkey.{domain}")
         rule = f"a name under _domainkey.{domain}"

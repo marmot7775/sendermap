@@ -54,7 +54,7 @@ from .sources import (
 
 Progress = Callable[[str], Awaitable[None]]
 MAX_SUBDOMAINS = 30
-# DKIM names probed per sending subdomain, besides the ones its own SPF or MX backs.
+# DKIM names probed per sending subdomain, besides the ones its own SPF, MX or delegation backs.
 SUBDOMAIN_PROBES = 27
 
 
@@ -125,7 +125,7 @@ async def map_domain(
         logged, ct_summary = ct_task.result()
         discovered = subs_task.result()
         apex = sum((task.result() for task in evidence), found) + logs_task.result().observed
-        apex += Observed(gaps=discovered.gaps)
+        apex += Observed(discovered.delegations, gaps=discovered.gaps)
         logo = logo_task.result()
 
         await say("Scanning DKIM keys and the networks in SPF")
@@ -144,7 +144,9 @@ async def map_domain(
             )
             apex += Observed(gaps=(Gap("sending subdomains", happened),))
         await say(f"Checking {len(picked)} sending subdomains")
-        under = await asyncio.gather(*(_subdomain(ctx, rules, name) for name in picked))
+        under = await asyncio.gather(
+            *(_subdomain(ctx, rules, name, discovered.delegations) for name in picked)
+        )
 
         observed = sum((*deep, *under), apex) + logged
         checked = observed.checked_by_name()
@@ -186,9 +188,11 @@ async def map_domain(
         return with_claimed(result, claimed, ctx.catalog)
 
 
-async def _subdomain(ctx: Context, rules: tuple[Rule, ...], name: str) -> Observed:
+async def _subdomain(
+    ctx: Context, rules: tuple[Rule, ...], name: str, delegations: Iterable[Claim]
+) -> Observed:
     (found, tree), received = await asyncio.gather(spf.collect(ctx, name), mx.collect(ctx, name))
-    first = found + received
+    first = found + received + Observed(tuple(c for c in delegations if c.where == name))
     backed = backed_selectors(first.claims, ctx.catalog)
     order = await _probe_order(ctx, rules, name, tree.includes, backed)
     probed = (*order[:SUBDOMAIN_PROBES], *backed)
@@ -201,7 +205,7 @@ async def _subdomain(ctx: Context, rules: tuple[Rule, ...], name: str) -> Observ
     if swept and (unasked := len(set(order) - set(probed))):
         happened = (
             f"{unasked} of {len(order)} not asked: only the first {SUBDOMAIN_PROBES} and the "
-            "names its own SPF or MX backs were (cap)"
+            "names its own SPF, MX or delegation backs were (cap)"
         )
         budget = Observed(gaps=(Gap(f"DKIM selectors at {name}", happened),))
     return first + keys + owned + budget

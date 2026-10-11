@@ -2,7 +2,7 @@
  "domain": "example.com",
  "services": [],
  "run": {
-  "checked_at": "2026-10-11T21:23:16+00:00"
+  "checked_at": "2026-10-11T22:12:31+00:00"
  },
  "findings": [
   {
@@ -14,7 +14,7 @@
      "name": "example.com",
      "rtype": "MX",
      "value": "0 ",
-     "checked_at": "2026-10-11T21:23:16+00:00"
+     "checked_at": "2026-10-11T22:12:31+00:00"
     }
    ]
   },
@@ -27,7 +27,7 @@
      "name": "*._domainkey.example.com",
      "rtype": "TXT",
      "value": "v=DKIM1; p=",
-     "checked_at": "2026-10-11T21:23:16+00:00"
+     "checked_at": "2026-10-11T22:12:31+00:00"
     }
    ]
   }

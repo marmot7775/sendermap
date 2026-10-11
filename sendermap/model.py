@@ -44,6 +44,7 @@ class Kind(StrEnum):
     DKIM_CNAME = "hosts a DKIM key (CNAME)"
     DKIM_NAME = "DKIM key named for it"
     RETURN_PATH = "bounce address CNAME"
+    DELEGATION = "hosts a sending subdomain's DNS (NS)"
     TRACKING = "link tracking CNAME"
     WEBSITE = "website loads a script or stylesheet from it"
     WEBSITE_MENTION = "mentioned on the website"
@@ -74,6 +75,8 @@ _KIND_TIER = {
     Kind.SPF_NETWORK: Tier.CONFIGURED,
     Kind.DKIM_CNAME: Tier.CONFIGURED,
     Kind.RETURN_PATH: Tier.CONFIGURED,
+    # The subdomain's records are the service's to publish: its sending setup lives there.
+    Kind.DELEGATION: Tier.CONFIGURED,
     Kind.TRACKING: Tier.CONFIGURED,
     Kind.CT_CNAME: Tier.CONFIGURED,
     # A web host in a service's network: a landing page or app there, not mail set up.

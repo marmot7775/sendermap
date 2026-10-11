@@ -58,6 +58,7 @@ def mapped() -> Zone:
         .alias("autodiscover.mapped.test", "autodiscover.outlook.com")
         .add("email.mapped.test", "TXT", "v=spf1 include:mailgun.org ~all")
         .add("email.mapped.test", "MX", "10 mxa.mailgun.org")
+        .add("send.mapped.test", "NS", "ns1.klaviyo.com", "ns2.klaviyo.com")
         .add("corp.mapped.test", "MX", "1 smtp.google.com")
         .add("*._domainkey.corp.mapped.test", "TXT", KEY)
         .add("mail.mapped.test", "TXT", "v=spf1 include:sendgrid.net -all", "v=spf1 -all")
