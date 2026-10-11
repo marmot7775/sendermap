@@ -214,20 +214,27 @@ failed lookup leaves the gap it has always left. Absences are shown in every vie
 "Checked and not there", each with its evidence; JSON carries them as `absences` and each
 Checked's class as `denial`.
 - An IP range in SPF, IPv4 or IPv6, is named by the narrowest range a service publishes in its own SPF record
-  that contains it, when exactly one service publishes that range. Otherwise the network that
-  announces it decides, from Team Cymru's IP to ASN data over DNS (`origin` for IPv4, `origin6`
-  for IPv6), sampled at three points for a range wider than an IPv4 /24 or an IPv6 /48: the
-  range goes to the service the vendor data lists as owning that network. Anything left is
-  listed as unknown, with the cloud named when the network is a shared cloud and the services
-  that publish the range. A cloud is never credited: 74.125.0.0/16, published by Google
+  that contains it, when exactly one service publishes that range. Otherwise the networks that
+  announce it decide, from Team Cymru's IP to ASN data over DNS (`origin` for IPv4, `origin6`
+  for IPv6). An address can be announced from more than one network (Amazon answers from
+  AS16509 and AS14618), one answer per prefix and sometimes several origins in one answer, and
+  those answers are a set, so every origin ASN is read and kept in ASN order, and the evidence
+  carries every answer read. A range wider than an IPv4 /24 or an IPv6 /48 is sampled at three
+  points, and of the union of the networks the samples return, those announcing a majority of
+  the samples are kept. The range goes to a service only when the vendor data lists every kept
+  network as that service's. Anything left is listed as unknown with every network named: the
+  cloud's name for a shared cloud, otherwise the owner's, networks under one name together
+  ("AS14618 and AS16509, Amazon Web Services") and different names after a semicolon, so nothing
+  is asserted that only one answer shows; then the services that publish the range. A cloud is never credited: 74.125.0.0/16, published by Google
   Workspace and HubSpot and announced by Google's network, stays unknown. The data keeps one
   Unknown per range. The views group them: the ranges and addresses at one name that share a
-  network, an owner name and a list of publishers are one line, "2 ranges and 1 address in
-  AS16509 (Amazon Web Services)", with the publishers once after it, then the ranges, the first
+  set of networks, an owner name and a list of publishers are one line, "2 ranges and 1 address
+  in AS16509 (Amazon Web Services)", with the publishers once after it, then the ranges, the first
   record and "+ N more" (every record with `--evidence`). `render.grouped_unknowns` does this
   for the text and Markdown views by reading the value networks.py writes, and app.js does the
   same with the same pattern, `render.NETWORK_VALUE`. A range with no network, one alone in its
-  network, and any unknown that is not an IP range stay single lines.
+  network, one whose networks have different names, and any unknown that is not an IP range stay
+  single lines.
 - A name from certificate logs (`--ct`) is matched with the matchers the DNS path uses: each
   hop of its CNAME chain through `label_cname` with the name's first label, as a label CNAME
   is; then its MX hosts through the MX table; then its addresses through the published ranges

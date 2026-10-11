@@ -7,21 +7,23 @@ the record. Each range, IPv4 or IPv6, is named in this order:
    inside a range that exactly one service publishes is that service: this is how a flattened
    copy of Amazon SES's ranges is recognised. When several services publish the holding range,
    this check names none of them.
-2. The network that announces the address. Team Cymru's public IP to ASN mapping, served over
-   DNS, says whose network it is. The range goes to a service only when vendors.json lists that
-   network as the service's own (Mailchimp, SendGrid, Mailgun and a few others run their own).
+2. The networks that announce the address. Team Cymru's public IP to ASN mapping, served over
+   DNS, says whose network it is. An address can be announced from more than one network (Amazon
+   answers from AS16509 and AS14618), and the answers are a set, so all of them are read. The
+   range goes to a service only when vendors.json lists every one of those networks as that
+   service's own (Mailchimp, SendGrid, Mailgun and a few others run their own).
 3. Anything else is listed as unknown, with the network, the cloud's name when vendors.json
    lists the network as a shared cloud, and the services that publish the range, if any. A
    cloud is never credited to a service: 74.125.0.0/16 is published by both Google Workspace
    and HubSpot and announced by Google's network, which vendors.json lists as a cloud, so it is
-   unknown, listed by both.
+   unknown, listed by both. When the networks are not all one service's, nothing is asserted
+   that only one answer shows: the range is unknown and names every network and its owner.
 """
 
 from __future__ import annotations
 
 import asyncio
 import ipaddress
-from collections import Counter
 from dataclasses import dataclass
 
 from ..model import Claim, Evidence, Gap, Kind, Observed, Unknown
@@ -39,12 +41,31 @@ Published = dict[Network, dict[str, Evidence]]
 
 @dataclass(frozen=True, slots=True)
 class Owner:
-    """Who announces an address or range: the ASN and its owner's name, both "" when no one
-    network does, and the Team Cymru answers that say so."""
+    """Who announces an address or range: each network as (ASN, its owner's name or ""), in ASN
+    order, none when no network does, and the Team Cymru answers that say so."""
 
-    asn: str
-    name: str
+    networks: tuple[tuple[str, str], ...]
     evidence: tuple[Evidence, ...]
+
+    @property
+    def asns(self) -> tuple[str, ...]:
+        return tuple(asn for asn, _ in self.networks)
+
+
+def credited(ctx: Context, announced: Owner) -> str | None:
+    """The service every announcing network belongs to, or None when any does not."""
+    services = {ctx.catalog.network(asn) for asn in announced.asns}
+    return services.pop() if len(services) == 1 else None
+
+
+def announced_by(ctx: Context, announced: Owner) -> str:
+    """The networks in words, each with the cloud vendors.json names it as or its owner's name,
+    networks under one name together: "AS14618 and AS16509, Amazon Web Services"."""
+    labels: dict[str, list[str]] = {}
+    for asn, name in announced.networks:
+        label = ctx.catalog.clouds.get(asn) or name or "owner name not published"
+        labels.setdefault(label, []).append(asn)
+    return "; ".join(f"{' and '.join(asns)}, {label}" for label, asns in labels.items())
 
 
 async def collect(ctx: Context, where: str, ranges: list[tuple[str, Evidence]]) -> Observed:
@@ -78,17 +99,15 @@ async def collect(ctx: Context, where: str, ranges: list[tuple[str, Evidence]]) 
             value = f"{cidr} (network lookup failed{listed})"
             unknowns.append(Unknown(what, value, where, evidence))
             continue
-        asn, name = announced.asn, announced.name
-        service = ctx.catalog.network(asn)
-        if service:
+        if service := credited(ctx, announced):
             claims.append(Claim(service, Kind.SPF_NETWORK, where, evidence, announced.evidence))
             continue
-        if not asn:
+        if not announced.networks:
             value = f"{cidr} (no one network announces it{listed})"
             unknowns.append(Unknown(what, value, where, evidence))
             continue
-        label = ctx.catalog.clouds.get(asn) or name or "owner name not published"
-        unknowns.append(Unknown(what, f"{cidr} ({asn}, {label}{listed})", where, evidence))
+        value = f"{cidr} ({announced_by(ctx, announced)}{listed})"
+        unknowns.append(Unknown(what, value, where, evidence))
     if failed:
         asked = f"network owners: Team Cymru TXT for {', '.join(failed)}"
         gaps += (Gap(asked, "lookup failed"),)
@@ -96,11 +115,12 @@ async def collect(ctx: Context, where: str, ranges: list[tuple[str, Evidence]]) 
 
 
 async def range_owner(ctx: Context, network: Network) -> Owner | None:
-    """The network that announces most of a range, with the answers for the samples that agree;
-    an Owner with no ASN when no one network announces most of it; None when a lookup failed. A
-    large range can hold blocks announced by others: 149.72.0.0/16 is SendGrid's, but its first
-    /24 is announced by Amazon. So a range wider than one routed block (an IPv4 /24, an IPv6 /48)
-    is sampled at three points and the majority wins."""
+    """The networks that announce most of a range, with the answers for the samples that show
+    them; an Owner with no networks when no network announces most of it; None when a lookup
+    failed. A large range can hold blocks announced by others: 149.72.0.0/16 is SendGrid's, but
+    its first /24 is announced by Amazon. So a range wider than one routed block (an IPv4 /24, an
+    IPv6 /48) is sampled at three points, and of the union of the networks the samples return,
+    those announcing a majority of the samples are kept."""
     size = network.num_addresses
     block = 24 if network.version == 4 else 48
     points = [1] if network.prefixlen >= block else [1, size // 2 + 1, 3 * size // 4 + 1]
@@ -108,17 +128,19 @@ async def range_owner(ctx: Context, network: Network) -> Owner | None:
     samples = [s for s in found if s is not None]
     if len(samples) < len(found):
         return None
-    asn, name = Counter((s.asn, s.name) for s in samples).most_common(1)[0][0]
-    agree = [s for s in samples if s.asn == asn]
-    if len(agree) * 2 <= len(samples):
-        return Owner("", "", tuple(e for s in samples for e in s.evidence))
-    return Owner(asn, name, tuple(dict.fromkeys(e for s in agree for e in s.evidence)))
+    union = sorted({n for s in samples for n in s.networks}, key=_asn_order)
+    kept = tuple(n for n in union if sum(n in s.networks for s in samples) * 2 > len(samples))
+    if not kept:
+        return Owner((), tuple(dict.fromkeys(e for s in samples for e in s.evidence)))
+    agree = [s for s in samples if set(kept) & set(s.networks)]
+    return Owner(kept, tuple(dict.fromkeys(e for s in agree for e in s.evidence)))
 
 
 async def owner(ctx: Context, ip: ipaddress.IPv4Address | ipaddress.IPv6Address) -> Owner | None:
-    """Who announces an address, an Owner with no ASN when no network does, or None when a
-    lookup failed. IPv4 asks origin.asn.cymru.com by reversed octets; IPv6 asks
-    origin6.asn.cymru.com by reversed nibbles."""
+    """Who announces an address: every origin network Team Cymru answers with, each named; an
+    Owner with no networks when no network does; None when a lookup failed. IPv4 asks
+    origin.asn.cymru.com by reversed octets; IPv6 asks origin6.asn.cymru.com by reversed nibbles.
+    The evidence is every answer read."""
     if ip.version == 4:
         origin_name = ".".join(reversed(str(ip).split("."))) + ".origin.asn.cymru.com"
     else:
@@ -127,16 +149,27 @@ async def owner(ctx: Context, ip: ipaddress.IPv4Address | ipaddress.IPv6Address)
     if not origin.answered:
         return None
     if not origin.ok:
-        return Owner("", "", (Evidence(origin_name, "TXT", origin.status.value, ctx.checked_at),))
-    asn = "AS" + origin.records[0].split("|")[0].split()[0]
-    said = Evidence(origin_name, "TXT", origin.records[0], ctx.checked_at)
-    about = await ctx.dns.txt(f"{asn}.asn.cymru.com")
-    if not about.answered:
+        return Owner((), (Evidence(origin_name, "TXT", origin.status.value, ctx.checked_at),))
+    # One answer per announced prefix, and one answer may list several origins.
+    asns = sorted(
+        {"AS" + n for r in origin.records for n in r.split("|")[0].split() if n.isdigit()},
+        key=lambda asn: int(asn[2:]),
+    )
+    said = [Evidence(origin_name, "TXT", r, ctx.checked_at) for r in origin.records]
+    abouts = await asyncio.gather(*(ctx.dns.txt(f"{asn}.asn.cymru.com") for asn in asns))
+    if not all(a.answered for a in abouts):
         return None
-    if not about.ok:
-        return Owner(asn, "", (said,))
-    named = Evidence(about.name, "TXT", about.records[0], ctx.checked_at)
-    return Owner(asn, about.records[0].split("|")[-1].strip(), (said, named))
+    named = [(a, a.records[0]) for a in abouts if a.ok]
+    owners = tuple(
+        (asn, a.records[0].split("|")[-1].strip() if a.ok else "")
+        for asn, a in zip(asns, abouts, strict=True)
+    )
+    evidence = said + [Evidence(a.name, "TXT", r, ctx.checked_at) for a, r in named]
+    return Owner(owners, tuple(evidence))
+
+
+def _asn_order(network: tuple[str, str]) -> tuple[int, str]:
+    return (int(network[0][2:]), network[1])
 
 
 def _network(cidr: str) -> Network | None:

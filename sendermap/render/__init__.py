@@ -7,10 +7,12 @@ from dataclasses import dataclass
 
 from ..model import CertificateEvidence, Checked, CtStatus, SenderMap, Unknown
 
-# How sources/networks.py writes a range whose network it named: "<range> (<ASN>, <name>)",
-# with "; listed by <services>" before the closing bracket when services publish the range.
-# app.js reads the same shape with the same pattern.
-NETWORK_VALUE = r"^(\S+) \((AS\d+), (.+?)(?:; listed by (.+))?\)$"
+# How sources/networks.py writes a range whose networks share one name: "<range> (<ASN>, <name>)"
+# or "<range> (<ASN> and <ASN>, <name>)", with "; listed by <services>" before the closing
+# bracket when services publish the range. A range whose networks have different names
+# ("; <ASN>, <name>" again) does not match, so it stays a line of its own. app.js reads the same
+# shape with the same pattern.
+NETWORK_VALUE = r"^(\S+) \((AS\d+(?: and AS\d+)*), ((?:(?!; AS\d).)+?)(?:; listed by (.+))?\)$"
 _NETWORK_VALUE = re.compile(NETWORK_VALUE)
 _IP_KINDS = {"IP range in SPF": 0, "IP address in SPF": 1}
 

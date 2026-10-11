@@ -942,7 +942,7 @@
   },
   {
    "what": "IP address in SPF",
-   "value": "107.20.91.250 (AS14618, Amazon Web Services)",
+   "value": "107.20.91.250 (AS14618 and AS16509, Amazon Web Services)",
    "where": "casper.com",
    "evidence": {
     "name": "docebosaas.com",
@@ -953,7 +953,7 @@
   },
   {
    "what": "IP address in SPF",
-   "value": "3.209.231.65 (AS14618, Amazon Web Services)",
+   "value": "3.209.231.65 (AS14618 and AS16509, Amazon Web Services)",
    "where": "casper.com",
    "evidence": {
     "name": "docebosaas.com",
@@ -1008,7 +1008,7 @@
   },
   {
    "what": "IP address in SPF",
-   "value": "52.4.156.8 (AS14618, Amazon Web Services)",
+   "value": "52.4.156.8 (AS14618 and AS16509, Amazon Web Services)",
    "where": "casper.com",
    "evidence": {
     "name": "docebosaas.com",
@@ -1272,7 +1272,7 @@
   },
   {
    "what": "IP range in SPF",
-   "value": "207.67.38.0/24 (AS22606, EXACT-7 - Salesforce.com, Inc., US)",
+   "value": "207.67.38.0/24 (AS3549, LVLT-3549 - Level 3 Parent, LLC, US; AS22606, EXACT-7 - Salesforce.com, Inc., US)",
    "where": "mail.casper.com",
    "evidence": {
     "name": "cust-spf.exacttarget.com",
