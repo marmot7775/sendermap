@@ -12,6 +12,8 @@ from sendermap import catalog
 from sendermap.dns import Answer, Lookups, Status, norm
 from sendermap.sources import Context
 
+PUBLIC = "93.184.215.14"  # any address the web guard counts as public
+
 
 class Zone:
     """Records keyed by (name, type), CNAMEs followed, "*." wildcards honoured, and names that
@@ -30,6 +32,12 @@ class Zone:
 
     def add(self, name: str, rtype: str, *values: str) -> Zone:
         self.records.setdefault((norm(name), rtype), []).extend(values)
+        return self
+
+    def public(self, *hosts: str) -> Zone:
+        """Give each host a public address, so the web guard lets a page there be fetched."""
+        for host in hosts:
+            self.add(host, "A", PUBLIC)
         return self
 
     def alias(self, name: str, target: str) -> Zone:

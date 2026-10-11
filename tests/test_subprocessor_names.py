@@ -30,7 +30,9 @@ async def named_on(page: str, loaded: catalog.Catalog | None = None) -> dict[str
         )
 
     async with httpx.AsyncClient(transport=httpx.MockTransport(handler)) as http:
-        ctx = replace(context(Zone()), http=http, catalog=loaded or catalog.load())
+        ctx = replace(
+            context(Zone().public("example.com")), http=http, catalog=loaded or catalog.load()
+        )
         observed = await web.collect(ctx)
     return {c.service: c.evidence.value for c in observed.claims if c.kind is Kind.SUBPROCESSOR}
 

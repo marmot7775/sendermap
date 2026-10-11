@@ -31,6 +31,7 @@ def mapped() -> Zone:
     """Every source finds something, and most kinds of finding fire."""
     return (
         Zone()
+        .public("mapped.test", "mta-sts.mapped.test")
         .add("mapped.test", "MX", "10 us-smtp-inbound-1.mimecast.com")
         .add(
             "mapped.test",
