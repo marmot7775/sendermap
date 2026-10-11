@@ -388,16 +388,56 @@ def test_loading_refuses_a_setup_proof_that_is_not_an_https_page_of_its_domain()
         catalog.build(_with_setup("Microsoft 365", entry))
 
 
-def test_the_five_vendors_carry_a_setup_backed_by_their_own_docs() -> None:
+# The vendors whose setup the data carries: every mailbox and security gateway whose own docs
+# a plain HTTP client can read, and the most seen senders across data/hunt_domains.txt.
+WITH_SETUP = {
+    "Microsoft 365",
+    "Google Workspace",
+    "Cloudflare Email Routing",
+    "Fastmail",
+    "GoDaddy Professional Email",
+    "IONOS",
+    "Proton Mail",
+    "Rackspace Email",
+    "Zoho Mail",
+    "Barracuda",
+    "DuoCircle",
+    "Symantec MessageLabs",
+    "SendGrid",
+    "Mailchimp",
+    "Klaviyo",
+    "Zendesk",
+    "Mandrill",
+    "Postmark",
+    "Mailgun",
+    "Intercom",
+    "HubSpot",
+    "Atlassian",
+    "Marketo",
+    "Campaign Monitor",
+    "SparkPost",
+    "Mailjet",
+    "Customer.io",
+    "Sailthru",
+}
+# Receivers with no setup, because no page on their own docs site names the values to a plain
+# HTTP client: Mimecast's and Proofpoint's refuse it or need a login, and no Microsoft page names
+# the consumer Outlook.com MX.
+RECEIVERS_WITHOUT_DOCS = {"Mimecast", "Proofpoint", "Outlook.com (consumer)"}
+
+
+def test_the_vendors_carry_a_setup_backed_by_their_own_docs() -> None:
     loaded = catalog.load()
-    assert set(loaded.setups) == {
-        "Microsoft 365",
-        "Google Workspace",
-        "SendGrid",
-        "Mailchimp",
-        "Klaviyo",
-    }
+    assert set(loaded.setups) == WITH_SETUP
     for vendor, rules in loaded.setups.items():
         for rule in rules:
             assert rule.proof.record.startswith("https://"), (vendor, rule.record)
             assert (rule.need is Need.NONE) == (not rule.values), (vendor, rule.record)
+
+
+def test_every_receiver_carries_a_setup_or_is_named_as_having_no_readable_docs() -> None:
+    loaded = catalog.load()
+    receivers = {
+        name for name, block in loaded.services.items() if block["category"] in setup.RECEIVERS
+    }
+    assert receivers - set(loaded.setups) == RECEIVERS_WITHOUT_DOCS

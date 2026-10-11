@@ -304,8 +304,14 @@ proof whose record is an https page on the vendor's own documentation site, date
 refuses an item whose values are not patterns of its block, a needed item with no values, an item
 that is not needed with any, a record listed twice, and a proof that is not an https page of its
 domain. `tools/verify_proofs.py` fetches each page and the proof holds when it contains every
-value; a page that cannot be fetched is could not check. Microsoft 365, Google Workspace,
-SendGrid, Mailchimp and Klaviyo carry one; the others none yet, so they have no setups.
+value; a page that cannot be fetched is could not check. Every Mailbox and Security gateway
+vendor carries one, except Mimecast, Proofpoint and Outlook.com (consumer), whose own docs name
+the values to no plain HTTP client; so do the most seen senders across `data/hunt_domains.txt`
+whose docs can be read that way. A mailbox's MX is optional, as a security gateway in front of
+it takes its place in MX. A gateway's SPF item is left out where its docs ask for the include
+only for mail sent out through it (Barracuda), since a receiver with SPF missing is a risk.
+`tests/test_setup.py` names which vendors carry one, and fails on a receiver with neither a
+setup nor a reason. The other vendors have no setups.
 
 For each service with setup data, one Setup per name it has claims at, the domain first, except
 a bounce domain: a name below another of the service's names where its MX takes the replies and

@@ -301,6 +301,21 @@
             "date": "2026-10-09"
           }
         }
+      ],
+      "setup": [
+        {
+          "record": "spf",
+          "need": "required",
+          "values": [
+            "_spf.atlassian.net"
+          ],
+          "proof": {
+            "domain": "atlassian.com",
+            "record": "https://support.atlassian.com/jira/kb/why-dns-checker-for-setting-up-custom-domain-email-address-still-unverified-in-cloud/",
+            "date": "2026-10-11"
+          },
+          "note": "For a custom email domain in Atlassian Cloud, whose verification checks the include."
+        }
       ]
     },
     "Attentive": {
@@ -409,6 +424,20 @@
             "domain": "barracuda.com",
             "record": "https://barracuda.com/",
             "date": "2026-10-09"
+          }
+        }
+      ],
+      "setup": [
+        {
+          "record": "mx",
+          "need": "required",
+          "values": [
+            "barracudanetworks.com"
+          ],
+          "proof": {
+            "domain": "barracuda.com",
+            "record": "https://campus.barracuda.com/doc/96022975",
+            "date": "2026-10-11"
           }
         }
       ]
@@ -585,6 +614,21 @@
             "date": "2026-10-09"
           }
         }
+      ],
+      "setup": [
+        {
+          "record": "dkim",
+          "need": "required",
+          "values": [
+            "cm"
+          ],
+          "proof": {
+            "domain": "campaignmonitor.com",
+            "record": "https://www.campaignmonitor.com/api/v3-3/clients/",
+            "date": "2026-10-11"
+          },
+          "note": "The API docs give the sending domain's key at cm._domainkey; the help center needs a browser to read."
+        }
       ]
     },
     "Cloudflare DMARC Management": {
@@ -637,6 +681,46 @@
             "record": "cf2024-1._domainkey.cloudflare.net",
             "date": "2026-10-09"
           }
+        }
+      ],
+      "setup": [
+        {
+          "record": "mx",
+          "need": "optional",
+          "values": [
+            "mx.cloudflare.net"
+          ],
+          "proof": {
+            "domain": "cloudflare.com",
+            "record": "https://developers.cloudflare.com/email-service/configuration/domains/",
+            "date": "2026-10-11"
+          },
+          "note": "Optional here because a security gateway in front of Cloudflare Email Routing takes its place in MX."
+        },
+        {
+          "record": "spf",
+          "need": "required",
+          "values": [
+            "_spf.mx.cloudflare.net"
+          ],
+          "proof": {
+            "domain": "cloudflare.com",
+            "record": "https://developers.cloudflare.com/email-service/configuration/domains/",
+            "date": "2026-10-11"
+          }
+        },
+        {
+          "record": "dkim",
+          "need": "required",
+          "values": [
+            "cf2024-1"
+          ],
+          "proof": {
+            "domain": "cloudflare.com",
+            "record": "https://developers.cloudflare.com/email-service/configuration/domains/",
+            "date": "2026-10-11"
+          },
+          "note": "Cloudflare publishes the key at cf2024-1 to sign the mail it forwards."
         }
       ]
     },
@@ -753,6 +837,20 @@
             "date": "2026-10-10"
           }
         }
+      ],
+      "setup": [
+        {
+          "record": "tracking",
+          "need": "optional",
+          "values": [
+            "customeriomail.com"
+          ],
+          "proof": {
+            "domain": "customer.io",
+            "record": "https://docs.customer.io/messaging/channels/email/deliverability/link-tracking-custom-domain/",
+            "date": "2026-10-11"
+          }
+        }
       ]
     },
     "DMARCian": {
@@ -788,6 +886,21 @@
             "record": "https://duocircle.com/",
             "date": "2026-10-09"
           }
+        }
+      ],
+      "setup": [
+        {
+          "record": "spf",
+          "need": "required",
+          "values": [
+            "outbound.mailhop.org"
+          ],
+          "proof": {
+            "domain": "duocircle.com",
+            "record": "https://support.duocircle.com/support/solutions/articles/5000716920-validate-spf-and-dkim-records",
+            "date": "2026-10-11"
+          },
+          "note": "For outbound SMTP accounts; sending restricted to one region uses that region's include instead."
         }
       ]
     },
@@ -1086,6 +1199,49 @@
             "date": "2026-10-09"
           }
         }
+      ],
+      "setup": [
+        {
+          "record": "mx",
+          "need": "optional",
+          "values": [
+            "messagingengine.com"
+          ],
+          "proof": {
+            "domain": "fastmail.help",
+            "record": "https://www.fastmail.help/hc/en-us/articles/360060591153-Manual-DNS-configuration",
+            "date": "2026-10-11"
+          },
+          "note": "Optional here because a security gateway in front of Fastmail takes its place in MX."
+        },
+        {
+          "record": "spf",
+          "need": "required",
+          "values": [
+            "spf.messagingengine.com"
+          ],
+          "proof": {
+            "domain": "fastmail.help",
+            "record": "https://www.fastmail.help/hc/en-us/articles/360060591153-Manual-DNS-configuration",
+            "date": "2026-10-11"
+          }
+        },
+        {
+          "record": "dkim",
+          "need": "required",
+          "values": [
+            "fm1",
+            "fm2",
+            "fm3",
+            "dkim.fmhosted.com"
+          ],
+          "proof": {
+            "domain": "fastmail.help",
+            "record": "https://www.fastmail.help/hc/en-us/articles/360060591153-Manual-DNS-configuration",
+            "date": "2026-10-11"
+          },
+          "note": "The page also names mesmtp as the selector of domains set up before 2018, so a key there reads older setup."
+        }
       ]
     },
     "Firebase": {
@@ -1205,6 +1361,33 @@
               "date": "2026-10-09"
             }
           ]
+        }
+      ],
+      "setup": [
+        {
+          "record": "mx",
+          "need": "optional",
+          "values": [
+            "secureserver.net"
+          ],
+          "proof": {
+            "domain": "godaddy.com",
+            "record": "https://www.godaddy.com/help/what-are-my-dns-settings-for-professional-email-powered-by-titan-42767",
+            "date": "2026-10-11"
+          },
+          "note": "Optional here because a security gateway in front of GoDaddy Professional Email takes its place in MX."
+        },
+        {
+          "record": "spf",
+          "need": "required",
+          "values": [
+            "secureserver.net"
+          ],
+          "proof": {
+            "domain": "godaddy.com",
+            "record": "https://www.godaddy.com/help/what-are-my-dns-settings-for-professional-email-powered-by-titan-42767",
+            "date": "2026-10-11"
+          }
         }
       ]
     },
@@ -1593,6 +1776,35 @@
             "date": "2026-10-09"
           }
         }
+      ],
+      "setup": [
+        {
+          "record": "spf",
+          "need": "required",
+          "values": [
+            "hubspotemail.net",
+            "hubspot.com"
+          ],
+          "proof": {
+            "domain": "hubspot.com",
+            "record": "https://knowledge.hubspot.com/marketing-email/manage-email-authentication-in-hubspot",
+            "date": "2026-10-11"
+          },
+          "note": "The setup gives an account numbered include under spf03.hubspotemail.net; older setups include shared.hubspot.com."
+        },
+        {
+          "record": "dkim",
+          "need": "required",
+          "values": [
+            "hubspotemail.net"
+          ],
+          "proof": {
+            "domain": "hubspot.com",
+            "record": "https://knowledge.hubspot.com/email/troubleshoot-your-email-sending-domain",
+            "date": "2026-10-11"
+          },
+          "note": "Two CNAMEs at selectors that carry the account number (hs1-123456), so the setup names the target only."
+        }
       ]
     },
     "Intercom": {
@@ -1641,6 +1853,30 @@
             "domain": "one.com",
             "record": "one.com",
             "date": "2026-10-10"
+          }
+        }
+      ],
+      "setup": [
+        {
+          "record": "spf",
+          "need": "none",
+          "proof": {
+            "domain": "intercom.com",
+            "record": "https://www.intercom.com/help/en/articles/11183745-troubleshooting-email-authentication-issues-dkim-dmarc-and-dns-setup",
+            "date": "2026-10-11"
+          },
+          "note": "Intercom handles SPF through its return path CNAME, which this block has no pattern for yet."
+        },
+        {
+          "record": "dkim",
+          "need": "required",
+          "values": [
+            "intercom"
+          ],
+          "proof": {
+            "domain": "intercom.com",
+            "record": "https://www.intercom.com/help/en/articles/11183745-troubleshooting-email-authentication-issues-dkim-dmarc-and-dns-setup",
+            "date": "2026-10-11"
           }
         }
       ]
@@ -1720,6 +1956,48 @@
             "record": "https://ionos.com/",
             "date": "2026-10-09"
           }
+        }
+      ],
+      "setup": [
+        {
+          "record": "mx",
+          "need": "optional",
+          "values": [
+            "ionos.com"
+          ],
+          "proof": {
+            "domain": "ionos.com",
+            "record": "https://www.ionos.com/help/email/troubleshooting-mail-basic-mail-business/adjusting-mx-records-for-receiving-email-via-ionos-mail-servers/",
+            "date": "2026-10-11"
+          },
+          "note": "The page gives mx00 and mx01.ionos.com for IONOS.com customers; other countries use their own hosts. Optional here because a security gateway in front of IONOS takes its place in MX."
+        },
+        {
+          "record": "spf",
+          "need": "required",
+          "values": [
+            "_spf-us.ionos.com"
+          ],
+          "proof": {
+            "domain": "ionos.com",
+            "record": "https://www.ionos.com/help/domains/configuring-mail-servers-and-other-related-records/using-ionos-spf-to-improve-email-delivery/",
+            "date": "2026-10-11"
+          },
+          "note": "IONOS publishes it itself when it hosts the zone; at another DNS provider the customer adds it."
+        },
+        {
+          "record": "dkim",
+          "need": "required",
+          "values": [
+            "s1-ionos",
+            "dkim.ionos.com"
+          ],
+          "proof": {
+            "domain": "ionos.com",
+            "record": "https://www.ionos.com/help/domains/configuring-mail-servers-and-other-related-records/email-authentication-with-dkim/",
+            "date": "2026-10-11"
+          },
+          "note": "The page names s1-ionos and s2-ionos and an account numbered selector; s2-ionos is not in this block yet."
         }
       ]
     },
@@ -2212,6 +2490,46 @@
             "date": "2026-10-10"
           }
         }
+      ],
+      "setup": [
+        {
+          "record": "spf",
+          "need": "required",
+          "values": [
+            "mailgun.org"
+          ],
+          "proof": {
+            "domain": "mailgun.com",
+            "record": "https://documentation.mailgun.com/docs/mailgun/user-manual/domains/",
+            "date": "2026-10-11"
+          }
+        },
+        {
+          "record": "mx",
+          "need": "optional",
+          "values": [
+            "mailgun.org"
+          ],
+          "proof": {
+            "domain": "mailgun.com",
+            "record": "https://documentation.mailgun.com/docs/mailgun/user-manual/domains/",
+            "date": "2026-10-11"
+          },
+          "note": "The page marks the MX records required, and says they are for Mailgun to receive mail, so they are optional here."
+        },
+        {
+          "record": "tracking",
+          "need": "optional",
+          "values": [
+            "mailgun.org"
+          ],
+          "proof": {
+            "domain": "mailgun.com",
+            "record": "https://documentation.mailgun.com/docs/mailgun/user-manual/domains/",
+            "date": "2026-10-11"
+          },
+          "note": "The page marks the CNAME required, and says it is for open, click and unsubscribe tracking, so it is optional here."
+        }
       ]
     },
     "Mailjet": {
@@ -2270,6 +2588,32 @@
             "domain": "frontiersin.org",
             "record": "mg.frontiersin.org",
             "date": "2026-10-10"
+          }
+        }
+      ],
+      "setup": [
+        {
+          "record": "spf",
+          "need": "required",
+          "values": [
+            "spf.mailjet.com"
+          ],
+          "proof": {
+            "domain": "mailjet.com",
+            "record": "https://dev.mailjet.com/docs/email-api/senders-domains/spf-dkim-validation",
+            "date": "2026-10-11"
+          }
+        },
+        {
+          "record": "dkim",
+          "need": "required",
+          "values": [
+            "mailjet"
+          ],
+          "proof": {
+            "domain": "mailjet.com",
+            "record": "https://dev.mailjet.com/docs/email-api/senders-domains/spf-dkim-validation",
+            "date": "2026-10-11"
           }
         }
       ]
@@ -2391,6 +2735,47 @@
             "date": "2026-10-10"
           }
         }
+      ],
+      "setup": [
+        {
+          "record": "dkim",
+          "need": "required",
+          "values": [
+            "mte1",
+            "mte2",
+            "mandrillapp.com"
+          ],
+          "proof": {
+            "domain": "mailchimp.com",
+            "record": "https://mailchimp.com/developer/transactional/docs/authentication-delivery/",
+            "date": "2026-10-11"
+          }
+        },
+        {
+          "record": "return_path",
+          "need": "optional",
+          "values": [
+            "mandrillapp.com"
+          ],
+          "proof": {
+            "domain": "mailchimp.com",
+            "record": "https://mailchimp.com/developer/transactional/docs/authentication-delivery/",
+            "date": "2026-10-11"
+          },
+          "note": "The return path is mandrillapp.com unless the customer points a subdomain of their own at it."
+        },
+        {
+          "record": "tracking",
+          "need": "optional",
+          "values": [
+            "mandrillapp.com"
+          ],
+          "proof": {
+            "domain": "mailchimp.com",
+            "record": "https://mailchimp.com/developer/transactional/docs/activity-reports/",
+            "date": "2026-10-11"
+          }
+        }
       ]
     },
     "Marketo": {
@@ -2469,6 +2854,20 @@
             "domain": "nvidia.com",
             "record": "mkto1._domainkey.nvidia.com",
             "date": "2026-10-10"
+          }
+        }
+      ],
+      "setup": [
+        {
+          "record": "spf",
+          "need": "required",
+          "values": [
+            "mktomail.com"
+          ],
+          "proof": {
+            "domain": "adobe.com",
+            "record": "https://experienceleague.adobe.com/en/docs/marketo/using/getting-started/initial-setup/configure-protocols-for-marketo",
+            "date": "2026-10-11"
           }
         }
       ]
@@ -2878,6 +3277,31 @@
             "date": "2026-10-10"
           }
         }
+      ],
+      "setup": [
+        {
+          "record": "spf",
+          "need": "none",
+          "proof": {
+            "domain": "postmarkapp.com",
+            "record": "https://postmarkapp.com/support/article/1102-why-is-it-not-required-to-include-postmark-in-our-own-custom-spf-record",
+            "date": "2026-10-11"
+          },
+          "note": "Postmark's own return path passes SPF, so the domain's record needs no include."
+        },
+        {
+          "record": "return_path",
+          "need": "optional",
+          "values": [
+            "mtasv.net"
+          ],
+          "proof": {
+            "domain": "postmarkapp.com",
+            "record": "https://postmarkapp.com/support/article/910-adding-a-custom-return-path-domain",
+            "date": "2026-10-11"
+          },
+          "note": "A custom return path (pm-bounces by default) is needed only for SPF to align under DMARC."
+        }
       ]
     },
     "PowerDMARC": {
@@ -3051,6 +3475,47 @@
             "date": "2026-10-09"
           }
         }
+      ],
+      "setup": [
+        {
+          "record": "mx",
+          "need": "optional",
+          "values": [
+            "protonmail.ch"
+          ],
+          "proof": {
+            "domain": "proton.me",
+            "record": "https://proton.me/support/custom-domain-wix",
+            "date": "2026-10-11"
+          },
+          "note": "Optional here because a security gateway in front of Proton Mail takes its place in MX."
+        },
+        {
+          "record": "spf",
+          "need": "required",
+          "values": [
+            "_spf.protonmail.ch"
+          ],
+          "proof": {
+            "domain": "proton.me",
+            "record": "https://proton.me/support/anti-spoofing-custom-domain",
+            "date": "2026-10-11"
+          }
+        },
+        {
+          "record": "dkim",
+          "need": "required",
+          "values": [
+            "protonmail",
+            "protonmail2",
+            "protonmail3"
+          ],
+          "proof": {
+            "domain": "proton.me",
+            "record": "https://proton.me/support/custom-domain-wix",
+            "date": "2026-10-11"
+          }
+        }
       ]
     },
     "Rackspace Email": {
@@ -3072,6 +3537,33 @@
             "domain": "ip-api.com",
             "record": "ip-api.com",
             "date": "2026-10-10"
+          }
+        }
+      ],
+      "setup": [
+        {
+          "record": "mx",
+          "need": "optional",
+          "values": [
+            "emailsrvr.com"
+          ],
+          "proof": {
+            "domain": "rackspace.com",
+            "record": "https://docs.rackspace.com/docs/set-up-dns-records-for-cloud-office-email",
+            "date": "2026-10-11"
+          },
+          "note": "Optional here because a security gateway in front of Rackspace Email takes its place in MX."
+        },
+        {
+          "record": "spf",
+          "need": "required",
+          "values": [
+            "emailsrvr.com"
+          ],
+          "proof": {
+            "domain": "rackspace.com",
+            "record": "https://docs.rackspace.com/docs/set-up-dns-records-for-cloud-office-email",
+            "date": "2026-10-11"
           }
         }
       ]
@@ -3185,6 +3677,46 @@
             "domain": "techcrunch.com",
             "record": "bounce.techcrunch.com",
             "date": "2026-10-10"
+          }
+        }
+      ],
+      "setup": [
+        {
+          "record": "dkim",
+          "need": "required",
+          "values": [
+            "sailthru",
+            "sailthrudkim.com"
+          ],
+          "proof": {
+            "domain": "zetaglobal.com",
+            "record": "https://products.zetaglobal.com/sailthru/Content/messaging/email/deliverability/config-dns-records.html",
+            "date": "2026-10-11"
+          },
+          "note": "Zeta Global owns Sailthru and hosts its docs. The page also names sailthru2, not in this block yet."
+        },
+        {
+          "record": "return_path",
+          "need": "required",
+          "values": [
+            "sailthrudkim.com"
+          ],
+          "proof": {
+            "domain": "zetaglobal.com",
+            "record": "https://products.zetaglobal.com/sailthru/Content/messaging/email/deliverability/config-dns-records.html",
+            "date": "2026-10-11"
+          }
+        },
+        {
+          "record": "tracking",
+          "need": "required",
+          "values": [
+            "sailthru.com"
+          ],
+          "proof": {
+            "domain": "zetaglobal.com",
+            "record": "https://products.zetaglobal.com/sailthru/Content/messaging/email/deliverability/config-dns-records.html",
+            "date": "2026-10-11"
           }
         }
       ]
@@ -3710,6 +4242,34 @@
             "date": "2026-10-10"
           }
         }
+      ],
+      "setup": [
+        {
+          "record": "tracking",
+          "need": "optional",
+          "values": [
+            "spgo.io",
+            "et.e.sparkpost.com"
+          ],
+          "proof": {
+            "domain": "sparkpost.com",
+            "record": "https://developers.sparkpost.com/api/tracking-domains/",
+            "date": "2026-10-11"
+          }
+        },
+        {
+          "record": "mx",
+          "need": "optional",
+          "values": [
+            "sparkpostmail.com"
+          ],
+          "proof": {
+            "domain": "sparkpost.com",
+            "record": "https://developers.sparkpost.com/api/inbound-domains/",
+            "date": "2026-10-11"
+          },
+          "note": "Needed only for a domain whose inbound mail SparkPost relays."
+        }
       ]
     },
     "Square": {
@@ -3809,7 +4369,34 @@
           }
         }
       ],
-      "category": "Security gateway"
+      "category": "Security gateway",
+      "setup": [
+        {
+          "record": "mx",
+          "need": "required",
+          "values": [
+            "messagelabs.com"
+          ],
+          "proof": {
+            "domain": "broadcom.com",
+            "record": "https://knowledge.broadcom.com/external/article/161419/mail-exchanger-mx-record-setup-with-emai.html",
+            "date": "2026-10-11"
+          }
+        },
+        {
+          "record": "spf",
+          "need": "required",
+          "values": [
+            "spf.messagelabs.com"
+          ],
+          "proof": {
+            "domain": "broadcom.com",
+            "record": "https://knowledge.broadcom.com/external/article/161394/implement-spf-records-for-email-security.html",
+            "date": "2026-10-11"
+          },
+          "note": "Broadcom asks for the include even where outbound mail does not pass through Email Security.cloud."
+        }
+      ]
     },
     "URIports": {
       "reporting": [
@@ -3920,6 +4507,36 @@
             "record": "zendesk1._domainkey.github.com",
             "date": "2026-10-10"
           }
+        }
+      ],
+      "setup": [
+        {
+          "record": "spf",
+          "need": "required",
+          "values": [
+            "mail.zendesk.com"
+          ],
+          "proof": {
+            "domain": "zendesk.com",
+            "record": "https://support.zendesk.com/hc/en-us/articles/4408832543770",
+            "date": "2026-10-11"
+          },
+          "note": "For a support address at the customer's own domain, which Zendesk checks when the address is added."
+        },
+        {
+          "record": "dkim",
+          "need": "optional",
+          "values": [
+            "zendesk1",
+            "zendesk2",
+            "zendesk.com"
+          ],
+          "proof": {
+            "domain": "zendesk.com",
+            "record": "https://support.zendesk.com/hc/en-us/articles/4408822303386",
+            "date": "2026-10-11"
+          },
+          "note": "Zendesk signs with its own domain until the customer turns on DKIM for theirs."
         }
       ]
     },
@@ -4035,6 +4652,35 @@
             "record": "zoho._domainkey.itch.io",
             "date": "2026-10-10"
           }
+        }
+      ],
+      "setup": [
+        {
+          "record": "mx",
+          "need": "optional",
+          "values": [
+            "zoho.com"
+          ],
+          "proof": {
+            "domain": "zoho.com",
+            "record": "https://www.zoho.com/mail/help/adminconsole/configure-email-delivery.html",
+            "date": "2026-10-11"
+          },
+          "note": "The page gives the zoho.com hosts; accounts in other data centers use zoho.eu, zoho.in and the like. Optional here because a security gateway in front of Zoho Mail takes its place in MX."
+        },
+        {
+          "record": "spf",
+          "need": "required",
+          "values": [
+            "zohomail.com",
+            "one.zoho.com"
+          ],
+          "proof": {
+            "domain": "zoho.com",
+            "record": "https://www.zoho.com/mail/help/adminconsole/spf-configuration.html",
+            "date": "2026-10-11"
+          },
+          "note": "include:one.zoho.com takes the place of include:zohomail.com when several Zoho services send."
         }
       ]
     }

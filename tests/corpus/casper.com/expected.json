@@ -675,7 +675,30 @@
      ]
     }
    ],
-   "setups": []
+   "setups": [
+    {
+     "service": "Campaign Monitor",
+     "where": "casper.com",
+     "items": [
+      {
+       "record": "dkim",
+       "need": "required",
+       "state": "present",
+       "evidence": [
+        {
+         "name": "cm._domainkey.casper.com",
+         "rtype": "TXT",
+         "value": "k=rsa; p=MIGfMA0GCSqG..., 1024-bit, fp 9347c624a5a8cd6f",
+         "checked_at": "2026-10-11T19:47:14+00:00"
+        }
+       ],
+       "asked": "TXT at cm._domainkey.casper.com",
+       "detail": ""
+      }
+     ],
+     "complete": true
+    }
+   ]
   },
   {
    "name": "Iterable",
@@ -837,7 +860,110 @@
      "supporting": []
     }
    ],
-   "setups": []
+   "setups": [
+    {
+     "service": "Mailgun",
+     "where": "e.casper.com",
+     "items": [
+      {
+       "record": "spf",
+       "need": "required",
+       "state": "present",
+       "evidence": [
+        {
+         "name": "e.casper.com",
+         "rtype": "TXT",
+         "value": "include:mailgun.org",
+         "checked_at": "2026-10-11T19:47:14+00:00"
+        }
+       ],
+       "asked": "TXT at e.casper.com",
+       "detail": ""
+      },
+      {
+       "record": "mx",
+       "need": "optional",
+       "state": "present",
+       "evidence": [
+        {
+         "name": "e.casper.com",
+         "rtype": "MX",
+         "value": "10 mxa.mailgun.org",
+         "checked_at": "2026-10-11T19:47:14+00:00"
+        },
+        {
+         "name": "e.casper.com",
+         "rtype": "MX",
+         "value": "10 mxb.mailgun.org",
+         "checked_at": "2026-10-11T19:47:14+00:00"
+        }
+       ],
+       "asked": "MX at e.casper.com",
+       "detail": ""
+      },
+      {
+       "record": "tracking",
+       "need": "optional",
+       "state": "not checked",
+       "evidence": [],
+       "asked": "CNAME labels under e.casper.com",
+       "detail": "no label was asked at e.casper.com"
+      }
+     ],
+     "complete": true
+    },
+    {
+     "service": "Mailgun",
+     "where": "t.casper.com",
+     "items": [
+      {
+       "record": "spf",
+       "need": "required",
+       "state": "present",
+       "evidence": [
+        {
+         "name": "t.casper.com",
+         "rtype": "TXT",
+         "value": "include:mailgun.org",
+         "checked_at": "2026-10-11T19:47:14+00:00"
+        }
+       ],
+       "asked": "TXT at t.casper.com",
+       "detail": ""
+      },
+      {
+       "record": "mx",
+       "need": "optional",
+       "state": "present",
+       "evidence": [
+        {
+         "name": "t.casper.com",
+         "rtype": "MX",
+         "value": "10 mxa.mailgun.org",
+         "checked_at": "2026-10-11T19:47:14+00:00"
+        },
+        {
+         "name": "t.casper.com",
+         "rtype": "MX",
+         "value": "10 mxb.mailgun.org",
+         "checked_at": "2026-10-11T19:47:14+00:00"
+        }
+       ],
+       "asked": "MX at t.casper.com",
+       "detail": ""
+      },
+      {
+       "record": "tracking",
+       "need": "optional",
+       "state": "not checked",
+       "evidence": [],
+       "asked": "CNAME labels under t.casper.com",
+       "detail": "no label was asked at t.casper.com"
+      }
+     ],
+     "complete": true
+    }
+   ]
   },
   {
    "name": "Mandrill",
@@ -918,7 +1044,380 @@
      "supporting": []
     }
    ],
-   "setups": []
+   "setups": [
+    {
+     "service": "Mandrill",
+     "where": "casper.com",
+     "items": [
+      {
+       "record": "dkim",
+       "need": "required",
+       "state": "present",
+       "evidence": [
+        {
+         "name": "mte1._domainkey.casper.com",
+         "rtype": "TXT",
+         "value": "v=DKIM1; k=rsa; p=MIIBIjANBgkq..., 2048-bit, fp 402b5aebde0f1c9f via dkim1.mandrillapp.com",
+         "checked_at": "2026-10-11T19:47:14+00:00"
+        },
+        {
+         "name": "mte2._domainkey.casper.com",
+         "rtype": "TXT",
+         "value": "v=DKIM1; k=rsa; p=MIIBIjANBgkq..., 2048-bit, fp bd970c8868f21f9b via dkim2.mandrillapp.com",
+         "checked_at": "2026-10-11T19:47:14+00:00"
+        },
+        {
+         "name": "mandrill._domainkey.casper.com",
+         "rtype": "TXT",
+         "value": "v=DKIM1; k=rsa; p=MIGfMA0GCSqG..., 1024-bit, fp 9cee89b6f986543a",
+         "checked_at": "2026-10-11T19:47:14+00:00"
+        }
+       ],
+       "asked": "TXT at mte1._domainkey.casper.com and TXT at mte2._domainkey.casper.com and TXT at mandrill._domainkey.casper.com",
+       "detail": ""
+      },
+      {
+       "record": "return_path",
+       "need": "optional",
+       "state": "missing",
+       "evidence": [
+        {
+         "name": "bounce.casper.com",
+         "rtype": "CNAME",
+         "value": "no record of this type",
+         "checked_at": "2026-10-11T19:47:14+00:00"
+        },
+        {
+         "name": "bounces.casper.com",
+         "rtype": "CNAME",
+         "value": "no record of this type",
+         "checked_at": "2026-10-11T19:47:14+00:00"
+        },
+        {
+         "name": "em.casper.com",
+         "rtype": "CNAME",
+         "value": "no record of this type",
+         "checked_at": "2026-10-11T19:47:14+00:00"
+        },
+        {
+         "name": "email.casper.com",
+         "rtype": "CNAME",
+         "value": "no record of this type",
+         "checked_at": "2026-10-11T19:47:14+00:00"
+        },
+        {
+         "name": "mail.casper.com",
+         "rtype": "CNAME",
+         "value": "no record of this type",
+         "checked_at": "2026-10-11T19:47:14+00:00"
+        },
+        {
+         "name": "send.casper.com",
+         "rtype": "CNAME",
+         "value": "no record of this type",
+         "checked_at": "2026-10-11T19:47:14+00:00"
+        },
+        {
+         "name": "mta.casper.com",
+         "rtype": "CNAME",
+         "value": "no record of this type",
+         "checked_at": "2026-10-11T19:47:14+00:00"
+        },
+        {
+         "name": "rp.casper.com",
+         "rtype": "CNAME",
+         "value": "no record of this type",
+         "checked_at": "2026-10-11T19:47:14+00:00"
+        },
+        {
+         "name": "pm-bounces.casper.com",
+         "rtype": "CNAME",
+         "value": "pm.mtasv.net",
+         "checked_at": "2026-10-11T19:47:14+00:00"
+        },
+        {
+         "name": "links.casper.com",
+         "rtype": "CNAME",
+         "value": "links.iterable.com",
+         "checked_at": "2026-10-11T19:47:14+00:00"
+        },
+        {
+         "name": "link.casper.com",
+         "rtype": "CNAME",
+         "value": "no record of this type",
+         "checked_at": "2026-10-11T19:47:14+00:00"
+        },
+        {
+         "name": "click.casper.com",
+         "rtype": "CNAME",
+         "value": "no record of this type",
+         "checked_at": "2026-10-11T19:47:14+00:00"
+        },
+        {
+         "name": "track.casper.com",
+         "rtype": "CNAME",
+         "value": "no record of this type",
+         "checked_at": "2026-10-11T19:47:14+00:00"
+        },
+        {
+         "name": "tracking.casper.com",
+         "rtype": "CNAME",
+         "value": "no record of this type",
+         "checked_at": "2026-10-11T19:47:14+00:00"
+        },
+        {
+         "name": "url.casper.com",
+         "rtype": "CNAME",
+         "value": "no record of this type",
+         "checked_at": "2026-10-11T19:47:14+00:00"
+        },
+        {
+         "name": "go.casper.com",
+         "rtype": "CNAME",
+         "value": "no record of this type",
+         "checked_at": "2026-10-11T19:47:14+00:00"
+        },
+        {
+         "name": "autodiscover.casper.com",
+         "rtype": "CNAME",
+         "value": "no record of this type",
+         "checked_at": "2026-10-11T19:47:14+00:00"
+        },
+        {
+         "name": "cf-bounce.casper.com",
+         "rtype": "CNAME",
+         "value": "no record of this type",
+         "checked_at": "2026-10-11T19:47:14+00:00"
+        },
+        {
+         "name": "eversrv.casper.com",
+         "rtype": "CNAME",
+         "value": "no record of this type",
+         "checked_at": "2026-10-11T19:47:14+00:00"
+        },
+        {
+         "name": "fwdkim1.casper.com",
+         "rtype": "CNAME",
+         "value": "no record of this type",
+         "checked_at": "2026-10-11T19:47:14+00:00"
+        },
+        {
+         "name": "bnc3.casper.com",
+         "rtype": "CNAME",
+         "value": "no record of this type",
+         "checked_at": "2026-10-11T19:47:14+00:00"
+        },
+        {
+         "name": "bounces.cloud.em.casper.com",
+         "rtype": "CNAME",
+         "value": "no record of this type",
+         "checked_at": "2026-10-11T19:47:14+00:00"
+        },
+        {
+         "name": "bounces.cloud2.em.casper.com",
+         "rtype": "CNAME",
+         "value": "no record of this type",
+         "checked_at": "2026-10-11T19:47:14+00:00"
+        }
+       ],
+       "asked": "CNAME at 23 labels under casper.com",
+       "detail": "no CNAME into mandrillapp.com at the 23 labels asked"
+      },
+      {
+       "record": "tracking",
+       "need": "optional",
+       "state": "missing",
+       "evidence": [
+        {
+         "name": "bounce.casper.com",
+         "rtype": "CNAME",
+         "value": "no record of this type",
+         "checked_at": "2026-10-11T19:47:14+00:00"
+        },
+        {
+         "name": "bounces.casper.com",
+         "rtype": "CNAME",
+         "value": "no record of this type",
+         "checked_at": "2026-10-11T19:47:14+00:00"
+        },
+        {
+         "name": "em.casper.com",
+         "rtype": "CNAME",
+         "value": "no record of this type",
+         "checked_at": "2026-10-11T19:47:14+00:00"
+        },
+        {
+         "name": "email.casper.com",
+         "rtype": "CNAME",
+         "value": "no record of this type",
+         "checked_at": "2026-10-11T19:47:14+00:00"
+        },
+        {
+         "name": "mail.casper.com",
+         "rtype": "CNAME",
+         "value": "no record of this type",
+         "checked_at": "2026-10-11T19:47:14+00:00"
+        },
+        {
+         "name": "send.casper.com",
+         "rtype": "CNAME",
+         "value": "no record of this type",
+         "checked_at": "2026-10-11T19:47:14+00:00"
+        },
+        {
+         "name": "mta.casper.com",
+         "rtype": "CNAME",
+         "value": "no record of this type",
+         "checked_at": "2026-10-11T19:47:14+00:00"
+        },
+        {
+         "name": "rp.casper.com",
+         "rtype": "CNAME",
+         "value": "no record of this type",
+         "checked_at": "2026-10-11T19:47:14+00:00"
+        },
+        {
+         "name": "pm-bounces.casper.com",
+         "rtype": "CNAME",
+         "value": "pm.mtasv.net",
+         "checked_at": "2026-10-11T19:47:14+00:00"
+        },
+        {
+         "name": "links.casper.com",
+         "rtype": "CNAME",
+         "value": "links.iterable.com",
+         "checked_at": "2026-10-11T19:47:14+00:00"
+        },
+        {
+         "name": "link.casper.com",
+         "rtype": "CNAME",
+         "value": "no record of this type",
+         "checked_at": "2026-10-11T19:47:14+00:00"
+        },
+        {
+         "name": "click.casper.com",
+         "rtype": "CNAME",
+         "value": "no record of this type",
+         "checked_at": "2026-10-11T19:47:14+00:00"
+        },
+        {
+         "name": "track.casper.com",
+         "rtype": "CNAME",
+         "value": "no record of this type",
+         "checked_at": "2026-10-11T19:47:14+00:00"
+        },
+        {
+         "name": "tracking.casper.com",
+         "rtype": "CNAME",
+         "value": "no record of this type",
+         "checked_at": "2026-10-11T19:47:14+00:00"
+        },
+        {
+         "name": "url.casper.com",
+         "rtype": "CNAME",
+         "value": "no record of this type",
+         "checked_at": "2026-10-11T19:47:14+00:00"
+        },
+        {
+         "name": "go.casper.com",
+         "rtype": "CNAME",
+         "value": "no record of this type",
+         "checked_at": "2026-10-11T19:47:14+00:00"
+        },
+        {
+         "name": "autodiscover.casper.com",
+         "rtype": "CNAME",
+         "value": "no record of this type",
+         "checked_at": "2026-10-11T19:47:14+00:00"
+        },
+        {
+         "name": "cf-bounce.casper.com",
+         "rtype": "CNAME",
+         "value": "no record of this type",
+         "checked_at": "2026-10-11T19:47:14+00:00"
+        },
+        {
+         "name": "eversrv.casper.com",
+         "rtype": "CNAME",
+         "value": "no record of this type",
+         "checked_at": "2026-10-11T19:47:14+00:00"
+        },
+        {
+         "name": "fwdkim1.casper.com",
+         "rtype": "CNAME",
+         "value": "no record of this type",
+         "checked_at": "2026-10-11T19:47:14+00:00"
+        },
+        {
+         "name": "bnc3.casper.com",
+         "rtype": "CNAME",
+         "value": "no record of this type",
+         "checked_at": "2026-10-11T19:47:14+00:00"
+        },
+        {
+         "name": "bounces.cloud.em.casper.com",
+         "rtype": "CNAME",
+         "value": "no record of this type",
+         "checked_at": "2026-10-11T19:47:14+00:00"
+        },
+        {
+         "name": "bounces.cloud2.em.casper.com",
+         "rtype": "CNAME",
+         "value": "no record of this type",
+         "checked_at": "2026-10-11T19:47:14+00:00"
+        }
+       ],
+       "asked": "CNAME at 23 labels under casper.com",
+       "detail": "no CNAME into mandrillapp.com at the 23 labels asked"
+      }
+     ],
+     "complete": true
+    },
+    {
+     "service": "Mandrill",
+     "where": "email.casper.com",
+     "items": [
+      {
+       "record": "dkim",
+       "need": "required",
+       "state": "present",
+       "evidence": [
+        {
+         "name": "mte1._domainkey.email.casper.com",
+         "rtype": "TXT",
+         "value": "v=DKIM1; k=rsa; p=MIIBIjANBgkq..., 2048-bit, fp 402b5aebde0f1c9f via dkim1.mandrillapp.com",
+         "checked_at": "2026-10-11T19:47:14+00:00"
+        },
+        {
+         "name": "mte2._domainkey.email.casper.com",
+         "rtype": "TXT",
+         "value": "v=DKIM1; k=rsa; p=MIIBIjANBgkq..., 2048-bit, fp bd970c8868f21f9b via dkim2.mandrillapp.com",
+         "checked_at": "2026-10-11T19:47:14+00:00"
+        }
+       ],
+       "asked": "TXT at mte1._domainkey.email.casper.com and TXT at mte2._domainkey.email.casper.com",
+       "detail": ""
+      },
+      {
+       "record": "return_path",
+       "need": "optional",
+       "state": "not checked",
+       "evidence": [],
+       "asked": "CNAME labels under email.casper.com",
+       "detail": "no label was asked at email.casper.com"
+      },
+      {
+       "record": "tracking",
+       "need": "optional",
+       "state": "not checked",
+       "evidence": [],
+       "asked": "CNAME labels under email.casper.com",
+       "detail": "no label was asked at email.casper.com"
+      }
+     ],
+     "complete": true
+    }
+   ]
   },
   {
    "name": "Postmark",
@@ -939,7 +1438,38 @@
      "supporting": []
     }
    ],
-   "setups": []
+   "setups": [
+    {
+     "service": "Postmark",
+     "where": "casper.com",
+     "items": [
+      {
+       "record": "spf",
+       "need": "none",
+       "state": "not needed",
+       "evidence": [],
+       "asked": "",
+       "detail": ""
+      },
+      {
+       "record": "return_path",
+       "need": "optional",
+       "state": "present",
+       "evidence": [
+        {
+         "name": "pm-bounces.casper.com",
+         "rtype": "CNAME",
+         "value": "pm.mtasv.net",
+         "checked_at": "2026-10-11T19:47:14+00:00"
+        }
+       ],
+       "asked": "CNAME at pm-bounces.casper.com",
+       "detail": ""
+      }
+     ],
+     "complete": true
+    }
+   ]
   },
   {
    "name": "Salesforce",
@@ -1429,7 +1959,23 @@
      "supporting": []
     }
    ],
-   "setups": []
+   "setups": [
+    {
+     "service": "Customer.io",
+     "where": "e.casper.com",
+     "items": [
+      {
+       "record": "tracking",
+       "need": "optional",
+       "state": "not checked",
+       "evidence": [],
+       "asked": "CNAME labels under e.casper.com",
+       "detail": "no label was asked at e.casper.com"
+      }
+     ],
+     "complete": true
+    }
+   ]
   },
   {
    "name": "Microsoft 365",

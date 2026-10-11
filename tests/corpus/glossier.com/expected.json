@@ -479,7 +479,38 @@
      "supporting": []
     }
    ],
-   "setups": []
+   "setups": [
+    {
+     "service": "Postmark",
+     "where": "glossier.com",
+     "items": [
+      {
+       "record": "spf",
+       "need": "none",
+       "state": "not needed",
+       "evidence": [],
+       "asked": "",
+       "detail": ""
+      },
+      {
+       "record": "return_path",
+       "need": "optional",
+       "state": "present",
+       "evidence": [
+        {
+         "name": "pm-bounces.glossier.com",
+         "rtype": "CNAME",
+         "value": "pm.mtasv.net",
+         "checked_at": "2026-10-11T19:47:18+00:00"
+        }
+       ],
+       "asked": "CNAME at pm-bounces.glossier.com",
+       "detail": ""
+      }
+     ],
+     "complete": true
+    }
+   ]
   },
   {
    "name": "Salesforce",
@@ -1130,7 +1161,51 @@
      "supporting": []
     }
    ],
-   "setups": []
+   "setups": [
+    {
+     "service": "Zendesk",
+     "where": "glossier.com",
+     "items": [
+      {
+       "record": "spf",
+       "need": "required",
+       "state": "not checked",
+       "evidence": [
+        {
+         "name": "glossier.com",
+         "rtype": "TXT",
+         "value": "v=spf1 include:%{i}._ip.%{h}._ehlo.%{d}._spf.vali.email ~all",
+         "checked_at": "2026-10-11T19:47:18+00:00"
+        }
+       ],
+       "asked": "TXT at glossier.com",
+       "detail": "managed through Valimail, which can authorize services without naming them"
+      },
+      {
+       "record": "dkim",
+       "need": "optional",
+       "state": "present",
+       "evidence": [
+        {
+         "name": "zendesk1._domainkey.glossier.com",
+         "rtype": "TXT",
+         "value": "v=DKIM1; t=s (strict); n=core; k=rsa; p=MIIBIjANBgkq..., 2048-bit, fp 45ce096f162d5ec4 via zendesk1._domainkey.zendesk.com",
+         "checked_at": "2026-10-11T19:47:18+00:00"
+        },
+        {
+         "name": "zendesk2._domainkey.glossier.com",
+         "rtype": "TXT",
+         "value": "v=DKIM1; t=s (strict); n=core; k=rsa; p=MIIBIjANBgkq..., 2048-bit, fp c5fa8a017cd8c5a5 via zendesk2._domainkey.zendesk.com",
+         "checked_at": "2026-10-11T19:47:18+00:00"
+        }
+       ],
+       "asked": "TXT at zendesk1._domainkey.glossier.com and TXT at zendesk2._domainkey.glossier.com",
+       "detail": ""
+      }
+     ],
+     "complete": null
+    }
+   ]
   },
   {
    "name": "Cloudflare Email Routing",
@@ -1151,7 +1226,84 @@
      "supporting": []
     }
    ],
-   "setups": []
+   "setups": [
+    {
+     "service": "Cloudflare Email Routing",
+     "where": "glossier.com",
+     "items": [
+      {
+       "record": "mx",
+       "need": "optional",
+       "state": "missing",
+       "evidence": [
+        {
+         "name": "glossier.com",
+         "rtype": "MX",
+         "value": "10 aspmx.l.google.com",
+         "checked_at": "2026-10-11T19:47:18+00:00"
+        },
+        {
+         "name": "glossier.com",
+         "rtype": "MX",
+         "value": "20 alt1.aspmx.l.google.com",
+         "checked_at": "2026-10-11T19:47:18+00:00"
+        },
+        {
+         "name": "glossier.com",
+         "rtype": "MX",
+         "value": "20 alt2.aspmx.l.google.com",
+         "checked_at": "2026-10-11T19:47:18+00:00"
+        },
+        {
+         "name": "glossier.com",
+         "rtype": "MX",
+         "value": "30 aspmx2.googlemail.com",
+         "checked_at": "2026-10-11T19:47:18+00:00"
+        },
+        {
+         "name": "glossier.com",
+         "rtype": "MX",
+         "value": "30 aspmx3.googlemail.com",
+         "checked_at": "2026-10-11T19:47:18+00:00"
+        }
+       ],
+       "asked": "MX at glossier.com",
+       "detail": "no MX host under mx.cloudflare.net"
+      },
+      {
+       "record": "spf",
+       "need": "required",
+       "state": "not checked",
+       "evidence": [
+        {
+         "name": "glossier.com",
+         "rtype": "TXT",
+         "value": "v=spf1 include:%{i}._ip.%{h}._ehlo.%{d}._spf.vali.email ~all",
+         "checked_at": "2026-10-11T19:47:18+00:00"
+        }
+       ],
+       "asked": "TXT at glossier.com",
+       "detail": "managed through Valimail, which can authorize services without naming them"
+      },
+      {
+       "record": "dkim",
+       "need": "required",
+       "state": "present",
+       "evidence": [
+        {
+         "name": "cf2024-1._domainkey.glossier.com",
+         "rtype": "TXT",
+         "value": "v=DKIM1; h=sha256; k=rsa; p=MIIBIjANBgkq..., 2048-bit, fp 3893fd85802c0281",
+         "checked_at": "2026-10-11T19:47:18+00:00"
+        }
+       ],
+       "asked": "TXT at cf2024-1._domainkey.glossier.com",
+       "detail": ""
+      }
+     ],
+     "complete": null
+    }
+   ]
   },
   {
    "name": "Mandrill",
@@ -1172,7 +1324,324 @@
      "supporting": []
     }
    ],
-   "setups": []
+   "setups": [
+    {
+     "service": "Mandrill",
+     "where": "glossier.com",
+     "items": [
+      {
+       "record": "dkim",
+       "need": "required",
+       "state": "present",
+       "evidence": [
+        {
+         "name": "mandrill._domainkey.glossier.com",
+         "rtype": "TXT",
+         "value": "v=DKIM1; k=rsa; p=MIGfMA0GCSqG..., 1024-bit, fp 9cee89b6f986543a",
+         "checked_at": "2026-10-11T19:47:18+00:00"
+        }
+       ],
+       "asked": "TXT at mandrill._domainkey.glossier.com",
+       "detail": "older setup: a key at mandrill; the current setup names mte1 and mte2"
+      },
+      {
+       "record": "return_path",
+       "need": "optional",
+       "state": "missing",
+       "evidence": [
+        {
+         "name": "bounce.glossier.com",
+         "rtype": "CNAME",
+         "value": "no record of this type",
+         "checked_at": "2026-10-11T19:47:18+00:00"
+        },
+        {
+         "name": "bounces.glossier.com",
+         "rtype": "CNAME",
+         "value": "no record of this type",
+         "checked_at": "2026-10-11T19:47:18+00:00"
+        },
+        {
+         "name": "em.glossier.com",
+         "rtype": "CNAME",
+         "value": "no record of this type",
+         "checked_at": "2026-10-11T19:47:18+00:00"
+        },
+        {
+         "name": "email.glossier.com",
+         "rtype": "CNAME",
+         "value": "no record of this type",
+         "checked_at": "2026-10-11T19:47:18+00:00"
+        },
+        {
+         "name": "mail.glossier.com",
+         "rtype": "CNAME",
+         "value": "ghs.googlehosted.com",
+         "checked_at": "2026-10-11T19:47:18+00:00"
+        },
+        {
+         "name": "send.glossier.com",
+         "rtype": "CNAME",
+         "value": "u161779.wl030.sendgrid.net",
+         "checked_at": "2026-10-11T19:47:18+00:00"
+        },
+        {
+         "name": "mta.glossier.com",
+         "rtype": "CNAME",
+         "value": "no record of this type",
+         "checked_at": "2026-10-11T19:47:18+00:00"
+        },
+        {
+         "name": "rp.glossier.com",
+         "rtype": "CNAME",
+         "value": "no record of this type",
+         "checked_at": "2026-10-11T19:47:18+00:00"
+        },
+        {
+         "name": "pm-bounces.glossier.com",
+         "rtype": "CNAME",
+         "value": "pm.mtasv.net",
+         "checked_at": "2026-10-11T19:47:18+00:00"
+        },
+        {
+         "name": "links.glossier.com",
+         "rtype": "CNAME",
+         "value": "no record of this type",
+         "checked_at": "2026-10-11T19:47:18+00:00"
+        },
+        {
+         "name": "link.glossier.com",
+         "rtype": "CNAME",
+         "value": "sendgrid.net",
+         "checked_at": "2026-10-11T19:47:18+00:00"
+        },
+        {
+         "name": "click.glossier.com",
+         "rtype": "CNAME",
+         "value": "no record of this type",
+         "checked_at": "2026-10-11T19:47:18+00:00"
+        },
+        {
+         "name": "track.glossier.com",
+         "rtype": "CNAME",
+         "value": "no record of this type",
+         "checked_at": "2026-10-11T19:47:18+00:00"
+        },
+        {
+         "name": "tracking.glossier.com",
+         "rtype": "CNAME",
+         "value": "no record of this type",
+         "checked_at": "2026-10-11T19:47:18+00:00"
+        },
+        {
+         "name": "url.glossier.com",
+         "rtype": "CNAME",
+         "value": "no record of this type",
+         "checked_at": "2026-10-11T19:47:18+00:00"
+        },
+        {
+         "name": "go.glossier.com",
+         "rtype": "CNAME",
+         "value": "cname.short.io",
+         "checked_at": "2026-10-11T19:47:18+00:00"
+        },
+        {
+         "name": "autodiscover.glossier.com",
+         "rtype": "CNAME",
+         "value": "no record of this type",
+         "checked_at": "2026-10-11T19:47:18+00:00"
+        },
+        {
+         "name": "cf-bounce.glossier.com",
+         "rtype": "CNAME",
+         "value": "no record of this type",
+         "checked_at": "2026-10-11T19:47:18+00:00"
+        },
+        {
+         "name": "eversrv.glossier.com",
+         "rtype": "CNAME",
+         "value": "no record of this type",
+         "checked_at": "2026-10-11T19:47:18+00:00"
+        },
+        {
+         "name": "fwdkim1.glossier.com",
+         "rtype": "CNAME",
+         "value": "no record of this type",
+         "checked_at": "2026-10-11T19:47:18+00:00"
+        },
+        {
+         "name": "bnc3.glossier.com",
+         "rtype": "CNAME",
+         "value": "no record of this type",
+         "checked_at": "2026-10-11T19:47:18+00:00"
+        },
+        {
+         "name": "bounces.cloud.em.glossier.com",
+         "rtype": "CNAME",
+         "value": "no record of this type",
+         "checked_at": "2026-10-11T19:47:18+00:00"
+        },
+        {
+         "name": "bounces.cloud2.em.glossier.com",
+         "rtype": "CNAME",
+         "value": "no record of this type",
+         "checked_at": "2026-10-11T19:47:18+00:00"
+        }
+       ],
+       "asked": "CNAME at 23 labels under glossier.com",
+       "detail": "no CNAME into mandrillapp.com at the 23 labels asked"
+      },
+      {
+       "record": "tracking",
+       "need": "optional",
+       "state": "missing",
+       "evidence": [
+        {
+         "name": "bounce.glossier.com",
+         "rtype": "CNAME",
+         "value": "no record of this type",
+         "checked_at": "2026-10-11T19:47:18+00:00"
+        },
+        {
+         "name": "bounces.glossier.com",
+         "rtype": "CNAME",
+         "value": "no record of this type",
+         "checked_at": "2026-10-11T19:47:18+00:00"
+        },
+        {
+         "name": "em.glossier.com",
+         "rtype": "CNAME",
+         "value": "no record of this type",
+         "checked_at": "2026-10-11T19:47:18+00:00"
+        },
+        {
+         "name": "email.glossier.com",
+         "rtype": "CNAME",
+         "value": "no record of this type",
+         "checked_at": "2026-10-11T19:47:18+00:00"
+        },
+        {
+         "name": "mail.glossier.com",
+         "rtype": "CNAME",
+         "value": "ghs.googlehosted.com",
+         "checked_at": "2026-10-11T19:47:18+00:00"
+        },
+        {
+         "name": "send.glossier.com",
+         "rtype": "CNAME",
+         "value": "u161779.wl030.sendgrid.net",
+         "checked_at": "2026-10-11T19:47:18+00:00"
+        },
+        {
+         "name": "mta.glossier.com",
+         "rtype": "CNAME",
+         "value": "no record of this type",
+         "checked_at": "2026-10-11T19:47:18+00:00"
+        },
+        {
+         "name": "rp.glossier.com",
+         "rtype": "CNAME",
+         "value": "no record of this type",
+         "checked_at": "2026-10-11T19:47:18+00:00"
+        },
+        {
+         "name": "pm-bounces.glossier.com",
+         "rtype": "CNAME",
+         "value": "pm.mtasv.net",
+         "checked_at": "2026-10-11T19:47:18+00:00"
+        },
+        {
+         "name": "links.glossier.com",
+         "rtype": "CNAME",
+         "value": "no record of this type",
+         "checked_at": "2026-10-11T19:47:18+00:00"
+        },
+        {
+         "name": "link.glossier.com",
+         "rtype": "CNAME",
+         "value": "sendgrid.net",
+         "checked_at": "2026-10-11T19:47:18+00:00"
+        },
+        {
+         "name": "click.glossier.com",
+         "rtype": "CNAME",
+         "value": "no record of this type",
+         "checked_at": "2026-10-11T19:47:18+00:00"
+        },
+        {
+         "name": "track.glossier.com",
+         "rtype": "CNAME",
+         "value": "no record of this type",
+         "checked_at": "2026-10-11T19:47:18+00:00"
+        },
+        {
+         "name": "tracking.glossier.com",
+         "rtype": "CNAME",
+         "value": "no record of this type",
+         "checked_at": "2026-10-11T19:47:18+00:00"
+        },
+        {
+         "name": "url.glossier.com",
+         "rtype": "CNAME",
+         "value": "no record of this type",
+         "checked_at": "2026-10-11T19:47:18+00:00"
+        },
+        {
+         "name": "go.glossier.com",
+         "rtype": "CNAME",
+         "value": "cname.short.io",
+         "checked_at": "2026-10-11T19:47:18+00:00"
+        },
+        {
+         "name": "autodiscover.glossier.com",
+         "rtype": "CNAME",
+         "value": "no record of this type",
+         "checked_at": "2026-10-11T19:47:18+00:00"
+        },
+        {
+         "name": "cf-bounce.glossier.com",
+         "rtype": "CNAME",
+         "value": "no record of this type",
+         "checked_at": "2026-10-11T19:47:18+00:00"
+        },
+        {
+         "name": "eversrv.glossier.com",
+         "rtype": "CNAME",
+         "value": "no record of this type",
+         "checked_at": "2026-10-11T19:47:18+00:00"
+        },
+        {
+         "name": "fwdkim1.glossier.com",
+         "rtype": "CNAME",
+         "value": "no record of this type",
+         "checked_at": "2026-10-11T19:47:18+00:00"
+        },
+        {
+         "name": "bnc3.glossier.com",
+         "rtype": "CNAME",
+         "value": "no record of this type",
+         "checked_at": "2026-10-11T19:47:18+00:00"
+        },
+        {
+         "name": "bounces.cloud.em.glossier.com",
+         "rtype": "CNAME",
+         "value": "no record of this type",
+         "checked_at": "2026-10-11T19:47:18+00:00"
+        },
+        {
+         "name": "bounces.cloud2.em.glossier.com",
+         "rtype": "CNAME",
+         "value": "no record of this type",
+         "checked_at": "2026-10-11T19:47:18+00:00"
+        }
+       ],
+       "asked": "CNAME at 23 labels under glossier.com",
+       "detail": "no CNAME into mandrillapp.com at the 23 labels asked"
+      }
+     ],
+     "complete": true
+    }
+   ]
   },
   {
    "name": "Amazon SES",
