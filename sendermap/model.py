@@ -175,6 +175,17 @@ class Unknown:
 
 
 @dataclass(frozen=True, slots=True)
+class KeyPrint:
+    """A DKIM public key seen at one selector: the fingerprint of its p= bytes and the record that
+    shows it. Two selectors with one fingerprint publish the same key."""
+
+    selector: str
+    where: str
+    fingerprint: str
+    evidence: Evidence
+
+
+@dataclass(frozen=True, slots=True)
 class Finding:
     severity: Severity
     title: str
@@ -273,6 +284,7 @@ class Observed:
     checked: tuple[Checked, ...] = ()
     historical: tuple[Historical, ...] = ()
     absences: tuple[Absence, ...] = ()
+    keys: tuple[KeyPrint, ...] = ()
 
     def __add__(self, other: Observed) -> Observed:
         return Observed(
@@ -283,6 +295,7 @@ class Observed:
             self.checked + other.checked,
             self.historical + other.historical,
             self.absences + other.absences,
+            self.keys + other.keys,
         )
 
     def checked_by_name(self) -> tuple[Checked, ...]:

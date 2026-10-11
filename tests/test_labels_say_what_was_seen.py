@@ -4,7 +4,7 @@ import httpx
 from conftest import CHECKED, Zone, context
 
 from sendermap import map_domain
-from sendermap.model import Kind, Observed, Role, Severity, Tier
+from sendermap.model import Evidence, KeyPrint, Kind, Observed, Role, Severity, Tier
 from sendermap.sources import Context, dkim, mta_sts, mx, spf
 
 KEY = "v=DKIM1; k=rsa; p=" + "A" * 392
@@ -102,3 +102,46 @@ async def test_the_easydmarc_note_says_the_walk_read_its_record() -> None:
     )
     observed, _ = await spf.collect(context(unread), "example.com")
     assert "could not read it" in observed.findings[0].detail
+
+
+async def test_the_key_flags_say_what_each_tag_means() -> None:
+    p = "MCowBQYDK2VwAyEA" + "A" * 28
+    zone = (
+        Zone()
+        .add("k1._domainkey.example.com", "TXT", f"v=DKIM1; t=y; p={p}")
+        .add("k2._domainkey.example.com", "TXT", f"v=DKIM1; h=sha1; p={p}")
+        .add("k3._domainkey.example.com", "TXT", f"v=DKIM1; s=tlsrpt; p={p}")
+        .add("s1._domainkey.example.com", "TXT", f"v=DKIM1; k=dsa; p={p}")
+        .add("s2._domainkey.example.com", "TXT", "v=DKIM1; k=ed25519; p=" + "A" * 40)
+    )
+    observed = await scan(zone, ["k1", "k2", "k3", "s1", "s2"])
+    titles = {f.title: f.detail for f in observed.findings}
+    assert titles["The k1 key at example.com is in testing mode"].startswith(
+        "t=y tells verifiers to treat mail signed with it like unsigned mail (RFC 6376 section "
+        "3.6.1), so the key adds nothing until the flag is removed."
+    )
+    assert "RFC 8301 (section 3.1)" in titles["The k2 key at example.com allows SHA-1 only"]
+    assert (
+        "verifiers ignore the record for email (RFC 6376 section 3.6.1)"
+        in (titles["The k3 key at example.com is not for email"])
+    )
+    assert "cannot be used" in titles["The s1 key at example.com has an unknown key type, k=dsa"]
+    assert "decodes to 30 bytes" in titles["The s2 key at example.com is a malformed Ed25519 key"]
+
+
+def test_the_same_key_note_names_both_selectors_and_where() -> None:
+    def seen(selector: str, where: str) -> KeyPrint:
+        name = f"{selector}._domainkey.{where}"
+        return KeyPrint(selector, where, "0123456789abcdef", Evidence(name, "TXT", KEY, CHECKED))
+
+    (here,) = dkim.same_keys([seen("k1", "example.com"), seen("s1", "example.com")])
+    assert here.title == "The k1 and s1 keys at example.com are the same key"
+    assert [e.name for e in here.evidence] == [
+        "k1._domainkey.example.com",
+        "s1._domainkey.example.com",
+    ]
+    (apart,) = dkim.same_keys([seen("k1", "example.com"), seen("s1", "mail.example.com")])
+    assert apart.title == (
+        "The k1 key at example.com and the s1 key at mail.example.com are the same key"
+    )
+    assert dkim.same_keys([seen("k1", "example.com"), seen("k1", "example.com")]) == ()
