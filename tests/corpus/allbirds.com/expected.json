@@ -62,18 +62,6 @@
      "evidence": {
       "name": "allbirds.com",
       "rtype": "TXT",
-      "value": "MS=ms79507765",
-      "checked_at": "2026-10-11T19:45:52+00:00"
-     },
-     "supporting": []
-    },
-    {
-     "service": "Microsoft 365",
-     "kind": "verification token",
-     "where": "allbirds.com",
-     "evidence": {
-      "name": "allbirds.com",
-      "rtype": "TXT",
       "value": "MS=A01B077C9CEAFC03E22F0B625C7E7600E37CC59A",
       "checked_at": "2026-10-11T19:45:52+00:00"
      },
@@ -87,6 +75,18 @@
       "name": "allbirds.com",
       "rtype": "TXT",
       "value": "MS=ms40651830",
+      "checked_at": "2026-10-11T19:45:52+00:00"
+     },
+     "supporting": []
+    },
+    {
+     "service": "Microsoft 365",
+     "kind": "verification token",
+     "where": "allbirds.com",
+     "evidence": {
+      "name": "allbirds.com",
+      "rtype": "TXT",
+      "value": "MS=ms79507765",
       "checked_at": "2026-10-11T19:45:52+00:00"
      },
      "supporting": []

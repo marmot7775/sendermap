@@ -14,7 +14,7 @@
      "evidence": {
       "name": "casper.com",
       "rtype": "MX",
-      "value": "10 aspmx3.googlemail.com",
+      "value": "1 aspmx.l.google.com",
       "checked_at": "2026-10-11T19:47:14+00:00"
      },
      "supporting": []
@@ -50,7 +50,7 @@
      "evidence": {
       "name": "casper.com",
       "rtype": "MX",
-      "value": "1 aspmx.l.google.com",
+      "value": "10 aspmx2.googlemail.com",
       "checked_at": "2026-10-11T19:47:14+00:00"
      },
      "supporting": []
@@ -62,7 +62,7 @@
      "evidence": {
       "name": "casper.com",
       "rtype": "MX",
-      "value": "10 aspmx2.googlemail.com",
+      "value": "10 aspmx3.googlemail.com",
       "checked_at": "2026-10-11T19:47:14+00:00"
      },
      "supporting": []
@@ -86,6 +86,18 @@
      "evidence": {
       "name": "e.casper.com",
       "rtype": "MX",
+      "value": "1 aspmx.l.google.com",
+      "checked_at": "2026-10-11T19:47:14+00:00"
+     },
+     "supporting": []
+    },
+    {
+     "service": "Google Workspace",
+     "kind": "in use for a subdomain's mail (MX)",
+     "where": "e.casper.com",
+     "evidence": {
+      "name": "e.casper.com",
+      "rtype": "MX",
       "value": "5 alt1.aspmx.l.google.com",
       "checked_at": "2026-10-11T19:47:14+00:00"
      },
@@ -99,18 +111,6 @@
       "name": "e.casper.com",
       "rtype": "MX",
       "value": "5 alt2.aspmx.l.google.com",
-      "checked_at": "2026-10-11T19:47:14+00:00"
-     },
-     "supporting": []
-    },
-    {
-     "service": "Google Workspace",
-     "kind": "in use for a subdomain's mail (MX)",
-     "where": "e.casper.com",
-     "evidence": {
-      "name": "e.casper.com",
-      "rtype": "MX",
-      "value": "1 aspmx.l.google.com",
       "checked_at": "2026-10-11T19:47:14+00:00"
      },
      "supporting": []
@@ -146,7 +146,7 @@
      "evidence": {
       "name": "mail.casper.com",
       "rtype": "MX",
-      "value": "5 alt2.aspmx.l.google.com",
+      "value": "1 aspmx.l.google.com",
       "checked_at": "2026-10-11T19:47:14+00:00"
      },
      "supporting": []
@@ -158,7 +158,19 @@
      "evidence": {
       "name": "mail.casper.com",
       "rtype": "MX",
-      "value": "1 aspmx.l.google.com",
+      "value": "5 alt1.aspmx.l.google.com",
+      "checked_at": "2026-10-11T19:47:14+00:00"
+     },
+     "supporting": []
+    },
+    {
+     "service": "Google Workspace",
+     "kind": "in use for a subdomain's mail (MX)",
+     "where": "mail.casper.com",
+     "evidence": {
+      "name": "mail.casper.com",
+      "rtype": "MX",
+      "value": "5 alt2.aspmx.l.google.com",
       "checked_at": "2026-10-11T19:47:14+00:00"
      },
      "supporting": []
@@ -190,11 +202,23 @@
     {
      "service": "Google Workspace",
      "kind": "in use for a subdomain's mail (MX)",
-     "where": "mail.casper.com",
+     "where": "orders.casper.com",
      "evidence": {
-      "name": "mail.casper.com",
+      "name": "orders.casper.com",
       "rtype": "MX",
-      "value": "5 alt1.aspmx.l.google.com",
+      "value": "25 aspmx.l.google.com",
+      "checked_at": "2026-10-11T19:47:14+00:00"
+     },
+     "supporting": []
+    },
+    {
+     "service": "Google Workspace",
+     "kind": "in use for a subdomain's mail (MX)",
+     "where": "orders.casper.com",
+     "evidence": {
+      "name": "orders.casper.com",
+      "rtype": "MX",
+      "value": "30 alt1.aspmx.l.google.com",
       "checked_at": "2026-10-11T19:47:14+00:00"
      },
      "supporting": []
@@ -237,30 +261,6 @@
     },
     {
      "service": "Google Workspace",
-     "kind": "in use for a subdomain's mail (MX)",
-     "where": "orders.casper.com",
-     "evidence": {
-      "name": "orders.casper.com",
-      "rtype": "MX",
-      "value": "25 aspmx.l.google.com",
-      "checked_at": "2026-10-11T19:47:14+00:00"
-     },
-     "supporting": []
-    },
-    {
-     "service": "Google Workspace",
-     "kind": "in use for a subdomain's mail (MX)",
-     "where": "orders.casper.com",
-     "evidence": {
-      "name": "orders.casper.com",
-      "rtype": "MX",
-      "value": "30 alt1.aspmx.l.google.com",
-      "checked_at": "2026-10-11T19:47:14+00:00"
-     },
-     "supporting": []
-    },
-    {
-     "service": "Google Workspace",
      "kind": "DKIM key named for it",
      "where": "casper.com",
      "evidence": {
@@ -292,7 +292,7 @@
       {
        "name": "orders.casper.com",
        "rtype": "MX",
-       "value": "30 alt2.aspmx.l.google.com",
+       "value": "25 aspmx.l.google.com",
        "checked_at": "2026-10-11T19:47:14+00:00"
       }
      ]
@@ -942,7 +942,7 @@
   },
   {
    "what": "IP address in SPF",
-   "value": "107.20.91.250 (AS16509, Amazon Web Services)",
+   "value": "107.20.91.250 (AS14618, Amazon Web Services)",
    "where": "casper.com",
    "evidence": {
     "name": "docebosaas.com",
@@ -1272,7 +1272,7 @@
   },
   {
    "what": "IP range in SPF",
-   "value": "207.67.38.0/24 (AS3549, LVLT-3549 - Level 3 Parent, LLC, US)",
+   "value": "207.67.38.0/24 (AS22606, EXACT-7 - Salesforce.com, Inc., US)",
    "where": "mail.casper.com",
    "evidence": {
     "name": "cust-spf.exacttarget.com",

@@ -268,9 +268,15 @@ same `checked_at` give the same map. `map_domain` takes
 `checked_at` from the caller and refuses one without a timezone. Only the Run's `elapsed`
 differs between such runs, and `SenderMap` equality ignores the Run. The SPF walk asks for every
 reachable record at once, then walks the tree depth first in the order of its terms, so its
-output never follows DNS timing. The vendor range table is built per map through the same
+output never follows DNS timing. A record set has no order (RFC 2181 section 5) and a resolver
+returns it in any, while a source that takes a record by position or lists claims in record order
+would follow it, so every Answer's records are sorted at the boundary, in `dns.Answer` itself:
+MX by preference then host, everything else by text. Every resolver, the recorded replay and the
+test zone included, hands out the same order for the same set. A CNAME chain keeps its order,
+since hops are a sequence. The vendor range table is built per map through the same
 lookups and counted with them. `tests/test_determinism.py` maps one busy fake domain twenty
-times with random delays on every answer and requires identical output.
+times with random delays on every answer, and again with every record set shuffled on every
+query, and requires identical output: the JSON, the deciding claim of each service and every view.
 
 ## The vendor data
 

@@ -33,11 +33,18 @@ class Status(StrEnum):
 
 @dataclass(frozen=True, slots=True)
 class Answer:
+    """One question's answer. A record set has no order (RFC 2181 section 5) and a resolver
+    returns it in any, so `records` is sorted here, at the boundary, and the same set reads the
+    same from every resolver. `chain` keeps its order, since hops are a sequence."""
+
     name: str
     rtype: str
     status: Status
     records: tuple[str, ...] = ()
     chain: tuple[str, ...] = ()  # the CNAME hops the name led through, in order
+
+    def __post_init__(self) -> None:
+        object.__setattr__(self, "records", sort_records(self.rtype, self.records))
 
     @property
     def ok(self) -> bool:
@@ -57,6 +64,19 @@ class Answer:
     def dangling(self) -> bool:
         """An alias to a name that does not exist."""
         return self.status is Status.NXDOMAIN and bool(self.chain)
+
+
+def sort_records(rtype: str, records: tuple[str, ...]) -> tuple[str, ...]:
+    """MX by preference then host, everything else by text."""
+    if rtype.upper() == "MX":
+        return tuple(sorted(records, key=_mx_order))
+    return tuple(sorted(records))
+
+
+def _mx_order(record: str) -> tuple[int, str]:
+    preference, _, host = record.partition(" ")
+    # A record that is not "preference host" goes after every one that is, by its text.
+    return (int(preference), host) if preference.isdigit() else (1 << 16, record)
 
 
 class Resolver(Protocol):

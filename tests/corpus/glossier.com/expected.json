@@ -86,30 +86,6 @@
      "evidence": {
       "name": "receipts.glossier.com",
       "rtype": "MX",
-      "value": "10 alt3.aspmx.l.google.com",
-      "checked_at": "2026-10-11T19:47:18+00:00"
-     },
-     "supporting": []
-    },
-    {
-     "service": "Google Workspace",
-     "kind": "in use for a subdomain's mail (MX)",
-     "where": "receipts.glossier.com",
-     "evidence": {
-      "name": "receipts.glossier.com",
-      "rtype": "MX",
-      "value": "10 alt4.aspmx.l.google.com",
-      "checked_at": "2026-10-11T19:47:18+00:00"
-     },
-     "supporting": []
-    },
-    {
-     "service": "Google Workspace",
-     "kind": "in use for a subdomain's mail (MX)",
-     "where": "receipts.glossier.com",
-     "evidence": {
-      "name": "receipts.glossier.com",
-      "rtype": "MX",
       "value": "5 alt1.aspmx.l.google.com",
       "checked_at": "2026-10-11T19:47:18+00:00"
      },
@@ -123,6 +99,30 @@
       "name": "receipts.glossier.com",
       "rtype": "MX",
       "value": "5 alt2.aspmx.l.google.com",
+      "checked_at": "2026-10-11T19:47:18+00:00"
+     },
+     "supporting": []
+    },
+    {
+     "service": "Google Workspace",
+     "kind": "in use for a subdomain's mail (MX)",
+     "where": "receipts.glossier.com",
+     "evidence": {
+      "name": "receipts.glossier.com",
+      "rtype": "MX",
+      "value": "10 alt3.aspmx.l.google.com",
+      "checked_at": "2026-10-11T19:47:18+00:00"
+     },
+     "supporting": []
+    },
+    {
+     "service": "Google Workspace",
+     "kind": "in use for a subdomain's mail (MX)",
+     "where": "receipts.glossier.com",
+     "evidence": {
+      "name": "receipts.glossier.com",
+      "rtype": "MX",
+      "value": "10 alt4.aspmx.l.google.com",
       "checked_at": "2026-10-11T19:47:18+00:00"
      },
      "supporting": []
@@ -337,7 +337,7 @@
      "evidence": {
       "name": "marketing.glossier.com",
       "rtype": "MX",
-      "value": "20 mx2.sendgrid.net",
+      "value": "10 mx.sendgrid.net",
       "checked_at": "2026-10-11T19:47:18+00:00"
      },
      "supporting": []
@@ -349,7 +349,7 @@
      "evidence": {
       "name": "marketing.glossier.com",
       "rtype": "MX",
-      "value": "10 mx.sendgrid.net",
+      "value": "20 mx2.sendgrid.net",
       "checked_at": "2026-10-11T19:47:18+00:00"
      },
      "supporting": []
