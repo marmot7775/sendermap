@@ -33,7 +33,12 @@
   }
  ],
  "unknowns": [],
- "gaps": [],
+ "gaps": [
+  {
+   "asked": "certificate transparency, crt.sh: GET https://crt.sh/?q=%25.example.com&output=json",
+   "happened": "not asked: read only with --ct (it also holds expired certificates)"
+  }
+ ],
  "subdomains_checked": [],
  "checked": [
   {
@@ -65,16 +70,29 @@
     "bounces.cloud2.em"
    ],
    "pages": [
-    "https://example.com/"
+    "https://example.com/",
+    "https://api.certspotter.com/v1/issuances?domain=example.com&include_subdomains=true&expand=dns_names"
    ],
    "denial": "wildcard"
   }
  ],
  "ct": {
   "status": "off",
-  "logged": 0,
+  "logged": 1,
   "resolved": 0,
-  "gone_unnamed": 0
+  "gone_unnamed": 0,
+  "providers": [
+   {
+    "name": "Cert Spotter",
+    "status": "read",
+    "logged": 1
+   },
+   {
+    "name": "crt.sh",
+    "status": "off",
+    "logged": 0
+   }
+  ]
  },
  "historical": [],
  "logo": null,

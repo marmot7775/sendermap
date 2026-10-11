@@ -59,8 +59,11 @@ Everything Sendermap reports is built from a few frozen dataclasses in `senderma
   and `not_after`, and the CNAME `target` that matched, when a CNAME did.
 - **Historical**: a name in certificate logs that no longer resolves but whose leftover CNAME
   points at a service: a possible past vendor, kept apart from the services.
-- **CtSummary**: whether CT was off, read from crt.sh, read from the cache, or unavailable, with
-  counts of names logged, resolved, and gone without naming a service.
+- **CtSummary**: whether the logged names were resolved and matched (`off` without `--ct`,
+  `unavailable` when no certificate log answered), with counts of names logged by all providers
+  together, resolved, and gone without naming a service, and one **CtProvider** per certificate
+  log: its name, whether it was read, read from the cache, unavailable or off, and how many names
+  under the domain it logged.
 - **Run**: when and how one map was made: `checked_at`, `elapsed` seconds and DNS `lookups`.
 - **SenderMap**: the domain, its services, findings, unknowns, gaps, the sending subdomains
   checked, one Checked per name, the BIMI logo if any, the absences, and the Run. `to_dict()` gives JSON with
@@ -76,8 +79,9 @@ Phase 1, concurrent
   spf.collect(domain)   -> claims + SpfTree (IP ranges, include hints, lookup count)
   mx, tokens, reports, labels, mta_sts, web   -> claims, unknowns, findings, gaps
   bimi.logo             -> logo URL, not evidence
-  subdomains.discover   -> wordlist + CT log names that publish SPF or MX
-  ct.collect (--ct)     -> crt.sh names, each resolved for CNAME, A and MX and matched
+  ct.read_logs          -> logged names, once per map: Cert Spotter, + crt.sh with --ct
+    subdomains.discover -> wordlist + those names, the ones that publish SPF or MX
+    ct.collect (--ct)   -> those names, each resolved for CNAME, A and MX and matched
 Phase 2, the domain itself
   backed = generic DKIM names that belong to services SPF or MX already shows
   probe order = selector rules ranked by MX and SPF hints, then the generic names
@@ -99,14 +103,17 @@ range listed as unknown with "network lookup failed", not "no network". If the M
 report, label, MTA-STS or website source or the subdomain search raises an exception, it
 becomes a gap that says it crashed instead of losing the map. A check turned off by the caller
 (`--no-web`, `--no-subdomains`) is a gap too, and with both off the MTA-STS policy is not
-fetched, which is also a gap.
+fetched, which is also a gap. Certificate logs are read by `ct.py` alone, once per map: each
+provider that failed or was off (crt.sh without `--ct`) is a gap of its own, worded with the
+provider's name and what happened, and each provider asked is recorded as a page in Checked. With
+`--no-subdomains` and no `--ct`, nothing reads the logs and no provider is asked.
 
 Every cap that leaves names unasked records a gap naming the cap and the count it dropped: 30
 sending subdomains, 27 DKIM names per sending subdomain beyond the ones its SPF or MX backs, 24
 SPF ranges for the network lookup, 60 names from the certificate log and names more than two
 labels below the domain, an SPF depth of 10, a vendor's own SPF read 3 levels deep for its
 published ranges, 2,000,000 bytes of a web page, 5 redirects of a web page, and 200 names from
-crt.sh.
+the certificate logs.
 
 ## Fetching pages
 
@@ -149,8 +156,8 @@ for the check and a private one a moment later (DNS rebinding) is not caught.
 | `sources/dkim.py` | DKIM probing, the wildcard check, reading keys and their flags, the key fingerprint, dangling, short and shared keys |
 | `sources/labels.py`, `tokens.py`, `reports.py`, `bimi.py` | Fixed-label CNAMEs, verification TXT, report addresses, the BIMI logo |
 | `sources/networks.py` | Naming SPF IP ranges by the ranges services publish, then by network owner |
-| `sources/ct.py` | Certificate transparency (`--ct`): crt.sh with retries and a one-day disk cache, then each logged name resolved and matched by the same catalog matchers as the DNS sources |
-| `sources/subdomains.py` | Finding sending subdomains from a wordlist and the certificate log |
+| `sources/ct.py` | Certificate transparency: the only reader of certificate logs. Reads them once per map through a provider list (Cert Spotter always, crt.sh with `--ct`), each with its own tries, timeout and one-day disk cache, into one set of names; with `--ct`, each logged name resolved and matched by the same catalog matchers as the DNS sources |
+| `sources/subdomains.py` | Finding sending subdomains from a wordlist and the names `ct.py` read |
 | `render/text.py`, `render/markdown.py` | The terminal and Markdown views; both show the gaps and what was asked at each name, as the web page does, and group unrecognised IP ranges by network |
 | `cli.py` | The `sendermap` command |
 | `testing.py` | Recording and replaying DNS answers and pages, and replaying a recorded case |
@@ -235,6 +242,11 @@ Checked's class as `denial`.
   same with the same pattern, `render.NETWORK_VALUE`. A range with no network, one alone in its
   network, one whose networks have different names, and any unknown that is not an IP range stay
   single lines.
+- Every provider's answer becomes rows of (name, not before, not after) that go through one
+  parse, `ct.logged_names`: lowercased, a leading `*.` dropped (the name below a wildcard is a
+  name too), names outside the domain and other wildcards dropped, sorted, and a name on several
+  certificates keeps the dates of the one that expires last. Cert Spotter's dates lose their
+  trailing `Z` so they compare with crt.sh's (both are UTC).
 - A name from certificate logs (`--ct`) is matched with the matchers the DNS path uses: each
   hop of its CNAME chain through `label_cname` with the name's first label, as a label CNAME
   is; then its MX hosts through the MX table; then its addresses through the published ranges
@@ -270,7 +282,7 @@ Checked's class as `denial`.
 
 ## Determinism
 
-The same DNS answers (and the same web pages and certificate log, when those are read) and the
+The same DNS answers (and the same web pages and certificate logs, when those are read) and the
 same `checked_at` give the same map. `map_domain` takes
 `checked_at` from the caller and refuses one without a timezone. Only the Run's `elapsed`
 differs between such runs, and `SenderMap` equality ignores the Run. The SPF walk asks for every
@@ -340,9 +352,11 @@ pattern becomes its proof; `--move` moves proven patterns into vendors.json.
   Optional: `resolver`, `http`, `use_web`, `use_subdomains`, `use_ct` (off by default) with
   `ct_cache` (a directory, or None for no cache), and a `progress` callback.
 - **Command line**: `sendermap example.com`, with `--json`, `--markdown`, `--evidence` (every
-  claim, not only the deciding one), `--no-web`, `--no-subdomains`, `--ct` (names from
-  certificate logs, cached in `$XDG_CACHE_HOME/sendermap/crtsh` or `~/.cache/sendermap/crtsh`)
-  and `--doh` (Cloudflare DNS over HTTPS). The web site does not use CT.
+  claim, not only the deciding one), `--no-web`, `--no-subdomains`, `--ct` (crt.sh read too,
+  and every logged name resolved and matched) and `--doh` (Cloudflare DNS over HTTPS). Both
+  certificate logs are cached in `$XDG_CACHE_HOME/sendermap/ct` or `~/.cache/sendermap/ct`, one
+  directory per provider. The web site does not use `--ct` or the cache: it reads Cert Spotter
+  for the subdomain search on each map it builds.
 - **Web site**: a FastAPI app. `GET /api/map?d=` returns the map as JSON, `GET /api/map.md?d=`
   as Markdown, and `GET /api/map/stream?d=` streams progress then the map as server-sent events.
   Uvicorn's access log is turned off when the app starts, so no query string is logged; a test
@@ -378,7 +392,9 @@ proof on every vendor pattern and one proofed selector list read once; `test_pen
 requires that the engine never opens the pending file and that a host only a pending pattern
 matches shows as not recognised; `test_hunt_proofs.py` holds where the hunt may find each kind of
 pattern, which domain's proof wins, that a rerun asks nothing and that a moved proof loads. `test_ct.py` runs the CT source on a recorded crt.sh answer
-(`tests/fixtures/crtsh_allbirds.json`).
+(`tests/fixtures/crtsh_allbirds.json`) beside Cert Spotter answers, and holds that the logs are
+read once per map, crt.sh only with `--ct`, one gap per provider that failed or was off, and the
+cache per provider.
 
 ### Record and replay
 

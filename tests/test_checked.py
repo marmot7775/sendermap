@@ -37,7 +37,12 @@ async def test_each_name_records_the_dkim_names_labels_and_pages_asked() -> None
     result = await acme_map()
     apex, sub = result.checked
     assert apex.where == "acme.test" and sub.where == "email.acme.test"
-    assert apex.pages == ("https://acme.test/", "https://acme.test/subprocessors")
+    assert apex.pages == (
+        "https://acme.test/",
+        "https://acme.test/subprocessors",
+        "https://api.certspotter.com/v1/issuances?domain=acme.test&include_subdomains=true"
+        "&expand=dns_names",
+    )
     assert "bounce" in apex.labels and "links" in apex.labels
     sweep = catalog.load().probe_selectors
     assert "google" in apex.dkim_selectors and set(apex.dkim_selectors) == set(sweep)

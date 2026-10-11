@@ -66,12 +66,14 @@ that supports it, so you can check it yourself.
   services its subprocessor page names. Every page fetch goes through one guard: https only,
   with the host's addresses checked first, so a domain cannot point a fetch at a private or
   internal address. A refused fetch is listed as not checked.
-- **Certificate transparency** (`--ct`, off by default): every name crt.sh has logged a
-  certificate for is resolved now and matched like any DNS record, so a branded tracking link
-  such as `link.example.com` pointing at an email platform shows up. A logged name that no
+- **Certificate transparency**: Cert Spotter's log is read on every map for the subdomain search.
+  With `--ct` (off by default), crt.sh is read too, since it also holds expired certificates,
+  and every logged name is resolved now and matched like any DNS record, so a branded tracking
+  link such as `link.example.com` pointing at an email platform shows up. A logged name that no
   longer resolves but still points at a service is listed as a possible past vendor, not a
-  current sender. crt.sh is often slow; it is tried three times, answers are cached for a day,
-  and if it never answers the map says so and finishes without it.
+  current sender. crt.sh is often slow; it is tried three times, each log's answers are cached
+  for a day, and a log that never answers is listed as not checked while the map finishes
+  without it.
 
 Run it from the command line:
 
@@ -81,7 +83,7 @@ sendermap example.com
 sendermap example.com --evidence     # every piece of evidence
 sendermap example.com --markdown     # a summary to paste
 sendermap example.com --json         # everything, for scripts
-sendermap example.com --ct           # add names from certificate logs (crt.sh)
+sendermap example.com --ct           # resolve every name in certificate logs, crt.sh too
 ```
 
 The website keeps no record of the domains looked up.

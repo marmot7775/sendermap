@@ -1,4 +1,5 @@
-"""Certificate transparency: names from a recorded crt.sh answer, resolved against a fake zone.
+"""Certificate transparency: names from a recorded crt.sh answer and Cert Spotter answers,
+read once per map and resolved against a fake zone.
 
 tests/fixtures/crtsh_allbirds.json is a slice of crt.sh's real answer for %.allbirds.com,
 recorded on 2026-10-09. The DNS answers here are made up; no test reaches the network.
@@ -15,8 +16,17 @@ from conftest import CHECKED, Zone, context
 
 from sendermap import map_domain
 from sendermap.cli import _parser
-from sendermap.model import CertificateEvidence, CtStatus, CtSummary, Kind, Observed, Tier
-from sendermap.render import markdown
+from sendermap.model import (
+    CertificateEvidence,
+    CtProvider,
+    CtStatus,
+    CtSummary,
+    Kind,
+    Observed,
+    SenderMap,
+    Tier,
+)
+from sendermap.render import ct_lines, markdown
 from sendermap.sources import Context, ct
 
 RECORDED = json.loads((Path(__file__).parent / "fixtures" / "crtsh_allbirds.json").read_text())
@@ -39,29 +49,59 @@ def zone() -> Zone:
     )
 
 
-class CrtSh:
-    """A crt.sh that answers with `body` after failing `failures` times, counting requests."""
+class Logs:
+    """Both certificate log providers: crt.sh answers with `body` after failing `failures` times,
+    Cert Spotter with `issuances` after failing `spotter_failures` times. Every request is kept."""
 
-    def __init__(self, body: list[dict[str, Any]] = RECORDED, failures: int = 0) -> None:
+    def __init__(
+        self,
+        body: list[dict[str, Any]] = RECORDED,
+        failures: int = 0,
+        issuances: list[dict[str, Any]] | None = None,
+        spotter_failures: int = 0,
+    ) -> None:
         self.body, self.failures = body, failures
+        self.issuances, self.spotter_failures = issuances or [], spotter_failures
         self.requests: list[httpx.Request] = []
 
+    def asked(self, host: str) -> list[httpx.Request]:
+        return [r for r in self.requests if r.url.host == host]
+
     def __call__(self, request: httpx.Request) -> httpx.Response:
-        if request.url.host != "crt.sh":
+        if request.url.host not in ("crt.sh", "api.certspotter.com"):
             raise AssertionError(f"test tried to reach {request.url}")
         self.requests.append(request)
-        if len(self.requests) <= self.failures:
+        if request.url.host == "api.certspotter.com":
+            if len(self.asked("api.certspotter.com")) <= self.spotter_failures:
+                raise httpx.ReadTimeout("Cert Spotter timed out", request=request)
+            return httpx.Response(200, json=self.issuances)
+        if len(self.asked("crt.sh")) <= self.failures:
             raise httpx.ReadTimeout("crt.sh timed out", request=request)
         return httpx.Response(200, json=self.body)
 
 
 async def run(
-    crtsh: CrtSh, cache: Path | None, at: datetime = CHECKED, dns: Zone | None = None
+    logs: Logs, cache: Path | None, at: datetime = CHECKED, dns: Zone | None = None
 ) -> tuple[Observed, CtSummary]:
-    async with httpx.AsyncClient(transport=httpx.MockTransport(crtsh)) as http:
+    async with httpx.AsyncClient(transport=httpx.MockTransport(logs)) as http:
         ctx = context(dns or zone(), DOMAIN)
         ctx = Context(ctx.domain, ctx.dns, ctx.catalog, at, http)
-        return await ct.collect(ctx, cache)
+        read = await ct.read_logs(ctx, cache, expired=True)
+        observed, summary = await ct.collect(ctx, read)
+        return read.observed + observed, summary
+
+
+async def map_with(logs: Logs, *, use_subdomains: bool, use_ct: bool) -> SenderMap:
+    async with httpx.AsyncClient(transport=httpx.MockTransport(logs)) as http:
+        return await map_domain(
+            DOMAIN,
+            checked_at=CHECKED,
+            resolver=zone(),
+            http=http,
+            use_web=False,
+            use_subdomains=use_subdomains,
+            use_ct=use_ct,
+        )
 
 
 @pytest.fixture(autouse=True)
@@ -82,7 +122,7 @@ def test_names_are_split_lowercased_and_cleaned() -> None:
             "not_after": "",
         },
     ]
-    names = ct.logged_names(RECORDED + extra, DOMAIN)
+    names = ct.logged_names(ct.CRT_SH.rows(RECORDED + extra), DOMAIN)
     assert [n.name for n in names] == [
         "2a57j78d05nkylnjxxxbsfyb1hqpih3.gift-cards.middle-tier-prod.aws.allbirds.com",
         "accounts.allbirds.com",
@@ -99,9 +139,9 @@ def test_names_are_split_lowercased_and_cleaned() -> None:
 
 
 async def test_the_query_is_for_every_name_under_the_domain_url_encoded(tmp_path: Path) -> None:
-    crtsh = CrtSh()
-    await run(crtsh, tmp_path)
-    (request,) = crtsh.requests
+    logs = Logs()
+    await run(logs, tmp_path)
+    (request,) = logs.asked("crt.sh")
     assert request.url.params["q"] == "%.allbirds.com"
     assert "q=%25.allbirds.com" in str(request.url) and request.url.params["output"] == "json"
 
@@ -109,7 +149,7 @@ async def test_the_query_is_for_every_name_under_the_domain_url_encoded(tmp_path
 async def test_logged_names_go_through_the_dns_matchers_with_certificate_evidence(
     tmp_path: Path,
 ) -> None:
-    observed, summary = await run(CrtSh(), tmp_path)
+    observed, summary = await run(Logs(), tmp_path)
     claims = {(c.service, c.kind, c.where): c.evidence for c in observed.claims}
     assert set(claims) == {
         ("Customer.io", Kind.TRACKING, "links.mail.allbirds.com"),
@@ -124,12 +164,16 @@ async def test_logged_names_go_through_the_dns_matchers_with_certificate_evidenc
     assert (links.not_before, links.not_after) == ("2025-12-07T00:00:00", "2027-01-05T23:59:59")
     assert links.target == "e.customeriomail.com"
     assert summary.status is CtStatus.READ and summary.logged == summary.resolved == 9
+    assert summary.providers == (
+        CtProvider("Cert Spotter", CtStatus.READ, 0),
+        CtProvider("crt.sh", CtStatus.READ, 9),
+    )
 
 
 async def test_a_logged_name_that_no_longer_resolves_is_a_possible_past_vendor(
     tmp_path: Path,
 ) -> None:
-    observed, summary = await run(CrtSh(), tmp_path)
+    observed, summary = await run(Logs(), tmp_path)
     (past,) = observed.historical
     assert past.service == "SparkPost" and past.evidence.name == "app-email.allbirds.com"
     assert past.evidence.not_after == "2020-12-10T23:33:19"
@@ -147,66 +191,137 @@ async def test_a_logged_autodiscover_cname_is_an_account_trace_as_in_the_dns_pat
     ]
     dns = Zone().alias("autodiscover.allbirds.com", "autodiscover.outlook.com")
     dns.add("autodiscover.outlook.com", "A", "192.0.2.30")
-    observed, _ = await run(CrtSh(logged), tmp_path, dns=dns)
+    observed, _ = await run(Logs(logged), tmp_path, dns=dns)
     (claim,) = observed.claims
     assert (claim.service, claim.kind) == ("Microsoft 365", Kind.AUTODISCOVER)
     assert claim.kind.tier is Tier.ACCOUNT_ONLY
 
 
 async def test_crt_sh_is_retried_twice_then_answers(tmp_path: Path) -> None:
-    crtsh = CrtSh(failures=2)
-    _, summary = await run(crtsh, tmp_path)
-    assert len(crtsh.requests) == 3 and summary.status is CtStatus.READ
+    logs = Logs(failures=2)
+    _, summary = await run(logs, tmp_path)
+    assert len(logs.asked("crt.sh")) == 3 and summary.status is CtStatus.READ
 
 
-async def test_crt_sh_failing_three_times_marks_ct_unavailable_and_the_map_finishes(
-    offline: httpx.AsyncClient,
+async def test_crt_sh_failing_three_times_is_a_gap_and_the_names_from_cert_spotter_are_read(
+    tmp_path: Path,
 ) -> None:
-    crtsh = CrtSh(failures=3)
-    async with httpx.AsyncClient(transport=httpx.MockTransport(crtsh)) as http:
-        result = await map_domain(
-            DOMAIN,
-            checked_at=CHECKED,
-            resolver=zone(),
-            http=http,
-            use_web=False,
-            use_subdomains=False,
-            use_ct=True,
-        )
-    assert len(crtsh.requests) == 3
-    assert result.ct.status is CtStatus.UNAVAILABLE
-    (gap,) = [g for g in result.gaps if g.asked.startswith("certificate transparency")]
+    issuances = [{"dns_names": ["links.mail.allbirds.com"], "not_after": "2027-01-05T23:59:59Z"}]
+    logs = Logs(failures=3, issuances=issuances)
+    observed, summary = await run(logs, tmp_path)
+    assert len(logs.asked("crt.sh")) == 3
+    (gap,) = observed.gaps
+    assert (
+        gap.asked
+        == "certificate transparency, crt.sh: GET https://crt.sh/?q=%25.allbirds.com&output=json"
+    )
     assert gap.happened == "unavailable after 3 tries: failed: ReadTimeout"
-    assert "crt.sh was unavailable" in markdown.render(result)
+    assert summary.status is CtStatus.READ and summary.resolved == 1
+    assert [p.status for p in summary.providers] == [CtStatus.READ, CtStatus.UNAVAILABLE]
+    assert {c.service for c in observed.claims} == {"Customer.io"}
 
 
-async def test_answers_are_cached_on_disk_for_a_day(tmp_path: Path) -> None:
-    await run(CrtSh(), tmp_path)
-    assert (tmp_path / "allbirds.com.json").exists()
-    refuses = CrtSh(failures=99)
+async def test_no_provider_answering_marks_ct_unavailable_and_the_map_finishes() -> None:
+    logs = Logs(failures=3, spotter_failures=1)
+    result = await map_with(logs, use_subdomains=True, use_ct=True)
+    assert len(logs.asked("crt.sh")) == 3 and len(logs.asked("api.certspotter.com")) == 1
+    assert result.ct.status is CtStatus.UNAVAILABLE
+    gaps = {g.asked.split(":")[0]: g.happened for g in result.gaps}
+    assert (
+        gaps["certificate transparency, crt.sh"] == "unavailable after 3 tries: failed: ReadTimeout"
+    )
+    assert gaps["certificate transparency, Cert Spotter"] == (
+        "unavailable after 1 try: failed: ReadTimeout"
+    )
+    assert "No certificate log answered" in markdown.render(result)
+
+
+async def test_the_logs_are_read_once_per_map_for_the_subdomains_and_the_ct_pass() -> None:
+    issuances = [{"dns_names": ["accounts.allbirds.com"]}]
+    logs = Logs(issuances=issuances)
+    result = await map_with(logs, use_subdomains=True, use_ct=True)
+    assert len(logs.asked("api.certspotter.com")) == 1 and len(logs.asked("crt.sh")) == 1
+    # A name only crt.sh logged is a subdomain candidate too: accounts publishes MX.
+    assert "accounts.allbirds.com" in result.subdomains_checked
+    assert result.ct.logged == 9
+
+
+async def test_without_ct_only_cert_spotter_is_asked_and_crt_sh_is_an_off_gap() -> None:
+    logs = Logs(issuances=[{"dns_names": ["accounts.allbirds.com", "*.mail.allbirds.com"]}])
+    result = await map_with(logs, use_subdomains=True, use_ct=False)
+    assert logs.asked("crt.sh") == [] and len(logs.asked("api.certspotter.com")) == 1
+    assert result.ct.status is CtStatus.OFF and result.historical == ()
+    assert result.ct.providers == (
+        CtProvider("Cert Spotter", CtStatus.READ, 2),
+        CtProvider("crt.sh", CtStatus.OFF, 0),
+    )
+    (off,) = [g for g in result.gaps if "crt.sh" in g.asked]
+    assert off.happened == "not asked: read only with --ct (it also holds expired certificates)"
+    assert "accounts.allbirds.com" in result.subdomains_checked
+    assert ct_lines(result) == []
+
+
+async def test_with_both_checks_off_no_log_is_asked() -> None:
+    logs = Logs()
+    result = await map_with(logs, use_subdomains=False, use_ct=False)
+    assert logs.requests == [] and result.ct == CtSummary()
+    assert not any(g.asked.startswith("certificate transparency") for g in result.gaps)
+
+
+def test_both_providers_rows_go_through_one_parse_and_the_latest_certificate_wins() -> None:
+    spotter = ct.CERT_SPOTTER.rows(
+        [
+            {
+                "dns_names": ["*.Links.Mail.allbirds.com", "allbirds.com"],
+                "not_before": "2026-01-01T00:00:00Z",
+                "not_after": "2027-06-01T00:00:00Z",
+            },
+            "not an issuance",
+        ]
+    )
+    names = ct.logged_names(spotter + ct.CRT_SH.rows(RECORDED), DOMAIN)
+    links = next(n for n in names if n.name == "links.mail.allbirds.com")
+    assert (links.not_before, links.not_after) == ("2026-01-01T00:00:00", "2027-06-01T00:00:00")
+    assert len(names) == 9
+    assert [n.name for n in names] == sorted(n.name for n in names)
+
+
+async def test_answers_are_cached_on_disk_for_a_day_per_provider(tmp_path: Path) -> None:
+    await run(Logs(), tmp_path)
+    assert (tmp_path / "crtsh" / "allbirds.com.json").exists()
+    assert (tmp_path / "certspotter" / "allbirds.com.json").exists()
+    refuses = Logs(failures=99, spotter_failures=99)
     observed, summary = await run(refuses, tmp_path, at=CHECKED + timedelta(hours=23))
-    assert refuses.requests == [] and summary.status is CtStatus.CACHED
+    assert refuses.requests == []
+    assert [p.status for p in summary.providers] == [CtStatus.CACHED, CtStatus.CACHED]
     assert {c.service for c in observed.claims} == {
         "Customer.io",
         "Mailgun",
         "Mailchimp",
         "Klaviyo",
     }
-    again = CrtSh()
+    again = Logs()
     _, summary = await run(again, tmp_path, at=CHECKED + timedelta(hours=25))
-    assert len(again.requests) == 1 and summary.status is CtStatus.READ
+    assert len(again.requests) == 2
+    assert [p.status for p in summary.providers] == [CtStatus.READ, CtStatus.READ]
+
+
+def test_the_cache_directory_is_ct(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
+    monkeypatch.setenv("XDG_CACHE_HOME", str(tmp_path))
+    assert ct.default_cache() == tmp_path / "sendermap" / "ct"
 
 
 async def test_ct_is_off_unless_asked_for(offline: httpx.AsyncClient) -> None:
-    # The offline client fails the test on any request to crt.sh.
+    # The offline client answers Cert Spotter and fails the test on any request to crt.sh.
     result = await map_domain(DOMAIN, checked_at=CHECKED, resolver=zone(), http=offline)
     assert result.ct.status is CtStatus.OFF and result.historical == ()
     assert not _parser().parse_args(["allbirds.com"]).ct
     assert _parser().parse_args(["allbirds.com", "--ct"]).ct
+    assert "crt.sh" in _parser().format_help()
 
 
 async def test_the_map_and_its_markdown_carry_the_ct_section(tmp_path: Path) -> None:
-    async with httpx.AsyncClient(transport=httpx.MockTransport(CrtSh())) as http:
+    async with httpx.AsyncClient(transport=httpx.MockTransport(Logs())) as http:
         result = await map_domain(
             DOMAIN,
             checked_at=CHECKED,
@@ -221,5 +336,11 @@ async def test_the_map_and_its_markdown_carry_the_ct_section(tmp_path: Path) -> 
     assert tracking.tier is Tier.CONFIGURED
     page = markdown.render(result)
     assert "## Certificate transparency" in page
+    assert "9 names logged (Cert Spotter read, 0 names; crt.sh read, 9 names)" in page
     assert "Possible past vendor: SparkPost at app-email.allbirds.com" in page
     assert result.to_dict()["historical"][0]["evidence"]["not_after"] == "2020-12-10T23:33:19"
+    assert result.to_dict()["ct"]["providers"][1] == {
+        "name": "crt.sh",
+        "status": "read",
+        "logged": 9,
+    }
