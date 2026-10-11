@@ -1368,7 +1368,204 @@
      "supporting": []
     }
    ],
-   "setups": []
+   "setups": [
+    {
+     "service": "Mailgun",
+     "where": "allbirds.com",
+     "items": [
+      {
+       "record": "spf",
+       "need": "required",
+       "state": "present",
+       "evidence": [
+        {
+         "name": "_spf1.allbirds_com._d.easydmarc.pro",
+         "rtype": "TXT",
+         "value": "ip4:161.38.204.0/22",
+         "checked_at": "2026-10-11T19:45:52+00:00"
+        },
+        {
+         "name": "_spf1.allbirds_com._d.easydmarc.pro",
+         "rtype": "TXT",
+         "value": "ip4:143.55.236.0/22",
+         "checked_at": "2026-10-11T19:45:52+00:00"
+        },
+        {
+         "name": "_spf1.allbirds_com._d.easydmarc.pro",
+         "rtype": "TXT",
+         "value": "ip4:198.244.60.0/22",
+         "checked_at": "2026-10-11T19:45:52+00:00"
+        },
+        {
+         "name": "_spf1.allbirds_com._d.easydmarc.pro",
+         "rtype": "TXT",
+         "value": "ip4:204.220.160.0/20",
+         "checked_at": "2026-10-11T19:45:52+00:00"
+        },
+        {
+         "name": "_spf1.allbirds_com._d.easydmarc.pro",
+         "rtype": "TXT",
+         "value": "ip4:143.55.224.0/21",
+         "checked_at": "2026-10-11T19:45:52+00:00"
+        },
+        {
+         "name": "_spf1.allbirds_com._d.easydmarc.pro",
+         "rtype": "TXT",
+         "value": "ip4:143.55.232.0/22",
+         "checked_at": "2026-10-11T19:45:52+00:00"
+        },
+        {
+         "name": "_spf1.allbirds_com._d.easydmarc.pro",
+         "rtype": "TXT",
+         "value": "ip4:204.220.168.0/21",
+         "checked_at": "2026-10-11T19:45:52+00:00"
+        },
+        {
+         "name": "_spf1.allbirds_com._d.easydmarc.pro",
+         "rtype": "TXT",
+         "value": "ip4:204.220.176.0/20",
+         "checked_at": "2026-10-11T19:45:52+00:00"
+        }
+       ],
+       "asked": "TXT at allbirds.com",
+       "detail": ""
+      },
+      {
+       "record": "mx",
+       "need": "optional",
+       "state": "missing",
+       "evidence": [
+        {
+         "name": "allbirds.com",
+         "rtype": "MX",
+         "value": "0 allbirds-com.mail.protection.outlook.com",
+         "checked_at": "2026-10-11T19:45:52+00:00"
+        }
+       ],
+       "asked": "MX at allbirds.com",
+       "detail": "no MX host under mailgun.org"
+      },
+      {
+       "record": "tracking",
+       "need": "optional",
+       "state": "present",
+       "evidence": [
+        {
+         "name": "email.allbirds.com",
+         "rtype": "CNAME",
+         "value": "mailgun.org",
+         "checked_at": "2026-10-11T19:45:52+00:00"
+        }
+       ],
+       "asked": "CNAME at email.allbirds.com",
+       "detail": ""
+      }
+     ],
+     "complete": true
+    },
+    {
+     "service": "Mailgun",
+     "where": "alerts.allbirds.com",
+     "items": [
+      {
+       "record": "spf",
+       "need": "required",
+       "state": "present",
+       "evidence": [
+        {
+         "name": "alerts.allbirds.com",
+         "rtype": "TXT",
+         "value": "include:mailgun.org",
+         "checked_at": "2026-10-11T19:45:52+00:00"
+        }
+       ],
+       "asked": "TXT at alerts.allbirds.com",
+       "detail": ""
+      },
+      {
+       "record": "mx",
+       "need": "optional",
+       "state": "missing",
+       "evidence": [
+        {
+         "name": "alerts.allbirds.com",
+         "rtype": "MX",
+         "value": "no record of this type",
+         "checked_at": "2026-10-11T19:45:52+00:00"
+        }
+       ],
+       "asked": "MX at alerts.allbirds.com",
+       "detail": "no MX record"
+      },
+      {
+       "record": "tracking",
+       "need": "optional",
+       "state": "not checked",
+       "evidence": [],
+       "asked": "CNAME labels under alerts.allbirds.com",
+       "detail": "no label was asked at alerts.allbirds.com"
+      }
+     ],
+     "complete": true
+    },
+    {
+     "service": "Mailgun",
+     "where": "mail.allbirds.com",
+     "items": [
+      {
+       "record": "spf",
+       "need": "required",
+       "state": "present",
+       "evidence": [
+        {
+         "name": "mail.allbirds.com",
+         "rtype": "TXT",
+         "value": "include:mailgun.org",
+         "checked_at": "2026-10-11T19:45:52+00:00"
+        }
+       ],
+       "asked": "TXT at mail.allbirds.com",
+       "detail": ""
+      },
+      {
+       "record": "mx",
+       "need": "optional",
+       "state": "missing",
+       "evidence": [
+        {
+         "name": "mail.allbirds.com",
+         "rtype": "MX",
+         "value": "1 aspmx.l.google.com",
+         "checked_at": "2026-10-11T19:45:52+00:00"
+        },
+        {
+         "name": "mail.allbirds.com",
+         "rtype": "MX",
+         "value": "5 alt1.aspmx.l.google.com",
+         "checked_at": "2026-10-11T19:45:52+00:00"
+        },
+        {
+         "name": "mail.allbirds.com",
+         "rtype": "MX",
+         "value": "10 alt2.aspmx.l.google.com",
+         "checked_at": "2026-10-11T19:45:52+00:00"
+        }
+       ],
+       "asked": "MX at mail.allbirds.com",
+       "detail": "no MX host under mailgun.org"
+      },
+      {
+       "record": "tracking",
+       "need": "optional",
+       "state": "not checked",
+       "evidence": [],
+       "asked": "CNAME labels under mail.allbirds.com",
+       "detail": "no label was asked at mail.allbirds.com"
+      }
+     ],
+     "complete": true
+    }
+   ]
   },
   {
    "name": "Mailjet",
@@ -1414,7 +1611,45 @@
      ]
     }
    ],
-   "setups": []
+   "setups": [
+    {
+     "service": "Mailjet",
+     "where": "allbirds.com",
+     "items": [
+      {
+       "record": "spf",
+       "need": "required",
+       "state": "present",
+       "evidence": [
+        {
+         "name": "_spf1.allbirds_com._d.easydmarc.pro",
+         "rtype": "TXT",
+         "value": "ip4:141.193.32.0/23",
+         "checked_at": "2026-10-11T19:45:52+00:00"
+        }
+       ],
+       "asked": "TXT at allbirds.com",
+       "detail": ""
+      },
+      {
+       "record": "dkim",
+       "need": "required",
+       "state": "missing",
+       "evidence": [
+        {
+         "name": "mailjet._domainkey.allbirds.com",
+         "rtype": "TXT",
+         "value": "no such name",
+         "checked_at": "2026-10-11T19:45:52+00:00"
+        }
+       ],
+       "asked": "TXT at mailjet._domainkey.allbirds.com",
+       "detail": "mailjet no such name"
+      }
+     ],
+     "complete": false
+    }
+   ]
   },
   {
    "name": "Postmark",
@@ -1435,7 +1670,38 @@
      "supporting": []
     }
    ],
-   "setups": []
+   "setups": [
+    {
+     "service": "Postmark",
+     "where": "allbirds.com",
+     "items": [
+      {
+       "record": "spf",
+       "need": "none",
+       "state": "not needed",
+       "evidence": [],
+       "asked": "",
+       "detail": ""
+      },
+      {
+       "record": "return_path",
+       "need": "optional",
+       "state": "present",
+       "evidence": [
+        {
+         "name": "pm-bounces.allbirds.com",
+         "rtype": "CNAME",
+         "value": "pm.mtasv.net",
+         "checked_at": "2026-10-11T19:45:52+00:00"
+        }
+       ],
+       "asked": "CNAME at pm-bounces.allbirds.com",
+       "detail": ""
+      }
+     ],
+     "complete": true
+    }
+   ]
   },
   {
    "name": "SendGrid",
@@ -2477,7 +2743,177 @@
      "supporting": []
     }
    ],
-   "setups": []
+   "setups": [
+    {
+     "service": "SparkPost",
+     "where": "allbirds.com",
+     "items": [
+      {
+       "record": "tracking",
+       "need": "optional",
+       "state": "missing",
+       "evidence": [
+        {
+         "name": "bounce.allbirds.com",
+         "rtype": "CNAME",
+         "value": "sparkpostmail.com",
+         "checked_at": "2026-10-11T19:45:52+00:00"
+        },
+        {
+         "name": "bounces.allbirds.com",
+         "rtype": "CNAME",
+         "value": "no such name",
+         "checked_at": "2026-10-11T19:45:52+00:00"
+        },
+        {
+         "name": "em.allbirds.com",
+         "rtype": "CNAME",
+         "value": "no such name",
+         "checked_at": "2026-10-11T19:45:52+00:00"
+        },
+        {
+         "name": "email.allbirds.com",
+         "rtype": "CNAME",
+         "value": "mailgun.org",
+         "checked_at": "2026-10-11T19:45:52+00:00"
+        },
+        {
+         "name": "mail.allbirds.com",
+         "rtype": "CNAME",
+         "value": "no record of this type",
+         "checked_at": "2026-10-11T19:45:52+00:00"
+        },
+        {
+         "name": "send.allbirds.com",
+         "rtype": "CNAME",
+         "value": "no such name",
+         "checked_at": "2026-10-11T19:45:52+00:00"
+        },
+        {
+         "name": "mta.allbirds.com",
+         "rtype": "CNAME",
+         "value": "no such name",
+         "checked_at": "2026-10-11T19:45:52+00:00"
+        },
+        {
+         "name": "rp.allbirds.com",
+         "rtype": "CNAME",
+         "value": "no such name",
+         "checked_at": "2026-10-11T19:45:52+00:00"
+        },
+        {
+         "name": "pm-bounces.allbirds.com",
+         "rtype": "CNAME",
+         "value": "pm.mtasv.net",
+         "checked_at": "2026-10-11T19:45:52+00:00"
+        },
+        {
+         "name": "links.allbirds.com",
+         "rtype": "CNAME",
+         "value": "links.iterable.com",
+         "checked_at": "2026-10-11T19:45:52+00:00"
+        },
+        {
+         "name": "link.allbirds.com",
+         "rtype": "CNAME",
+         "value": "no such name",
+         "checked_at": "2026-10-11T19:45:52+00:00"
+        },
+        {
+         "name": "click.allbirds.com",
+         "rtype": "CNAME",
+         "value": "no such name",
+         "checked_at": "2026-10-11T19:45:52+00:00"
+        },
+        {
+         "name": "track.allbirds.com",
+         "rtype": "CNAME",
+         "value": "no such name",
+         "checked_at": "2026-10-11T19:45:52+00:00"
+        },
+        {
+         "name": "tracking.allbirds.com",
+         "rtype": "CNAME",
+         "value": "no such name",
+         "checked_at": "2026-10-11T19:45:52+00:00"
+        },
+        {
+         "name": "url.allbirds.com",
+         "rtype": "CNAME",
+         "value": "no such name",
+         "checked_at": "2026-10-11T19:45:52+00:00"
+        },
+        {
+         "name": "go.allbirds.com",
+         "rtype": "CNAME",
+         "value": "no such name",
+         "checked_at": "2026-10-11T19:45:52+00:00"
+        },
+        {
+         "name": "autodiscover.allbirds.com",
+         "rtype": "CNAME",
+         "value": "autodiscover.outlook.com",
+         "checked_at": "2026-10-11T19:45:52+00:00"
+        },
+        {
+         "name": "cf-bounce.allbirds.com",
+         "rtype": "CNAME",
+         "value": "no such name",
+         "checked_at": "2026-10-11T19:45:52+00:00"
+        },
+        {
+         "name": "eversrv.allbirds.com",
+         "rtype": "CNAME",
+         "value": "no such name",
+         "checked_at": "2026-10-11T19:45:52+00:00"
+        },
+        {
+         "name": "fwdkim1.allbirds.com",
+         "rtype": "CNAME",
+         "value": "no such name",
+         "checked_at": "2026-10-11T19:45:52+00:00"
+        },
+        {
+         "name": "bnc3.allbirds.com",
+         "rtype": "CNAME",
+         "value": "no such name",
+         "checked_at": "2026-10-11T19:45:52+00:00"
+        },
+        {
+         "name": "bounces.cloud.em.allbirds.com",
+         "rtype": "CNAME",
+         "value": "no such name",
+         "checked_at": "2026-10-11T19:45:52+00:00"
+        },
+        {
+         "name": "bounces.cloud2.em.allbirds.com",
+         "rtype": "CNAME",
+         "value": "no such name",
+         "checked_at": "2026-10-11T19:45:52+00:00"
+        }
+       ],
+       "asked": "CNAME at 23 labels under allbirds.com",
+       "detail": "no CNAME into spgo.io and et.e.sparkpost.com at the 23 labels asked"
+      },
+      {
+       "record": "mx",
+       "need": "optional",
+       "state": "missing",
+       "evidence": [
+        {
+         "name": "allbirds.com",
+         "rtype": "MX",
+         "value": "0 allbirds-com.mail.protection.outlook.com",
+         "checked_at": "2026-10-11T19:45:52+00:00"
+        }
+       ],
+       "asked": "MX at allbirds.com",
+       "detail": "no MX host under sparkpostmail.com"
+      }
+     ],
+     "complete": true
+    }
+   ]
   },
   {
    "name": "Zendesk",
@@ -2581,7 +3017,75 @@
      ]
     }
    ],
-   "setups": []
+   "setups": [
+    {
+     "service": "Zendesk",
+     "where": "allbirds.com",
+     "items": [
+      {
+       "record": "spf",
+       "need": "required",
+       "state": "present",
+       "evidence": [
+        {
+         "name": "_spf.allbirds_com._d.easydmarc.pro",
+         "rtype": "TXT",
+         "value": "ip4:103.151.192.0/23",
+         "checked_at": "2026-10-11T19:45:52+00:00"
+        },
+        {
+         "name": "_spf.allbirds_com._d.easydmarc.pro",
+         "rtype": "TXT",
+         "value": "ip4:185.12.80.0/22",
+         "checked_at": "2026-10-11T19:45:52+00:00"
+        },
+        {
+         "name": "_spf.allbirds_com._d.easydmarc.pro",
+         "rtype": "TXT",
+         "value": "ip4:188.172.128.0/20",
+         "checked_at": "2026-10-11T19:45:52+00:00"
+        },
+        {
+         "name": "_spf.allbirds_com._d.easydmarc.pro",
+         "rtype": "TXT",
+         "value": "ip4:192.161.144.0/20",
+         "checked_at": "2026-10-11T19:45:52+00:00"
+        },
+        {
+         "name": "_spf.allbirds_com._d.easydmarc.pro",
+         "rtype": "TXT",
+         "value": "ip4:216.198.0.0/18",
+         "checked_at": "2026-10-11T19:45:52+00:00"
+        }
+       ],
+       "asked": "TXT at allbirds.com",
+       "detail": ""
+      },
+      {
+       "record": "dkim",
+       "need": "optional",
+       "state": "missing",
+       "evidence": [
+        {
+         "name": "zendesk1._domainkey.allbirds.com",
+         "rtype": "TXT",
+         "value": "no such name",
+         "checked_at": "2026-10-11T19:45:52+00:00"
+        },
+        {
+         "name": "zendesk2._domainkey.allbirds.com",
+         "rtype": "TXT",
+         "value": "no such name",
+         "checked_at": "2026-10-11T19:45:52+00:00"
+        }
+       ],
+       "asked": "TXT at zendesk1._domainkey.allbirds.com and TXT at zendesk2._domainkey.allbirds.com",
+       "detail": "zendesk1 and zendesk2 no such name"
+      }
+     ],
+     "complete": true
+    }
+   ]
   },
   {
    "name": "Customer.io",
@@ -2602,7 +3106,162 @@
      "supporting": []
     }
    ],
-   "setups": []
+   "setups": [
+    {
+     "service": "Customer.io",
+     "where": "allbirds.com",
+     "items": [
+      {
+       "record": "tracking",
+       "need": "optional",
+       "state": "missing",
+       "evidence": [
+        {
+         "name": "bounce.allbirds.com",
+         "rtype": "CNAME",
+         "value": "sparkpostmail.com",
+         "checked_at": "2026-10-11T19:45:52+00:00"
+        },
+        {
+         "name": "bounces.allbirds.com",
+         "rtype": "CNAME",
+         "value": "no such name",
+         "checked_at": "2026-10-11T19:45:52+00:00"
+        },
+        {
+         "name": "em.allbirds.com",
+         "rtype": "CNAME",
+         "value": "no such name",
+         "checked_at": "2026-10-11T19:45:52+00:00"
+        },
+        {
+         "name": "email.allbirds.com",
+         "rtype": "CNAME",
+         "value": "mailgun.org",
+         "checked_at": "2026-10-11T19:45:52+00:00"
+        },
+        {
+         "name": "mail.allbirds.com",
+         "rtype": "CNAME",
+         "value": "no record of this type",
+         "checked_at": "2026-10-11T19:45:52+00:00"
+        },
+        {
+         "name": "send.allbirds.com",
+         "rtype": "CNAME",
+         "value": "no such name",
+         "checked_at": "2026-10-11T19:45:52+00:00"
+        },
+        {
+         "name": "mta.allbirds.com",
+         "rtype": "CNAME",
+         "value": "no such name",
+         "checked_at": "2026-10-11T19:45:52+00:00"
+        },
+        {
+         "name": "rp.allbirds.com",
+         "rtype": "CNAME",
+         "value": "no such name",
+         "checked_at": "2026-10-11T19:45:52+00:00"
+        },
+        {
+         "name": "pm-bounces.allbirds.com",
+         "rtype": "CNAME",
+         "value": "pm.mtasv.net",
+         "checked_at": "2026-10-11T19:45:52+00:00"
+        },
+        {
+         "name": "links.allbirds.com",
+         "rtype": "CNAME",
+         "value": "links.iterable.com",
+         "checked_at": "2026-10-11T19:45:52+00:00"
+        },
+        {
+         "name": "link.allbirds.com",
+         "rtype": "CNAME",
+         "value": "no such name",
+         "checked_at": "2026-10-11T19:45:52+00:00"
+        },
+        {
+         "name": "click.allbirds.com",
+         "rtype": "CNAME",
+         "value": "no such name",
+         "checked_at": "2026-10-11T19:45:52+00:00"
+        },
+        {
+         "name": "track.allbirds.com",
+         "rtype": "CNAME",
+         "value": "no such name",
+         "checked_at": "2026-10-11T19:45:52+00:00"
+        },
+        {
+         "name": "tracking.allbirds.com",
+         "rtype": "CNAME",
+         "value": "no such name",
+         "checked_at": "2026-10-11T19:45:52+00:00"
+        },
+        {
+         "name": "url.allbirds.com",
+         "rtype": "CNAME",
+         "value": "no such name",
+         "checked_at": "2026-10-11T19:45:52+00:00"
+        },
+        {
+         "name": "go.allbirds.com",
+         "rtype": "CNAME",
+         "value": "no such name",
+         "checked_at": "2026-10-11T19:45:52+00:00"
+        },
+        {
+         "name": "autodiscover.allbirds.com",
+         "rtype": "CNAME",
+         "value": "autodiscover.outlook.com",
+         "checked_at": "2026-10-11T19:45:52+00:00"
+        },
+        {
+         "name": "cf-bounce.allbirds.com",
+         "rtype": "CNAME",
+         "value": "no such name",
+         "checked_at": "2026-10-11T19:45:52+00:00"
+        },
+        {
+         "name": "eversrv.allbirds.com",
+         "rtype": "CNAME",
+         "value": "no such name",
+         "checked_at": "2026-10-11T19:45:52+00:00"
+        },
+        {
+         "name": "fwdkim1.allbirds.com",
+         "rtype": "CNAME",
+         "value": "no such name",
+         "checked_at": "2026-10-11T19:45:52+00:00"
+        },
+        {
+         "name": "bnc3.allbirds.com",
+         "rtype": "CNAME",
+         "value": "no such name",
+         "checked_at": "2026-10-11T19:45:52+00:00"
+        },
+        {
+         "name": "bounces.cloud.em.allbirds.com",
+         "rtype": "CNAME",
+         "value": "no such name",
+         "checked_at": "2026-10-11T19:45:52+00:00"
+        },
+        {
+         "name": "bounces.cloud2.em.allbirds.com",
+         "rtype": "CNAME",
+         "value": "no such name",
+         "checked_at": "2026-10-11T19:45:52+00:00"
+        }
+       ],
+       "asked": "CNAME at 23 labels under allbirds.com",
+       "detail": "no CNAME into customeriomail.com at the 23 labels asked"
+      }
+     ],
+     "complete": true
+    }
+   ]
   },
   {
    "name": "Mandrill",
@@ -2623,7 +3282,324 @@
      "supporting": []
     }
    ],
-   "setups": []
+   "setups": [
+    {
+     "service": "Mandrill",
+     "where": "allbirds.com",
+     "items": [
+      {
+       "record": "dkim",
+       "need": "required",
+       "state": "present",
+       "evidence": [
+        {
+         "name": "mandrill._domainkey.allbirds.com",
+         "rtype": "TXT",
+         "value": "v=DKIM1; k=rsa; p=MIGfMA0GCSqG..., 1024-bit, fp 9cee89b6f986543a",
+         "checked_at": "2026-10-11T19:45:52+00:00"
+        }
+       ],
+       "asked": "TXT at mandrill._domainkey.allbirds.com",
+       "detail": "older setup: a key at mandrill; the current setup names mte1 and mte2"
+      },
+      {
+       "record": "return_path",
+       "need": "optional",
+       "state": "missing",
+       "evidence": [
+        {
+         "name": "bounce.allbirds.com",
+         "rtype": "CNAME",
+         "value": "sparkpostmail.com",
+         "checked_at": "2026-10-11T19:45:52+00:00"
+        },
+        {
+         "name": "bounces.allbirds.com",
+         "rtype": "CNAME",
+         "value": "no such name",
+         "checked_at": "2026-10-11T19:45:52+00:00"
+        },
+        {
+         "name": "em.allbirds.com",
+         "rtype": "CNAME",
+         "value": "no such name",
+         "checked_at": "2026-10-11T19:45:52+00:00"
+        },
+        {
+         "name": "email.allbirds.com",
+         "rtype": "CNAME",
+         "value": "mailgun.org",
+         "checked_at": "2026-10-11T19:45:52+00:00"
+        },
+        {
+         "name": "mail.allbirds.com",
+         "rtype": "CNAME",
+         "value": "no record of this type",
+         "checked_at": "2026-10-11T19:45:52+00:00"
+        },
+        {
+         "name": "send.allbirds.com",
+         "rtype": "CNAME",
+         "value": "no such name",
+         "checked_at": "2026-10-11T19:45:52+00:00"
+        },
+        {
+         "name": "mta.allbirds.com",
+         "rtype": "CNAME",
+         "value": "no such name",
+         "checked_at": "2026-10-11T19:45:52+00:00"
+        },
+        {
+         "name": "rp.allbirds.com",
+         "rtype": "CNAME",
+         "value": "no such name",
+         "checked_at": "2026-10-11T19:45:52+00:00"
+        },
+        {
+         "name": "pm-bounces.allbirds.com",
+         "rtype": "CNAME",
+         "value": "pm.mtasv.net",
+         "checked_at": "2026-10-11T19:45:52+00:00"
+        },
+        {
+         "name": "links.allbirds.com",
+         "rtype": "CNAME",
+         "value": "links.iterable.com",
+         "checked_at": "2026-10-11T19:45:52+00:00"
+        },
+        {
+         "name": "link.allbirds.com",
+         "rtype": "CNAME",
+         "value": "no such name",
+         "checked_at": "2026-10-11T19:45:52+00:00"
+        },
+        {
+         "name": "click.allbirds.com",
+         "rtype": "CNAME",
+         "value": "no such name",
+         "checked_at": "2026-10-11T19:45:52+00:00"
+        },
+        {
+         "name": "track.allbirds.com",
+         "rtype": "CNAME",
+         "value": "no such name",
+         "checked_at": "2026-10-11T19:45:52+00:00"
+        },
+        {
+         "name": "tracking.allbirds.com",
+         "rtype": "CNAME",
+         "value": "no such name",
+         "checked_at": "2026-10-11T19:45:52+00:00"
+        },
+        {
+         "name": "url.allbirds.com",
+         "rtype": "CNAME",
+         "value": "no such name",
+         "checked_at": "2026-10-11T19:45:52+00:00"
+        },
+        {
+         "name": "go.allbirds.com",
+         "rtype": "CNAME",
+         "value": "no such name",
+         "checked_at": "2026-10-11T19:45:52+00:00"
+        },
+        {
+         "name": "autodiscover.allbirds.com",
+         "rtype": "CNAME",
+         "value": "autodiscover.outlook.com",
+         "checked_at": "2026-10-11T19:45:52+00:00"
+        },
+        {
+         "name": "cf-bounce.allbirds.com",
+         "rtype": "CNAME",
+         "value": "no such name",
+         "checked_at": "2026-10-11T19:45:52+00:00"
+        },
+        {
+         "name": "eversrv.allbirds.com",
+         "rtype": "CNAME",
+         "value": "no such name",
+         "checked_at": "2026-10-11T19:45:52+00:00"
+        },
+        {
+         "name": "fwdkim1.allbirds.com",
+         "rtype": "CNAME",
+         "value": "no such name",
+         "checked_at": "2026-10-11T19:45:52+00:00"
+        },
+        {
+         "name": "bnc3.allbirds.com",
+         "rtype": "CNAME",
+         "value": "no such name",
+         "checked_at": "2026-10-11T19:45:52+00:00"
+        },
+        {
+         "name": "bounces.cloud.em.allbirds.com",
+         "rtype": "CNAME",
+         "value": "no such name",
+         "checked_at": "2026-10-11T19:45:52+00:00"
+        },
+        {
+         "name": "bounces.cloud2.em.allbirds.com",
+         "rtype": "CNAME",
+         "value": "no such name",
+         "checked_at": "2026-10-11T19:45:52+00:00"
+        }
+       ],
+       "asked": "CNAME at 23 labels under allbirds.com",
+       "detail": "no CNAME into mandrillapp.com at the 23 labels asked"
+      },
+      {
+       "record": "tracking",
+       "need": "optional",
+       "state": "missing",
+       "evidence": [
+        {
+         "name": "bounce.allbirds.com",
+         "rtype": "CNAME",
+         "value": "sparkpostmail.com",
+         "checked_at": "2026-10-11T19:45:52+00:00"
+        },
+        {
+         "name": "bounces.allbirds.com",
+         "rtype": "CNAME",
+         "value": "no such name",
+         "checked_at": "2026-10-11T19:45:52+00:00"
+        },
+        {
+         "name": "em.allbirds.com",
+         "rtype": "CNAME",
+         "value": "no such name",
+         "checked_at": "2026-10-11T19:45:52+00:00"
+        },
+        {
+         "name": "email.allbirds.com",
+         "rtype": "CNAME",
+         "value": "mailgun.org",
+         "checked_at": "2026-10-11T19:45:52+00:00"
+        },
+        {
+         "name": "mail.allbirds.com",
+         "rtype": "CNAME",
+         "value": "no record of this type",
+         "checked_at": "2026-10-11T19:45:52+00:00"
+        },
+        {
+         "name": "send.allbirds.com",
+         "rtype": "CNAME",
+         "value": "no such name",
+         "checked_at": "2026-10-11T19:45:52+00:00"
+        },
+        {
+         "name": "mta.allbirds.com",
+         "rtype": "CNAME",
+         "value": "no such name",
+         "checked_at": "2026-10-11T19:45:52+00:00"
+        },
+        {
+         "name": "rp.allbirds.com",
+         "rtype": "CNAME",
+         "value": "no such name",
+         "checked_at": "2026-10-11T19:45:52+00:00"
+        },
+        {
+         "name": "pm-bounces.allbirds.com",
+         "rtype": "CNAME",
+         "value": "pm.mtasv.net",
+         "checked_at": "2026-10-11T19:45:52+00:00"
+        },
+        {
+         "name": "links.allbirds.com",
+         "rtype": "CNAME",
+         "value": "links.iterable.com",
+         "checked_at": "2026-10-11T19:45:52+00:00"
+        },
+        {
+         "name": "link.allbirds.com",
+         "rtype": "CNAME",
+         "value": "no such name",
+         "checked_at": "2026-10-11T19:45:52+00:00"
+        },
+        {
+         "name": "click.allbirds.com",
+         "rtype": "CNAME",
+         "value": "no such name",
+         "checked_at": "2026-10-11T19:45:52+00:00"
+        },
+        {
+         "name": "track.allbirds.com",
+         "rtype": "CNAME",
+         "value": "no such name",
+         "checked_at": "2026-10-11T19:45:52+00:00"
+        },
+        {
+         "name": "tracking.allbirds.com",
+         "rtype": "CNAME",
+         "value": "no such name",
+         "checked_at": "2026-10-11T19:45:52+00:00"
+        },
+        {
+         "name": "url.allbirds.com",
+         "rtype": "CNAME",
+         "value": "no such name",
+         "checked_at": "2026-10-11T19:45:52+00:00"
+        },
+        {
+         "name": "go.allbirds.com",
+         "rtype": "CNAME",
+         "value": "no such name",
+         "checked_at": "2026-10-11T19:45:52+00:00"
+        },
+        {
+         "name": "autodiscover.allbirds.com",
+         "rtype": "CNAME",
+         "value": "autodiscover.outlook.com",
+         "checked_at": "2026-10-11T19:45:52+00:00"
+        },
+        {
+         "name": "cf-bounce.allbirds.com",
+         "rtype": "CNAME",
+         "value": "no such name",
+         "checked_at": "2026-10-11T19:45:52+00:00"
+        },
+        {
+         "name": "eversrv.allbirds.com",
+         "rtype": "CNAME",
+         "value": "no such name",
+         "checked_at": "2026-10-11T19:45:52+00:00"
+        },
+        {
+         "name": "fwdkim1.allbirds.com",
+         "rtype": "CNAME",
+         "value": "no such name",
+         "checked_at": "2026-10-11T19:45:52+00:00"
+        },
+        {
+         "name": "bnc3.allbirds.com",
+         "rtype": "CNAME",
+         "value": "no such name",
+         "checked_at": "2026-10-11T19:45:52+00:00"
+        },
+        {
+         "name": "bounces.cloud.em.allbirds.com",
+         "rtype": "CNAME",
+         "value": "no such name",
+         "checked_at": "2026-10-11T19:45:52+00:00"
+        },
+        {
+         "name": "bounces.cloud2.em.allbirds.com",
+         "rtype": "CNAME",
+         "value": "no such name",
+         "checked_at": "2026-10-11T19:45:52+00:00"
+        }
+       ],
+       "asked": "CNAME at 23 labels under allbirds.com",
+       "detail": "no CNAME into mandrillapp.com at the 23 labels asked"
+      }
+     ],
+     "complete": true
+    }
+   ]
   }
  ],
  "run": {
@@ -2690,6 +3666,19 @@
      "name": "_domainkey.mail.allbirds.com",
      "rtype": "TXT",
      "value": "no record of this type",
+     "checked_at": "2026-10-11T19:45:52+00:00"
+    }
+   ]
+  },
+  {
+   "severity": "warning",
+   "title": "Mailjet at allbirds.com has no DKIM",
+   "detail": "Its documented setup needs it and the map shows it missing: mailjet no such name.",
+   "evidence": [
+    {
+     "name": "mailjet._domainkey.allbirds.com",
+     "rtype": "TXT",
+     "value": "no such name",
      "checked_at": "2026-10-11T19:45:52+00:00"
     }
    ]
