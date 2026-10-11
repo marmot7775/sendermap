@@ -74,10 +74,12 @@ Everything Sendermap reports is built from a few frozen dataclasses in `senderma
   nobody claimed (a reporting service is never unclaimed); `unfound`, claimed and known but with
   no claim at any name checked; and `unknown`, the claimed names no service goes by, kept as the
   client wrote them, so a client's words are never silently dropped. See "Claimed senders".
+- **Story**: one paragraph, a string, written by rules from the map for a reader who runs a
+  company. See "The story".
 - **Run**: when and how one map was made: `checked_at`, `elapsed` seconds and DNS `lookups`.
 - **SenderMap**: the domain, its services, findings, unknowns, gaps, the sending subdomains
   checked, one Checked per name, the BIMI logo if any, the absences, the reconciliation (`null`
-  when nothing was claimed) and the Run. `to_dict()` gives JSON with
+  when nothing was claimed), the story and the Run. `to_dict()` gives JSON with
   schema `sendermap/1`.
 
 ## From domain to result
@@ -108,6 +110,7 @@ Assembly
   findings sorted by severity, + gateway note + same key notes + setup findings; unknowns and
      gaps deduplicated
   -> SenderMap + Run
+  story.write: the paragraph from the map; no query
   reconcile.with_claimed: the claimed names against the services; no query
   -> render.text | render.markdown | to_dict JSON | web stream
 ```
@@ -166,6 +169,7 @@ for the check and a private one a moment later (DNS rebinding) is not caught.
 | `proofs.py` | The Proof type and the checks every proof must pass on loading |
 | `selectors.py` | DKIM selector rules with proofs: parsing and checking them, and ordering the probes |
 | `infer.py` | Turning claims into ranked services; the map of backed selectors |
+| `story.py` | The story: at most five sentences from the map, each counted where it is written |
 | `reconcile.py` | The claimed list against the map: the four parts, splitting a comma separated list |
 | `setup.py` | Setups: each item's state from what the map already asked, `complete`, the findings a setup raises, and the setup line every view shows |
 | `engine.py` | `map_domain`: input cleaning, the phase order, subdomain scans, limits, the gateway note |
@@ -372,7 +376,40 @@ only is one note asking whether the account is still used, and nothing about wha
 lacks. Broken raises nothing new: the key and SPF findings already exist. Every view shows one
 line per setup under its service, "Setup at <where>: SPF present, DKIM missing (selector1 and
 selector2 no such name), bounce CNAME not needed.", built by `setup.line` and, on the web page,
-by the same words in app.js.
+by the same words in app.js. An optional item that is missing reads "not used (optional, <what
+was asked>)" in every view, so a reader does not take an optional record for a fault; its state
+in JSON stays `missing`, with its detail and evidence.
+
+## The story
+
+The rule: nothing stated past what the evidence shows. `story.py` is pure: it reads a finished
+SenderMap and writes at most five sentences, in this order, each built only from objects in the
+map and left out when they are absent:
+
+1. **Risks**: every finding of severity risk, one clause each by its own title, in the map's
+   order ("The map shows two risks: ..."). Warnings and notes are not in the story.
+2. **Who receives the mail**: each service in the domain's own MX. For a mailbox provider, what
+   its DKIM setup item at the domain shows: a key in place to sign, no key in place, only a
+   broken key, or that it could not be checked; with no setup data, only that it receives the
+   mail. "Has a DKIM key in place to sign it", not "signs it", since a published key does not
+   show that anything signs with it. A security gateway "stands in front of the domain's mail
+   ... so the mailbox provider is not visible from MX".
+3. **Senders**: the Configured senders grouped by category, groups and names in the map's order
+   ("eleven other services are set up to send as the domain: four transactional (...)", "other"
+   when sentence 2 named a receiver), then the Likely ones grouped by the kind of the claim that
+   decided them ("two more are likely from a DKIM key name alone (...)").
+4. **Traces and reports**: the Account only services, then who receives the DMARC and the TLS
+   reports, by the report claims.
+5. **Not checked**: every gap, one clause each as the text view words it, the website first
+   when it was not read. A gap in reading another service's own SPF for its published ranges is
+   about the vendor data, not the domain, and would name a service the map did not find, so
+   those are counted instead, one clause per reason.
+
+Counts are in words up to twenty and counted in the function that writes the sentence. The
+words are plain, with no abbreviation the map does not already print, no adjectives and no
+advice. The engine writes the story before the reconciliation, so a claimed list never changes
+it. The text view prints it under the headline, the Markdown view as the first paragraph, the
+web page above the map, and JSON carries it as `story`.
 
 ## Claimed senders
 
@@ -514,7 +551,10 @@ guard. Run `pytest`. `mypy` (strict, over `sendermap/`, `tests/` and `tools/`), 
 
 Tests that hold the rules: `test_evidence.py` maps a fake domain that reaches every kind of
 claim and requires evidence on every claim, unknown and finding, and the supporting records on
-every claim whose evidence does not name its service; `test_reconcile.py` holds the normaliser, the aliases and the loading
+every claim whose evidence does not name its service; `test_story.py` holds a map that reaches every sentence and one
+that reaches none, each receiver's wording, that every service the story names is a service of
+the map and every count is the map's count (on the fake map and every corpus case), the views
+and the optional wording; `test_reconcile.py` holds the normaliser, the aliases and the loading
 rules, each of the four parts on a fake map, that claiming asks nothing more, the CLI flags, the
 JSON field, the API parameter and the views; `test_setup.py` holds each setup state
 with its evidence, the findings, the bounce domain, `complete`, the views, the loading rules and

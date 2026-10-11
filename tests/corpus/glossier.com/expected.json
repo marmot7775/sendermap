@@ -2083,5 +2083,6 @@
  "historical": [],
  "logo": null,
  "schema": "sendermap/1",
- "absences": []
+ "absences": [],
+ "story": "Google Workspace receives the domain's mail and has a DKIM key in place to sign it. Six other services are set up to send as the domain: three support and CRM (Help Scout, Salesforce, Zendesk), one marketing (Klaviyo), two transactional (Postmark, SendGrid); two more are likely from a DKIM key name alone (Cloudflare Email Routing, Mandrill). One service shows an account and nothing set up to send (Amazon SES); DMARC reports go to Valimail. Not checked: the website (not read: web checks were turned off (--no-web)); certificate transparency, crt.sh: GET https://crt.sh/?q=%25.glossier.com&output=json (not asked: read only with --ct (it also holds expired certificates)); DKIM selectors at marketing.glossier.com (79 of 106 not asked: only the first 27 and the names its own SPF, MX or delegation backs were (cap)); DKIM selectors at receipts.glossier.com (79 of 106 not asked: only the first 27 and the names its own SPF, MX or delegation backs were (cap)); DKIM selectors at send.glossier.com (79 of 106 not asked: only the first 27 and the names its own SPF, MX or delegation backs were (cap)); the IP ranges two services publish in their own SPF (includes more than 3 levels deep not read (cap))."
 }

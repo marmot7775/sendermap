@@ -29,12 +29,7 @@ _SEVERITY_STYLE = {
 
 def render(result: SenderMap, console: Console, *, evidence: bool = False) -> None:
     senders = result.senders
-    headline = Text.assemble(
-        (result.domain, "bold"),
-        f"   {len(senders)} sending service{'s' if len(senders) != 1 else ''}",
-        (f"   {result.run.lookups} lookups in {result.run.elapsed:.1f} s", "bright_black"),
-    )
-    console.print(Panel(headline, border_style="bright_black", expand=False))
+    _head(result, console)
     for tier, group in groupby(senders, key=lambda s: s.tier):
         console.print(Text(f"\n{tier.value.upper()}", style=_TIER_STYLE[tier]))
         console.print(_services(list(group), result.domain, evidence))
@@ -86,6 +81,19 @@ def _unknown(item: Unknown | NetworkGroup, domain: str, console: Console, eviden
         console.print(Text(f"    {u.evidence}", style="bright_black"))
     if len(shown) < len(item.members):
         console.print(Text(f"    + {len(item.members) - len(shown)} more", style="bright_black"))
+
+
+def _head(result: SenderMap, console: Console) -> None:
+    """The headline, then the story under it."""
+    count = len(result.senders)
+    headline = Text.assemble(
+        (result.domain, "bold"),
+        f"   {count} sending service{'s' if count != 1 else ''}",
+        (f"   {result.run.lookups} lookups in {result.run.elapsed:.1f} s", "bright_black"),
+    )
+    console.print(Panel(headline, border_style="bright_black", expand=False))
+    if result.story:
+        console.print(Text(result.story))
 
 
 def _claimed(result: SenderMap, console: Console) -> None:

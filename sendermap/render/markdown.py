@@ -10,7 +10,7 @@ from . import NetworkGroup, asked, asked_in_full, claimed_parts, ct_lines, group
 
 
 def render(result: SenderMap, *, evidence: bool = False) -> str:
-    lines = [f"# Sendermap: {result.domain}", ""]
+    lines = [f"# Sendermap: {result.domain}", ""] + ([result.story, ""] if result.story else [])
     checked = result.run.checked_at.astimezone(UTC).strftime("%Y-%m-%d %H:%M UTC")
     lines.append(
         f"{len(result.senders)} sending services found from public records checked {checked} "
