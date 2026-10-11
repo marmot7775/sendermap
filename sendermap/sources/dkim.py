@@ -3,6 +3,13 @@
 A selector name cannot be listed from DNS, only guessed, so this scans the names services are
 known to use. A key reached through a CNAME into a service's zone is that service hosting it,
 as strong as an SPF include. A key known only by its name is weaker: anyone can pick the name.
+
+Two names are asked first: a name nobody publishes under _domainkey, and _domainkey itself.
+When the zone answers no such name for the first, it denies names classically, and then no such
+name at _domainkey means no selector exists under it (RFC 8020 section 2, RFC 4592 section
+2.2.3), while an empty answer there means at least one does. A zone that answers empty for names
+that do not exist (compact denial, RFC 9824) says nothing about existence by its answer code, so
+the sweep runs as it would anyway.
 """
 
 from __future__ import annotations
@@ -13,9 +20,26 @@ from collections.abc import Iterable, Mapping
 from dataclasses import dataclass
 from datetime import datetime
 
-from ..dns import Answer
-from ..model import Checked, Claim, Evidence, Finding, Gap, Kind, Observed, Severity, Unknown
-from . import CANARY, Context
+from ..dns import Answer, Status
+from ..model import (
+    Absence,
+    Checked,
+    Claim,
+    Denial,
+    Evidence,
+    Finding,
+    Gap,
+    Kind,
+    Observed,
+    Severity,
+    Unknown,
+)
+from . import CANARY, Context, negative
+
+# When _domainkey says no selector exists, the ranked names asked anyway, besides the backed ones,
+# as a check on servers that answer no such name for a name with names below it (RFC 8020 s. 5).
+CHECK_PROBES = 8
+NO_SELECTORS = "no selectors exist"
 
 
 @dataclass(frozen=True, slots=True)
@@ -85,7 +109,8 @@ async def collect(
     """Scan `selectors` under `where`. `backed` maps a selector to the SPF or MX claim of a
     service the domain already shows, whose own selector list has that name."""
     base = f"_domainkey.{where}"
-    canary = await ctx.dns.txt(f"{CANARY}.{base}")
+    canary, node = await asyncio.gather(ctx.dns.txt(f"{CANARY}.{base}"), ctx.dns.txt(base))
+    denial = _denial(canary)
     if canary.ok and any("p" in tags(r) for r in canary.records):
         wildcard = Finding(
             Severity.NOTE,
@@ -94,9 +119,80 @@ async def collect(
             "about which services sign for the domain.",
             (Evidence(f"*.{base}", "TXT", canary.records[0], ctx.checked_at),),
         )
-        return Observed(findings=(wildcard,), checked=(Checked(where),))
+        return Observed(findings=(wildcard,), checked=(Checked(where, denial=denial),))
     names = list(dict.fromkeys(s.lower() for s in selectors))
-    answers = await asyncio.gather(*(ctx.dns.txt(f"{s}.{base}") for s in names))
+    classic = denial is Denial.CLASSIC
+    contradicted = Observed()
+    if classic and node.status is Status.NXDOMAIN and not node.chain:
+        check = list(dict.fromkeys([*names[:CHECK_PROBES], *(s.lower() for s in backed)]))
+        answers = await _ask(ctx, base, check)
+        found = next((a for a in answers if _exists(a)), None)
+        if found is None:
+            happened = (
+                f"{NO_SELECTORS}: {base} does not exist and the zone returns no such name for "
+                f"names that do not exist. The sweep of {len(names)} names was not run for that "
+                f"reason; only the {len(check)} names the domain's MX and SPF back or hint at were "
+                "asked, as a check on servers that answer no such name for a name with names "
+                "below it (RFC 8020 section 5)"
+            )
+            evidence = (negative(node, ctx.checked_at), negative(canary, ctx.checked_at))
+            absence = Absence(f"DKIM keys at {where}", happened, evidence)
+            return _scan(
+                ctx, where, check, answers, backed=backed, canary=canary, denial=denial
+            ) + Observed(absences=(absence,))
+        what = "a key" if any("p" in tags(r) for r in found.records) else "a record"
+        happened = (
+            f"the server answered no such name at {base} but {what} exists at {found.name}, so "
+            "existence could not be read from it"
+        )
+        contradicted = Observed(gaps=(Gap(f"DKIM keys at {where}", happened),))
+    answers = await _ask(ctx, base, names)
+    observed = (
+        _scan(ctx, where, names, answers, backed=backed, canary=canary, denial=denial)
+        + contradicted
+    )
+    if (
+        classic
+        and node.status is Status.NOANSWER
+        and all(a.status is Status.NXDOMAIN and not a.chain for a in answers)
+    ):
+        happened = f"selectors exist but none of the {len(names)} names asked is one"
+        absence = Absence(f"DKIM keys at {where}", happened, (negative(node, ctx.checked_at),))
+        observed += Observed(absences=(absence,))
+    return observed
+
+
+def _denial(canary: Answer) -> Denial:
+    """How the zone answers for a name that does not exist, read from the wildcard check."""
+    if canary.ok:
+        return Denial.WILDCARD
+    if canary.status is Status.NXDOMAIN:
+        return Denial.CLASSIC
+    if canary.status is Status.NOANSWER:
+        return Denial.NONE_BY_RCODE
+    return Denial.UNKNOWN
+
+
+def _exists(answer: Answer) -> bool:
+    """Whether an answer shows its name exists: records, an empty answer, or a CNAME there."""
+    return answer.ok or answer.status is Status.NOANSWER or bool(answer.chain)
+
+
+async def _ask(ctx: Context, base: str, names: list[str]) -> list[Answer]:
+    return list(await asyncio.gather(*(ctx.dns.txt(f"{s}.{base}") for s in names)))
+
+
+def _scan(
+    ctx: Context,
+    where: str,
+    names: list[str],
+    answers: list[Answer],
+    *,
+    backed: Mapping[str, Claim],
+    canary: Answer,
+    denial: Denial,
+) -> Observed:
+    """What the answers for `names` show, with a gap for each that failed."""
     echo = frozenset(canary.records) if canary.ok else None
     observed = Observed()
     failed: list[str] = []
@@ -114,9 +210,11 @@ async def collect(
             )
         )
     if failed:
+        base = f"_domainkey.{where}"
         asked = f"DKIM keys: TXT at {len(failed)} selectors under {base} ({', '.join(failed)})"
         gaps.append(Gap(asked, "lookup failed"))
-    return observed + Observed(gaps=tuple(gaps), checked=(Checked(where, tuple(names)),))
+    checked = Checked(where, tuple(names), denial=denial)
+    return observed + Observed(gaps=tuple(gaps), checked=(checked,))
 
 
 def _read(

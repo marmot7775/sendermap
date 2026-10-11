@@ -8,7 +8,8 @@ from datetime import datetime
 import httpx
 
 from ..catalog import Catalog
-from ..dns import Lookups
+from ..dns import Answer, Lookups
+from ..model import Evidence
 
 # Asked before a wave of probes: a name nobody publishes, so an answer here is a wildcard. Fixed,
 # not random, so the same DNS answers give the same map.
@@ -29,3 +30,9 @@ def http_failure(error: httpx.HTTPError) -> str:
     if isinstance(error, httpx.HTTPStatusError):
         return f"HTTP {error.response.status_code}"
     return f"failed: {type(error).__name__}"
+
+
+def negative(answer: Answer, checked_at: datetime) -> Evidence:
+    """A negative answer as evidence: the name, the type asked, and what came back in words
+    ("no such name", "no record of this type")."""
+    return Evidence(answer.name, answer.rtype, answer.status.value, checked_at)

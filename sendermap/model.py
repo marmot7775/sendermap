@@ -219,6 +219,27 @@ class Gap:
 
 
 @dataclass(frozen=True, slots=True)
+class Absence:
+    """A question answered with "not there", and the negative answers that show it: unlike a
+    gap, its silence can be read as absent."""
+
+    asked: str
+    happened: str
+    evidence: tuple[Evidence, ...]
+
+
+class Denial(StrEnum):
+    """How the zone under a name's _domainkey answers for a name that does not exist, read from
+    the wildcard check: no such name (classic), an empty answer that says nothing about
+    existence (compact denial, RFC 9824), a wildcard, or not known."""
+
+    CLASSIC = "classic"
+    NONE_BY_RCODE = "none by rcode"
+    WILDCARD = "wildcard"
+    UNKNOWN = "unknown"
+
+
+@dataclass(frozen=True, slots=True)
 class Checked:
     """What was asked at one name: the DKIM selectors probed, the labels whose CNAMEs were
     asked, the pages requested. Silence about anything not listed here says nothing."""
@@ -227,14 +248,17 @@ class Checked:
     dkim_selectors: tuple[str, ...] = ()
     labels: tuple[str, ...] = ()
     pages: tuple[str, ...] = ()
+    denial: Denial = Denial.UNKNOWN
 
     def __add__(self, other: Checked) -> Checked:
-        """Both records of one name, each list in the order first asked, without repeats."""
+        """Both records of one name, each list in the order first asked, without repeats, and
+        the first denial that is known."""
         return Checked(
             self.where,
             tuple(dict.fromkeys(self.dkim_selectors + other.dkim_selectors)),
             tuple(dict.fromkeys(self.labels + other.labels)),
             tuple(dict.fromkeys(self.pages + other.pages)),
+            self.denial if self.denial is not Denial.UNKNOWN else other.denial,
         )
 
 
@@ -248,6 +272,7 @@ class Observed:
     gaps: tuple[Gap, ...] = ()
     checked: tuple[Checked, ...] = ()
     historical: tuple[Historical, ...] = ()
+    absences: tuple[Absence, ...] = ()
 
     def __add__(self, other: Observed) -> Observed:
         return Observed(
@@ -257,6 +282,7 @@ class Observed:
             self.gaps + other.gaps,
             self.checked + other.checked,
             self.historical + other.historical,
+            self.absences + other.absences,
         )
 
     def checked_by_name(self) -> tuple[Checked, ...]:
@@ -294,6 +320,7 @@ class SenderMap:
     historical: tuple[Historical, ...] = ()
     logo: str | None = None
     schema: str = field(default=SCHEMA)
+    absences: tuple[Absence, ...] = ()
 
     @property
     def senders(self) -> tuple[Service, ...]:

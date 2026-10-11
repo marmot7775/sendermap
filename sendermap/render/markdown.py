@@ -33,6 +33,11 @@ def render(result: SenderMap) -> str:
     if ct := ct_lines(result):
         lines += ["", "## Certificate transparency", ""]
         lines += [f"- {line}" for line in ct]
+    if result.absences:
+        lines += ["", "## Checked and not there", ""]
+        for a in result.absences:
+            lines.append(f"- {a.asked}: {a.happened}")
+            lines += [f"  - `{e}`" for e in a.evidence]
     if result.gaps:
         lines += ["", "## Not checked", ""]
         lines += [f"- {g.asked}: {g.happened}" for g in result.gaps]

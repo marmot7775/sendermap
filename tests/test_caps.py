@@ -38,7 +38,11 @@ async def test_sending_subdomains_past_the_cap_are_a_gap(
 async def test_dkim_names_left_out_of_a_subdomains_budget_are_a_gap(
     offline: httpx.AsyncClient,
 ) -> None:
-    zone = Zone().add("email.acme.test", "TXT", "v=spf1 include:mailgun.org ~all")
+    zone = (
+        Zone()
+        .add("email.acme.test", "TXT", "v=spf1 include:mailgun.org ~all")
+        .selectors_exist("email.acme.test")
+    )
     result = await map_domain(
         "acme.test", checked_at=CHECKED, resolver=zone, http=offline, use_web=False
     )

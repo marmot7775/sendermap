@@ -134,8 +134,9 @@ async def test_a_logged_name_that_no_longer_resolves_is_a_possible_past_vendor(
     assert past.service == "SparkPost" and past.evidence.name == "app-email.allbirds.com"
     assert past.evidence.not_after == "2020-12-10T23:33:19"
     assert "SparkPost" not in {c.service for c in observed.claims}
-    # The other gift-cards name and the middle-tier names do not resolve and name no service.
-    assert summary.gone_unnamed == 3
+    # The other gift-cards name and middle-tier-dev do not resolve and name no service;
+    # middle-tier-prod has a name below it, so it exists (an empty non-terminal, RFC 8020).
+    assert summary.gone_unnamed == 2
 
 
 async def test_a_logged_autodiscover_cname_is_an_account_trace_as_in_the_dns_path(

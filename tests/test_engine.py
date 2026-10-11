@@ -99,6 +99,7 @@ async def test_mx_and_spf_hints_put_google_and_microsoft_selectors_first(
         .add("hinted.test", "MX", "1 smtp.google.com")
         .add("hinted.test", "TXT", "v=spf1 include:_spf.hinted.test ~all")
         .add("_spf.hinted.test", "TXT", "v=spf1 include:spf.protection.outlook.com ~all")
+        .selectors_exist("hinted.test")
     )
     await map_domain("hinted.test", checked_at=CHECKED, resolver=zone, http=offline, use_web=False)
     probed = [
@@ -139,6 +140,7 @@ async def test_a_subdomain_whose_mx_is_google_probes_google_before_any_other_rul
         Zone()
         .add("mail.subhint.test", "MX", "1 smtp.google.com")
         .add("mail.subhint.test", "TXT", "v=spf1 include:hubspotemail.net ~all")
+        .selectors_exist("mail.subhint.test")
     )
     await map_domain("subhint.test", checked_at=CHECKED, resolver=zone, http=offline, use_web=False)
     probed = [
