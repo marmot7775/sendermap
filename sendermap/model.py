@@ -398,6 +398,30 @@ class Observed:
 
 
 @dataclass(frozen=True, slots=True)
+class Reconciled:
+    """One service in a reconciliation: its name in the vendor data, its tier in the map (None
+    when the map did not find it, or found it only receiving reports), and the names the client
+    wrote for it, as written (empty for a service nobody claimed)."""
+
+    service: str
+    tier: Tier | None
+    claimed_as: tuple[str, ...] = ()
+
+
+@dataclass(frozen=True, slots=True)
+class Reconciliation:
+    """The services a client says they use, against the map: `confirmed`, claimed and found;
+    `unclaimed`, every sending service found that nobody claimed; `unfound`, claimed and known
+    but with no claim at any name checked; `unknown`, claimed names that match no service in
+    the vendor data, as the client wrote them."""
+
+    confirmed: tuple[Reconciled, ...] = ()
+    unclaimed: tuple[Reconciled, ...] = ()
+    unfound: tuple[Reconciled, ...] = ()
+    unknown: tuple[str, ...] = ()
+
+
+@dataclass(frozen=True, slots=True)
 class Run:
     """When and how one map was made. Two runs over the same DNS answers differ here only."""
 
@@ -423,6 +447,8 @@ class SenderMap:
     logo: str | None = None
     schema: str = field(default=SCHEMA)
     absences: tuple[Absence, ...] = ()
+    # The client's own list of services against the map; None when nothing was claimed.
+    reconciliation: Reconciliation | None = None
 
     @property
     def senders(self) -> tuple[Service, ...]:

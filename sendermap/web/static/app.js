@@ -16,6 +16,9 @@ const $ = (id) => document.getElementById(id);
 
 let current = null;
 let source = null;
+// The services the domain's owner says they use, from the page's own ?claimed=, comma
+// separated. The API reconciles them with the map; the page only passes them on.
+let claimed = "";
 
 document.addEventListener("DOMContentLoaded", () => {
   $("lookup").addEventListener("submit", (e) => {
@@ -30,30 +33,37 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 function fromUrl() {
-  const d = new URLSearchParams(location.search).get("d");
+  const params = new URLSearchParams(location.search);
+  const d = params.get("d");
   if (d) {
     $("domain").value = d;
-    start(d, false);
+    start(d, false, params.get("claimed") || "");
   }
 }
 
-function start(text, push = true) {
+// A domain typed into the form starts afresh: a claimed list belongs to the link that carried it.
+function start(text, push = true, names = "") {
   const domain = text.trim();
   if (!domain) return;
   if (source) source.close();
-  if (push) history.pushState(null, "", `/?d=${encodeURIComponent(domain)}`);
+  claimed = names;
+  if (push) history.pushState(null, "", `/?${query(domain)}`);
   show("progress"); hide("result"); hide("error");
   $("step").textContent = "Starting";
-  source = new EventSource(`/api/map/stream?d=${encodeURIComponent(domain)}`);
+  source = new EventSource(`/api/map/stream?${query(domain)}`);
   source.addEventListener("progress", (e) => { $("step").textContent = JSON.parse(e.data).step; });
   source.addEventListener("map", (e) => { source.close(); render(JSON.parse(e.data)); });
   source.addEventListener("failed", (e) => { source.close(); fail(JSON.parse(e.data).error); });
   source.onerror = async () => {
     source.close();
-    const reply = await fetch(`/api/map?d=${encodeURIComponent(domain)}`);
+    const reply = await fetch(`/api/map?${query(domain)}`);
     if (reply.ok) render(await reply.json());
     else fail((await reply.json().catch(() => ({}))).detail || "The map could not be built.");
   };
+}
+
+function query(domain) {
+  return `d=${encodeURIComponent(domain)}${claimed ? `&claimed=${encodeURIComponent(claimed)}` : ""}`;
 }
 
 function fail(message) {
@@ -78,6 +88,7 @@ function render(map) {
   drawMap(map.domain, senders);
   renderServices(senders, map.domain);
   renderReporting(reporting, map.domain);
+  renderClaimed(map.reconciliation);
   renderAttention(map.findings);
   renderUnknowns(map.unknowns, map.domain);
   renderChecked(map.gaps, map.checked, map.absences || []);
@@ -230,6 +241,37 @@ function renderReporting(reporting, domain) {
   const cards = h("div", { class: "cards" });
   reporting.forEach((s) => cards.append(card(s, domain, "b-reporting", "Reporting")));
   box.append(cards);
+}
+
+// The four parts of a reconciliation, in the words of sendermap/render/__init__.py CLAIMED_PARTS.
+const CLAIMED_PARTS = [
+  ["confirmed", "Claimed and found"],
+  ["unclaimed", "Found, not claimed"],
+  ["unfound", "Claimed, not found at any name checked"],
+  ["unknown", "Claimed, no service Sendermap knows by that name"],
+];
+
+function renderClaimed(reconciliation) {
+  const box = $("claimed");
+  box.replaceChildren();
+  if (!reconciliation) return;
+  box.append(h("h3", { class: "section-title" }, "Claimed senders"));
+  for (const [key, heading] of CLAIMED_PARTS) {
+    const items = reconciliation[key].map((item) => (typeof item === "string" ? item : reconciled(item, key)));
+    const ul = h("ul", { class: "gaps" });
+    (items.length ? items : ["none"]).forEach((line) => ul.append(h("li", {}, line)));
+    box.append(h("h4", {}, heading), ul);
+  }
+}
+
+function reconciled(item, part) {
+  let line = item.service;
+  if (part !== "unfound") line += item.tier ? `, ${item.tier}` : ", receives reports only";
+  const wrote = item.claimed_as;
+  if (wrote.length && !(wrote.length === 1 && wrote[0] === item.service)) {
+    line += ` (claimed as ${wrote.map((t) => `"${t}"`).join(", ")})`;
+  }
+  return line;
 }
 
 function card(service, domain, badgeClass, badgeText) {
@@ -396,12 +438,12 @@ function renderChecked(gaps, checked, absences = []) {
 // ------------------------------------------------------------------ sharing
 
 function shareLink() {
-  return `${location.origin}/?d=${encodeURIComponent(current ? current.domain : "")}`;
+  return `${location.origin}/?${query(current ? current.domain : "")}`;
 }
 
 async function copyMarkdown() {
   if (!current) return;
-  const reply = await fetch(`/api/map.md?d=${encodeURIComponent(current.domain)}`);
+  const reply = await fetch(`/api/map.md?${query(current.domain)}`);
   if (reply.ok) copy(await reply.text(), "copy-md", "Markdown copied");
 }
 

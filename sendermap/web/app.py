@@ -3,7 +3,8 @@
 Privacy: the server keeps no record of the domains looked up. Uvicorn's access log, which would
 record each request's query string, is turned off when the app starts. Results are held in
 memory for ten minutes so a shared link opens instantly, and a visitor's address is held in
-memory for one minute for the rate limit. Neither is written anywhere.
+memory for one minute for the rate limit. Neither is written anywhere. The claimed names a
+request carries are used for its response only: the cached map does not hold them.
 """
 
 from __future__ import annotations
@@ -23,9 +24,10 @@ from fastapi import FastAPI, HTTPException, Query, Request
 from fastapi.responses import FileResponse, HTMLResponse, PlainTextResponse, StreamingResponse
 from fastapi.staticfiles import StaticFiles
 
-from .. import __version__
+from .. import __version__, catalog
 from ..engine import Progress, clean_domain, map_domain
 from ..model import SenderMap
+from ..reconcile import split, with_claimed
 from ..render import markdown
 
 ACCESS_LOG = "uvicorn.access"
@@ -71,22 +73,32 @@ async def health() -> dict[str, str]:
     return {"status": "ok", "version": __version__}
 
 
+# The services the domain's owner says they use, comma separated: the map's reconciliation.
+CLAIMED = Query("", max_length=2000)
+
+
 @app.get("/api/map")
-async def get_map(request: Request, d: str = Query(..., max_length=253)) -> dict[str, object]:
+async def get_map(
+    request: Request, d: str = Query(..., max_length=253), claimed: str = CLAIMED
+) -> dict[str, object]:
     domain = _domain(d)
     _limit(request)
-    return (await _map(domain, _ignore)).to_dict()
+    return (await _map(domain, _ignore, claimed)).to_dict()
 
 
 @app.get("/api/map.md", response_class=PlainTextResponse)
-async def get_markdown(request: Request, d: str = Query(..., max_length=253)) -> str:
+async def get_markdown(
+    request: Request, d: str = Query(..., max_length=253), claimed: str = CLAIMED
+) -> str:
     domain = _domain(d)
     _limit(request)
-    return markdown.render(await _map(domain, _ignore))
+    return markdown.render(await _map(domain, _ignore, claimed))
 
 
 @app.get("/api/map/stream")
-async def stream(request: Request, d: str = Query(..., max_length=253)) -> StreamingResponse:
+async def stream(
+    request: Request, d: str = Query(..., max_length=253), claimed: str = CLAIMED
+) -> StreamingResponse:
     """Server-sent events: `progress` lines while the map builds, then one `map` event."""
     domain = _domain(d)
     _limit(request)
@@ -97,7 +109,7 @@ async def stream(request: Request, d: str = Query(..., max_length=253)) -> Strea
 
     async def build() -> None:
         try:
-            result = await _map(domain, progress)
+            result = await _map(domain, progress, claimed)
             await queue.put(("map", json.dumps(result.to_dict(), default=str)))
         except Exception:  # the page shows a plain error instead of hanging
             await queue.put(("failed", json.dumps({"error": "The map could not be built."})))
@@ -118,7 +130,13 @@ async def stream(request: Request, d: str = Query(..., max_length=253)) -> Strea
     return StreamingResponse(events(), media_type="text/event-stream", headers=headers)
 
 
-async def _map(domain: str, progress: Progress) -> SenderMap:
+async def _map(domain: str, progress: Progress, claimed: str) -> SenderMap:
+    """The map from the cache or one shared build, then reconciled with this request's claimed
+    names, which are never cached or kept."""
+    return with_claimed(await _shared(domain, progress), split(claimed), catalog.load())
+
+
+async def _shared(domain: str, progress: Progress) -> SenderMap:
     cached = state.cache.get(domain)
     if cached and time.monotonic() - cached[0] < CACHE_SECONDS:
         await progress("Done")

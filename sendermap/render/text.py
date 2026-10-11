@@ -12,7 +12,7 @@ from rich.text import Text
 
 from ..model import Claim, SenderMap, Service, Severity, Tier, Unknown
 from ..setup import line
-from . import NetworkGroup, asked, asked_in_full, ct_lines, grouped_unknowns
+from . import NetworkGroup, asked, asked_in_full, claimed_parts, ct_lines, grouped_unknowns
 
 _TIER_STYLE = {
     Tier.IN_USE: "bold green",
@@ -41,6 +41,7 @@ def render(result: SenderMap, console: Console, *, evidence: bool = False) -> No
     if result.reporting:
         console.print(Text("\nREPORTS GO TO", style="bold magenta"))
         console.print(_services(list(result.reporting), result.domain, evidence))
+    _claimed(result, console)
     if result.findings:
         console.print(Text("\nNEEDS ATTENTION", style="bold"))
         for f in result.findings:
@@ -85,6 +86,17 @@ def _unknown(item: Unknown | NetworkGroup, domain: str, console: Console, eviden
         console.print(Text(f"    {u.evidence}", style="bright_black"))
     if len(shown) < len(item.members):
         console.print(Text(f"    + {len(item.members) - len(shown)} more", style="bright_black"))
+
+
+def _claimed(result: SenderMap, console: Console) -> None:
+    """The services the client claimed against the map, in four parts, when any were claimed."""
+    if not result.reconciliation:
+        return
+    console.print(Text("\nCLAIMED SENDERS", style="bold"))
+    for heading, lines in claimed_parts(result.reconciliation):
+        console.print(Text(f"  {heading}"))
+        for item in lines:
+            console.print(Text(f"    {item}", style="bright_black"))
 
 
 def _absences(result: SenderMap, console: Console) -> None:

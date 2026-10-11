@@ -6,6 +6,9 @@ checked. Loading refuses a pattern without one. This module checks the proofs, i
 patterns and applies the matching rules, each of which was learned on a live domain.
 
 data/vendors_pending.json holds patterns with no proof yet. Nothing here reads it.
+
+A block may also carry `aliases`: other names a client calls the service by, with no proof, since
+an alias matches text a person typed and nothing in DNS.
 """
 
 from __future__ import annotations
@@ -122,6 +125,8 @@ class Catalog:
     subprocessor_names: dict[str, str]
     # Each vendor's documented setup, one rule per record, in file order.
     setups: dict[str, tuple[SetupRule, ...]] = field(default_factory=dict)
+    # Every vendor's name and aliases, normalised, to the vendor.
+    names: dict[str, str] = field(default_factory=dict)
 
     # ------------------------------------------------------------ lookups by record
 
@@ -219,6 +224,11 @@ class Catalog:
             dict.fromkeys((*build_dictionary(self.rules), *sorted(self.generic_selectors)))
         )
 
+    def named(self, text: str) -> str | None:
+        """The vendor a person means by `text`: its name or one of its aliases, exactly, after
+        both are normalised. Nothing fuzzier."""
+        return self.names.get(normalise(text))
+
     def category(self, service: str) -> str:
         return str(self.services.get(service, {}).get("category", "Other"))
 
@@ -296,7 +306,43 @@ def build(raw: dict[str, Any]) -> Catalog:
             for name, block in raw["vendors"].items()
             if (setup := _setup(name, block, selector_rules))
         },
+        names=_names(raw["vendors"]),
     )
+
+
+# Words a company name may start or end with that do not tell one service from another.
+_LEADING = ("the",)
+_TRAILING = ("inc", "llc", "ltd")
+
+
+def normalise(text: str) -> str:
+    """A service name as a person might type it, reduced for exact matching: casefolded,
+    spaces and punctuation gone, a leading "the" and a trailing "inc", "llc" or "ltd" dropped
+    when other words remain. "The Mailchimp, Inc." and "mailchimp" are one name."""
+    words = re.findall(r"[^\W_]+", text.casefold())
+    if len(words) > 1 and words[0] in _LEADING:
+        words = words[1:]
+    if len(words) > 1 and words[-1] in _TRAILING:
+        words = words[:-1]
+    return "".join(words)
+
+
+def _names(vendors: dict[str, Any]) -> dict[str, str]:
+    """Each vendor's name and aliases, normalised, to the vendor. ValueError for an alias that
+    is not a string, normalises to nothing, or names a vendor already named the same way (its
+    own name or another vendor's name or alias)."""
+    names: dict[str, str] = {}
+    for vendor, block in vendors.items():
+        aliases = block.get("aliases", [])
+        if not isinstance(aliases, list):
+            raise ValueError(f"{vendor} aliases: not a list")
+        for text in (vendor, *aliases):
+            if not isinstance(text, str) or not (key := normalise(text)):
+                raise ValueError(f"{vendor} alias {text!r}: not a name")
+            if key in names:
+                raise ValueError(f"{vendor} alias {text!r}: already names {names[key]}")
+            names[key] = vendor
+    return names
 
 
 def _setup(vendor: str, block: dict[str, Any], rules: tuple[Rule, ...]) -> tuple[SetupRule, ...]:

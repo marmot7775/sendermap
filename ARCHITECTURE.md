@@ -67,9 +67,16 @@ Everything Sendermap reports is built from a few frozen dataclasses in `senderma
   together, resolved, and gone without naming a service, and one **CtProvider** per certificate
   log: its name, whether it was read, read from the cache, unavailable or off, and how many names
   under the domain it logged.
+- **Reconciliation**: the services a client says they use, held against the map, in four parts,
+  each a **Reconciled** (the service, its tier in the map, the names the client wrote for it):
+  `confirmed`, claimed and found, with the tier; `unclaimed`, every sending service found that
+  nobody claimed (a reporting service is never unclaimed); `unfound`, claimed and known but with
+  no claim at any name checked; and `unknown`, the claimed names no service goes by, kept as the
+  client wrote them, so a client's words are never silently dropped. See "Claimed senders".
 - **Run**: when and how one map was made: `checked_at`, `elapsed` seconds and DNS `lookups`.
 - **SenderMap**: the domain, its services, findings, unknowns, gaps, the sending subdomains
-  checked, one Checked per name, the BIMI logo if any, the absences, and the Run. `to_dict()` gives JSON with
+  checked, one Checked per name, the BIMI logo if any, the absences, the reconciliation (`null`
+  when nothing was claimed) and the Run. `to_dict()` gives JSON with
   schema `sendermap/1`.
 
 ## From domain to result
@@ -98,7 +105,9 @@ Assembly
      absences and gaps; no query
   findings sorted by severity, + gateway note + same key notes + setup findings; unknowns and
      gaps deduplicated
-  -> SenderMap + Run -> render.text | render.markdown | to_dict JSON | web stream
+  -> SenderMap + Run
+  reconcile.with_claimed: the claimed names against the services; no query
+  -> render.text | render.markdown | to_dict JSON | web stream
 ```
 
 Each source returns an `Observed`: claims, unknowns, findings, gaps and what it checked. Sources never raise
@@ -151,10 +160,11 @@ for the check and a private one a moment later (DNS rebinding) is not caught.
 |---|---|
 | `model.py` | The result types above, and which Tier each Kind supports |
 | `dns.py` | The Resolver interface, the system and DNS-over-HTTPS resolvers, and `Lookups`: the per-map cache that asks each name and type once and counts the queries |
-| `catalog.py` | Loading vendors.json into match tables, refusing any pattern without a proof; matching a host, token or selector to a service |
+| `catalog.py` | Loading vendors.json into match tables, refusing any pattern without a proof; matching a host, token or selector to a service, and a name a person typed (`normalise`, `named`) |
 | `proofs.py` | The Proof type and the checks every proof must pass on loading |
 | `selectors.py` | DKIM selector rules with proofs: parsing and checking them, and ordering the probes |
 | `infer.py` | Turning claims into ranked services; the map of backed selectors |
+| `reconcile.py` | The claimed list against the map: the four parts, splitting a comma separated list |
 | `setup.py` | Setups: each item's state from what the map already asked, `complete`, the findings a setup raises, and the setup line every view shows |
 | `engine.py` | `map_domain`: input cleaning, the phase order, subdomain scans, limits, the gateway note |
 | `sources/spf.py` | Walking the SPF tree: credited includes, IP ranges, the lookup count, SPF findings |
@@ -352,6 +362,36 @@ line per setup under its service, "Setup at <where>: SPF present, DKIM missing (
 selector2 no such name), bounce CNAME not needed.", built by `setup.line` and, on the web page,
 by the same words in app.js.
 
+## Claimed senders
+
+A client says which services they use; the map says what DNS shows. `reconcile.py` is pure: it
+reads the finished map, the names the client wrote and the catalog, and asks nothing, so a map
+built with a claimed list asks the same questions as one without (a test holds it).
+
+A claimed name matches a service only exactly, after both are normalised by
+`catalog.normalise`: casefolded, spaces and punctuation gone, a leading "the" and a trailing
+"inc", "llc" or "ltd" dropped when other words remain. "The Mailchimp, Inc." is Mailchimp;
+"Mailchimps" is nobody. There is no fuzzy matching. A name matches its vendor's own name or one
+of the vendor block's `aliases`: a plain list of the other names customers call the service by
+("Office 365", "O365", "Exchange Online" for Microsoft 365; "Sendinblue" for Brevo). An alias
+carries no proof, unlike every other entry in a block, because it matches text a person typed and
+nothing in DNS, so no record could show it. Loading refuses an alias that is not a string, that
+normalises to nothing, or that names a vendor already named the same way, by its own name or
+another vendor's name or alias; a name with two readings ("Outlook", "Zoho", "GoDaddy") is left
+out.
+
+Found services keep the map's order; unfound services and unknown names keep the order they were
+claimed in. Blank names are left out and a name written twice the same way counts once. Nothing
+claimed is no reconciliation: `null` in JSON and no section in any view. Every view shows a
+CLAIMED SENDERS section with all four parts, "none" for an empty one, each found service with
+its tier and, when the client wrote another name, "claimed as" with their words. The text and
+Markdown views build it with `render.claimed_parts`, and app.js with the same words.
+
+The web site caches maps by domain only; the claimed names a request carries are applied to the
+cached map for that response and kept nowhere. The page passes its own `?claimed=` on to the API,
+so it needs no input of its own. A recorded corpus case holds no claims, so `testing.comparable`
+leaves out a `null` reconciliation and the corpus did not change.
+
 ## Determinism
 
 The same DNS answers (and the same web pages and certificate logs, when those are read) and the
@@ -425,15 +465,19 @@ pattern becomes its proof; `--move` moves proven patterns into vendors.json.
 
 - **Library**: `await sendermap.map_domain("example.com", checked_at=datetime.now(UTC))`.
   Optional: `resolver`, `http`, `use_web`, `use_subdomains`, `use_ct` (off by default) with
-  `ct_cache` (a directory, or None for no cache), and a `progress` callback.
+  `ct_cache` (a directory, or None for no cache), a `progress` callback, and `claimed`, a
+  sequence of the service names the client says they use.
 - **Command line**: `sendermap example.com`, with `--json`, `--markdown`, `--evidence` (every
   claim, not only the deciding one), `--no-web`, `--no-subdomains`, `--ct` (crt.sh read too,
-  and every logged name resolved and matched) and `--doh` (Cloudflare DNS over HTTPS). Both
+  and every logged name resolved and matched), `--doh` (Cloudflare DNS over HTTPS), `--claimed`
+  (a comma separated list of the services the client says they use) and `--claimed-file` (one
+  per line; both may be given). Both
   certificate logs are cached in `$XDG_CACHE_HOME/sendermap/ct` or `~/.cache/sendermap/ct`, one
   directory per provider. The web site does not use `--ct` or the cache: it reads Cert Spotter
   for the subdomain search on each map it builds.
 - **Web site**: a FastAPI app. `GET /api/map?d=` returns the map as JSON, `GET /api/map.md?d=`
   as Markdown, and `GET /api/map/stream?d=` streams progress then the map as server-sent events.
+  Each takes `claimed`, a comma separated list, for the map's reconciliation.
   Uvicorn's access log is turned off when the app starts, so no query string is logged; a test
   runs a real server and checks that a request logs nothing. Visitor addresses are held in
   memory for one minute for the rate limit.
@@ -453,7 +497,9 @@ guard. Run `pytest`. `mypy` (strict, over `sendermap/`, `tests/` and `tools/`), 
 
 Tests that hold the rules: `test_evidence.py` maps a fake domain that reaches every kind of
 claim and requires evidence on every claim, unknown and finding, and the supporting records on
-every claim whose evidence does not name its service; `test_setup.py` holds each setup state
+every claim whose evidence does not name its service; `test_reconcile.py` holds the normaliser, the aliases and the loading
+rules, each of the four parts on a fake map, that claiming asks nothing more, the CLI flags, the
+JSON field, the API parameter and the views; `test_setup.py` holds each setup state
 with its evidence, the findings, the bounce domain, `complete`, the views, the loading rules and
 that a setup asks nothing more; `test_dkim_denial.py` holds the
 _domainkey triage for each denial class, the absences with their evidence, and their rendering;

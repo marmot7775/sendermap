@@ -1,5 +1,5 @@
 {
-  "about": "Email services recognisable from a domain's own DNS. One block per vendor; imported from dns-audit (MIT) at fac9e2e. Hostname patterns match the host itself or any name under it, and the longest match wins. Every pattern is an entry with its value and a proof: a live domain that publishes it, the record name (or, for a website host or a subprocessor name, the page) as found, and the date it was checked. Networks are autonomous system numbers a service owns outright; shared clouds are listed under rules.cloud_networks and never credited to a service. Each selectors entry names a vendor's DKIM selectors with their source and a proof; a fixed shape with several names takes a list of proofs, one per name in order. These entries are the only selector list: they credit keys by name, back generic names, and with rules.generic_selectors make the probe sweep. Hints are MX and SPF values the vendor's customers publish, with the pages that list them. Patterns not yet proven wait in vendors_pending.json, which Sendermap never reads. A setup list names the records the vendor's documentation says a complete setup publishes: each item's record, whether it is needed, its values (patterns of the same block) and a proof whose record is the documentation page that names them all.",
+  "about": "Email services recognisable from a domain's own DNS. One block per vendor; imported from dns-audit (MIT) at fac9e2e. Hostname patterns match the host itself or any name under it, and the longest match wins. Every pattern is an entry with its value and a proof: a live domain that publishes it, the record name (or, for a website host or a subprocessor name, the page) as found, and the date it was checked. Networks are autonomous system numbers a service owns outright; shared clouds are listed under rules.cloud_networks and never credited to a service. Each selectors entry names a vendor's DKIM selectors with their source and a proof; a fixed shape with several names takes a list of proofs, one per name in order. These entries are the only selector list: they credit keys by name, back generic names, and with rules.generic_selectors make the probe sweep. Hints are MX and SPF values the vendor's customers publish, with the pages that list them. Patterns not yet proven wait in vendors_pending.json, which Sendermap never reads. A setup list names the records the vendor's documentation says a complete setup publishes: each item's record, whether it is needed, its values (patterns of the same block) and a proof whose record is the documentation page that names them all. Aliases are other names a client calls the vendor by, a plain list with no proof: an alias matches text a person typed, never anything in DNS.",
   "categories": [
     "Mailbox",
     "Security gateway",
@@ -217,7 +217,10 @@
           }
         }
       ],
-      "category": "DMARC reporting"
+      "category": "DMARC reporting",
+      "aliases": [
+        "Fortra Agari"
+      ]
     },
     "Amazon SES": {
       "spf_includes": [
@@ -231,6 +234,11 @@
         }
       ],
       "category": "Transactional",
+      "aliases": [
+        "SES",
+        "AWS SES",
+        "Amazon Simple Email Service"
+      ],
       "selectors_note": "No selector entry: Easy DKIM selectors are tokens SES generates per identity, not a series. https://docs.aws.amazon.com/ses/latest/APIReference-V2/API_DkimAttributes.html",
       "subprocessor_names": [
         {
@@ -292,6 +300,10 @@
         }
       ],
       "category": "Commerce and apps",
+      "aliases": [
+        "Jira",
+        "Confluence"
+      ],
       "subprocessor_names": [
         {
           "value": "Atlassian",
@@ -320,6 +332,9 @@
     },
     "Attentive": {
       "category": "Marketing",
+      "aliases": [
+        "Attentive Mobile"
+      ],
       "subprocessor_names": [
         {
           "value": "Attentive",
@@ -417,6 +432,11 @@
         }
       ],
       "category": "Security gateway",
+      "aliases": [
+        "Barracuda Email Protection",
+        "Barracuda Essentials",
+        "Barracuda Email Security Gateway"
+      ],
       "subprocessor_names": [
         {
           "value": "Barracuda",
@@ -485,6 +505,9 @@
         }
       ],
       "category": "Marketing",
+      "aliases": [
+        "Sendinblue"
+      ],
       "subprocessor_names": [
         {
           "value": "Brevo",
@@ -642,7 +665,10 @@
           }
         }
       ],
-      "category": "DMARC reporting"
+      "category": "DMARC reporting",
+      "aliases": [
+        "Cloudflare DMARC"
+      ]
     },
     "Cloudflare Email Routing": {
       "spf_includes": [
@@ -666,6 +692,9 @@
         }
       ],
       "category": "Mailbox",
+      "aliases": [
+        "Cloudflare Email"
+      ],
       "selectors": [
         {
           "shape": {
@@ -986,6 +1015,10 @@
     },
     "Emma": {
       "category": "Marketing",
+      "aliases": [
+        "MyEmma",
+        "Marigold Emma"
+      ],
       "selectors": [
         {
           "shape": {
@@ -1246,6 +1279,10 @@
     },
     "Firebase": {
       "category": "Transactional",
+      "aliases": [
+        "Firebase Authentication",
+        "Google Firebase"
+      ],
       "subprocessor_names": [
         {
           "value": "Firebase",
@@ -1269,6 +1306,9 @@
     },
     "Freshdesk": {
       "category": "Support and CRM",
+      "aliases": [
+        "Freshworks"
+      ],
       "subprocessor_names": [
         {
           "value": "Freshdesk",
@@ -1338,6 +1378,10 @@
         }
       ],
       "category": "Mailbox",
+      "aliases": [
+        "GoDaddy Email",
+        "GoDaddy Workspace Email"
+      ],
       "selectors": [
         {
           "shape": {
@@ -1412,7 +1456,10 @@
           }
         }
       ],
-      "category": "Marketing"
+      "category": "Marketing",
+      "aliases": [
+        "GoDaddy Email Marketing"
+      ]
     },
     "Google Workspace": {
       "spf_includes": [
@@ -1476,6 +1523,13 @@
         }
       ],
       "category": "Mailbox",
+      "aliases": [
+        "G Suite",
+        "Google Apps",
+        "Gmail",
+        "Google",
+        "Google Mail"
+      ],
       "selectors": [
         {
           "shape": {
@@ -1716,6 +1770,10 @@
         }
       ],
       "category": "Marketing",
+      "aliases": [
+        "HubSpot CRM",
+        "HubSpot Marketing Hub"
+      ],
       "website": [
         {
           "value": "js.hs-analytics.net",
@@ -1913,6 +1971,10 @@
         }
       ],
       "category": "Mailbox",
+      "aliases": [
+        "1&1 IONOS",
+        "1and1"
+      ],
       "networks": [
         {
           "value": "AS8560",
@@ -2026,6 +2088,9 @@
     },
     "Kit": {
       "category": "Marketing",
+      "aliases": [
+        "ConvertKit"
+      ],
       "selectors": [
         {
           "shape": {
@@ -2219,6 +2284,9 @@
         }
       ],
       "category": "Marketing",
+      "aliases": [
+        "Intuit Mailchimp"
+      ],
       "networks": [
         {
           "value": "AS14782",
@@ -2374,6 +2442,9 @@
         }
       ],
       "category": "Transactional",
+      "aliases": [
+        "Sinch Mailgun"
+      ],
       "mx": [
         {
           "value": "mailgun.org",
@@ -2554,6 +2625,9 @@
         }
       ],
       "category": "Transactional",
+      "aliases": [
+        "Sinch Mailjet"
+      ],
       "selectors": [
         {
           "shape": {
@@ -2675,6 +2749,10 @@
         }
       ],
       "category": "Transactional",
+      "aliases": [
+        "Mailchimp Transactional",
+        "Mandrill by Mailchimp"
+      ],
       "selectors": [
         {
           "shape": {
@@ -2790,6 +2868,11 @@
         }
       ],
       "category": "Marketing",
+      "aliases": [
+        "Adobe Marketo",
+        "Marketo Engage",
+        "Adobe Marketo Engage"
+      ],
       "website": [
         {
           "value": "munchkin.marketo.net",
@@ -2949,6 +3032,15 @@
         }
       ],
       "category": "Mailbox",
+      "aliases": [
+        "Office 365",
+        "O365",
+        "M365",
+        "Microsoft Office 365",
+        "Exchange Online",
+        "Microsoft Exchange Online",
+        "Outlook for Microsoft 365"
+      ],
       "selectors": [
         {
           "shape": {
@@ -3139,7 +3231,10 @@
           }
         }
       ],
-      "category": "DMARC reporting"
+      "category": "DMARC reporting",
+      "aliases": [
+        "DMARC Analyzer"
+      ]
     },
     "Omnisend": {
       "category": "Marketing",
@@ -3201,10 +3296,17 @@
           }
         }
       ],
-      "category": "Mailbox"
+      "category": "Mailbox",
+      "aliases": [
+        "Outlook.com",
+        "Hotmail"
+      ]
     },
     "Pepipost": {
       "category": "Transactional",
+      "aliases": [
+        "Netcore Email API"
+      ],
       "selectors": [
         {
           "shape": {
@@ -3258,6 +3360,9 @@
         }
       ],
       "category": "Transactional",
+      "aliases": [
+        "Postmarkapp"
+      ],
       "subprocessor_names": [
         {
           "value": "Postmark",
@@ -3365,6 +3470,10 @@
         }
       ],
       "category": "Security gateway",
+      "aliases": [
+        "Proofpoint Essentials",
+        "Proofpoint Email Protection"
+      ],
       "subprocessor_names": [
         {
           "value": "Proofpoint",
@@ -3435,6 +3544,9 @@
         }
       ],
       "category": "Mailbox",
+      "aliases": [
+        "Proton"
+      ],
       "selectors": [
         {
           "shape": {
@@ -3530,6 +3642,9 @@
         }
       ],
       "category": "Mailbox",
+      "aliases": [
+        "Rackspace"
+      ],
       "spf_includes": [
         {
           "value": "emailsrvr.com",
@@ -3589,7 +3704,11 @@
           }
         }
       ],
-      "category": "DMARC reporting"
+      "category": "DMARC reporting",
+      "aliases": [
+        "OnDMARC",
+        "Red Sift"
+      ]
     },
     "Resend": {
       "category": "Transactional",
@@ -3643,6 +3762,9 @@
         }
       ],
       "category": "Marketing",
+      "aliases": [
+        "Marigold Sailthru"
+      ],
       "selectors": [
         {
           "shape": {
@@ -3743,6 +3865,11 @@
         }
       ],
       "category": "Support and CRM",
+      "aliases": [
+        "Salesforce CRM",
+        "Sales Cloud",
+        "Service Cloud"
+      ],
       "selectors": [
         {
           "shape": {
@@ -3886,6 +4013,10 @@
         }
       ],
       "category": "Marketing",
+      "aliases": [
+        "Pardot",
+        "Salesforce Pardot"
+      ],
       "selectors": [
         {
           "shape": {
@@ -3924,6 +4055,12 @@
     },
     "Salesforce Marketing Cloud Engagement": {
       "category": "Marketing",
+      "aliases": [
+        "Salesforce Marketing Cloud",
+        "Marketing Cloud",
+        "SFMC",
+        "ExactTarget"
+      ],
       "selectors": [
         {
           "shape": {
@@ -3964,6 +4101,9 @@
         }
       ],
       "category": "Transactional",
+      "aliases": [
+        "Twilio SendGrid"
+      ],
       "networks": [
         {
           "value": "AS11377",
@@ -4112,6 +4252,9 @@
     },
     "Shopify": {
       "category": "Commerce and apps",
+      "aliases": [
+        "Shopify Email"
+      ],
       "website": [
         {
           "value": "cdn.shopify.com",
@@ -4287,6 +4430,9 @@
     },
     "Squarespace": {
       "category": "Commerce and apps",
+      "aliases": [
+        "Squarespace Email Campaigns"
+      ],
       "website": [
         {
           "value": "static1.squarespace.com",
@@ -4370,6 +4516,11 @@
         }
       ],
       "category": "Security gateway",
+      "aliases": [
+        "MessageLabs",
+        "Symantec Email Security.cloud",
+        "Broadcom Email Security"
+      ],
       "setup": [
         {
           "record": "mx",
@@ -4440,7 +4591,11 @@
           }
         }
       ],
-      "category": "DMARC reporting"
+      "category": "DMARC reporting",
+      "aliases": [
+        "Valimail Enforce",
+        "Valimail Monitor"
+      ]
     },
     "Zendesk": {
       "spf_includes": [
@@ -4617,6 +4772,9 @@
         }
       ],
       "category": "Mailbox",
+      "aliases": [
+        "Zoho Workplace"
+      ],
       "subprocessor_names": [
         {
           "value": "Zoho Mail",
