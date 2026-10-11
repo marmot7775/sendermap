@@ -142,7 +142,9 @@ async def map_domain(
                 elapsed=round(time.perf_counter() - started, 2),
                 lookups=ctx.dns.count,
             ),
-            findings=_sorted(observed.findings + _cross_findings(ctx, observed)),
+            findings=_sorted(
+                observed.findings + _cross_findings(ctx, observed) + dkim.same_keys(observed.keys)
+            ),
             unknowns=tuple(dict.fromkeys(observed.unknowns)),
             gaps=tuple(dict.fromkeys(observed.gaps)),
             subdomains_checked=tuple(picked),

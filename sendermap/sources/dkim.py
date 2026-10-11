@@ -16,6 +16,7 @@ from __future__ import annotations
 
 import asyncio
 import base64
+import hashlib
 from collections.abc import Iterable, Mapping
 from dataclasses import dataclass
 from datetime import datetime
@@ -29,6 +30,7 @@ from ..model import (
     Evidence,
     Finding,
     Gap,
+    KeyPrint,
     Kind,
     Observed,
     Severity,
@@ -40,6 +42,23 @@ from . import CANARY, Context, negative
 # as a check on servers that answer no such name for a name with names below it (RFC 8020 s. 5).
 CHECK_PROBES = 8
 NO_SELECTORS = "no selectors exist"
+# The key types RFC 6376 (rsa) and RFC 8463 (ed25519) define.
+KEY_TYPES = frozenset({"rsa", "ed25519"})
+FLAG_WORDS = {"y": "testing", "s": "strict"}
+
+
+def fingerprint(p: str) -> str | None:
+    """The first 16 hex characters of SHA-256 over a p= value's decoded bytes, or None when p= is
+    empty or is not base64. Two records with one fingerprint publish the same key."""
+    raw = _decoded(p)
+    return hashlib.sha256(raw).hexdigest()[:16] if raw else None
+
+
+def _decoded(p: str) -> bytes | None:
+    try:
+        return base64.b64decode("".join(p.split()), validate=True)
+    except ValueError:
+        return None
 
 
 @dataclass(frozen=True, slots=True)
@@ -64,18 +83,40 @@ class Key:
         return self.tags.get("k", "rsa").lower()
 
     @property
+    def flags(self) -> frozenset[str]:
+        """The t= flags: y for testing, s for strict (RFC 6376, section 3.6.1)."""
+        return _listed(self.tags.get("t", ""))
+
+    @property
+    def hashes(self) -> frozenset[str]:
+        """The h= hash algorithms; empty when the record leaves h= out, which allows all."""
+        return _listed(self.tags.get("h", ""))
+
+    @property
+    def services(self) -> frozenset[str]:
+        """The s= service types; * (all) when the record leaves s= out."""
+        return _listed(self.tags.get("s", "*"))
+
+    @property
+    def raw(self) -> bytes | None:
+        """The p= bytes, or None when p= is not base64."""
+        return _decoded(self.tags.get("p", ""))
+
+    @property
+    def fingerprint(self) -> str | None:
+        return fingerprint(self.tags.get("p", ""))
+
+    @property
     def bits(self) -> int | None:
         """The key's size: for RSA, the length of the modulus read from the key itself; for
-        Ed25519, 256, fixed by the type. None when the key cannot be read."""
+        Ed25519, 256, fixed by the type, when p= holds the 32 bytes the type needs. None when the
+        key cannot be read."""
+        raw = self.raw
+        if raw is None:
+            return None
         if self.algorithm == "ed25519":
-            return 256
-        if self.algorithm != "rsa":
-            return None
-        try:
-            der = base64.b64decode("".join(self.tags.get("p", "").split()), validate=True)
-        except ValueError:
-            return None
-        return _rsa_modulus_bits(der)
+            return 256 if len(raw) == 32 else None
+        return _rsa_modulus_bits(raw) if self.algorithm == "rsa" else None
 
     def evidence(self, checked_at: datetime) -> Evidence:
         return Evidence(self.name, "TXT", self.described(), checked_at)
@@ -86,12 +127,20 @@ class Key:
         return f"{self.summary()}{via}"
 
     def summary(self) -> str:
+        """The record's tags as published, with p= shortened to a prefix, the key size and its
+        fingerprint, and the t= flags put in words."""
         parts = []
         for part in self.record.split(";"):
             key, sep, value = part.strip().partition("=")
-            if sep and key.strip().lower() == "p" and value.strip():
+            name = key.strip().lower()
+            if sep and name == "p" and value.strip():
                 size = f", {self.bits}-bit" if self.bits else ", could not read key size"
-                parts.append(f"p={value.strip()[:12]}...{size}")
+                fp = f", fp {self.fingerprint}" if self.fingerprint else ""
+                parts.append(f"p={value.strip()[:12]}...{size}{fp}")
+            elif (
+                sep and name == "t" and (words := [FLAG_WORDS[f] for f in "ys" if f in self.flags])
+            ):
+                parts.append(f"{part.strip()} ({', '.join(words)})")
             elif part.strip():
                 parts.append(part.strip())
         return "; ".join(parts)
@@ -101,6 +150,11 @@ def tags(record: str) -> dict[str, str]:
     """A DKIM record's tags by exact name, so ap= or rp= is never read as p=."""
     pairs = (part.partition("=") for part in record.split(";"))
     return {k.strip().lower(): v.strip() for k, sep, v in pairs if sep}
+
+
+def _listed(value: str) -> frozenset[str]:
+    """A colon-separated tag value as a set of lowercase entries."""
+    return frozenset(v.strip().lower() for v in value.split(":") if v.strip())
 
 
 async def collect(
@@ -253,7 +307,100 @@ def _read(
         found = Observed(unknowns=(Unknown("DKIM key", value, where, evidence),))
     if key.algorithm == "rsa" and key.bits is not None and key.bits <= 1024:
         found += Observed(findings=(_short_key(selector, where, key.bits, evidence),))
-    return found
+    if fp := key.fingerprint:
+        found += Observed(keys=(KeyPrint(selector, where, fp, evidence),))
+    return found + Observed(findings=_flagged(key, where, evidence))
+
+
+def _flagged(key: Key, where: str, evidence: Evidence) -> tuple[Finding, ...]:
+    """What the key's t=, h=, s= and k= tags, and its p= length for Ed25519, mean for mail."""
+    the = f"The {key.selector} key at {where}"
+    findings = []
+    if "y" in key.flags:
+        findings.append(
+            Finding(
+                Severity.WARNING,
+                f"{the} is in testing mode",
+                "t=y tells verifiers to treat mail signed with it like unsigned mail (RFC 6376 "
+                "section 3.6.1), so the key adds nothing until the flag is removed.",
+                (evidence,),
+            )
+        )
+    if key.hashes == {"sha1"}:
+        findings.append(
+            Finding(
+                Severity.RISK,
+                f"{the} allows SHA-1 only",
+                "h=sha1 limits the key to rsa-sha1, which RFC 8301 (section 3.1) says is not to be "
+                "used for signing or verifying, so verifiers that follow it accept no signature "
+                "made with this key. Remove h= or list sha256.",
+                (evidence,),
+            )
+        )
+    if not key.services & {"email", "*"}:
+        findings.append(
+            Finding(
+                Severity.WARNING,
+                f"{the} is not for email",
+                f"s={key.tags.get('s', '')} lists neither email nor *, so verifiers ignore the "
+                "record for email (RFC 6376 section 3.6.1).",
+                (evidence,),
+            )
+        )
+    if key.algorithm not in KEY_TYPES:
+        findings.append(
+            Finding(
+                Severity.WARNING,
+                f"{the} has an unknown key type, k={key.algorithm}",
+                "DKIM defines rsa (RFC 6376) and ed25519 (RFC 8463). A verifier cannot use a key "
+                "of any other type, so the record cannot be used.",
+                (evidence,),
+            )
+        )
+    elif key.algorithm == "ed25519" and len(raw := key.raw or b"") != 32:
+        decoded = f"decodes to {len(raw)} bytes" if key.raw is not None else "is not base64"
+        findings.append(
+            Finding(
+                Severity.WARNING,
+                f"{the} is a malformed Ed25519 key",
+                "An Ed25519 public key is 32 bytes, published in p= as is (RFC 8463), and this p= "
+                f"{decoded}. Verifiers cannot use it, so mail signed with this selector fails "
+                "DKIM.",
+                (evidence,),
+            )
+        )
+    return tuple(findings)
+
+
+def same_keys(keys: Iterable[KeyPrint]) -> tuple[Finding, ...]:
+    """A note for each key published at more than one selector in the map, in the order the keys
+    were first seen, carrying each selector's record."""
+    groups: dict[str, list[KeyPrint]] = {}
+    for key in keys:
+        seen = groups.setdefault(key.fingerprint, [])
+        if key.evidence.name not in {k.evidence.name for k in seen}:
+            seen.append(key)
+    return tuple(_same_key(group) for group in groups.values() if len(group) > 1)
+
+
+def _same_key(group: list[KeyPrint]) -> Finding:
+    wheres = {k.where for k in group}
+    if len(wheres) == 1:
+        title = f"The {_joined([k.selector for k in group])} keys at {group[0].where}"
+    else:
+        title = _joined([f"the {k.selector} key at {k.where}" for k in group])
+        title = title[0].upper() + title[1:]
+    return Finding(
+        Severity.NOTE,
+        f"{title} are the same key",
+        f"They publish one public key, fp {group[0].fingerprint}, so one private key signs for "
+        "all of them, and replacing the key at one selector leaves it live at the others.",
+        tuple(k.evidence for k in group),
+    )
+
+
+def _joined(items: list[str]) -> str:
+    return items[0] if len(items) == 1 else f"{', '.join(items[:-1])} and {items[-1]}"
 
 
 def _malformed(ctx: Context, where: str, selector: str, answer: Answer) -> Finding:

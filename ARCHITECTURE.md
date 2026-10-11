@@ -38,7 +38,8 @@ Everything Sendermap reports is built from a few frozen dataclasses in `senderma
 - **Role**: `sender`, or `reporting` for a service that only receives the domain's DMARC or
   TLS reports. A reporting service has no tier (`null` in JSON): nothing shows that it sends.
 - **Finding**: something that needs attention (a dangling DKIM CNAME, SPF over ten lookups,
-  a short key), with a severity of risk, warning or note.
+  a short key, a key in testing mode, one key at two selectors), with a severity of risk,
+  warning or note.
 - **Unknown**: a record that clearly points at a sender no service in the vendor data matches,
   with the Evidence that shows it, which every view prints with it.
 - **Gap**: a question that got no usable answer: what was `asked` (the record type and name,
@@ -86,7 +87,7 @@ Phase 3, each sending subdomain (first 30)
 Assembly
   all Observed summed -> infer.services: group by service,
      tier = strongest Kind, report-only services -> role "reporting"
-  findings sorted by severity, + gateway note; unknowns and gaps deduplicated
+  findings sorted by severity, + gateway note + same key notes; unknowns and gaps deduplicated
   -> SenderMap + Run -> render.text | render.markdown | to_dict JSON | web stream
 ```
 
@@ -145,7 +146,7 @@ for the check and a private one a moment later (DNS rebinding) is not caught.
 | `sources/spf.py` | Walking the SPF tree: credited includes, IP ranges, the lookup count, SPF findings |
 | `sources/mx.py`, `sources/mta_sts.py` | Where the domain receives mail |
 | `sources/web.py` | The homepage and subprocessor page, and the guard every page fetch goes through |
-| `sources/dkim.py` | DKIM probing, the wildcard check, reading keys, dangling and short keys |
+| `sources/dkim.py` | DKIM probing, the wildcard check, reading keys and their flags, the key fingerprint, dangling, short and shared keys |
 | `sources/labels.py`, `tokens.py`, `reports.py`, `bimi.py` | Fixed-label CNAMEs, verification TXT, report addresses, the BIMI logo |
 | `sources/networks.py` | Naming SPF IP ranges by the ranges services publish, then by network owner |
 | `sources/ct.py` | Certificate transparency (`--ct`): crt.sh with retries and a one-day disk cache, then each logged name resolved and matched by the same catalog matchers as the DNS sources |
@@ -229,7 +230,21 @@ Checked's class as `denial`.
   as gone when its address lookup says no such name and it has no MX; gone with a CNAME that
   still names a service, it is a possible past vendor. At most 200 names are resolved, with a
   gap for the rest.
-- A DKIM key's size is read from the key: the RSA modulus length, or 256 for Ed25519.
+- A DKIM key's size is read from the key: the RSA modulus length, or 256 for an Ed25519 key
+  whose p= holds 32 bytes.
+- Each key's summary line, its evidence, shows its tags as published with p= shortened to a
+  prefix, the size and a fingerprint, `fp <hex>`: the first 16 hex characters of SHA-256 over the
+  decoded p= bytes, from `dkim.fingerprint`, the one function that computes it and the seed of the
+  key index. The t= flags are put in words: `t=y (testing)`, `t=s (strict)`. Read from the tags,
+  each a finding carrying the key's evidence: t=y, a warning (verifiers treat the mail as
+  unsigned, RFC 6376 section 3.6.1); h= listing sha1 only, a risk (RFC 8301 section 3.1); s=
+  listing neither email nor `*`, a warning (verifiers ignore the record for email); k= other than
+  rsa or ed25519, a warning (unknown type, unusable); k=ed25519 whose p= does not decode to 32
+  bytes, a warning (malformed). A revoked key has no fingerprint and none of these findings.
+- Every key read is kept on the source's Observed as a KeyPrint (selector, name, fingerprint,
+  evidence). After every name is scanned, `dkim.same_keys` makes a note for each fingerprint seen
+  at more than one selector anywhere in the map ("The k1 and s1 keys at <where> are the same
+  key"), carrying each selector's record, in the order the keys were first seen.
 - DKIM tags are read by exact name, so `ap=` is not `p=`. A record with no `p=` tag at all is
   malformed, a warning of its own; an empty `p=` is a revoked key. A wildcard answer that is
   not a key is ignored wherever it echoes.
@@ -335,7 +350,8 @@ require a gap for each failed question and each cap; `test_web_guard.py` require
 refused fetch sends nothing and is a gap, for each reason the guard refuses, on every redirect
 and on the subprocessor and MTA-STS pages; `test_checked.py` requires the record of
 what was asked and its rendering; `test_labels_say_what_was_seen.py` holds the wording of the
-labels; `test_determinism.py` requires the same map from the same answers;
+labels, the key flag and same key findings among them; `test_dkim.py` holds the key reading,
+the fingerprint and which keys raise which flag; `test_determinism.py` requires the same map from the same answers;
 `test_vendor_proofs.py`, `test_one_selector_list.py` and `test_subprocessor_names.py` require a
 proof on every vendor pattern and one proofed selector list read once; `test_pending_vendors.py`
 requires that the engine never opens the pending file and that a host only a pending pattern
