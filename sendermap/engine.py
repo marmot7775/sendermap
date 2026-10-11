@@ -10,7 +10,7 @@ from __future__ import annotations
 
 import asyncio
 import time
-from collections.abc import Awaitable, Callable, Iterable, Mapping
+from collections.abc import Awaitable, Callable, Iterable, Mapping, Sequence
 from contextlib import AsyncExitStack
 from datetime import datetime
 from pathlib import Path
@@ -34,6 +34,7 @@ from .model import (
     SenderMap,
     Severity,
 )
+from .reconcile import with_claimed
 from .selectors import Rule, probe_order, rank_rules
 from .sources import (
     Context,
@@ -68,6 +69,7 @@ async def map_domain(
     use_ct: bool = False,
     ct_cache: Path | None = None,
     progress: Progress | None = None,
+    claimed: Sequence[str] = (),
 ) -> SenderMap:
     """Map the services that send email as `domain`, with the evidence for each.
 
@@ -75,6 +77,8 @@ async def map_domain(
     same DNS answers and the same moment give the same map. Certificate logs are read once per
     map, Cert Spotter for the subdomain search and, with `use_ct`, crt.sh too, each cached for a
     day in `ct_cache` (None: no cache). `use_ct` also resolves every logged name and matches it.
+    `claimed` is the services the client says they use, by any name; the map's reconciliation
+    holds them against what it found, and is None when nothing was claimed. It asks nothing.
     """
     if checked_at.tzinfo is None:
         raise ValueError("checked_at needs a timezone")
@@ -179,7 +183,7 @@ async def map_domain(
             absences=absences,
         )
         await say("Done")
-        return result
+        return with_claimed(result, claimed, ctx.catalog)
 
 
 async def _subdomain(ctx: Context, rules: tuple[Rule, ...], name: str) -> Observed:

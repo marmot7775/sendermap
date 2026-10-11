@@ -222,9 +222,12 @@ class Case:
 
 
 def comparable(sender_map: SenderMap) -> dict[str, Any]:
-    """The map's JSON without the run's elapsed time and lookup count, which are not answers."""
+    """The map's JSON without the run's elapsed time and lookup count, which are not answers,
+    and without the reconciliation when nothing was claimed, since a case records no claims."""
     data = sender_map.to_dict()
     data["run"] = {k: v for k, v in data["run"].items() if k not in ("elapsed", "lookups")}
+    if data["reconciliation"] is None:
+        del data["reconciliation"]
     return data
 
 

@@ -6,7 +6,7 @@ from datetime import UTC
 
 from ..model import SenderMap, Service, Unknown
 from ..setup import line
-from . import NetworkGroup, asked, asked_in_full, ct_lines, grouped_unknowns
+from . import NetworkGroup, asked, asked_in_full, claimed_parts, ct_lines, grouped_unknowns
 
 
 def render(result: SenderMap, *, evidence: bool = False) -> str:
@@ -25,6 +25,7 @@ def render(result: SenderMap, *, evidence: bool = False) -> str:
             lines += [f"  - {line(setup)}" for setup in service.setups]
     if result.reporting:
         lines += ["", "**Reports go to:** " + ", ".join(s.name for s in result.reporting)]
+    lines += _claimed(result)
     if result.findings:
         lines += ["", "## Needs attention", ""]
         lines += [f"- **{f.title}** ({f.severity.value}). {f.detail}" for f in result.findings]
@@ -52,6 +53,17 @@ def render(result: SenderMap, *, evidence: bool = False) -> str:
                 for heading, names in asked_in_full(record)
             ]
     return "\n".join(lines) + "\n"
+
+
+def _claimed(result: SenderMap) -> list[str]:
+    """The services the client claimed against the map, in four parts; nothing when none were."""
+    if not result.reconciliation:
+        return []
+    lines = ["", "## Claimed senders", ""]
+    for heading, items in claimed_parts(result.reconciliation):
+        lines.append(f"- **{heading}**")
+        lines += [f"  - {item}" for item in items]
+    return lines
 
 
 def _row(service: Service, domain: str) -> str:

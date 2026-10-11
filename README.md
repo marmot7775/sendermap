@@ -84,6 +84,7 @@ sendermap example.com --evidence     # every piece of evidence
 sendermap example.com --markdown     # a summary to paste
 sendermap example.com --json         # everything, for scripts
 sendermap example.com --ct           # resolve every name in certificate logs, crt.sh too
+sendermap example.com --claimed "Office 365, Mailchimp"   # hold the services you were told of against the map
 ```
 
 The website keeps no record of the domains looked up.
@@ -116,7 +117,9 @@ there. Every pattern in a block (an SPF include, an MX host, a CNAME target, a r
 verification token, a network, a website host, a selector name, a subprocessor name) carries one
 proof of its own: a live domain that publishes it, the record name or page as found, and the
 date checked (a numbered series of selectors such as s1, s2 needs one for the series). A pattern without a proof
-does not get merged, and Sendermap refuses to load one.
+does not get merged, and Sendermap refuses to load one. A block may also list `aliases`, the
+other names customers call the service by ("Office 365" for Microsoft 365). An alias needs no
+proof, since it matches only what a person types, never a record.
 
 Patterns not yet proven wait in `sendermap/data/vendors_pending.json`, each block with a note of
 what was checked; Sendermap never reads that file, so a record they would match shows as not

@@ -5,7 +5,15 @@ from __future__ import annotations
 import re
 from dataclasses import dataclass
 
-from ..model import CertificateEvidence, Checked, CtStatus, SenderMap, Unknown
+from ..model import (
+    CertificateEvidence,
+    Checked,
+    CtStatus,
+    Reconciled,
+    Reconciliation,
+    SenderMap,
+    Unknown,
+)
 
 # How sources/networks.py writes a range whose networks share one name: "<range> (<ASN>, <name>)"
 # or "<range> (<ASN> and <ASN>, <name>)", with "; listed by <services>" before the closing
@@ -69,6 +77,36 @@ def grouped_unknowns(unknowns: tuple[Unknown, ...]) -> list[Unknown | NetworkGro
         else:
             out.append(NetworkGroup(*item, members=tuple(members)))
     return out
+
+
+# The four parts of a reconciliation, in the words every view uses; app.js has the same.
+CLAIMED_PARTS = (
+    ("confirmed", "Claimed and found"),
+    ("unclaimed", "Found, not claimed"),
+    ("unfound", "Claimed, not found at any name checked"),
+    ("unknown", "Claimed, no service Sendermap knows by that name"),
+)
+
+
+def claimed_parts(reconciliation: Reconciliation) -> list[tuple[str, list[str]]]:
+    """(heading, lines) for each of the four parts, every part shown, "none" when empty:
+    "Microsoft 365, In use (claimed as "Office 365")", "Shopify, Configured", "Klaviyo", and
+    an unknown name as the client wrote it."""
+    parts: list[tuple[str, list[str]]] = []
+    for key, heading in CLAIMED_PARTS:
+        found: tuple[Reconciled | str, ...] = getattr(reconciliation, key)
+        lines = [item if isinstance(item, str) else _reconciled(item, key) for item in found]
+        parts.append((heading, lines or ["none"]))
+    return parts
+
+
+def _reconciled(item: Reconciled, part: str) -> str:
+    line = item.service
+    if part != "unfound":
+        line += f", {item.tier}" if item.tier else ", receives reports only"
+    if [item.service] != list(item.claimed_as) and item.claimed_as:
+        line += f" (claimed as {', '.join(f'"{text}"' for text in item.claimed_as)})"
+    return line
 
 
 def asked(checked: Checked) -> str:
