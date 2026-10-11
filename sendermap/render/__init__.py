@@ -97,8 +97,14 @@ def ct_lines(result: SenderMap) -> list[str]:
         return []
     summary = result.ct
     if summary.status is CtStatus.UNAVAILABLE:
-        return ["crt.sh was unavailable, so no names from certificate logs were checked."]
-    lines = [f"{summary.logged} names logged ({summary.status}); {summary.resolved} resolved now."]
+        return ["No certificate log answered, so no names from certificate logs were checked."]
+    said = "; ".join(
+        f"{p.name} {p.status}, {p.logged} names"
+        if p.status in (CtStatus.READ, CtStatus.CACHED)
+        else f"{p.name} {p.status}"
+        for p in summary.providers
+    )
+    lines = [f"{summary.logged} names logged ({said}); {summary.resolved} resolved now."]
     current = [
         (s.name, c)
         for s in result.services

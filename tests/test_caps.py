@@ -65,14 +65,7 @@ async def test_certificate_log_names_too_deep_or_past_the_cap_are_gaps(
 ) -> None:
     monkeypatch.setattr(subdomains, "MAX_FROM_CT", 2)
     logged = ["a.example.com", "b.example.com", "c.example.com", "x.y.z.example.com"]
-
-    def log(request: httpx.Request) -> httpx.Response:
-        return httpx.Response(200, json=[{"dns_names": logged}])
-
-    async with httpx.AsyncClient(transport=httpx.MockTransport(log)) as http:
-        ctx = context(Zone())
-        ctx = Context(ctx.domain, ctx.dns, ctx.catalog, ctx.checked_at, http)
-        found = await subdomains.discover(ctx)
+    found = await subdomains.discover(context(Zone()), logged)
     gaps = {g.asked: g.happened for g in found.gaps}
     assert gaps["certificate log names more than 2 labels deep"].startswith("1 not asked")
     assert gaps["certificate log names"].startswith("1 of 3 not asked")

@@ -204,20 +204,33 @@ class Historical:
 
 class CtStatus(StrEnum):
     OFF = "off"
-    READ = "read from crt.sh"
-    CACHED = "read from the local crt.sh cache"
+    READ = "read"
+    CACHED = "read from the local cache"
     UNAVAILABLE = "unavailable"
 
 
 @dataclass(frozen=True, slots=True)
+class CtProvider:
+    """What one certificate log provider did for this map, and how many names under the domain
+    it logged."""
+
+    name: str
+    status: CtStatus = CtStatus.OFF
+    logged: int = 0
+
+
+@dataclass(frozen=True, slots=True)
 class CtSummary:
-    """How the certificate transparency source went: whether crt.sh answered, how many names it
-    logged, how many were resolved, and how many no longer resolve and name no service."""
+    """How the certificate transparency source went: whether the logged names were resolved and
+    matched (`off` without --ct, `unavailable` when no provider answered), how many names the
+    providers logged together, how many were resolved, how many no longer resolve and name no
+    service, and what each provider did."""
 
     status: CtStatus = CtStatus.OFF
     logged: int = 0
     resolved: int = 0
     gone_unnamed: int = 0
+    providers: tuple[CtProvider, ...] = ()
 
 
 @dataclass(frozen=True, slots=True)

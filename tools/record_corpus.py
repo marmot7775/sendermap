@@ -6,9 +6,9 @@
     python tools/record_corpus.py DOMAIN --recheck DIR
 
 The first form maps DOMAIN live through the recorders, with checked_at fixed to the moment of
-recording, CT off, and the website off unless --web is given, and writes
+recording, --ct off, and the website off unless --web is given, and writes
 tests/corpus/<domain>/: dns.json (every DNS question and answer), http.json (every page
-requested: the MTA-STS policy, the certificate log the subdomain search reads and, with --web,
+requested: the MTA-STS policy, the Cert Spotter log the subdomain search reads and, with --web,
 the homepage), case.json (checked_at and the options) and expected.json, the map's JSON without
 run.elapsed and run.lookups. expected.json is made by replaying the files just written, and the
 tool fails if the replay differs from the live map, so a case that is saved replays.

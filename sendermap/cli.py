@@ -73,7 +73,10 @@ def _parser() -> argparse.ArgumentParser:
     p.add_argument(
         "--ct",
         action="store_true",
-        help="also resolve every name crt.sh has logged a certificate for (slow; cached a day)",
+        help=(
+            "also read crt.sh, which holds expired certificates too, and resolve every name the "
+            "certificate logs hold now (slow; each log cached a day)"
+        ),
     )
     p.add_argument("--doh", action="store_true", help="look up DNS over HTTPS (Cloudflare)")
     p.add_argument("--version", action="version", version=f"sendermap {__version__}")

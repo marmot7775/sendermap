@@ -71,8 +71,9 @@ async def map_domain(
     """Map the services that send email as `domain`, with the evidence for each.
 
     `checked_at` is the moment the map is dated by, timezone-aware; the caller says when, so the
-    same DNS answers and the same moment give the same map. `use_ct` adds every name crt.sh has
-    logged a certificate for, cached for a day in `ct_cache` (None: no cache).
+    same DNS answers and the same moment give the same map. Certificate logs are read once per
+    map, Cert Spotter for the subdomain search and, with `use_ct`, crt.sh too, each cached for a
+    day in `ct_cache` (None: no cache). `use_ct` also resolves every logged name and matches it.
     """
     if checked_at.tzinfo is None:
         raise ValueError("checked_at needs a timezone")
@@ -107,12 +108,19 @@ async def map_domain(
                 )
             ]
             logo_task = tg.create_task(bimi.logo(ctx))
-            subs_task = tg.create_task(_discover(ctx) if use_subdomains else _no_subdomains())
-            ct_task = tg.create_task(_certificates(ctx, ct_cache) if use_ct else _ct_off())
+            reads_logs = use_subdomains or use_ct
+            logs_task = tg.create_task(_logs(ctx, ct_cache, use_ct) if reads_logs else _no_logs())
+            subs_task = tg.create_task(
+                _discover(ctx, logs_task) if use_subdomains else _no_subdomains()
+            )
+            ct_task = tg.create_task(
+                _certificates(ctx, logs_task) if use_ct else _ct_off(logs_task)
+            )
         found, tree = spf_task.result()
         logged, ct_summary = ct_task.result()
         discovered = subs_task.result()
-        apex = sum((task.result() for task in evidence), found) + Observed(gaps=discovered.gaps)
+        apex = sum((task.result() for task in evidence), found) + logs_task.result().observed
+        apex += Observed(gaps=discovered.gaps)
         logo = logo_task.result()
 
         await say("Scanning DKIM keys and the networks in SPF")
@@ -231,26 +239,41 @@ async def _guard(source: Awaitable[Observed], what: str) -> Observed:
         return Observed(gaps=(Gap(what, f"the check crashed: {type(e).__name__}"),))
 
 
-async def _discover(ctx: Context) -> subdomains.Found:
+async def _logs(ctx: Context, cache: Path | None, expired: bool) -> ct.Logs:
+    """The certificate logs, read once; a crash here costs the logged names, not the map."""
+    try:
+        return await ct.read_logs(ctx, cache, expired=expired)
+    except Exception as e:  # a source bug must not take down every other source
+        crashed = Gap("certificate transparency", f"the check crashed: {type(e).__name__}")
+        return ct.Logs(observed=Observed(gaps=(crashed,)))
+
+
+async def _no_logs() -> ct.Logs:
+    return ct.Logs()
+
+
+async def _discover(ctx: Context, logs: Awaitable[ct.Logs]) -> subdomains.Found:
     """Sending subdomains; a crash here costs the subdomains, not the map, and says so."""
     try:
-        return await subdomains.discover(ctx)
+        return await subdomains.discover(ctx, (logged.name for logged in (await logs).names))
     except Exception as e:  # a source bug must not take down every other source
         crashed = Gap("sending subdomains", f"the search crashed: {type(e).__name__}")
         return subdomains.Found(gaps=(crashed,))
 
 
-async def _certificates(ctx: Context, cache: Path | None) -> tuple[Observed, CtSummary]:
-    """Certificate transparency; a crash here costs CT, not the map, and says so."""
+async def _certificates(ctx: Context, logs: Awaitable[ct.Logs]) -> tuple[Observed, CtSummary]:
+    """The logged names resolved and matched; a crash here costs CT, not the map, and says so."""
+    read = await logs
     try:
-        return await ct.collect(ctx, cache)
+        return await ct.collect(ctx, read)
     except Exception as e:  # a source bug must not take down every other source
         crashed = Gap("certificate transparency", f"the check crashed: {type(e).__name__}")
-        return Observed(gaps=(crashed,)), CtSummary(CtStatus.UNAVAILABLE)
+        return Observed(gaps=(crashed,)), CtSummary(CtStatus.UNAVAILABLE, providers=read.providers)
 
 
-async def _ct_off() -> tuple[Observed, CtSummary]:
-    return Observed(), CtSummary()
+async def _ct_off(logs: Awaitable[ct.Logs]) -> tuple[Observed, CtSummary]:
+    read = await logs
+    return Observed(), CtSummary(logged=len(read.names), providers=read.providers)
 
 
 async def _skipped(gap: Gap) -> Observed:

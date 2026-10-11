@@ -1,7 +1,7 @@
 """Rule 3: a question that got no answer is a gap that says what was asked and what happened,
 never silence and never an absence."""
 
-from collections.abc import Callable
+from collections.abc import Callable, Iterable
 
 import httpx
 import pytest
@@ -99,13 +99,9 @@ async def test_a_subprocessor_page_that_does_not_load_is_a_gap() -> None:
     }
 
 
-async def test_a_subdomain_whose_lookups_failed_is_a_gap_not_a_non_sender(
-    offline: httpx.AsyncClient,
-) -> None:
+async def test_a_subdomain_whose_lookups_failed_is_a_gap_not_a_non_sender() -> None:
     zone = Zone(failing={"email.example.com"})
-    ctx = context(zone)
-    ctx = Context(ctx.domain, ctx.dns, ctx.catalog, ctx.checked_at, offline)
-    found = await subdomains.discover(ctx)
+    found = await subdomains.discover(context(zone), ())
     assert "email.example.com" not in found.sending
     (gap,) = found.gaps
     assert "email.example.com" in gap.asked and gap.happened.startswith("lookup failed")
@@ -138,13 +134,13 @@ async def test_a_failed_apex_txt_lookup_says_spf_and_tokens_were_not_checked(
 async def test_a_crash_in_the_subdomain_search_is_reported_as_a_crash(
     offline: httpx.AsyncClient, monkeypatch: pytest.MonkeyPatch
 ) -> None:
-    async def crash(ctx: Context) -> subdomains.Found:
+    async def crash(ctx: Context, logged: Iterable[str]) -> subdomains.Found:
         raise KeyError("wordlist")
 
     monkeypatch.setattr(subdomains, "discover", crash)
     result = await map_domain("acme.test", checked_at=CHECKED, resolver=Zone(), http=offline)
     assert asked(result)["sending subdomains"] == "the search crashed: KeyError"
-    assert not any("certificate" in g.asked for g in result.gaps)
+    assert not any("Cert Spotter" in g.asked for g in result.gaps)
 
 
 @pytest.mark.parametrize(

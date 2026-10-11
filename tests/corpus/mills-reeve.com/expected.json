@@ -732,6 +732,10 @@
    "happened": "not read: web checks were turned off (--no-web)"
   },
   {
+   "asked": "certificate transparency, crt.sh: GET https://crt.sh/?q=%25.mills-reeve.com&output=json",
+   "happened": "not asked: read only with --ct (it also holds expired certificates)"
+  },
+  {
    "asked": "published ranges: SPF of HubSpot",
    "happened": "includes more than 3 levels deep not read (cap)"
   },
@@ -892,7 +896,9 @@
     "bounces.cloud.em",
     "bounces.cloud2.em"
    ],
-   "pages": [],
+   "pages": [
+    "https://api.certspotter.com/v1/issuances?domain=mills-reeve.com&include_subdomains=true&expand=dns_names"
+   ],
    "denial": "none by rcode"
   },
   {
@@ -970,9 +976,21 @@
  ],
  "ct": {
   "status": "off",
-  "logged": 0,
+  "logged": 15,
   "resolved": 0,
-  "gone_unnamed": 0
+  "gone_unnamed": 0,
+  "providers": [
+   {
+    "name": "Cert Spotter",
+    "status": "read",
+    "logged": 15
+   },
+   {
+    "name": "crt.sh",
+    "status": "off",
+    "logged": 0
+   }
+  ]
  },
  "historical": [],
  "logo": null,
