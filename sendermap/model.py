@@ -452,6 +452,8 @@ class SenderMap:
     absences: tuple[Absence, ...] = ()
     # The client's own list of services against the map; None when nothing was claimed.
     reconciliation: Reconciliation | None = None
+    # One paragraph written by rules from the map itself (story.py), for the reader above the map.
+    story: str = ""
 
     @property
     def senders(self) -> tuple[Service, ...]:

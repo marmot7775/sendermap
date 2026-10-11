@@ -12,6 +12,7 @@ import asyncio
 import time
 from collections.abc import Awaitable, Callable, Iterable, Mapping, Sequence
 from contextlib import AsyncExitStack
+from dataclasses import replace
 from datetime import datetime
 from pathlib import Path
 
@@ -19,6 +20,7 @@ import httpx
 
 from . import catalog as catalog_module
 from . import setup as setup_module
+from . import story as story_module
 from .dns import Lookups, Resolver, SystemResolver
 from .infer import backed_selectors, services
 from .model import (
@@ -184,6 +186,7 @@ async def map_domain(
             logo=logo,
             absences=absences,
         )
+        result = replace(result, story=story_module.write(result))
         await say("Done")
         return with_claimed(result, claimed, ctx.catalog)
 

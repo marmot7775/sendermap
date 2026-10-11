@@ -31,6 +31,8 @@ from . import Context
 from .spf import spf_records, terms
 
 MAX_RANGES = 24
+# A gap in reading a service's own SPF record for its published ranges: this, then its name.
+PUBLISHED = "published ranges: SPF of "
 # How far below a service's own SPF record its published ranges are read.
 MAX_PUBLISHED_DEPTH = 3
 
@@ -200,7 +202,7 @@ async def published_ranges(ctx: Context) -> tuple[Published, tuple[Gap, ...]]:
         for network, evidence in networks:
             owners.setdefault(network, {}).setdefault(name, evidence)
         problems.update(dict.fromkeys((name, problem) for problem in missed))
-    gaps = tuple(Gap(f"published ranges: SPF of {name}", why) for name, why in problems)
+    gaps = tuple(Gap(f"{PUBLISHED}{name}", why) for name, why in problems)
     return owners, gaps
 
 

@@ -1423,5 +1423,6 @@
  "historical": [],
  "logo": null,
  "schema": "sendermap/1",
- "absences": []
+ "absences": [],
+ "story": "Mimecast stands in front of the domain's mail as a security gateway, so the mailbox provider is not visible from MX. Three other services are set up to send as the domain: one support and CRM (Freshdesk), one mailbox (Microsoft 365), one transactional (SendGrid). DMARC reports go to Mimecast DMARC Analyzer. Not checked: the website (not read: web checks were turned off (--no-web)); certificate transparency, crt.sh: GET https://crt.sh/?q=%25.mills-reeve.com&output=json (not asked: read only with --ct (it also holds expired certificates)); network owners of the IP ranges in SPF at mills-reeve.com (25 of 49 not looked up: only the first 24 were (cap)); DKIM selectors at update.mills-reeve.com (77 of 106 not asked: only the first 27 and the names its own SPF, MX or delegation backs were (cap)); DKIM selectors at updates.mills-reeve.com (79 of 106 not asked: only the first 27 and the names its own SPF, MX or delegation backs were (cap)); the IP ranges two services publish in their own SPF (includes more than 3 levels deep not read (cap))."
 }

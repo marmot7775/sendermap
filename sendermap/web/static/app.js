@@ -82,6 +82,8 @@ function render(map) {
   const senders = map.services.filter((s) => s.role === "sender");
   const reporting = map.services.filter((s) => s.role === "reporting");
   $("summary").textContent = summary(map.domain, senders, reporting);
+  $("story").textContent = map.story || "";
+  $("story").hidden = !map.story;
   const logo = $("logo");
   if (map.logo) { logo.src = map.logo; logo.hidden = false; } else { logo.hidden = true; }
 
@@ -308,7 +310,9 @@ function card(service, domain, badgeClass, badgeText) {
 const SETUP_WORDS = { spf: "SPF", dkim: "DKIM", return_path: "bounce CNAME", tracking: "tracking CNAME", mx: "MX" };
 
 function setupLine(setup) {
-  const parts = setup.items.map((i) => `${SETUP_WORDS[i.record]} ${i.state}${i.detail ? ` (${i.detail})` : ""}`);
+  const parts = setup.items.map((i) => (i.need === "optional" && i.state === "missing"
+    ? `${SETUP_WORDS[i.record]} not used (optional, ${i.asked})`
+    : `${SETUP_WORDS[i.record]} ${i.state}${i.detail ? ` (${i.detail})` : ""}`));
   return `Setup at ${setup.where}: ${parts.join(", ")}.`;
 }
 

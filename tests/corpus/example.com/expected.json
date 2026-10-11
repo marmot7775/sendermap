@@ -97,5 +97,6 @@
  "historical": [],
  "logo": null,
  "schema": "sendermap/1",
- "absences": []
+ "absences": [],
+ "story": "Not checked: certificate transparency, crt.sh: GET https://crt.sh/?q=%25.example.com&output=json (not asked: read only with --ct (it also holds expired certificates))."
 }
