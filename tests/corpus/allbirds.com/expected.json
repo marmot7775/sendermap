@@ -1,0 +1,2507 @@
+{
+ "domain": "allbirds.com",
+ "services": [
+  {
+   "name": "Microsoft 365",
+   "category": "Mailbox",
+   "tier": "In use",
+   "role": "sender",
+   "claims": [
+    {
+     "service": "Microsoft 365",
+     "kind": "receives the domain's mail (MX)",
+     "where": "allbirds.com",
+     "evidence": {
+      "name": "allbirds.com",
+      "rtype": "MX",
+      "value": "0 allbirds-com.mail.protection.outlook.com",
+      "checked_at": "2026-10-11T19:45:52+00:00"
+     },
+     "supporting": []
+    },
+    {
+     "service": "Microsoft 365",
+     "kind": "included in SPF",
+     "where": "allbirds.com",
+     "evidence": {
+      "name": "allbirds.com",
+      "rtype": "TXT",
+      "value": "include:spf.protection.outlook.com",
+      "checked_at": "2026-10-11T19:45:52+00:00"
+     },
+     "supporting": []
+    },
+    {
+     "service": "Microsoft 365",
+     "kind": "hosts a DKIM key (CNAME)",
+     "where": "allbirds.com",
+     "evidence": {
+      "name": "selector1._domainkey.allbirds.com",
+      "rtype": "TXT",
+      "value": "v=DKIM1; k=rsa; p=MIIBIjANBgkq..., 2048-bit, fp d16c91a9c741c096 via selector1-allbirds-com._domainkey.axnygroup.e-v1.dkim.mail.microsoft",
+      "checked_at": "2026-10-11T19:45:52+00:00"
+     },
+     "supporting": []
+    },
+    {
+     "service": "Microsoft 365",
+     "kind": "hosts a DKIM key (CNAME)",
+     "where": "allbirds.com",
+     "evidence": {
+      "name": "selector2._domainkey.allbirds.com",
+      "rtype": "TXT",
+      "value": "v=DKIM1; k=rsa; p=MIIBIjANBgkq..., 2048-bit, fp 6cc817c15f61a3e2 via selector2-allbirds-com._domainkey.axnygroup.e-v1.dkim.mail.microsoft",
+      "checked_at": "2026-10-11T19:45:52+00:00"
+     },
+     "supporting": []
+    },
+    {
+     "service": "Microsoft 365",
+     "kind": "verification token",
+     "where": "allbirds.com",
+     "evidence": {
+      "name": "allbirds.com",
+      "rtype": "TXT",
+      "value": "MS=ms79507765",
+      "checked_at": "2026-10-11T19:45:52+00:00"
+     },
+     "supporting": []
+    },
+    {
+     "service": "Microsoft 365",
+     "kind": "verification token",
+     "where": "allbirds.com",
+     "evidence": {
+      "name": "allbirds.com",
+      "rtype": "TXT",
+      "value": "MS=A01B077C9CEAFC03E22F0B625C7E7600E37CC59A",
+      "checked_at": "2026-10-11T19:45:52+00:00"
+     },
+     "supporting": []
+    },
+    {
+     "service": "Microsoft 365",
+     "kind": "verification token",
+     "where": "allbirds.com",
+     "evidence": {
+      "name": "allbirds.com",
+      "rtype": "TXT",
+      "value": "MS=ms40651830",
+      "checked_at": "2026-10-11T19:45:52+00:00"
+     },
+     "supporting": []
+    },
+    {
+     "service": "Microsoft 365",
+     "kind": "autodiscover CNAME",
+     "where": "allbirds.com",
+     "evidence": {
+      "name": "autodiscover.allbirds.com",
+      "rtype": "CNAME",
+      "value": "autodiscover.outlook.com",
+      "checked_at": "2026-10-11T19:45:52+00:00"
+     },
+     "supporting": []
+    }
+   ]
+  },
+  {
+   "name": "Amazon SES",
+   "category": "Transactional",
+   "tier": "Configured",
+   "role": "sender",
+   "claims": [
+    {
+     "service": "Amazon SES",
+     "kind": "owns a network listed in SPF",
+     "where": "allbirds.com",
+     "evidence": {
+      "name": "_spf.allbirds_com._d.easydmarc.pro",
+      "rtype": "TXT",
+      "value": "ip4:199.255.192.0/22",
+      "checked_at": "2026-10-11T19:45:52+00:00"
+     },
+     "supporting": [
+      {
+       "name": "amazonses.com",
+       "rtype": "TXT",
+       "value": "ip4:199.255.192.0/22",
+       "checked_at": "2026-10-11T19:45:52+00:00"
+      }
+     ]
+    },
+    {
+     "service": "Amazon SES",
+     "kind": "owns a network listed in SPF",
+     "where": "allbirds.com",
+     "evidence": {
+      "name": "_spf.allbirds_com._d.easydmarc.pro",
+      "rtype": "TXT",
+      "value": "ip4:199.127.232.0/22",
+      "checked_at": "2026-10-11T19:45:52+00:00"
+     },
+     "supporting": [
+      {
+       "name": "amazonses.com",
+       "rtype": "TXT",
+       "value": "ip4:199.127.232.0/22",
+       "checked_at": "2026-10-11T19:45:52+00:00"
+      }
+     ]
+    },
+    {
+     "service": "Amazon SES",
+     "kind": "owns a network listed in SPF",
+     "where": "allbirds.com",
+     "evidence": {
+      "name": "_spf.allbirds_com._d.easydmarc.pro",
+      "rtype": "TXT",
+      "value": "ip4:54.240.0.0/18",
+      "checked_at": "2026-10-11T19:45:52+00:00"
+     },
+     "supporting": [
+      {
+       "name": "amazonses.com",
+       "rtype": "TXT",
+       "value": "ip4:54.240.0.0/18",
+       "checked_at": "2026-10-11T19:45:52+00:00"
+      }
+     ]
+    },
+    {
+     "service": "Amazon SES",
+     "kind": "owns a network listed in SPF",
+     "where": "allbirds.com",
+     "evidence": {
+      "name": "_spf.allbirds_com._d.easydmarc.pro",
+      "rtype": "TXT",
+      "value": "ip4:69.169.224.0/20",
+      "checked_at": "2026-10-11T19:45:52+00:00"
+     },
+     "supporting": [
+      {
+       "name": "amazonses.com",
+       "rtype": "TXT",
+       "value": "ip4:69.169.224.0/20",
+       "checked_at": "2026-10-11T19:45:52+00:00"
+      }
+     ]
+    },
+    {
+     "service": "Amazon SES",
+     "kind": "owns a network listed in SPF",
+     "where": "allbirds.com",
+     "evidence": {
+      "name": "_spf.allbirds_com._d.easydmarc.pro",
+      "rtype": "TXT",
+      "value": "ip4:23.249.208.0/20",
+      "checked_at": "2026-10-11T19:45:52+00:00"
+     },
+     "supporting": [
+      {
+       "name": "amazonses.com",
+       "rtype": "TXT",
+       "value": "ip4:23.249.208.0/20",
+       "checked_at": "2026-10-11T19:45:52+00:00"
+      }
+     ]
+    },
+    {
+     "service": "Amazon SES",
+     "kind": "owns a network listed in SPF",
+     "where": "allbirds.com",
+     "evidence": {
+      "name": "_spf.allbirds_com._d.easydmarc.pro",
+      "rtype": "TXT",
+      "value": "ip4:23.251.224.0/19",
+      "checked_at": "2026-10-11T19:45:52+00:00"
+     },
+     "supporting": [
+      {
+       "name": "amazonses.com",
+       "rtype": "TXT",
+       "value": "ip4:23.251.224.0/19",
+       "checked_at": "2026-10-11T19:45:52+00:00"
+      }
+     ]
+    },
+    {
+     "service": "Amazon SES",
+     "kind": "owns a network listed in SPF",
+     "where": "allbirds.com",
+     "evidence": {
+      "name": "_spf.allbirds_com._d.easydmarc.pro",
+      "rtype": "TXT",
+      "value": "ip4:76.223.176.0/20",
+      "checked_at": "2026-10-11T19:45:52+00:00"
+     },
+     "supporting": [
+      {
+       "name": "amazonses.com",
+       "rtype": "TXT",
+       "value": "ip4:76.223.176.0/20",
+       "checked_at": "2026-10-11T19:45:52+00:00"
+      }
+     ]
+    },
+    {
+     "service": "Amazon SES",
+     "kind": "owns a network listed in SPF",
+     "where": "allbirds.com",
+     "evidence": {
+      "name": "_spf.allbirds_com._d.easydmarc.pro",
+      "rtype": "TXT",
+      "value": "ip4:54.240.64.0/18",
+      "checked_at": "2026-10-11T19:45:52+00:00"
+     },
+     "supporting": [
+      {
+       "name": "amazonses.com",
+       "rtype": "TXT",
+       "value": "ip4:54.240.64.0/18",
+       "checked_at": "2026-10-11T19:45:52+00:00"
+      }
+     ]
+    },
+    {
+     "service": "Amazon SES",
+     "kind": "owns a network listed in SPF",
+     "where": "allbirds.com",
+     "evidence": {
+      "name": "_spf.allbirds_com._d.easydmarc.pro",
+      "rtype": "TXT",
+      "value": "ip4:76.223.128.0/19",
+      "checked_at": "2026-10-11T19:45:52+00:00"
+     },
+     "supporting": [
+      {
+       "name": "amazonses.com",
+       "rtype": "TXT",
+       "value": "ip4:76.223.128.0/19",
+       "checked_at": "2026-10-11T19:45:52+00:00"
+      }
+     ]
+    },
+    {
+     "service": "Amazon SES",
+     "kind": "owns a network listed in SPF",
+     "where": "allbirds.com",
+     "evidence": {
+      "name": "_spf.allbirds_com._d.easydmarc.pro",
+      "rtype": "TXT",
+      "value": "ip4:216.221.160.0/19",
+      "checked_at": "2026-10-11T19:45:52+00:00"
+     },
+     "supporting": [
+      {
+       "name": "amazonses.com",
+       "rtype": "TXT",
+       "value": "ip4:216.221.160.0/19",
+       "checked_at": "2026-10-11T19:45:52+00:00"
+      }
+     ]
+    },
+    {
+     "service": "Amazon SES",
+     "kind": "owns a network listed in SPF",
+     "where": "allbirds.com",
+     "evidence": {
+      "name": "_spf.allbirds_com._d.easydmarc.pro",
+      "rtype": "TXT",
+      "value": "ip4:206.55.144.0/20",
+      "checked_at": "2026-10-11T19:45:52+00:00"
+     },
+     "supporting": [
+      {
+       "name": "amazonses.com",
+       "rtype": "TXT",
+       "value": "ip4:206.55.144.0/20",
+       "checked_at": "2026-10-11T19:45:52+00:00"
+      }
+     ]
+    },
+    {
+     "service": "Amazon SES",
+     "kind": "owns a network listed in SPF",
+     "where": "allbirds.com",
+     "evidence": {
+      "name": "_spf.allbirds_com._d.easydmarc.pro",
+      "rtype": "TXT",
+      "value": "ip4:24.110.64.0/18",
+      "checked_at": "2026-10-11T19:45:52+00:00"
+     },
+     "supporting": [
+      {
+       "name": "amazonses.com",
+       "rtype": "TXT",
+       "value": "ip4:24.110.64.0/18",
+       "checked_at": "2026-10-11T19:45:52+00:00"
+      }
+     ]
+    },
+    {
+     "service": "Amazon SES",
+     "kind": "owns a network listed in SPF",
+     "where": "allbirds.com",
+     "evidence": {
+      "name": "_spf.allbirds_com._d.easydmarc.pro",
+      "rtype": "TXT",
+      "value": "ip4:98.77.0.0/16",
+      "checked_at": "2026-10-11T19:45:52+00:00"
+     },
+     "supporting": [
+      {
+       "name": "amazonses.com",
+       "rtype": "TXT",
+       "value": "ip4:98.77.0.0/16",
+       "checked_at": "2026-10-11T19:45:52+00:00"
+      }
+     ]
+    },
+    {
+     "service": "Amazon SES",
+     "kind": "included in SPF",
+     "where": "alerts.allbirds.com",
+     "evidence": {
+      "name": "alerts.allbirds.com",
+      "rtype": "TXT",
+      "value": "include:amazonses.com",
+      "checked_at": "2026-10-11T19:45:52+00:00"
+     },
+     "supporting": []
+    },
+    {
+     "service": "Amazon SES",
+     "kind": "included in SPF",
+     "where": "mail.allbirds.com",
+     "evidence": {
+      "name": "mail.allbirds.com",
+      "rtype": "TXT",
+      "value": "include:amazonses.com",
+      "checked_at": "2026-10-11T19:45:52+00:00"
+     },
+     "supporting": []
+    }
+   ]
+  },
+  {
+   "name": "Freshdesk",
+   "category": "Support and CRM",
+   "tier": "Configured",
+   "role": "sender",
+   "claims": [
+    {
+     "service": "Freshdesk",
+     "kind": "owns a network listed in SPF",
+     "where": "allbirds.com",
+     "evidence": {
+      "name": "_spf1.allbirds_com._d.easydmarc.pro",
+      "rtype": "TXT",
+      "value": "ip4:3.7.25.40/29",
+      "checked_at": "2026-10-11T19:45:52+00:00"
+     },
+     "supporting": [
+      {
+       "name": "fdspfind.freshemail.io",
+       "rtype": "TXT",
+       "value": "ip4:3.7.25.40/29",
+       "checked_at": "2026-10-11T19:45:52+00:00"
+      }
+     ]
+    },
+    {
+     "service": "Freshdesk",
+     "kind": "owns a network listed in SPF",
+     "where": "allbirds.com",
+     "evidence": {
+      "name": "_spf1.allbirds_com._d.easydmarc.pro",
+      "rtype": "TXT",
+      "value": "ip4:13.127.153.86",
+      "checked_at": "2026-10-11T19:45:52+00:00"
+     },
+     "supporting": [
+      {
+       "name": "fdspfind.freshemail.io",
+       "rtype": "TXT",
+       "value": "ip4:13.127.153.86",
+       "checked_at": "2026-10-11T19:45:52+00:00"
+      }
+     ]
+    },
+    {
+     "service": "Freshdesk",
+     "kind": "owns a network listed in SPF",
+     "where": "allbirds.com",
+     "evidence": {
+      "name": "_spf1.allbirds_com._d.easydmarc.pro",
+      "rtype": "TXT",
+      "value": "ip4:52.66.154.99",
+      "checked_at": "2026-10-11T19:45:52+00:00"
+     },
+     "supporting": [
+      {
+       "name": "fdspfind.freshemail.io",
+       "rtype": "TXT",
+       "value": "ip4:52.66.154.99",
+       "checked_at": "2026-10-11T19:45:52+00:00"
+      }
+     ]
+    },
+    {
+     "service": "Freshdesk",
+     "kind": "owns a network listed in SPF",
+     "where": "allbirds.com",
+     "evidence": {
+      "name": "_spf1.allbirds_com._d.easydmarc.pro",
+      "rtype": "TXT",
+      "value": "ip4:13.127.210.61",
+      "checked_at": "2026-10-11T19:45:52+00:00"
+     },
+     "supporting": [
+      {
+       "name": "fdspfind.freshemail.io",
+       "rtype": "TXT",
+       "value": "ip4:13.127.210.61",
+       "checked_at": "2026-10-11T19:45:52+00:00"
+      }
+     ]
+    },
+    {
+     "service": "Freshdesk",
+     "kind": "owns a network listed in SPF",
+     "where": "allbirds.com",
+     "evidence": {
+      "name": "_spf1.allbirds_com._d.easydmarc.pro",
+      "rtype": "TXT",
+      "value": "ip4:3.120.181.200/29",
+      "checked_at": "2026-10-11T19:45:52+00:00"
+     },
+     "supporting": [
+      {
+       "name": "fdspfeuc.freshemail.io",
+       "rtype": "TXT",
+       "value": "ip4:3.120.181.192/28",
+       "checked_at": "2026-10-11T19:45:52+00:00"
+      }
+     ]
+    },
+    {
+     "service": "Freshdesk",
+     "kind": "owns a network listed in SPF",
+     "where": "allbirds.com",
+     "evidence": {
+      "name": "_spf1.allbirds_com._d.easydmarc.pro",
+      "rtype": "TXT",
+      "value": "ip4:3.222.0.24/29",
+      "checked_at": "2026-10-11T19:45:52+00:00"
+     },
+     "supporting": [
+      {
+       "name": "fdspfus.freshemail.io",
+       "rtype": "TXT",
+       "value": "ip4:3.222.0.24/29",
+       "checked_at": "2026-10-11T19:45:52+00:00"
+      }
+     ]
+    },
+    {
+     "service": "Freshdesk",
+     "kind": "owns a network listed in SPF",
+     "where": "allbirds.com",
+     "evidence": {
+      "name": "_spf1.allbirds_com._d.easydmarc.pro",
+      "rtype": "TXT",
+      "value": "ip4:44.192.35.0/24",
+      "checked_at": "2026-10-11T19:45:52+00:00"
+     },
+     "supporting": [
+      {
+       "name": "fdspfus.freshemail.io",
+       "rtype": "TXT",
+       "value": "ip4:44.192.35.0/24",
+       "checked_at": "2026-10-11T19:45:52+00:00"
+      }
+     ]
+    },
+    {
+     "service": "Freshdesk",
+     "kind": "owns a network listed in SPF",
+     "where": "allbirds.com",
+     "evidence": {
+      "name": "_spf1.allbirds_com._d.easydmarc.pro",
+      "rtype": "TXT",
+      "value": "ip4:3.25.47.0/29",
+      "checked_at": "2026-10-11T19:45:52+00:00"
+     },
+     "supporting": [
+      {
+       "name": "fdspfaus.freshemail.io",
+       "rtype": "TXT",
+       "value": "ip4:3.25.47.0/29",
+       "checked_at": "2026-10-11T19:45:52+00:00"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "name": "Google Workspace",
+   "category": "Mailbox",
+   "tier": "Configured",
+   "role": "sender",
+   "claims": [
+    {
+     "service": "Google Workspace",
+     "kind": "owns a network listed in SPF",
+     "where": "allbirds.com",
+     "evidence": {
+      "name": "_spf.allbirds_com._d.easydmarc.pro",
+      "rtype": "TXT",
+      "value": "ip6:2001:4860:4864::/56",
+      "checked_at": "2026-10-11T19:45:52+00:00"
+     },
+     "supporting": [
+      {
+       "name": "_spf.google.com",
+       "rtype": "TXT",
+       "value": "ip6:2001:4860:4864::/56",
+       "checked_at": "2026-10-11T19:45:52+00:00"
+      }
+     ]
+    },
+    {
+     "service": "Google Workspace",
+     "kind": "owns a network listed in SPF",
+     "where": "allbirds.com",
+     "evidence": {
+      "name": "_spf.allbirds_com._d.easydmarc.pro",
+      "rtype": "TXT",
+      "value": "ip6:2404:6800:4864::/56",
+      "checked_at": "2026-10-11T19:45:52+00:00"
+     },
+     "supporting": [
+      {
+       "name": "_spf.google.com",
+       "rtype": "TXT",
+       "value": "ip6:2404:6800:4864::/56",
+       "checked_at": "2026-10-11T19:45:52+00:00"
+      }
+     ]
+    },
+    {
+     "service": "Google Workspace",
+     "kind": "owns a network listed in SPF",
+     "where": "allbirds.com",
+     "evidence": {
+      "name": "_spf.allbirds_com._d.easydmarc.pro",
+      "rtype": "TXT",
+      "value": "ip6:2607:f8b0:4864::/56",
+      "checked_at": "2026-10-11T19:45:52+00:00"
+     },
+     "supporting": [
+      {
+       "name": "_spf.google.com",
+       "rtype": "TXT",
+       "value": "ip6:2607:f8b0:4864::/56",
+       "checked_at": "2026-10-11T19:45:52+00:00"
+      }
+     ]
+    },
+    {
+     "service": "Google Workspace",
+     "kind": "owns a network listed in SPF",
+     "where": "allbirds.com",
+     "evidence": {
+      "name": "_spf.allbirds_com._d.easydmarc.pro",
+      "rtype": "TXT",
+      "value": "ip6:2800:3f0:4864::/56",
+      "checked_at": "2026-10-11T19:45:52+00:00"
+     },
+     "supporting": [
+      {
+       "name": "_spf.google.com",
+       "rtype": "TXT",
+       "value": "ip6:2800:3f0:4864::/56",
+       "checked_at": "2026-10-11T19:45:52+00:00"
+      }
+     ]
+    },
+    {
+     "service": "Google Workspace",
+     "kind": "owns a network listed in SPF",
+     "where": "allbirds.com",
+     "evidence": {
+      "name": "_spf.allbirds_com._d.easydmarc.pro",
+      "rtype": "TXT",
+      "value": "ip6:2a00:1450:4864::/56",
+      "checked_at": "2026-10-11T19:45:52+00:00"
+     },
+     "supporting": [
+      {
+       "name": "_spf.google.com",
+       "rtype": "TXT",
+       "value": "ip6:2a00:1450:4864::/56",
+       "checked_at": "2026-10-11T19:45:52+00:00"
+      }
+     ]
+    },
+    {
+     "service": "Google Workspace",
+     "kind": "owns a network listed in SPF",
+     "where": "allbirds.com",
+     "evidence": {
+      "name": "_spf.allbirds_com._d.easydmarc.pro",
+      "rtype": "TXT",
+      "value": "ip6:2c0f:fb50:4864::/56",
+      "checked_at": "2026-10-11T19:45:52+00:00"
+     },
+     "supporting": [
+      {
+       "name": "_spf.google.com",
+       "rtype": "TXT",
+       "value": "ip6:2c0f:fb50:4864::/56",
+       "checked_at": "2026-10-11T19:45:52+00:00"
+      }
+     ]
+    },
+    {
+     "service": "Google Workspace",
+     "kind": "in use for a subdomain's mail (MX)",
+     "where": "mail.allbirds.com",
+     "evidence": {
+      "name": "mail.allbirds.com",
+      "rtype": "MX",
+      "value": "1 aspmx.l.google.com",
+      "checked_at": "2026-10-11T19:45:52+00:00"
+     },
+     "supporting": []
+    },
+    {
+     "service": "Google Workspace",
+     "kind": "in use for a subdomain's mail (MX)",
+     "where": "mail.allbirds.com",
+     "evidence": {
+      "name": "mail.allbirds.com",
+      "rtype": "MX",
+      "value": "5 alt1.aspmx.l.google.com",
+      "checked_at": "2026-10-11T19:45:52+00:00"
+     },
+     "supporting": []
+    },
+    {
+     "service": "Google Workspace",
+     "kind": "in use for a subdomain's mail (MX)",
+     "where": "mail.allbirds.com",
+     "evidence": {
+      "name": "mail.allbirds.com",
+      "rtype": "MX",
+      "value": "10 alt2.aspmx.l.google.com",
+      "checked_at": "2026-10-11T19:45:52+00:00"
+     },
+     "supporting": []
+    },
+    {
+     "service": "Google Workspace",
+     "kind": "included in SPF",
+     "where": "alerts.allbirds.com",
+     "evidence": {
+      "name": "alerts.allbirds.com",
+      "rtype": "TXT",
+      "value": "include:_spf.google.com",
+      "checked_at": "2026-10-11T19:45:52+00:00"
+     },
+     "supporting": []
+    },
+    {
+     "service": "Google Workspace",
+     "kind": "included in SPF",
+     "where": "mail.allbirds.com",
+     "evidence": {
+      "name": "mail.allbirds.com",
+      "rtype": "TXT",
+      "value": "include:_spf.google.com",
+      "checked_at": "2026-10-11T19:45:52+00:00"
+     },
+     "supporting": []
+    },
+    {
+     "service": "Google Workspace",
+     "kind": "DKIM key named for it",
+     "where": "allbirds.com",
+     "evidence": {
+      "name": "google._domainkey.allbirds.com",
+      "rtype": "TXT",
+      "value": "v=DKIM1; k=rsa; p=MIIBIjANBgkq..., 2048-bit, fp d8f8fdab59ca9b21",
+      "checked_at": "2026-10-11T19:45:52+00:00"
+     },
+     "supporting": []
+    }
+   ]
+  },
+  {
+   "name": "Iterable",
+   "category": "Marketing",
+   "tier": "Configured",
+   "role": "sender",
+   "claims": [
+    {
+     "service": "Iterable",
+     "kind": "link tracking CNAME",
+     "where": "allbirds.com",
+     "evidence": {
+      "name": "links.allbirds.com",
+      "rtype": "CNAME",
+      "value": "links.iterable.com",
+      "checked_at": "2026-10-11T19:45:52+00:00"
+     },
+     "supporting": []
+    }
+   ]
+  },
+  {
+   "name": "Mailchimp",
+   "category": "Marketing",
+   "tier": "Configured",
+   "role": "sender",
+   "claims": [
+    {
+     "service": "Mailchimp",
+     "kind": "hosts a DKIM key (CNAME)",
+     "where": "allbirds.com",
+     "evidence": {
+      "name": "k1._domainkey.allbirds.com",
+      "rtype": "TXT",
+      "value": "k=rsa; p=MIGfMA0GCSqG..., 1024-bit, fp 53d7bb0466c8346d via dkim.mcsv.net",
+      "checked_at": "2026-10-11T19:45:52+00:00"
+     },
+     "supporting": []
+    }
+   ]
+  },
+  {
+   "name": "Mailgun",
+   "category": "Transactional",
+   "tier": "Configured",
+   "role": "sender",
+   "claims": [
+    {
+     "service": "Mailgun",
+     "kind": "owns a network listed in SPF",
+     "where": "allbirds.com",
+     "evidence": {
+      "name": "_spf1.allbirds_com._d.easydmarc.pro",
+      "rtype": "TXT",
+      "value": "ip4:161.38.204.0/22",
+      "checked_at": "2026-10-11T19:45:52+00:00"
+     },
+     "supporting": [
+      {
+       "name": "_spf.eu.mailgun.org",
+       "rtype": "TXT",
+       "value": "ip4:161.38.204.0/22",
+       "checked_at": "2026-10-11T19:45:52+00:00"
+      }
+     ]
+    },
+    {
+     "service": "Mailgun",
+     "kind": "owns a network listed in SPF",
+     "where": "allbirds.com",
+     "evidence": {
+      "name": "_spf1.allbirds_com._d.easydmarc.pro",
+      "rtype": "TXT",
+      "value": "ip4:143.55.236.0/22",
+      "checked_at": "2026-10-11T19:45:52+00:00"
+     },
+     "supporting": [
+      {
+       "name": "_spf.eu.mailgun.org",
+       "rtype": "TXT",
+       "value": "ip4:143.55.236.0/22",
+       "checked_at": "2026-10-11T19:45:52+00:00"
+      }
+     ]
+    },
+    {
+     "service": "Mailgun",
+     "kind": "owns a network listed in SPF",
+     "where": "allbirds.com",
+     "evidence": {
+      "name": "_spf1.allbirds_com._d.easydmarc.pro",
+      "rtype": "TXT",
+      "value": "ip4:198.244.60.0/22",
+      "checked_at": "2026-10-11T19:45:52+00:00"
+     },
+     "supporting": [
+      {
+       "name": "_spf.eu.mailgun.org",
+       "rtype": "TXT",
+       "value": "ip4:198.244.60.0/22",
+       "checked_at": "2026-10-11T19:45:52+00:00"
+      }
+     ]
+    },
+    {
+     "service": "Mailgun",
+     "kind": "owns a network listed in SPF",
+     "where": "allbirds.com",
+     "evidence": {
+      "name": "_spf1.allbirds_com._d.easydmarc.pro",
+      "rtype": "TXT",
+      "value": "ip4:204.220.160.0/20",
+      "checked_at": "2026-10-11T19:45:52+00:00"
+     },
+     "supporting": [
+      {
+       "name": "_spf.eu.mailgun.org",
+       "rtype": "TXT",
+       "value": "ip4:204.220.160.0/20",
+       "checked_at": "2026-10-11T19:45:52+00:00"
+      }
+     ]
+    },
+    {
+     "service": "Mailgun",
+     "kind": "owns a network listed in SPF",
+     "where": "allbirds.com",
+     "evidence": {
+      "name": "_spf1.allbirds_com._d.easydmarc.pro",
+      "rtype": "TXT",
+      "value": "ip4:143.55.224.0/21",
+      "checked_at": "2026-10-11T19:45:52+00:00"
+     },
+     "supporting": [
+      {
+       "name": "_spf2.mailgun.org",
+       "rtype": "TXT",
+       "value": "ip4:143.55.224.0/21",
+       "checked_at": "2026-10-11T19:45:52+00:00"
+      }
+     ]
+    },
+    {
+     "service": "Mailgun",
+     "kind": "owns a network listed in SPF",
+     "where": "allbirds.com",
+     "evidence": {
+      "name": "_spf1.allbirds_com._d.easydmarc.pro",
+      "rtype": "TXT",
+      "value": "ip4:143.55.232.0/22",
+      "checked_at": "2026-10-11T19:45:52+00:00"
+     },
+     "supporting": [
+      {
+       "name": "_spf2.mailgun.org",
+       "rtype": "TXT",
+       "value": "ip4:143.55.232.0/22",
+       "checked_at": "2026-10-11T19:45:52+00:00"
+      }
+     ]
+    },
+    {
+     "service": "Mailgun",
+     "kind": "owns a network listed in SPF",
+     "where": "allbirds.com",
+     "evidence": {
+      "name": "_spf1.allbirds_com._d.easydmarc.pro",
+      "rtype": "TXT",
+      "value": "ip4:204.220.168.0/21",
+      "checked_at": "2026-10-11T19:45:52+00:00"
+     },
+     "supporting": [
+      {
+       "name": "_spf2.mailgun.org",
+       "rtype": "TXT",
+       "value": "ip4:204.220.168.0/21",
+       "checked_at": "2026-10-11T19:45:52+00:00"
+      }
+     ]
+    },
+    {
+     "service": "Mailgun",
+     "kind": "owns a network listed in SPF",
+     "where": "allbirds.com",
+     "evidence": {
+      "name": "_spf1.allbirds_com._d.easydmarc.pro",
+      "rtype": "TXT",
+      "value": "ip4:204.220.176.0/20",
+      "checked_at": "2026-10-11T19:45:52+00:00"
+     },
+     "supporting": [
+      {
+       "name": "_spf2.mailgun.org",
+       "rtype": "TXT",
+       "value": "ip4:204.220.176.0/20",
+       "checked_at": "2026-10-11T19:45:52+00:00"
+      }
+     ]
+    },
+    {
+     "service": "Mailgun",
+     "kind": "link tracking CNAME",
+     "where": "allbirds.com",
+     "evidence": {
+      "name": "email.allbirds.com",
+      "rtype": "CNAME",
+      "value": "mailgun.org",
+      "checked_at": "2026-10-11T19:45:52+00:00"
+     },
+     "supporting": []
+    },
+    {
+     "service": "Mailgun",
+     "kind": "receives replies and bounces for a sending subdomain (MX)",
+     "where": "email.allbirds.com",
+     "evidence": {
+      "name": "email.allbirds.com",
+      "rtype": "MX",
+      "value": "10 mxa.mailgun.org",
+      "checked_at": "2026-10-11T19:45:52+00:00"
+     },
+     "supporting": []
+    },
+    {
+     "service": "Mailgun",
+     "kind": "receives replies and bounces for a sending subdomain (MX)",
+     "where": "email.allbirds.com",
+     "evidence": {
+      "name": "email.allbirds.com",
+      "rtype": "MX",
+      "value": "10 mxb.mailgun.org",
+      "checked_at": "2026-10-11T19:45:52+00:00"
+     },
+     "supporting": []
+    },
+    {
+     "service": "Mailgun",
+     "kind": "included in SPF",
+     "where": "alerts.allbirds.com",
+     "evidence": {
+      "name": "alerts.allbirds.com",
+      "rtype": "TXT",
+      "value": "include:mailgun.org",
+      "checked_at": "2026-10-11T19:45:52+00:00"
+     },
+     "supporting": []
+    },
+    {
+     "service": "Mailgun",
+     "kind": "included in SPF",
+     "where": "email.allbirds.com",
+     "evidence": {
+      "name": "email.allbirds.com",
+      "rtype": "TXT",
+      "value": "include:_spf.mailgun.org",
+      "checked_at": "2026-10-11T19:45:52+00:00"
+     },
+     "supporting": []
+    },
+    {
+     "service": "Mailgun",
+     "kind": "included in SPF",
+     "where": "email.allbirds.com",
+     "evidence": {
+      "name": "email.allbirds.com",
+      "rtype": "TXT",
+      "value": "include:_spf.eu.mailgun.org",
+      "checked_at": "2026-10-11T19:45:52+00:00"
+     },
+     "supporting": []
+    },
+    {
+     "service": "Mailgun",
+     "kind": "included in SPF",
+     "where": "mail.allbirds.com",
+     "evidence": {
+      "name": "mail.allbirds.com",
+      "rtype": "TXT",
+      "value": "include:mailgun.org",
+      "checked_at": "2026-10-11T19:45:52+00:00"
+     },
+     "supporting": []
+    }
+   ]
+  },
+  {
+   "name": "Mailjet",
+   "category": "Transactional",
+   "tier": "Configured",
+   "role": "sender",
+   "claims": [
+    {
+     "service": "Mailjet",
+     "kind": "owns a network listed in SPF",
+     "where": "allbirds.com",
+     "evidence": {
+      "name": "_spf1.allbirds_com._d.easydmarc.pro",
+      "rtype": "TXT",
+      "value": "ip4:141.193.32.0/23",
+      "checked_at": "2026-10-11T19:45:52+00:00"
+     },
+     "supporting": [
+      {
+       "name": "1.32.193.141.origin.asn.cymru.com",
+       "rtype": "TXT",
+       "value": "200069 | 141.193.32.0/24 | US | arin | 2017-07-03",
+       "checked_at": "2026-10-11T19:45:52+00:00"
+      },
+      {
+       "name": "as200069.asn.cymru.com",
+       "rtype": "TXT",
+       "value": "200069 | FR | ripencc | 2013-10-16 | MAILJET, FR",
+       "checked_at": "2026-10-11T19:45:52+00:00"
+      },
+      {
+       "name": "1.33.193.141.origin.asn.cymru.com",
+       "rtype": "TXT",
+       "value": "200069 | 141.193.33.0/24 | US | arin | 2017-07-03",
+       "checked_at": "2026-10-11T19:45:52+00:00"
+      },
+      {
+       "name": "129.33.193.141.origin.asn.cymru.com",
+       "rtype": "TXT",
+       "value": "200069 | 141.193.33.0/24 | US | arin | 2017-07-03",
+       "checked_at": "2026-10-11T19:45:52+00:00"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "name": "Postmark",
+   "category": "Transactional",
+   "tier": "Configured",
+   "role": "sender",
+   "claims": [
+    {
+     "service": "Postmark",
+     "kind": "bounce address CNAME",
+     "where": "allbirds.com",
+     "evidence": {
+      "name": "pm-bounces.allbirds.com",
+      "rtype": "CNAME",
+      "value": "pm.mtasv.net",
+      "checked_at": "2026-10-11T19:45:52+00:00"
+     },
+     "supporting": []
+    }
+   ]
+  },
+  {
+   "name": "SendGrid",
+   "category": "Transactional",
+   "tier": "Configured",
+   "role": "sender",
+   "claims": [
+    {
+     "service": "SendGrid",
+     "kind": "owns a network listed in SPF",
+     "where": "allbirds.com",
+     "evidence": {
+      "name": "_spf.allbirds_com._d.easydmarc.pro",
+      "rtype": "TXT",
+      "value": "ip4:167.89.0.0/17",
+      "checked_at": "2026-10-11T19:45:52+00:00"
+     },
+     "supporting": [
+      {
+       "name": "1.0.89.167.origin.asn.cymru.com",
+       "rtype": "TXT",
+       "value": "11377 | 167.89.0.0/18 | US | arin | 2013-10-31",
+       "checked_at": "2026-10-11T19:45:52+00:00"
+      },
+      {
+       "name": "as11377.asn.cymru.com",
+       "rtype": "TXT",
+       "value": "11377 | US | arin | 2012-06-28 | SENDGRID - SendGrid, Inc., US",
+       "checked_at": "2026-10-11T19:45:52+00:00"
+      },
+      {
+       "name": "1.64.89.167.origin.asn.cymru.com",
+       "rtype": "TXT",
+       "value": "11377 | 167.89.64.0/19 | US | arin | 2013-10-31",
+       "checked_at": "2026-10-11T19:45:52+00:00"
+      },
+      {
+       "name": "1.96.89.167.origin.asn.cymru.com",
+       "rtype": "TXT",
+       "value": "11377 | 167.89.96.0/20 | US | arin | 2013-10-31",
+       "checked_at": "2026-10-11T19:45:52+00:00"
+      }
+     ]
+    },
+    {
+     "service": "SendGrid",
+     "kind": "owns a network listed in SPF",
+     "where": "allbirds.com",
+     "evidence": {
+      "name": "_spf.allbirds_com._d.easydmarc.pro",
+      "rtype": "TXT",
+      "value": "ip4:208.117.48.0/20",
+      "checked_at": "2026-10-11T19:45:52+00:00"
+     },
+     "supporting": [
+      {
+       "name": "1.48.117.208.origin.asn.cymru.com",
+       "rtype": "TXT",
+       "value": "11377 | 208.117.48.0/21 | US | arin | 2022-04-13",
+       "checked_at": "2026-10-11T19:45:52+00:00"
+      },
+      {
+       "name": "as11377.asn.cymru.com",
+       "rtype": "TXT",
+       "value": "11377 | US | arin | 2012-06-28 | SENDGRID - SendGrid, Inc., US",
+       "checked_at": "2026-10-11T19:45:52+00:00"
+      },
+      {
+       "name": "1.56.117.208.origin.asn.cymru.com",
+       "rtype": "TXT",
+       "value": "11377 | 208.117.56.0/21 | US | arin | 2022-04-13",
+       "checked_at": "2026-10-11T19:45:52+00:00"
+      },
+      {
+       "name": "1.60.117.208.origin.asn.cymru.com",
+       "rtype": "TXT",
+       "value": "11377 | 208.117.56.0/21 | US | arin | 2022-04-13",
+       "checked_at": "2026-10-11T19:45:52+00:00"
+      }
+     ]
+    },
+    {
+     "service": "SendGrid",
+     "kind": "owns a network listed in SPF",
+     "where": "allbirds.com",
+     "evidence": {
+      "name": "_spf.allbirds_com._d.easydmarc.pro",
+      "rtype": "TXT",
+      "value": "ip4:50.31.32.0/19",
+      "checked_at": "2026-10-11T19:45:52+00:00"
+     },
+     "supporting": [
+      {
+       "name": "1.32.31.50.origin.asn.cymru.com",
+       "rtype": "TXT",
+       "value": "11377 | 50.31.32.0/20 | US | arin | 2022-04-13",
+       "checked_at": "2026-10-11T19:45:52+00:00"
+      },
+      {
+       "name": "as11377.asn.cymru.com",
+       "rtype": "TXT",
+       "value": "11377 | US | arin | 2012-06-28 | SENDGRID - SendGrid, Inc., US",
+       "checked_at": "2026-10-11T19:45:52+00:00"
+      },
+      {
+       "name": "1.48.31.50.origin.asn.cymru.com",
+       "rtype": "TXT",
+       "value": "11377 | 50.31.48.0/20 | US | arin | 2022-04-13",
+       "checked_at": "2026-10-11T19:45:52+00:00"
+      },
+      {
+       "name": "1.56.31.50.origin.asn.cymru.com",
+       "rtype": "TXT",
+       "value": "11377 | 50.31.48.0/20 | US | arin | 2022-04-13",
+       "checked_at": "2026-10-11T19:45:52+00:00"
+      }
+     ]
+    },
+    {
+     "service": "SendGrid",
+     "kind": "owns a network listed in SPF",
+     "where": "allbirds.com",
+     "evidence": {
+      "name": "_spf.allbirds_com._d.easydmarc.pro",
+      "rtype": "TXT",
+      "value": "ip4:198.37.144.0/20",
+      "checked_at": "2026-10-11T19:45:52+00:00"
+     },
+     "supporting": [
+      {
+       "name": "1.144.37.198.origin.asn.cymru.com",
+       "rtype": "TXT",
+       "value": "11377 | 198.37.144.0/20 | US | arin | 2012-07-23",
+       "checked_at": "2026-10-11T19:45:52+00:00"
+      },
+      {
+       "name": "as11377.asn.cymru.com",
+       "rtype": "TXT",
+       "value": "11377 | US | arin | 2012-06-28 | SENDGRID - SendGrid, Inc., US",
+       "checked_at": "2026-10-11T19:45:52+00:00"
+      },
+      {
+       "name": "1.152.37.198.origin.asn.cymru.com",
+       "rtype": "TXT",
+       "value": "11377 | 198.37.144.0/20 | US | arin | 2012-07-23",
+       "checked_at": "2026-10-11T19:45:52+00:00"
+      },
+      {
+       "name": "1.156.37.198.origin.asn.cymru.com",
+       "rtype": "TXT",
+       "value": "11377 | 198.37.144.0/20 | US | arin | 2012-07-23",
+       "checked_at": "2026-10-11T19:45:52+00:00"
+      }
+     ]
+    },
+    {
+     "service": "SendGrid",
+     "kind": "owns a network listed in SPF",
+     "where": "allbirds.com",
+     "evidence": {
+      "name": "_spf.allbirds_com._d.easydmarc.pro",
+      "rtype": "TXT",
+      "value": "ip4:198.21.0.0/21",
+      "checked_at": "2026-10-11T19:45:52+00:00"
+     },
+     "supporting": [
+      {
+       "name": "1.0.21.198.origin.asn.cymru.com",
+       "rtype": "TXT",
+       "value": "11377 | 198.21.0.0/21 | US | arin | 2013-04-01",
+       "checked_at": "2026-10-11T19:45:52+00:00"
+      },
+      {
+       "name": "as11377.asn.cymru.com",
+       "rtype": "TXT",
+       "value": "11377 | US | arin | 2012-06-28 | SENDGRID - SendGrid, Inc., US",
+       "checked_at": "2026-10-11T19:45:52+00:00"
+      },
+      {
+       "name": "1.4.21.198.origin.asn.cymru.com",
+       "rtype": "TXT",
+       "value": "11377 | 198.21.0.0/21 | US | arin | 2013-04-01",
+       "checked_at": "2026-10-11T19:45:52+00:00"
+      },
+      {
+       "name": "1.6.21.198.origin.asn.cymru.com",
+       "rtype": "TXT",
+       "value": "11377 | 198.21.0.0/21 | US | arin | 2013-04-01",
+       "checked_at": "2026-10-11T19:45:52+00:00"
+      }
+     ]
+    },
+    {
+     "service": "SendGrid",
+     "kind": "owns a network listed in SPF",
+     "where": "allbirds.com",
+     "evidence": {
+      "name": "_spf.allbirds_com._d.easydmarc.pro",
+      "rtype": "TXT",
+      "value": "ip4:192.254.112.0/20",
+      "checked_at": "2026-10-11T19:45:52+00:00"
+     },
+     "supporting": [
+      {
+       "name": "1.112.254.192.origin.asn.cymru.com",
+       "rtype": "TXT",
+       "value": "11377 | 192.254.112.0/20 | US | arin | 2013-06-21",
+       "checked_at": "2026-10-11T19:45:52+00:00"
+      },
+      {
+       "name": "as11377.asn.cymru.com",
+       "rtype": "TXT",
+       "value": "11377 | US | arin | 2012-06-28 | SENDGRID - SendGrid, Inc., US",
+       "checked_at": "2026-10-11T19:45:52+00:00"
+      },
+      {
+       "name": "1.120.254.192.origin.asn.cymru.com",
+       "rtype": "TXT",
+       "value": "11377 | 192.254.112.0/20 | US | arin | 2013-06-21",
+       "checked_at": "2026-10-11T19:45:52+00:00"
+      },
+      {
+       "name": "1.124.254.192.origin.asn.cymru.com",
+       "rtype": "TXT",
+       "value": "11377 | 192.254.112.0/20 | US | arin | 2013-06-21",
+       "checked_at": "2026-10-11T19:45:52+00:00"
+      }
+     ]
+    },
+    {
+     "service": "SendGrid",
+     "kind": "owns a network listed in SPF",
+     "where": "allbirds.com",
+     "evidence": {
+      "name": "_spf.allbirds_com._d.easydmarc.pro",
+      "rtype": "TXT",
+      "value": "ip4:168.245.0.0/17",
+      "checked_at": "2026-10-11T19:45:52+00:00"
+     },
+     "supporting": [
+      {
+       "name": "1.0.245.168.origin.asn.cymru.com",
+       "rtype": "TXT",
+       "value": "11377 | 168.245.0.0/18 | US | arin | 2016-11-10",
+       "checked_at": "2026-10-11T19:45:52+00:00"
+      },
+      {
+       "name": "as11377.asn.cymru.com",
+       "rtype": "TXT",
+       "value": "11377 | US | arin | 2012-06-28 | SENDGRID - SendGrid, Inc., US",
+       "checked_at": "2026-10-11T19:45:52+00:00"
+      },
+      {
+       "name": "1.64.245.168.origin.asn.cymru.com",
+       "rtype": "TXT",
+       "value": "11377 | 168.245.64.0/20 | US | arin | 2016-11-10",
+       "checked_at": "2026-10-11T19:45:52+00:00"
+      },
+      {
+       "name": "1.96.245.168.origin.asn.cymru.com",
+       "rtype": "TXT",
+       "value": "11377 | 168.245.96.0/19 | US | arin | 2016-11-10",
+       "checked_at": "2026-10-11T19:45:52+00:00"
+      }
+     ]
+    },
+    {
+     "service": "SendGrid",
+     "kind": "owns a network listed in SPF",
+     "where": "allbirds.com",
+     "evidence": {
+      "name": "_spf.allbirds_com._d.easydmarc.pro",
+      "rtype": "TXT",
+      "value": "ip4:149.72.0.0/16",
+      "checked_at": "2026-10-11T19:45:52+00:00"
+     },
+     "supporting": [
+      {
+       "name": "1.128.72.149.origin.asn.cymru.com",
+       "rtype": "TXT",
+       "value": "11377 | 149.72.128.0/19 | US | arin | 2017-09-05",
+       "checked_at": "2026-10-11T19:45:52+00:00"
+      },
+      {
+       "name": "as11377.asn.cymru.com",
+       "rtype": "TXT",
+       "value": "11377 | US | arin | 2012-06-28 | SENDGRID - SendGrid, Inc., US",
+       "checked_at": "2026-10-11T19:45:52+00:00"
+      },
+      {
+       "name": "1.192.72.149.origin.asn.cymru.com",
+       "rtype": "TXT",
+       "value": "11377 | 149.72.192.0/19 | US | arin | 2017-09-05",
+       "checked_at": "2026-10-11T19:45:52+00:00"
+      }
+     ]
+    },
+    {
+     "service": "SendGrid",
+     "kind": "owns a network listed in SPF",
+     "where": "allbirds.com",
+     "evidence": {
+      "name": "_spf.allbirds_com._d.easydmarc.pro",
+      "rtype": "TXT",
+      "value": "ip4:159.183.0.0/16",
+      "checked_at": "2026-10-11T19:45:52+00:00"
+     },
+     "supporting": [
+      {
+       "name": "1.0.183.159.origin.asn.cymru.com",
+       "rtype": "TXT",
+       "value": "11377 | 159.183.0.0/19 | US | arin | 2021-03-01",
+       "checked_at": "2026-10-11T19:45:52+00:00"
+      },
+      {
+       "name": "as11377.asn.cymru.com",
+       "rtype": "TXT",
+       "value": "11377 | US | arin | 2012-06-28 | SENDGRID - SendGrid, Inc., US",
+       "checked_at": "2026-10-11T19:45:52+00:00"
+      },
+      {
+       "name": "1.128.183.159.origin.asn.cymru.com",
+       "rtype": "TXT",
+       "value": "11377 | 159.183.128.0/18 | US | arin | 2021-03-01",
+       "checked_at": "2026-10-11T19:45:52+00:00"
+      },
+      {
+       "name": "1.192.183.159.origin.asn.cymru.com",
+       "rtype": "TXT",
+       "value": "11377 | 159.183.192.0/19 | US | arin | 2021-03-01",
+       "checked_at": "2026-10-11T19:45:52+00:00"
+      }
+     ]
+    },
+    {
+     "service": "SendGrid",
+     "kind": "owns a network listed in SPF",
+     "where": "allbirds.com",
+     "evidence": {
+      "name": "_spf.allbirds_com._d.easydmarc.pro",
+      "rtype": "TXT",
+      "value": "ip4:134.128.64.0/18",
+      "checked_at": "2026-10-11T19:45:52+00:00"
+     },
+     "supporting": [
+      {
+       "name": "1.64.128.134.origin.asn.cymru.com",
+       "rtype": "TXT",
+       "value": "11377 | 134.128.64.0/19 | US | arin | 2024-10-10",
+       "checked_at": "2026-10-11T19:45:52+00:00"
+      },
+      {
+       "name": "as11377.asn.cymru.com",
+       "rtype": "TXT",
+       "value": "11377 | US | arin | 2012-06-28 | SENDGRID - SendGrid, Inc., US",
+       "checked_at": "2026-10-11T19:45:52+00:00"
+      },
+      {
+       "name": "1.96.128.134.origin.asn.cymru.com",
+       "rtype": "TXT",
+       "value": "11377 | 134.128.96.0/19 | US | arin | 2024-10-10",
+       "checked_at": "2026-10-11T19:45:52+00:00"
+      },
+      {
+       "name": "1.112.128.134.origin.asn.cymru.com",
+       "rtype": "TXT",
+       "value": "11377 | 134.128.96.0/19 | US | arin | 2024-10-10",
+       "checked_at": "2026-10-11T19:45:52+00:00"
+      }
+     ]
+    },
+    {
+     "service": "SendGrid",
+     "kind": "owns a network listed in SPF",
+     "where": "allbirds.com",
+     "evidence": {
+      "name": "_spf.allbirds_com._d.easydmarc.pro",
+      "rtype": "TXT",
+      "value": "ip4:159.26.176.0/20",
+      "checked_at": "2026-10-11T19:45:52+00:00"
+     },
+     "supporting": [
+      {
+       "name": "1.176.26.159.origin.asn.cymru.com",
+       "rtype": "TXT",
+       "value": "11377 | 159.26.176.0/24 | US | arin | 2024-10-10",
+       "checked_at": "2026-10-11T19:45:52+00:00"
+      },
+      {
+       "name": "as11377.asn.cymru.com",
+       "rtype": "TXT",
+       "value": "11377 | US | arin | 2012-06-28 | SENDGRID - SendGrid, Inc., US",
+       "checked_at": "2026-10-11T19:45:52+00:00"
+      },
+      {
+       "name": "1.184.26.159.origin.asn.cymru.com",
+       "rtype": "TXT",
+       "value": "11377 | 159.26.184.0/24 | US | arin | 2024-10-10",
+       "checked_at": "2026-10-11T19:45:52+00:00"
+      },
+      {
+       "name": "1.188.26.159.origin.asn.cymru.com",
+       "rtype": "TXT",
+       "value": "11377 | 159.26.188.0/24 | US | arin | 2024-10-10",
+       "checked_at": "2026-10-11T19:45:52+00:00"
+      }
+     ]
+    },
+    {
+     "service": "SendGrid",
+     "kind": "owns a network listed in SPF",
+     "where": "allbirds.com",
+     "evidence": {
+      "name": "_spf.allbirds_com._d.easydmarc.pro",
+      "rtype": "TXT",
+      "value": "ip4:223.165.113.0/24",
+      "checked_at": "2026-10-11T19:45:52+00:00"
+     },
+     "supporting": [
+      {
+       "name": "1.113.165.223.origin.asn.cymru.com",
+       "rtype": "TXT",
+       "value": "11377 | 223.165.113.0/24 | US | arin | 2020-08-17",
+       "checked_at": "2026-10-11T19:45:52+00:00"
+      },
+      {
+       "name": "as11377.asn.cymru.com",
+       "rtype": "TXT",
+       "value": "11377 | US | arin | 2012-06-28 | SENDGRID - SendGrid, Inc., US",
+       "checked_at": "2026-10-11T19:45:52+00:00"
+      }
+     ]
+    },
+    {
+     "service": "SendGrid",
+     "kind": "owns a network listed in SPF",
+     "where": "allbirds.com",
+     "evidence": {
+      "name": "_spf.allbirds_com._d.easydmarc.pro",
+      "rtype": "TXT",
+      "value": "ip4:223.165.115.0/24",
+      "checked_at": "2026-10-11T19:45:52+00:00"
+     },
+     "supporting": [
+      {
+       "name": "1.115.165.223.origin.asn.cymru.com",
+       "rtype": "TXT",
+       "value": "11377 | 223.165.115.0/24 | US | arin | 2020-08-17",
+       "checked_at": "2026-10-11T19:45:52+00:00"
+      },
+      {
+       "name": "as11377.asn.cymru.com",
+       "rtype": "TXT",
+       "value": "11377 | US | arin | 2012-06-28 | SENDGRID - SendGrid, Inc., US",
+       "checked_at": "2026-10-11T19:45:52+00:00"
+      }
+     ]
+    },
+    {
+     "service": "SendGrid",
+     "kind": "owns a network listed in SPF",
+     "where": "allbirds.com",
+     "evidence": {
+      "name": "_spf.allbirds_com._d.easydmarc.pro",
+      "rtype": "TXT",
+      "value": "ip4:223.165.118.0/23",
+      "checked_at": "2026-10-11T19:45:52+00:00"
+     },
+     "supporting": [
+      {
+       "name": "1.118.165.223.origin.asn.cymru.com",
+       "rtype": "TXT",
+       "value": "11377 | 223.165.118.0/24 | US | arin | 2020-08-17",
+       "checked_at": "2026-10-11T19:45:52+00:00"
+      },
+      {
+       "name": "as11377.asn.cymru.com",
+       "rtype": "TXT",
+       "value": "11377 | US | arin | 2012-06-28 | SENDGRID - SendGrid, Inc., US",
+       "checked_at": "2026-10-11T19:45:52+00:00"
+      },
+      {
+       "name": "1.119.165.223.origin.asn.cymru.com",
+       "rtype": "TXT",
+       "value": "11377 | 223.165.119.0/24 | US | arin | 2020-08-17",
+       "checked_at": "2026-10-11T19:45:52+00:00"
+      },
+      {
+       "name": "129.119.165.223.origin.asn.cymru.com",
+       "rtype": "TXT",
+       "value": "11377 | 223.165.119.0/24 | US | arin | 2020-08-17",
+       "checked_at": "2026-10-11T19:45:52+00:00"
+      }
+     ]
+    },
+    {
+     "service": "SendGrid",
+     "kind": "owns a network listed in SPF",
+     "where": "allbirds.com",
+     "evidence": {
+      "name": "_spf1.allbirds_com._d.easydmarc.pro",
+      "rtype": "TXT",
+      "value": "ip4:223.165.120.0/23",
+      "checked_at": "2026-10-11T19:45:52+00:00"
+     },
+     "supporting": [
+      {
+       "name": "1.120.165.223.origin.asn.cymru.com",
+       "rtype": "TXT",
+       "value": "11377 | 223.165.120.0/24 | US | arin | 2020-08-17",
+       "checked_at": "2026-10-11T19:45:52+00:00"
+      },
+      {
+       "name": "as11377.asn.cymru.com",
+       "rtype": "TXT",
+       "value": "11377 | US | arin | 2012-06-28 | SENDGRID - SendGrid, Inc., US",
+       "checked_at": "2026-10-11T19:45:52+00:00"
+      },
+      {
+       "name": "1.121.165.223.origin.asn.cymru.com",
+       "rtype": "TXT",
+       "value": "11377 | 223.165.121.0/24 | US | arin | 2020-08-17",
+       "checked_at": "2026-10-11T19:45:52+00:00"
+      },
+      {
+       "name": "129.121.165.223.origin.asn.cymru.com",
+       "rtype": "TXT",
+       "value": "11377 | 223.165.121.0/24 | US | arin | 2020-08-17",
+       "checked_at": "2026-10-11T19:45:52+00:00"
+      }
+     ]
+    },
+    {
+     "service": "SendGrid",
+     "kind": "owns a network listed in SPF",
+     "where": "allbirds.com",
+     "evidence": {
+      "name": "_spf1.allbirds_com._d.easydmarc.pro",
+      "rtype": "TXT",
+      "value": "ip4:198.21.4.52",
+      "checked_at": "2026-10-11T19:45:52+00:00"
+     },
+     "supporting": [
+      {
+       "name": "52.4.21.198.origin.asn.cymru.com",
+       "rtype": "TXT",
+       "value": "11377 | 198.21.0.0/21 | US | arin | 2013-04-01",
+       "checked_at": "2026-10-11T19:45:52+00:00"
+      },
+      {
+       "name": "as11377.asn.cymru.com",
+       "rtype": "TXT",
+       "value": "11377 | US | arin | 2012-06-28 | SENDGRID - SendGrid, Inc., US",
+       "checked_at": "2026-10-11T19:45:52+00:00"
+      }
+     ]
+    },
+    {
+     "service": "SendGrid",
+     "kind": "owns a network listed in SPF",
+     "where": "allbirds.com",
+     "evidence": {
+      "name": "_spf1.allbirds_com._d.easydmarc.pro",
+      "rtype": "TXT",
+      "value": "ip4:167.89.31.27",
+      "checked_at": "2026-10-11T19:45:52+00:00"
+     },
+     "supporting": [
+      {
+       "name": "27.31.89.167.origin.asn.cymru.com",
+       "rtype": "TXT",
+       "value": "11377 | 167.89.0.0/18 | US | arin | 2013-10-31",
+       "checked_at": "2026-10-11T19:45:52+00:00"
+      },
+      {
+       "name": "as11377.asn.cymru.com",
+       "rtype": "TXT",
+       "value": "11377 | US | arin | 2012-06-28 | SENDGRID - SendGrid, Inc., US",
+       "checked_at": "2026-10-11T19:45:52+00:00"
+      }
+     ]
+    },
+    {
+     "service": "SendGrid",
+     "kind": "owns a network listed in SPF",
+     "where": "allbirds.com",
+     "evidence": {
+      "name": "_spf1.allbirds_com._d.easydmarc.pro",
+      "rtype": "TXT",
+      "value": "ip4:167.89.127.244",
+      "checked_at": "2026-10-11T19:45:52+00:00"
+     },
+     "supporting": [
+      {
+       "name": "244.127.89.167.origin.asn.cymru.com",
+       "rtype": "TXT",
+       "value": "11377 | 167.89.126.0/23 | US | arin | 2013-10-31",
+       "checked_at": "2026-10-11T19:45:52+00:00"
+      },
+      {
+       "name": "as11377.asn.cymru.com",
+       "rtype": "TXT",
+       "value": "11377 | US | arin | 2012-06-28 | SENDGRID - SendGrid, Inc., US",
+       "checked_at": "2026-10-11T19:45:52+00:00"
+      }
+     ]
+    },
+    {
+     "service": "SendGrid",
+     "kind": "hosts a DKIM key (CNAME)",
+     "where": "allbirds.com",
+     "evidence": {
+      "name": "s1._domainkey.allbirds.com",
+      "rtype": "TXT",
+      "value": "k=rsa; t=s (strict); p=MIIBIjANBgkq..., 2048-bit, fp 1613a2732ba0bb85 via s1.domainkey.u246613.wl114.sendgrid.net",
+      "checked_at": "2026-10-11T19:45:52+00:00"
+     },
+     "supporting": []
+    },
+    {
+     "service": "SendGrid",
+     "kind": "hosts a DKIM key (CNAME)",
+     "where": "allbirds.com",
+     "evidence": {
+      "name": "s2._domainkey.allbirds.com",
+      "rtype": "TXT",
+      "value": "k=rsa; t=s (strict); p=MIIBIjANBgkq..., 2048-bit, fp 74e0ef530aa45e05 via s2.domainkey.u246613.wl114.sendgrid.net",
+      "checked_at": "2026-10-11T19:45:52+00:00"
+     },
+     "supporting": []
+    }
+   ]
+  },
+  {
+   "name": "Shopify",
+   "category": "Commerce and apps",
+   "tier": "Configured",
+   "role": "sender",
+   "claims": [
+    {
+     "service": "Shopify",
+     "kind": "included in SPF",
+     "where": "alerts.allbirds.com",
+     "evidence": {
+      "name": "alerts.allbirds.com",
+      "rtype": "TXT",
+      "value": "include:shops.shopify.com",
+      "checked_at": "2026-10-11T19:45:52+00:00"
+     },
+     "supporting": []
+    },
+    {
+     "service": "Shopify",
+     "kind": "included in SPF",
+     "where": "mail.allbirds.com",
+     "evidence": {
+      "name": "mail.allbirds.com",
+      "rtype": "TXT",
+      "value": "include:shops.shopify.com",
+      "checked_at": "2026-10-11T19:45:52+00:00"
+     },
+     "supporting": []
+    }
+   ]
+  },
+  {
+   "name": "SparkPost",
+   "category": "Transactional",
+   "tier": "Configured",
+   "role": "sender",
+   "claims": [
+    {
+     "service": "SparkPost",
+     "kind": "bounce address CNAME",
+     "where": "allbirds.com",
+     "evidence": {
+      "name": "bounce.allbirds.com",
+      "rtype": "CNAME",
+      "value": "sparkpostmail.com",
+      "checked_at": "2026-10-11T19:45:52+00:00"
+     },
+     "supporting": []
+    },
+    {
+     "service": "SparkPost",
+     "kind": "receives replies and bounces for a sending subdomain (MX)",
+     "where": "bounce.allbirds.com",
+     "evidence": {
+      "name": "bounce.allbirds.com",
+      "rtype": "MX",
+      "value": "5 smtp.sparkpostmail.com",
+      "checked_at": "2026-10-11T19:45:52+00:00"
+     },
+     "supporting": []
+    },
+    {
+     "service": "SparkPost",
+     "kind": "receives replies and bounces for a sending subdomain (MX)",
+     "where": "info.allbirds.com",
+     "evidence": {
+      "name": "info.allbirds.com",
+      "rtype": "MX",
+      "value": "5 smtp.sparkpostmail.com",
+      "checked_at": "2026-10-11T19:45:52+00:00"
+     },
+     "supporting": []
+    }
+   ]
+  },
+  {
+   "name": "Zendesk",
+   "category": "Support and CRM",
+   "tier": "Configured",
+   "role": "sender",
+   "claims": [
+    {
+     "service": "Zendesk",
+     "kind": "owns a network listed in SPF",
+     "where": "allbirds.com",
+     "evidence": {
+      "name": "_spf.allbirds_com._d.easydmarc.pro",
+      "rtype": "TXT",
+      "value": "ip4:103.151.192.0/23",
+      "checked_at": "2026-10-11T19:45:52+00:00"
+     },
+     "supporting": [
+      {
+       "name": "mail.zendesk.com",
+       "rtype": "TXT",
+       "value": "ip4:103.151.192.0/23",
+       "checked_at": "2026-10-11T19:45:52+00:00"
+      }
+     ]
+    },
+    {
+     "service": "Zendesk",
+     "kind": "owns a network listed in SPF",
+     "where": "allbirds.com",
+     "evidence": {
+      "name": "_spf.allbirds_com._d.easydmarc.pro",
+      "rtype": "TXT",
+      "value": "ip4:185.12.80.0/22",
+      "checked_at": "2026-10-11T19:45:52+00:00"
+     },
+     "supporting": [
+      {
+       "name": "mail.zendesk.com",
+       "rtype": "TXT",
+       "value": "ip4:185.12.80.0/22",
+       "checked_at": "2026-10-11T19:45:52+00:00"
+      }
+     ]
+    },
+    {
+     "service": "Zendesk",
+     "kind": "owns a network listed in SPF",
+     "where": "allbirds.com",
+     "evidence": {
+      "name": "_spf.allbirds_com._d.easydmarc.pro",
+      "rtype": "TXT",
+      "value": "ip4:188.172.128.0/20",
+      "checked_at": "2026-10-11T19:45:52+00:00"
+     },
+     "supporting": [
+      {
+       "name": "mail.zendesk.com",
+       "rtype": "TXT",
+       "value": "ip4:188.172.128.0/20",
+       "checked_at": "2026-10-11T19:45:52+00:00"
+      }
+     ]
+    },
+    {
+     "service": "Zendesk",
+     "kind": "owns a network listed in SPF",
+     "where": "allbirds.com",
+     "evidence": {
+      "name": "_spf.allbirds_com._d.easydmarc.pro",
+      "rtype": "TXT",
+      "value": "ip4:192.161.144.0/20",
+      "checked_at": "2026-10-11T19:45:52+00:00"
+     },
+     "supporting": [
+      {
+       "name": "mail.zendesk.com",
+       "rtype": "TXT",
+       "value": "ip4:192.161.144.0/20",
+       "checked_at": "2026-10-11T19:45:52+00:00"
+      }
+     ]
+    },
+    {
+     "service": "Zendesk",
+     "kind": "owns a network listed in SPF",
+     "where": "allbirds.com",
+     "evidence": {
+      "name": "_spf.allbirds_com._d.easydmarc.pro",
+      "rtype": "TXT",
+      "value": "ip4:216.198.0.0/18",
+      "checked_at": "2026-10-11T19:45:52+00:00"
+     },
+     "supporting": [
+      {
+       "name": "mail.zendesk.com",
+       "rtype": "TXT",
+       "value": "ip4:216.198.0.0/18",
+       "checked_at": "2026-10-11T19:45:52+00:00"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "name": "Customer.io",
+   "category": "Marketing",
+   "tier": "Likely",
+   "role": "sender",
+   "claims": [
+    {
+     "service": "Customer.io",
+     "kind": "DKIM key named for it",
+     "where": "allbirds.com",
+     "evidence": {
+      "name": "krs._domainkey.allbirds.com",
+      "rtype": "TXT",
+      "value": "k=rsa; p=MIIBIjANBgkq..., 2048-bit, fp f65b843679924ff6",
+      "checked_at": "2026-10-11T19:45:52+00:00"
+     },
+     "supporting": []
+    }
+   ]
+  },
+  {
+   "name": "Mandrill",
+   "category": "Transactional",
+   "tier": "Likely",
+   "role": "sender",
+   "claims": [
+    {
+     "service": "Mandrill",
+     "kind": "DKIM key named for it",
+     "where": "allbirds.com",
+     "evidence": {
+      "name": "mandrill._domainkey.allbirds.com",
+      "rtype": "TXT",
+      "value": "v=DKIM1; k=rsa; p=MIGfMA0GCSqG..., 1024-bit, fp 9cee89b6f986543a",
+      "checked_at": "2026-10-11T19:45:52+00:00"
+     },
+     "supporting": []
+    }
+   ]
+  }
+ ],
+ "run": {
+  "checked_at": "2026-10-11T19:45:52+00:00"
+ },
+ "findings": [
+  {
+   "severity": "warning",
+   "title": "The k1 key at allbirds.com is 1024-bit",
+   "detail": "Some receivers already treat 1024-bit RSA keys as weak. Rotate to 2048-bit.",
+   "evidence": [
+    {
+     "name": "k1._domainkey.allbirds.com",
+     "rtype": "TXT",
+     "value": "k=rsa; p=MIGfMA0GCSqG..., 1024-bit, fp 53d7bb0466c8346d via dkim.mcsv.net",
+     "checked_at": "2026-10-11T19:45:52+00:00"
+    }
+   ]
+  },
+  {
+   "severity": "warning",
+   "title": "The mandrill key at allbirds.com is 1024-bit",
+   "detail": "Some receivers already treat 1024-bit RSA keys as weak. Rotate to 2048-bit.",
+   "evidence": [
+    {
+     "name": "mandrill._domainkey.allbirds.com",
+     "rtype": "TXT",
+     "value": "v=DKIM1; k=rsa; p=MIGfMA0GCSqG..., 1024-bit, fp 9cee89b6f986543a",
+     "checked_at": "2026-10-11T19:45:52+00:00"
+    }
+   ]
+  },
+  {
+   "severity": "note",
+   "title": "SPF at allbirds.com is managed through EasyDMARC",
+   "detail": "EasyDMARC copies the domain's senders into its own record. The walk read that record, so the services and ranges it lists are reported here as the domain's.",
+   "evidence": [
+    {
+     "name": "allbirds.com",
+     "rtype": "TXT",
+     "value": "v=spf1 include:allbirds_com._es.easydmarc.com include:spf.protection.outlook.com ~all",
+     "checked_at": "2026-10-11T19:45:52+00:00"
+    }
+   ]
+  }
+ ],
+ "unknowns": [
+  {
+   "what": "IP range in SPF",
+   "value": "74.125.0.0/16 (AS15169, Google; listed by Google Workspace and HubSpot)",
+   "where": "allbirds.com",
+   "evidence": {
+    "name": "_spf.allbirds_com._d.easydmarc.pro",
+    "rtype": "TXT",
+    "value": "ip4:74.125.0.0/16",
+    "checked_at": "2026-10-11T19:45:52+00:00"
+   }
+  },
+  {
+   "what": "IP range in SPF",
+   "value": "209.85.128.0/17 (AS15169, Google; listed by Google Workspace and HubSpot)",
+   "where": "allbirds.com",
+   "evidence": {
+    "name": "_spf.allbirds_com._d.easydmarc.pro",
+    "rtype": "TXT",
+    "value": "ip4:209.85.128.0/17",
+    "checked_at": "2026-10-11T19:45:52+00:00"
+   }
+  },
+  {
+   "what": "IP range in SPF",
+   "value": "35.159.219.224/28 (AS16509, Amazon Web Services)",
+   "where": "allbirds.com",
+   "evidence": {
+    "name": "_spf1.allbirds_com._d.easydmarc.pro",
+    "rtype": "TXT",
+    "value": "ip4:35.159.219.224/28",
+    "checked_at": "2026-10-11T19:45:52+00:00"
+   }
+  },
+  {
+   "what": "IP range in SPF",
+   "value": "18.199.180.160/27 (AS16509, Amazon Web Services)",
+   "where": "allbirds.com",
+   "evidence": {
+    "name": "_spf1.allbirds_com._d.easydmarc.pro",
+    "rtype": "TXT",
+    "value": "ip4:18.199.180.160/27",
+    "checked_at": "2026-10-11T19:45:52+00:00"
+   }
+  },
+  {
+   "what": "IP range in SPF",
+   "value": "159.135.140.80/29 (AS39921, DE-RACKSPACE Frankfurt, Germany, GB; listed by HubSpot and Mailgun)",
+   "where": "allbirds.com",
+   "evidence": {
+    "name": "_spf1.allbirds_com._d.easydmarc.pro",
+    "rtype": "TXT",
+    "value": "ip4:159.135.140.80/29",
+    "checked_at": "2026-10-11T19:45:52+00:00"
+   }
+  },
+  {
+   "what": "IP address in SPF",
+   "value": "157.131.136.130 (AS46375, AS-SONICTELECOM - Sonic Telecom LLC, US)",
+   "where": "mail.allbirds.com",
+   "evidence": {
+    "name": "mail.allbirds.com",
+    "rtype": "TXT",
+    "value": "ip4:157.131.136.130",
+    "checked_at": "2026-10-11T19:45:52+00:00"
+   }
+  },
+  {
+   "what": "IP address in SPF",
+   "value": "116.66.213.98 (AS3491, PCCWG-APAC-HK PCCW Global HK Ltd., HK)",
+   "where": "mail.allbirds.com",
+   "evidence": {
+    "name": "mail.allbirds.com",
+    "rtype": "TXT",
+    "value": "ip4:116.66.213.98",
+    "checked_at": "2026-10-11T19:45:52+00:00"
+   }
+  },
+  {
+   "what": "IP address in SPF",
+   "value": "96.71.160.117 (AS7922, COMCAST-7922 - Comcast Cable Communications, LLC, US)",
+   "where": "mail.allbirds.com",
+   "evidence": {
+    "name": "mail.allbirds.com",
+    "rtype": "TXT",
+    "value": "ip4:96.71.160.117",
+    "checked_at": "2026-10-11T19:45:52+00:00"
+   }
+  },
+  {
+   "what": "IP address in SPF",
+   "value": "216.40.27.182 (AS53828, NITEL - NETWORK INNOVATIONS, LLC, US)",
+   "where": "mail.allbirds.com",
+   "evidence": {
+    "name": "mail.allbirds.com",
+    "rtype": "TXT",
+    "value": "ip4:216.40.27.182",
+    "checked_at": "2026-10-11T19:45:52+00:00"
+   }
+  }
+ ],
+ "gaps": [
+  {
+   "asked": "the website",
+   "happened": "not read: web checks were turned off (--no-web)"
+  },
+  {
+   "asked": "certificate log names more than 2 labels deep",
+   "happened": "34 not asked (cap of 2 labels below the domain)"
+  },
+  {
+   "asked": "sending subdomains: TXT and MX at apisdk.allbirds.com, community.allbirds.com, dataplane.allbirds.com, jssdk.allbirds.com, rerun.allbirds.com, www.jssdk.allbirds.com",
+   "happened": "lookup failed, so whether they send is not known"
+  },
+  {
+   "asked": "published ranges: SPF of HubSpot",
+   "happened": "includes more than 3 levels deep not read (cap)"
+  },
+  {
+   "asked": "published ranges: SPF of Mimecast",
+   "happened": "includes more than 3 levels deep not read (cap)"
+  },
+  {
+   "asked": "network owners of the IP ranges in SPF at allbirds.com",
+   "happened": "12 of 36 not looked up: only the first 24 were (cap)"
+  },
+  {
+   "asked": "DKIM selectors at alerts.allbirds.com",
+   "happened": "74 of 106 not asked: only the first 27 and the names its own SPF or MX backs were (cap)"
+  },
+  {
+   "asked": "DKIM selectors at info.allbirds.com",
+   "happened": "79 of 106 not asked: only the first 27 and the names its own SPF or MX backs were (cap)"
+  },
+  {
+   "asked": "DKIM selectors at mail.allbirds.com",
+   "happened": "74 of 106 not asked: only the first 27 and the names its own SPF or MX backs were (cap)"
+  }
+ ],
+ "subdomains_checked": [
+  "alerts.allbirds.com",
+  "bounce.allbirds.com",
+  "email.allbirds.com",
+  "info.allbirds.com",
+  "mail.allbirds.com"
+ ],
+ "checked": [
+  {
+   "where": "allbirds.com",
+   "dkim_selectors": [
+    "selector1",
+    "selector2",
+    "acdkim1",
+    "acdkim2",
+    "ses",
+    "aweber_key_a",
+    "aweber_key_b",
+    "aweber_key_c",
+    "brevo",
+    "brevo1",
+    "brevo2",
+    "cm",
+    "cf2024-1",
+    "ctct1",
+    "ctct2",
+    "krs",
+    "e2ma-k1",
+    "e2ma-k2",
+    "e2ma-k3",
+    "everlytickey1",
+    "everlytickey2",
+    "fm2",
+    "fm1",
+    "fm3",
+    "mesmtp",
+    "secureserver1",
+    "secureserver2",
+    "google",
+    "gapps",
+    "gor",
+    "strong1",
+    "strong2",
+    "hs1",
+    "hs2",
+    "intercom",
+    "s1-ionos",
+    "s42582890",
+    "cka",
+    "kl",
+    "kl1",
+    "kl2",
+    "k2",
+    "k1",
+    "k3",
+    "litesrv",
+    "mg",
+    "mailgun",
+    "mg1",
+    "pdk1",
+    "pdk2",
+    "mailjet",
+    "mailpoet2",
+    "mailpoet1",
+    "mandrill",
+    "mte1",
+    "mte2",
+    "marketo",
+    "mkto",
+    "mkto1",
+    "mimecast",
+    "mimecast20190719",
+    "pepipost",
+    "pp1",
+    "protonmail",
+    "protonmail2",
+    "protonmail3",
+    "resend",
+    "sailthru",
+    "salesforce",
+    "salesforce2",
+    "salesforce1",
+    "sf",
+    "sf1",
+    "sf2",
+    "sfdc",
+    "200608",
+    "pardot",
+    "sfmc",
+    "s1",
+    "s2",
+    "smtpapi",
+    "scph0819",
+    "sparkpost",
+    "squarespace",
+    "zendesk1",
+    "zendesk2",
+    "zoho",
+    "api",
+    "default",
+    "dk",
+    "dkim",
+    "dkim1",
+    "dkim2",
+    "email",
+    "k",
+    "key",
+    "key1",
+    "key2",
+    "mail",
+    "mta",
+    "mx",
+    "pm",
+    "s",
+    "selector",
+    "smtp",
+    "sp"
+   ],
+   "labels": [
+    "bounce",
+    "bounces",
+    "em",
+    "email",
+    "mail",
+    "send",
+    "mta",
+    "rp",
+    "pm-bounces",
+    "links",
+    "link",
+    "click",
+    "track",
+    "tracking",
+    "url",
+    "go",
+    "autodiscover",
+    "cf-bounce",
+    "eversrv",
+    "fwdkim1",
+    "bnc3",
+    "bounces.cloud.em",
+    "bounces.cloud2.em"
+   ],
+   "pages": [],
+   "denial": "classic"
+  },
+  {
+   "where": "alerts.allbirds.com",
+   "dkim_selectors": [
+    "google",
+    "gapps",
+    "acdkim1",
+    "acdkim2",
+    "ses",
+    "aweber_key_a",
+    "aweber_key_b",
+    "aweber_key_c",
+    "brevo",
+    "brevo1",
+    "brevo2",
+    "cm",
+    "cf2024-1",
+    "ctct1",
+    "ctct2",
+    "krs",
+    "e2ma-k1",
+    "e2ma-k2",
+    "e2ma-k3",
+    "everlytickey1",
+    "everlytickey2",
+    "fm2",
+    "fm1",
+    "fm3",
+    "mesmtp",
+    "secureserver1",
+    "secureserver2",
+    "mailgun",
+    "mg",
+    "mg1",
+    "pdk1",
+    "pdk2"
+   ],
+   "labels": [],
+   "pages": [],
+   "denial": "classic"
+  },
+  {
+   "where": "bounce.allbirds.com",
+   "dkim_selectors": [
+    "acdkim1",
+    "acdkim2",
+    "ses",
+    "aweber_key_a",
+    "aweber_key_b",
+    "aweber_key_c",
+    "brevo",
+    "brevo1"
+   ],
+   "labels": [],
+   "pages": [],
+   "denial": "classic"
+  },
+  {
+   "where": "email.allbirds.com",
+   "dkim_selectors": [
+    "acdkim1",
+    "acdkim2",
+    "ses",
+    "aweber_key_a",
+    "aweber_key_b",
+    "aweber_key_c",
+    "brevo",
+    "brevo1",
+    "mailgun",
+    "mg",
+    "mg1",
+    "pdk1",
+    "pdk2"
+   ],
+   "labels": [],
+   "pages": [],
+   "denial": "classic"
+  },
+  {
+   "where": "info.allbirds.com",
+   "dkim_selectors": [
+    "acdkim1",
+    "acdkim2",
+    "ses",
+    "aweber_key_a",
+    "aweber_key_b",
+    "aweber_key_c",
+    "brevo",
+    "brevo1",
+    "brevo2",
+    "cm",
+    "cf2024-1",
+    "ctct1",
+    "ctct2",
+    "krs",
+    "e2ma-k1",
+    "e2ma-k2",
+    "e2ma-k3",
+    "everlytickey1",
+    "everlytickey2",
+    "fm2",
+    "fm1",
+    "fm3",
+    "mesmtp",
+    "secureserver1",
+    "secureserver2",
+    "google",
+    "gapps"
+   ],
+   "labels": [],
+   "pages": [],
+   "denial": "classic"
+  },
+  {
+   "where": "mail.allbirds.com",
+   "dkim_selectors": [
+    "google",
+    "gapps",
+    "acdkim1",
+    "acdkim2",
+    "ses",
+    "aweber_key_a",
+    "aweber_key_b",
+    "aweber_key_c",
+    "brevo",
+    "brevo1",
+    "brevo2",
+    "cm",
+    "cf2024-1",
+    "ctct1",
+    "ctct2",
+    "krs",
+    "e2ma-k1",
+    "e2ma-k2",
+    "e2ma-k3",
+    "everlytickey1",
+    "everlytickey2",
+    "fm2",
+    "fm1",
+    "fm3",
+    "mesmtp",
+    "secureserver1",
+    "secureserver2",
+    "mailgun",
+    "mg",
+    "mg1",
+    "pdk1",
+    "pdk2"
+   ],
+   "labels": [],
+   "pages": [],
+   "denial": "classic"
+  }
+ ],
+ "ct": {
+  "status": "off",
+  "logged": 0,
+  "resolved": 0,
+  "gone_unnamed": 0
+ },
+ "historical": [],
+ "logo": "https://vmc.digicert.com/faeed248-398e-4fa8-a86d-c03dc037898a.svg",
+ "schema": "sendermap/1",
+ "absences": [
+  {
+   "asked": "DKIM keys at alerts.allbirds.com",
+   "happened": "selectors exist but none of the 32 names asked is one",
+   "evidence": [
+    {
+     "name": "_domainkey.alerts.allbirds.com",
+     "rtype": "TXT",
+     "value": "no record of this type",
+     "checked_at": "2026-10-11T19:45:52+00:00"
+    }
+   ]
+  },
+  {
+   "asked": "DKIM keys at bounce.allbirds.com",
+   "happened": "no selectors exist: _domainkey.bounce.allbirds.com does not exist and the zone returns no such name for names that do not exist. The sweep of 27 names was not run for that reason; only the 8 names the domain's MX and SPF back or hint at were asked, as a check on servers that answer no such name for a name with names below it (RFC 8020 section 5)",
+   "evidence": [
+    {
+     "name": "_domainkey.bounce.allbirds.com",
+     "rtype": "TXT",
+     "value": "no such name",
+     "checked_at": "2026-10-11T19:45:52+00:00"
+    },
+    {
+     "name": "sendermap-wildcard-check._domainkey.bounce.allbirds.com",
+     "rtype": "TXT",
+     "value": "no such name",
+     "checked_at": "2026-10-11T19:45:52+00:00"
+    }
+   ]
+  },
+  {
+   "asked": "DKIM keys at email.allbirds.com",
+   "happened": "no selectors exist: _domainkey.email.allbirds.com does not exist and the zone returns no such name for names that do not exist. The sweep of 32 names was not run for that reason; only the 13 names the domain's MX and SPF back or hint at were asked, as a check on servers that answer no such name for a name with names below it (RFC 8020 section 5)",
+   "evidence": [
+    {
+     "name": "_domainkey.email.allbirds.com",
+     "rtype": "TXT",
+     "value": "no such name",
+     "checked_at": "2026-10-11T19:45:52+00:00"
+    },
+    {
+     "name": "sendermap-wildcard-check._domainkey.email.allbirds.com",
+     "rtype": "TXT",
+     "value": "no such name",
+     "checked_at": "2026-10-11T19:45:52+00:00"
+    }
+   ]
+  },
+  {
+   "asked": "DKIM keys at info.allbirds.com",
+   "happened": "selectors exist but none of the 27 names asked is one",
+   "evidence": [
+    {
+     "name": "_domainkey.info.allbirds.com",
+     "rtype": "TXT",
+     "value": "no record of this type",
+     "checked_at": "2026-10-11T19:45:52+00:00"
+    }
+   ]
+  },
+  {
+   "asked": "DKIM keys at mail.allbirds.com",
+   "happened": "selectors exist but none of the 32 names asked is one",
+   "evidence": [
+    {
+     "name": "_domainkey.mail.allbirds.com",
+     "rtype": "TXT",
+     "value": "no record of this type",
+     "checked_at": "2026-10-11T19:45:52+00:00"
+    }
+   ]
+  }
+ ]
+}

@@ -153,6 +153,7 @@ for the check and a private one a moment later (DNS rebinding) is not caught.
 | `sources/subdomains.py` | Finding sending subdomains from a wordlist and the certificate log |
 | `render/text.py`, `render/markdown.py` | The terminal and Markdown views; both show the gaps and what was asked at each name, as the web page does, and group unrecognised IP ranges by network |
 | `cli.py` | The `sendermap` command |
+| `testing.py` | Recording and replaying DNS answers and pages, and replaying a recorded case |
 | `web/app.py` | The site: a page, and an API that streams progress and the finished map |
 
 ## Matching rules
@@ -365,3 +366,24 @@ requires that the engine never opens the pending file and that a host only a pen
 matches shows as not recognised; `test_hunt_proofs.py` holds where the hunt may find each kind of
 pattern, which domain's proof wins, that a rerun asks nothing and that a moved proof loads. `test_ct.py` runs the CT source on a recorded crt.sh answer
 (`tests/fixtures/crtsh_allbirds.json`).
+
+### Record and replay
+
+`sendermap/testing.py` ships in the package, so other projects can replay too.
+`RecordingResolver` wraps any Resolver and keeps every question and Answer; `save` writes them
+as JSON sorted by name and type, one object per question. `ReplayResolver` answers from that
+file, and a recorded failed lookup replays as failed, which is how could not check is modelled.
+`RecordingTransport` and `ReplayTransport` do the same for pages: method, URL, status, content
+type, redirect target and body text, or the transport error the request ended in. A question or
+request the recording does not hold raises `UnrecordedError` naming it. The engine's guards turn
+an exception in a source into a gap, so each replayer also lists what it missed, and a replay
+with anything missed fails.
+
+`tests/corpus/` holds real domains recorded this way (`tools/record_corpus.py DOMAIN`), each
+with the map it gave as `expected.json`; `tests/test_corpus.py` maps each again offline and
+requires that map. `--update` rebuilds every `expected.json` from the recorded answers without
+the network, for a change that rightly changes a map; the diff it causes is the review. Every
+bug found on a live domain becomes a case there (`tests/corpus/README.md`).
+
+pytest runs with pytest-socket (`--disable-socket --allow-unix-socket --allow-hosts=127.0.0.1`),
+so a test that opens a network socket fails, while the loopback web test keeps running.

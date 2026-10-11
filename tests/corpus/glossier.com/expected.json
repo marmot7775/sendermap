@@ -1,0 +1,1276 @@
+{
+ "domain": "glossier.com",
+ "services": [
+  {
+   "name": "Google Workspace",
+   "category": "Mailbox",
+   "tier": "In use",
+   "role": "sender",
+   "claims": [
+    {
+     "service": "Google Workspace",
+     "kind": "receives the domain's mail (MX)",
+     "where": "glossier.com",
+     "evidence": {
+      "name": "glossier.com",
+      "rtype": "MX",
+      "value": "10 aspmx.l.google.com",
+      "checked_at": "2026-10-11T19:47:18+00:00"
+     },
+     "supporting": []
+    },
+    {
+     "service": "Google Workspace",
+     "kind": "receives the domain's mail (MX)",
+     "where": "glossier.com",
+     "evidence": {
+      "name": "glossier.com",
+      "rtype": "MX",
+      "value": "20 alt1.aspmx.l.google.com",
+      "checked_at": "2026-10-11T19:47:18+00:00"
+     },
+     "supporting": []
+    },
+    {
+     "service": "Google Workspace",
+     "kind": "receives the domain's mail (MX)",
+     "where": "glossier.com",
+     "evidence": {
+      "name": "glossier.com",
+      "rtype": "MX",
+      "value": "20 alt2.aspmx.l.google.com",
+      "checked_at": "2026-10-11T19:47:18+00:00"
+     },
+     "supporting": []
+    },
+    {
+     "service": "Google Workspace",
+     "kind": "receives the domain's mail (MX)",
+     "where": "glossier.com",
+     "evidence": {
+      "name": "glossier.com",
+      "rtype": "MX",
+      "value": "30 aspmx2.googlemail.com",
+      "checked_at": "2026-10-11T19:47:18+00:00"
+     },
+     "supporting": []
+    },
+    {
+     "service": "Google Workspace",
+     "kind": "receives the domain's mail (MX)",
+     "where": "glossier.com",
+     "evidence": {
+      "name": "glossier.com",
+      "rtype": "MX",
+      "value": "30 aspmx3.googlemail.com",
+      "checked_at": "2026-10-11T19:47:18+00:00"
+     },
+     "supporting": []
+    },
+    {
+     "service": "Google Workspace",
+     "kind": "in use for a subdomain's mail (MX)",
+     "where": "receipts.glossier.com",
+     "evidence": {
+      "name": "receipts.glossier.com",
+      "rtype": "MX",
+      "value": "1 aspmx.l.google.com",
+      "checked_at": "2026-10-11T19:47:18+00:00"
+     },
+     "supporting": []
+    },
+    {
+     "service": "Google Workspace",
+     "kind": "in use for a subdomain's mail (MX)",
+     "where": "receipts.glossier.com",
+     "evidence": {
+      "name": "receipts.glossier.com",
+      "rtype": "MX",
+      "value": "10 alt3.aspmx.l.google.com",
+      "checked_at": "2026-10-11T19:47:18+00:00"
+     },
+     "supporting": []
+    },
+    {
+     "service": "Google Workspace",
+     "kind": "in use for a subdomain's mail (MX)",
+     "where": "receipts.glossier.com",
+     "evidence": {
+      "name": "receipts.glossier.com",
+      "rtype": "MX",
+      "value": "10 alt4.aspmx.l.google.com",
+      "checked_at": "2026-10-11T19:47:18+00:00"
+     },
+     "supporting": []
+    },
+    {
+     "service": "Google Workspace",
+     "kind": "in use for a subdomain's mail (MX)",
+     "where": "receipts.glossier.com",
+     "evidence": {
+      "name": "receipts.glossier.com",
+      "rtype": "MX",
+      "value": "5 alt1.aspmx.l.google.com",
+      "checked_at": "2026-10-11T19:47:18+00:00"
+     },
+     "supporting": []
+    },
+    {
+     "service": "Google Workspace",
+     "kind": "in use for a subdomain's mail (MX)",
+     "where": "receipts.glossier.com",
+     "evidence": {
+      "name": "receipts.glossier.com",
+      "rtype": "MX",
+      "value": "5 alt2.aspmx.l.google.com",
+      "checked_at": "2026-10-11T19:47:18+00:00"
+     },
+     "supporting": []
+    },
+    {
+     "service": "Google Workspace",
+     "kind": "DKIM key named for it",
+     "where": "glossier.com",
+     "evidence": {
+      "name": "google._domainkey.glossier.com",
+      "rtype": "TXT",
+      "value": "v=DKIM1; k=rsa; p=MIIBIjANBgkq..., 2048-bit, fp 40785b4787f0f30f",
+      "checked_at": "2026-10-11T19:47:18+00:00"
+     },
+     "supporting": [
+      {
+       "name": "glossier.com",
+       "rtype": "MX",
+       "value": "10 aspmx.l.google.com",
+       "checked_at": "2026-10-11T19:47:18+00:00"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "name": "Help Scout",
+   "category": "Support and CRM",
+   "tier": "Configured",
+   "role": "sender",
+   "claims": [
+    {
+     "service": "Help Scout",
+     "kind": "hosts a DKIM key (CNAME)",
+     "where": "glossier.com",
+     "evidence": {
+      "name": "strong1._domainkey.glossier.com",
+      "rtype": "TXT",
+      "value": "v=DKIM1; k=rsa; p=MIIBIjANBgkq..., 2048-bit, fp bdaef67ee0bd9b30 via strong1._domainkey.helpscout.net",
+      "checked_at": "2026-10-11T19:47:18+00:00"
+     },
+     "supporting": []
+    },
+    {
+     "service": "Help Scout",
+     "kind": "hosts a DKIM key (CNAME)",
+     "where": "glossier.com",
+     "evidence": {
+      "name": "strong2._domainkey.glossier.com",
+      "rtype": "TXT",
+      "value": "v=DKIM1; k=rsa; p=MIIBIjANBgkq..., 2048-bit, fp 6d999cc9f7fe9631 via strong2._domainkey.helpscout.net",
+      "checked_at": "2026-10-11T19:47:18+00:00"
+     },
+     "supporting": []
+    }
+   ]
+  },
+  {
+   "name": "Klaviyo",
+   "category": "Marketing",
+   "tier": "Configured",
+   "role": "sender",
+   "claims": [
+    {
+     "service": "Klaviyo",
+     "kind": "hosts a DKIM key (CNAME)",
+     "where": "glossier.com",
+     "evidence": {
+      "name": "kl._domainkey.glossier.com",
+      "rtype": "TXT",
+      "value": "k=rsa; t=s (strict); p=MIIBIjANBgkq..., 2048-bit, fp 8f7c4abc32a3149e via kl.domainkey.u161779.wl030.sendgrid.net",
+      "checked_at": "2026-10-11T19:47:18+00:00"
+     },
+     "supporting": []
+    },
+    {
+     "service": "Klaviyo",
+     "kind": "hosts a DKIM key (CNAME)",
+     "where": "glossier.com",
+     "evidence": {
+      "name": "kl2._domainkey.glossier.com",
+      "rtype": "TXT",
+      "value": "k=rsa; t=s (strict); p=MIIBIjANBgkq..., 2048-bit, fp a8e9604b93b01972 via kl2.domainkey.u161779.wl030.sendgrid.net",
+      "checked_at": "2026-10-11T19:47:18+00:00"
+     },
+     "supporting": []
+    },
+    {
+     "service": "Klaviyo",
+     "kind": "bounce address CNAME",
+     "where": "glossier.com",
+     "evidence": {
+      "name": "send.glossier.com",
+      "rtype": "CNAME",
+      "value": "u161779.wl030.sendgrid.net",
+      "checked_at": "2026-10-11T19:47:18+00:00"
+     },
+     "supporting": []
+    },
+    {
+     "service": "Klaviyo",
+     "kind": "verification token",
+     "where": "glossier.com",
+     "evidence": {
+      "name": "glossier.com",
+      "rtype": "TXT",
+      "value": "klaviyo-site-verification=Sn6eFZ",
+      "checked_at": "2026-10-11T19:47:18+00:00"
+     },
+     "supporting": []
+    }
+   ]
+  },
+  {
+   "name": "Postmark",
+   "category": "Transactional",
+   "tier": "Configured",
+   "role": "sender",
+   "claims": [
+    {
+     "service": "Postmark",
+     "kind": "bounce address CNAME",
+     "where": "glossier.com",
+     "evidence": {
+      "name": "pm-bounces.glossier.com",
+      "rtype": "CNAME",
+      "value": "pm.mtasv.net",
+      "checked_at": "2026-10-11T19:47:18+00:00"
+     },
+     "supporting": []
+    }
+   ]
+  },
+  {
+   "name": "Salesforce",
+   "category": "Support and CRM",
+   "tier": "Configured",
+   "role": "sender",
+   "claims": [
+    {
+     "service": "Salesforce",
+     "kind": "hosts a DKIM key (CNAME)",
+     "where": "glossier.com",
+     "evidence": {
+      "name": "salesforce2._domainkey.glossier.com",
+      "rtype": "TXT",
+      "value": "v=DKIM1; p=MIIBIjANBgkq..., 2048-bit, fp 487730d4106fc223 via salesforce2.h8cv4t.custdkim.salesforce.com",
+      "checked_at": "2026-10-11T19:47:18+00:00"
+     },
+     "supporting": []
+    },
+    {
+     "service": "Salesforce",
+     "kind": "hosts a DKIM key (CNAME)",
+     "where": "glossier.com",
+     "evidence": {
+      "name": "salesforce1._domainkey.glossier.com",
+      "rtype": "TXT",
+      "value": "v=DKIM1; p=MIIBIjANBgkq..., 2048-bit, fp b89c6f4a80bb10de via salesforce1.6nkqhl.custdkim.salesforce.com",
+      "checked_at": "2026-10-11T19:47:18+00:00"
+     },
+     "supporting": []
+    }
+   ]
+  },
+  {
+   "name": "SendGrid",
+   "category": "Transactional",
+   "tier": "Configured",
+   "role": "sender",
+   "claims": [
+    {
+     "service": "SendGrid",
+     "kind": "hosts a DKIM key (CNAME)",
+     "where": "glossier.com",
+     "evidence": {
+      "name": "s1._domainkey.glossier.com",
+      "rtype": "TXT",
+      "value": "k=rsa; t=s (strict); p=MIIBIjANBgkq..., 2048-bit, fp 3d0654c2b22f63e6 via s1.domainkey.u246655.wl156.sendgrid.net",
+      "checked_at": "2026-10-11T19:47:18+00:00"
+     },
+     "supporting": []
+    },
+    {
+     "service": "SendGrid",
+     "kind": "hosts a DKIM key (CNAME)",
+     "where": "glossier.com",
+     "evidence": {
+      "name": "s2._domainkey.glossier.com",
+      "rtype": "TXT",
+      "value": "k=rsa; t=s (strict); p=MIGfMA0GCSqG..., 1024-bit, fp 493ef754cca287c6 via s2.domainkey.u246655.wl156.sendgrid.net",
+      "checked_at": "2026-10-11T19:47:18+00:00"
+     },
+     "supporting": []
+    },
+    {
+     "service": "SendGrid",
+     "kind": "link tracking CNAME",
+     "where": "glossier.com",
+     "evidence": {
+      "name": "link.glossier.com",
+      "rtype": "CNAME",
+      "value": "sendgrid.net",
+      "checked_at": "2026-10-11T19:47:18+00:00"
+     },
+     "supporting": []
+    },
+    {
+     "service": "SendGrid",
+     "kind": "receives replies and bounces for a sending subdomain (MX)",
+     "where": "marketing.glossier.com",
+     "evidence": {
+      "name": "marketing.glossier.com",
+      "rtype": "MX",
+      "value": "20 mx2.sendgrid.net",
+      "checked_at": "2026-10-11T19:47:18+00:00"
+     },
+     "supporting": []
+    },
+    {
+     "service": "SendGrid",
+     "kind": "receives replies and bounces for a sending subdomain (MX)",
+     "where": "marketing.glossier.com",
+     "evidence": {
+      "name": "marketing.glossier.com",
+      "rtype": "MX",
+      "value": "10 mx.sendgrid.net",
+      "checked_at": "2026-10-11T19:47:18+00:00"
+     },
+     "supporting": []
+    },
+    {
+     "service": "SendGrid",
+     "kind": "receives replies and bounces for a sending subdomain (MX)",
+     "where": "send.glossier.com",
+     "evidence": {
+      "name": "send.glossier.com",
+      "rtype": "MX",
+      "value": "20 mx.sendgrid.net",
+      "checked_at": "2026-10-11T19:47:18+00:00"
+     },
+     "supporting": []
+    },
+    {
+     "service": "SendGrid",
+     "kind": "included in SPF",
+     "where": "marketing.glossier.com",
+     "evidence": {
+      "name": "marketing.glossier.com",
+      "rtype": "TXT",
+      "value": "include:ab.sendgrid.net",
+      "checked_at": "2026-10-11T19:47:18+00:00"
+     },
+     "supporting": []
+    },
+    {
+     "service": "SendGrid",
+     "kind": "included in SPF",
+     "where": "send.glossier.com",
+     "evidence": {
+      "name": "send.glossier.com",
+      "rtype": "TXT",
+      "value": "include:sendgrid.net",
+      "checked_at": "2026-10-11T19:47:18+00:00"
+     },
+     "supporting": []
+    },
+    {
+     "service": "SendGrid",
+     "kind": "owns a network listed in SPF",
+     "where": "marketing.glossier.com",
+     "evidence": {
+      "name": "marketing.glossier.com",
+      "rtype": "TXT",
+      "value": "ip4:167.89.0.0/17",
+      "checked_at": "2026-10-11T19:47:18+00:00"
+     },
+     "supporting": [
+      {
+       "name": "1.0.89.167.origin.asn.cymru.com",
+       "rtype": "TXT",
+       "value": "11377 | 167.89.0.0/18 | US | arin | 2013-10-31",
+       "checked_at": "2026-10-11T19:47:18+00:00"
+      },
+      {
+       "name": "as11377.asn.cymru.com",
+       "rtype": "TXT",
+       "value": "11377 | US | arin | 2012-06-28 | SENDGRID - SendGrid, Inc., US",
+       "checked_at": "2026-10-11T19:47:18+00:00"
+      },
+      {
+       "name": "1.64.89.167.origin.asn.cymru.com",
+       "rtype": "TXT",
+       "value": "11377 | 167.89.64.0/19 | US | arin | 2013-10-31",
+       "checked_at": "2026-10-11T19:47:18+00:00"
+      },
+      {
+       "name": "1.96.89.167.origin.asn.cymru.com",
+       "rtype": "TXT",
+       "value": "11377 | 167.89.96.0/20 | US | arin | 2013-10-31",
+       "checked_at": "2026-10-11T19:47:18+00:00"
+      }
+     ]
+    },
+    {
+     "service": "SendGrid",
+     "kind": "owns a network listed in SPF",
+     "where": "marketing.glossier.com",
+     "evidence": {
+      "name": "marketing.glossier.com",
+      "rtype": "TXT",
+      "value": "ip4:208.117.48.0/20",
+      "checked_at": "2026-10-11T19:47:18+00:00"
+     },
+     "supporting": [
+      {
+       "name": "1.48.117.208.origin.asn.cymru.com",
+       "rtype": "TXT",
+       "value": "11377 | 208.117.48.0/21 | US | arin | 2022-04-13",
+       "checked_at": "2026-10-11T19:47:18+00:00"
+      },
+      {
+       "name": "as11377.asn.cymru.com",
+       "rtype": "TXT",
+       "value": "11377 | US | arin | 2012-06-28 | SENDGRID - SendGrid, Inc., US",
+       "checked_at": "2026-10-11T19:47:18+00:00"
+      },
+      {
+       "name": "1.56.117.208.origin.asn.cymru.com",
+       "rtype": "TXT",
+       "value": "11377 | 208.117.56.0/21 | US | arin | 2022-04-13",
+       "checked_at": "2026-10-11T19:47:18+00:00"
+      },
+      {
+       "name": "1.60.117.208.origin.asn.cymru.com",
+       "rtype": "TXT",
+       "value": "11377 | 208.117.56.0/21 | US | arin | 2022-04-13",
+       "checked_at": "2026-10-11T19:47:18+00:00"
+      }
+     ]
+    },
+    {
+     "service": "SendGrid",
+     "kind": "owns a network listed in SPF",
+     "where": "marketing.glossier.com",
+     "evidence": {
+      "name": "marketing.glossier.com",
+      "rtype": "TXT",
+      "value": "ip4:50.31.32.0/19",
+      "checked_at": "2026-10-11T19:47:18+00:00"
+     },
+     "supporting": [
+      {
+       "name": "1.32.31.50.origin.asn.cymru.com",
+       "rtype": "TXT",
+       "value": "11377 | 50.31.32.0/20 | US | arin | 2022-04-13",
+       "checked_at": "2026-10-11T19:47:18+00:00"
+      },
+      {
+       "name": "as11377.asn.cymru.com",
+       "rtype": "TXT",
+       "value": "11377 | US | arin | 2012-06-28 | SENDGRID - SendGrid, Inc., US",
+       "checked_at": "2026-10-11T19:47:18+00:00"
+      },
+      {
+       "name": "1.48.31.50.origin.asn.cymru.com",
+       "rtype": "TXT",
+       "value": "11377 | 50.31.48.0/20 | US | arin | 2022-04-13",
+       "checked_at": "2026-10-11T19:47:18+00:00"
+      },
+      {
+       "name": "1.56.31.50.origin.asn.cymru.com",
+       "rtype": "TXT",
+       "value": "11377 | 50.31.48.0/20 | US | arin | 2022-04-13",
+       "checked_at": "2026-10-11T19:47:18+00:00"
+      }
+     ]
+    },
+    {
+     "service": "SendGrid",
+     "kind": "owns a network listed in SPF",
+     "where": "marketing.glossier.com",
+     "evidence": {
+      "name": "marketing.glossier.com",
+      "rtype": "TXT",
+      "value": "ip4:198.37.144.0/20",
+      "checked_at": "2026-10-11T19:47:18+00:00"
+     },
+     "supporting": [
+      {
+       "name": "1.144.37.198.origin.asn.cymru.com",
+       "rtype": "TXT",
+       "value": "11377 | 198.37.144.0/20 | US | arin | 2012-07-23",
+       "checked_at": "2026-10-11T19:47:18+00:00"
+      },
+      {
+       "name": "as11377.asn.cymru.com",
+       "rtype": "TXT",
+       "value": "11377 | US | arin | 2012-06-28 | SENDGRID - SendGrid, Inc., US",
+       "checked_at": "2026-10-11T19:47:18+00:00"
+      },
+      {
+       "name": "1.152.37.198.origin.asn.cymru.com",
+       "rtype": "TXT",
+       "value": "11377 | 198.37.144.0/20 | US | arin | 2012-07-23",
+       "checked_at": "2026-10-11T19:47:18+00:00"
+      },
+      {
+       "name": "1.156.37.198.origin.asn.cymru.com",
+       "rtype": "TXT",
+       "value": "11377 | 198.37.144.0/20 | US | arin | 2012-07-23",
+       "checked_at": "2026-10-11T19:47:18+00:00"
+      }
+     ]
+    },
+    {
+     "service": "SendGrid",
+     "kind": "owns a network listed in SPF",
+     "where": "marketing.glossier.com",
+     "evidence": {
+      "name": "marketing.glossier.com",
+      "rtype": "TXT",
+      "value": "ip4:198.21.0.0/21",
+      "checked_at": "2026-10-11T19:47:18+00:00"
+     },
+     "supporting": [
+      {
+       "name": "1.0.21.198.origin.asn.cymru.com",
+       "rtype": "TXT",
+       "value": "11377 | 198.21.0.0/21 | US | arin | 2013-04-01",
+       "checked_at": "2026-10-11T19:47:18+00:00"
+      },
+      {
+       "name": "as11377.asn.cymru.com",
+       "rtype": "TXT",
+       "value": "11377 | US | arin | 2012-06-28 | SENDGRID - SendGrid, Inc., US",
+       "checked_at": "2026-10-11T19:47:18+00:00"
+      },
+      {
+       "name": "1.4.21.198.origin.asn.cymru.com",
+       "rtype": "TXT",
+       "value": "11377 | 198.21.0.0/21 | US | arin | 2013-04-01",
+       "checked_at": "2026-10-11T19:47:18+00:00"
+      },
+      {
+       "name": "1.6.21.198.origin.asn.cymru.com",
+       "rtype": "TXT",
+       "value": "11377 | 198.21.0.0/21 | US | arin | 2013-04-01",
+       "checked_at": "2026-10-11T19:47:18+00:00"
+      }
+     ]
+    },
+    {
+     "service": "SendGrid",
+     "kind": "owns a network listed in SPF",
+     "where": "marketing.glossier.com",
+     "evidence": {
+      "name": "marketing.glossier.com",
+      "rtype": "TXT",
+      "value": "ip4:192.254.112.0/20",
+      "checked_at": "2026-10-11T19:47:18+00:00"
+     },
+     "supporting": [
+      {
+       "name": "1.112.254.192.origin.asn.cymru.com",
+       "rtype": "TXT",
+       "value": "11377 | 192.254.112.0/20 | US | arin | 2013-06-21",
+       "checked_at": "2026-10-11T19:47:18+00:00"
+      },
+      {
+       "name": "as11377.asn.cymru.com",
+       "rtype": "TXT",
+       "value": "11377 | US | arin | 2012-06-28 | SENDGRID - SendGrid, Inc., US",
+       "checked_at": "2026-10-11T19:47:18+00:00"
+      },
+      {
+       "name": "1.120.254.192.origin.asn.cymru.com",
+       "rtype": "TXT",
+       "value": "11377 | 192.254.112.0/20 | US | arin | 2013-06-21",
+       "checked_at": "2026-10-11T19:47:18+00:00"
+      },
+      {
+       "name": "1.124.254.192.origin.asn.cymru.com",
+       "rtype": "TXT",
+       "value": "11377 | 192.254.112.0/20 | US | arin | 2013-06-21",
+       "checked_at": "2026-10-11T19:47:18+00:00"
+      }
+     ]
+    },
+    {
+     "service": "SendGrid",
+     "kind": "owns a network listed in SPF",
+     "where": "marketing.glossier.com",
+     "evidence": {
+      "name": "marketing.glossier.com",
+      "rtype": "TXT",
+      "value": "ip4:168.245.0.0/17",
+      "checked_at": "2026-10-11T19:47:18+00:00"
+     },
+     "supporting": [
+      {
+       "name": "1.0.245.168.origin.asn.cymru.com",
+       "rtype": "TXT",
+       "value": "11377 | 168.245.0.0/18 | US | arin | 2016-11-10",
+       "checked_at": "2026-10-11T19:47:18+00:00"
+      },
+      {
+       "name": "as11377.asn.cymru.com",
+       "rtype": "TXT",
+       "value": "11377 | US | arin | 2012-06-28 | SENDGRID - SendGrid, Inc., US",
+       "checked_at": "2026-10-11T19:47:18+00:00"
+      },
+      {
+       "name": "1.64.245.168.origin.asn.cymru.com",
+       "rtype": "TXT",
+       "value": "11377 | 168.245.64.0/20 | US | arin | 2016-11-10",
+       "checked_at": "2026-10-11T19:47:18+00:00"
+      },
+      {
+       "name": "1.96.245.168.origin.asn.cymru.com",
+       "rtype": "TXT",
+       "value": "11377 | 168.245.96.0/19 | US | arin | 2016-11-10",
+       "checked_at": "2026-10-11T19:47:18+00:00"
+      }
+     ]
+    },
+    {
+     "service": "SendGrid",
+     "kind": "owns a network listed in SPF",
+     "where": "marketing.glossier.com",
+     "evidence": {
+      "name": "marketing.glossier.com",
+      "rtype": "TXT",
+      "value": "ip4:149.72.0.0/16",
+      "checked_at": "2026-10-11T19:47:18+00:00"
+     },
+     "supporting": [
+      {
+       "name": "1.128.72.149.origin.asn.cymru.com",
+       "rtype": "TXT",
+       "value": "11377 | 149.72.128.0/19 | US | arin | 2017-09-05",
+       "checked_at": "2026-10-11T19:47:18+00:00"
+      },
+      {
+       "name": "as11377.asn.cymru.com",
+       "rtype": "TXT",
+       "value": "11377 | US | arin | 2012-06-28 | SENDGRID - SendGrid, Inc., US",
+       "checked_at": "2026-10-11T19:47:18+00:00"
+      },
+      {
+       "name": "1.192.72.149.origin.asn.cymru.com",
+       "rtype": "TXT",
+       "value": "11377 | 149.72.192.0/19 | US | arin | 2017-09-05",
+       "checked_at": "2026-10-11T19:47:18+00:00"
+      }
+     ]
+    },
+    {
+     "service": "SendGrid",
+     "kind": "owns a network listed in SPF",
+     "where": "marketing.glossier.com",
+     "evidence": {
+      "name": "marketing.glossier.com",
+      "rtype": "TXT",
+      "value": "ip4:159.183.0.0/16",
+      "checked_at": "2026-10-11T19:47:18+00:00"
+     },
+     "supporting": [
+      {
+       "name": "1.0.183.159.origin.asn.cymru.com",
+       "rtype": "TXT",
+       "value": "11377 | 159.183.0.0/19 | US | arin | 2021-03-01",
+       "checked_at": "2026-10-11T19:47:18+00:00"
+      },
+      {
+       "name": "as11377.asn.cymru.com",
+       "rtype": "TXT",
+       "value": "11377 | US | arin | 2012-06-28 | SENDGRID - SendGrid, Inc., US",
+       "checked_at": "2026-10-11T19:47:18+00:00"
+      },
+      {
+       "name": "1.128.183.159.origin.asn.cymru.com",
+       "rtype": "TXT",
+       "value": "11377 | 159.183.128.0/18 | US | arin | 2021-03-01",
+       "checked_at": "2026-10-11T19:47:18+00:00"
+      },
+      {
+       "name": "1.192.183.159.origin.asn.cymru.com",
+       "rtype": "TXT",
+       "value": "11377 | 159.183.192.0/19 | US | arin | 2021-03-01",
+       "checked_at": "2026-10-11T19:47:18+00:00"
+      }
+     ]
+    },
+    {
+     "service": "SendGrid",
+     "kind": "owns a network listed in SPF",
+     "where": "marketing.glossier.com",
+     "evidence": {
+      "name": "marketing.glossier.com",
+      "rtype": "TXT",
+      "value": "ip4:134.128.64.0/18",
+      "checked_at": "2026-10-11T19:47:18+00:00"
+     },
+     "supporting": [
+      {
+       "name": "1.64.128.134.origin.asn.cymru.com",
+       "rtype": "TXT",
+       "value": "11377 | 134.128.64.0/19 | US | arin | 2024-10-10",
+       "checked_at": "2026-10-11T19:47:18+00:00"
+      },
+      {
+       "name": "as11377.asn.cymru.com",
+       "rtype": "TXT",
+       "value": "11377 | US | arin | 2012-06-28 | SENDGRID - SendGrid, Inc., US",
+       "checked_at": "2026-10-11T19:47:18+00:00"
+      },
+      {
+       "name": "1.96.128.134.origin.asn.cymru.com",
+       "rtype": "TXT",
+       "value": "11377 | 134.128.96.0/19 | US | arin | 2024-10-10",
+       "checked_at": "2026-10-11T19:47:18+00:00"
+      },
+      {
+       "name": "1.112.128.134.origin.asn.cymru.com",
+       "rtype": "TXT",
+       "value": "11377 | 134.128.96.0/19 | US | arin | 2024-10-10",
+       "checked_at": "2026-10-11T19:47:18+00:00"
+      }
+     ]
+    },
+    {
+     "service": "SendGrid",
+     "kind": "owns a network listed in SPF",
+     "where": "marketing.glossier.com",
+     "evidence": {
+      "name": "marketing.glossier.com",
+      "rtype": "TXT",
+      "value": "ip4:159.26.176.0/20",
+      "checked_at": "2026-10-11T19:47:18+00:00"
+     },
+     "supporting": [
+      {
+       "name": "1.176.26.159.origin.asn.cymru.com",
+       "rtype": "TXT",
+       "value": "11377 | 159.26.176.0/24 | US | arin | 2024-10-10",
+       "checked_at": "2026-10-11T19:47:18+00:00"
+      },
+      {
+       "name": "as11377.asn.cymru.com",
+       "rtype": "TXT",
+       "value": "11377 | US | arin | 2012-06-28 | SENDGRID - SendGrid, Inc., US",
+       "checked_at": "2026-10-11T19:47:18+00:00"
+      },
+      {
+       "name": "1.184.26.159.origin.asn.cymru.com",
+       "rtype": "TXT",
+       "value": "11377 | 159.26.184.0/24 | US | arin | 2024-10-10",
+       "checked_at": "2026-10-11T19:47:18+00:00"
+      },
+      {
+       "name": "1.188.26.159.origin.asn.cymru.com",
+       "rtype": "TXT",
+       "value": "11377 | 159.26.188.0/24 | US | arin | 2024-10-10",
+       "checked_at": "2026-10-11T19:47:18+00:00"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "name": "Zendesk",
+   "category": "Support and CRM",
+   "tier": "Configured",
+   "role": "sender",
+   "claims": [
+    {
+     "service": "Zendesk",
+     "kind": "hosts a DKIM key (CNAME)",
+     "where": "glossier.com",
+     "evidence": {
+      "name": "zendesk1._domainkey.glossier.com",
+      "rtype": "TXT",
+      "value": "v=DKIM1; t=s (strict); n=core; k=rsa; p=MIIBIjANBgkq..., 2048-bit, fp 45ce096f162d5ec4 via zendesk1._domainkey.zendesk.com",
+      "checked_at": "2026-10-11T19:47:18+00:00"
+     },
+     "supporting": []
+    },
+    {
+     "service": "Zendesk",
+     "kind": "hosts a DKIM key (CNAME)",
+     "where": "glossier.com",
+     "evidence": {
+      "name": "zendesk2._domainkey.glossier.com",
+      "rtype": "TXT",
+      "value": "v=DKIM1; t=s (strict); n=core; k=rsa; p=MIIBIjANBgkq..., 2048-bit, fp c5fa8a017cd8c5a5 via zendesk2._domainkey.zendesk.com",
+      "checked_at": "2026-10-11T19:47:18+00:00"
+     },
+     "supporting": []
+    }
+   ]
+  },
+  {
+   "name": "Cloudflare Email Routing",
+   "category": "Mailbox",
+   "tier": "Likely",
+   "role": "sender",
+   "claims": [
+    {
+     "service": "Cloudflare Email Routing",
+     "kind": "DKIM key named for it",
+     "where": "glossier.com",
+     "evidence": {
+      "name": "cf2024-1._domainkey.glossier.com",
+      "rtype": "TXT",
+      "value": "v=DKIM1; h=sha256; k=rsa; p=MIIBIjANBgkq..., 2048-bit, fp 3893fd85802c0281",
+      "checked_at": "2026-10-11T19:47:18+00:00"
+     },
+     "supporting": []
+    }
+   ]
+  },
+  {
+   "name": "Mandrill",
+   "category": "Transactional",
+   "tier": "Likely",
+   "role": "sender",
+   "claims": [
+    {
+     "service": "Mandrill",
+     "kind": "DKIM key named for it",
+     "where": "glossier.com",
+     "evidence": {
+      "name": "mandrill._domainkey.glossier.com",
+      "rtype": "TXT",
+      "value": "v=DKIM1; k=rsa; p=MIGfMA0GCSqG..., 1024-bit, fp 9cee89b6f986543a",
+      "checked_at": "2026-10-11T19:47:18+00:00"
+     },
+     "supporting": []
+    }
+   ]
+  },
+  {
+   "name": "Amazon SES",
+   "category": "Transactional",
+   "tier": "Account only",
+   "role": "sender",
+   "claims": [
+    {
+     "service": "Amazon SES",
+     "kind": "verification token",
+     "where": "glossier.com",
+     "evidence": {
+      "name": "glossier.com",
+      "rtype": "TXT",
+      "value": "amazonses:awBV5EM6W53p2/Xbg80uJ29zurZnGsMMJcLLLp6vUcY=",
+      "checked_at": "2026-10-11T19:47:18+00:00"
+     },
+     "supporting": []
+    }
+   ]
+  },
+  {
+   "name": "Valimail",
+   "category": "DMARC reporting",
+   "tier": null,
+   "role": "reporting",
+   "claims": [
+    {
+     "service": "Valimail",
+     "kind": "receives DMARC reports",
+     "where": "glossier.com",
+     "evidence": {
+      "name": "_dmarc.glossier.com",
+      "rtype": "TXT",
+      "value": "v=DMARC1; p=reject; rua=mailto:dmarc_agg@vali.email",
+      "checked_at": "2026-10-11T19:47:18+00:00"
+     },
+     "supporting": []
+    }
+   ]
+  }
+ ],
+ "run": {
+  "checked_at": "2026-10-11T19:47:18+00:00"
+ },
+ "findings": [
+  {
+   "severity": "warning",
+   "title": "The mandrill key at glossier.com is 1024-bit",
+   "detail": "Some receivers already treat 1024-bit RSA keys as weak. Rotate to 2048-bit.",
+   "evidence": [
+    {
+     "name": "mandrill._domainkey.glossier.com",
+     "rtype": "TXT",
+     "value": "v=DKIM1; k=rsa; p=MIGfMA0GCSqG..., 1024-bit, fp 9cee89b6f986543a",
+     "checked_at": "2026-10-11T19:47:18+00:00"
+    }
+   ]
+  },
+  {
+   "severity": "warning",
+   "title": "The s2 key at glossier.com is 1024-bit",
+   "detail": "Some receivers already treat 1024-bit RSA keys as weak. Rotate to 2048-bit.",
+   "evidence": [
+    {
+     "name": "s2._domainkey.glossier.com",
+     "rtype": "TXT",
+     "value": "k=rsa; t=s (strict); p=MIGfMA0GCSqG..., 1024-bit, fp 493ef754cca287c6 via s2.domainkey.u246655.wl156.sendgrid.net",
+     "checked_at": "2026-10-11T19:47:18+00:00"
+    }
+   ]
+  },
+  {
+   "severity": "note",
+   "title": "SPF at glossier.com is managed through Valimail",
+   "detail": "A hosted or macro record can authorize services without naming them, so the services it covers do not show in the record itself.",
+   "evidence": [
+    {
+     "name": "glossier.com",
+     "rtype": "TXT",
+     "value": "v=spf1 include:%{i}._ip.%{h}._ehlo.%{d}._spf.vali.email ~all",
+     "checked_at": "2026-10-11T19:47:18+00:00"
+    }
+   ]
+  },
+  {
+   "severity": "note",
+   "title": "SPF at receipts.glossier.com is managed through Valimail",
+   "detail": "A hosted or macro record can authorize services without naming them, so the services it covers do not show in the record itself.",
+   "evidence": [
+    {
+     "name": "receipts.glossier.com",
+     "rtype": "TXT",
+     "value": "v=spf1 include:receipts.glossier.com._nspf.vali.email include:%{i}._ip.%{h}._ehlo.%{d}._spf.vali.email ~all",
+     "checked_at": "2026-10-11T19:47:18+00:00"
+    }
+   ]
+  }
+ ],
+ "unknowns": [
+  {
+   "what": "CNAME at mail",
+   "value": "ghs.googlehosted.com",
+   "where": "glossier.com",
+   "evidence": {
+    "name": "mail.glossier.com",
+    "rtype": "CNAME",
+    "value": "ghs.googlehosted.com",
+    "checked_at": "2026-10-11T19:47:18+00:00"
+   }
+  },
+  {
+   "what": "CNAME at go",
+   "value": "cname.short.io",
+   "where": "glossier.com",
+   "evidence": {
+    "name": "go.glossier.com",
+    "rtype": "CNAME",
+    "value": "cname.short.io",
+    "checked_at": "2026-10-11T19:47:18+00:00"
+   }
+  }
+ ],
+ "gaps": [
+  {
+   "asked": "the website",
+   "happened": "not read: web checks were turned off (--no-web)"
+  },
+  {
+   "asked": "published ranges: SPF of HubSpot",
+   "happened": "includes more than 3 levels deep not read (cap)"
+  },
+  {
+   "asked": "published ranges: SPF of Mimecast",
+   "happened": "includes more than 3 levels deep not read (cap)"
+  },
+  {
+   "asked": "DKIM selectors at marketing.glossier.com",
+   "happened": "79 of 106 not asked: only the first 27 and the names its own SPF or MX backs were (cap)"
+  },
+  {
+   "asked": "DKIM selectors at receipts.glossier.com",
+   "happened": "79 of 106 not asked: only the first 27 and the names its own SPF or MX backs were (cap)"
+  },
+  {
+   "asked": "DKIM selectors at send.glossier.com",
+   "happened": "79 of 106 not asked: only the first 27 and the names its own SPF or MX backs were (cap)"
+  }
+ ],
+ "subdomains_checked": [
+  "marketing.glossier.com",
+  "receipts.glossier.com",
+  "send.glossier.com"
+ ],
+ "checked": [
+  {
+   "where": "glossier.com",
+   "dkim_selectors": [
+    "acdkim1",
+    "acdkim2",
+    "ses",
+    "aweber_key_a",
+    "aweber_key_b",
+    "aweber_key_c",
+    "brevo",
+    "brevo1",
+    "brevo2",
+    "cm",
+    "cf2024-1",
+    "ctct1",
+    "ctct2",
+    "krs",
+    "e2ma-k1",
+    "e2ma-k2",
+    "e2ma-k3",
+    "everlytickey1",
+    "everlytickey2",
+    "fm2",
+    "fm1",
+    "fm3",
+    "mesmtp",
+    "secureserver1",
+    "secureserver2",
+    "google",
+    "gapps",
+    "gor",
+    "strong1",
+    "strong2",
+    "hs1",
+    "hs2",
+    "intercom",
+    "s1-ionos",
+    "s42582890",
+    "cka",
+    "kl",
+    "kl1",
+    "kl2",
+    "k2",
+    "k1",
+    "k3",
+    "litesrv",
+    "mg",
+    "mailgun",
+    "mg1",
+    "pdk1",
+    "pdk2",
+    "mailjet",
+    "mailpoet2",
+    "mailpoet1",
+    "mandrill",
+    "mte1",
+    "mte2",
+    "marketo",
+    "mkto",
+    "mkto1",
+    "selector1",
+    "selector2",
+    "mimecast",
+    "mimecast20190719",
+    "pepipost",
+    "pp1",
+    "protonmail",
+    "protonmail2",
+    "protonmail3",
+    "resend",
+    "sailthru",
+    "salesforce",
+    "salesforce2",
+    "salesforce1",
+    "sf",
+    "sf1",
+    "sf2",
+    "sfdc",
+    "200608",
+    "pardot",
+    "sfmc",
+    "s1",
+    "s2",
+    "smtpapi",
+    "scph0819",
+    "sparkpost",
+    "squarespace",
+    "zendesk1",
+    "zendesk2",
+    "zoho",
+    "api",
+    "default",
+    "dk",
+    "dkim",
+    "dkim1",
+    "dkim2",
+    "email",
+    "k",
+    "key",
+    "key1",
+    "key2",
+    "mail",
+    "mta",
+    "mx",
+    "pm",
+    "s",
+    "selector",
+    "smtp",
+    "sp"
+   ],
+   "labels": [
+    "bounce",
+    "bounces",
+    "em",
+    "email",
+    "mail",
+    "send",
+    "mta",
+    "rp",
+    "pm-bounces",
+    "links",
+    "link",
+    "click",
+    "track",
+    "tracking",
+    "url",
+    "go",
+    "autodiscover",
+    "cf-bounce",
+    "eversrv",
+    "fwdkim1",
+    "bnc3",
+    "bounces.cloud.em",
+    "bounces.cloud2.em"
+   ],
+   "pages": [],
+   "denial": "classic"
+  },
+  {
+   "where": "marketing.glossier.com",
+   "dkim_selectors": [
+    "s1",
+    "s2",
+    "smtpapi",
+    "acdkim1",
+    "acdkim2",
+    "ses",
+    "aweber_key_a",
+    "aweber_key_b",
+    "aweber_key_c",
+    "brevo",
+    "brevo1",
+    "brevo2",
+    "cm",
+    "cf2024-1",
+    "ctct1",
+    "ctct2",
+    "krs",
+    "e2ma-k1",
+    "e2ma-k2",
+    "e2ma-k3",
+    "everlytickey1",
+    "everlytickey2",
+    "fm2",
+    "fm1",
+    "fm3",
+    "mesmtp",
+    "secureserver1"
+   ],
+   "labels": [],
+   "pages": [],
+   "denial": "none by rcode"
+  },
+  {
+   "where": "receipts.glossier.com",
+   "dkim_selectors": [
+    "acdkim1",
+    "acdkim2",
+    "ses",
+    "aweber_key_a",
+    "aweber_key_b",
+    "aweber_key_c",
+    "brevo",
+    "brevo1",
+    "brevo2",
+    "cm",
+    "cf2024-1",
+    "ctct1",
+    "ctct2",
+    "krs",
+    "e2ma-k1",
+    "e2ma-k2",
+    "e2ma-k3",
+    "everlytickey1",
+    "everlytickey2",
+    "fm2",
+    "fm1",
+    "fm3",
+    "mesmtp",
+    "secureserver1",
+    "secureserver2",
+    "google",
+    "gapps"
+   ],
+   "labels": [],
+   "pages": [],
+   "denial": "none by rcode"
+  },
+  {
+   "where": "send.glossier.com",
+   "dkim_selectors": [
+    "s1",
+    "s2",
+    "smtpapi",
+    "acdkim1",
+    "acdkim2",
+    "ses",
+    "aweber_key_a",
+    "aweber_key_b",
+    "aweber_key_c",
+    "brevo",
+    "brevo1",
+    "brevo2",
+    "cm",
+    "cf2024-1",
+    "ctct1",
+    "ctct2",
+    "krs",
+    "e2ma-k1",
+    "e2ma-k2",
+    "e2ma-k3",
+    "everlytickey1",
+    "everlytickey2",
+    "fm2",
+    "fm1",
+    "fm3",
+    "mesmtp",
+    "secureserver1"
+   ],
+   "labels": [],
+   "pages": [],
+   "denial": "none by rcode"
+  }
+ ],
+ "ct": {
+  "status": "off",
+  "logged": 0,
+  "resolved": 0,
+  "gone_unnamed": 0
+ },
+ "historical": [],
+ "logo": null,
+ "schema": "sendermap/1",
+ "absences": []
+}

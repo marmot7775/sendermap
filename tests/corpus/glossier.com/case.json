@@ -1,0 +1,7 @@
+{
+ "domain": "glossier.com",
+ "checked_at": "2026-10-11T19:47:18+00:00",
+ "use_web": false,
+ "use_subdomains": true,
+ "use_ct": false
+}

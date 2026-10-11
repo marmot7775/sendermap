@@ -1,0 +1,981 @@
+{
+ "domain": "mills-reeve.com",
+ "services": [
+  {
+   "name": "Mimecast",
+   "category": "Security gateway",
+   "tier": "In use",
+   "role": "sender",
+   "claims": [
+    {
+     "service": "Mimecast",
+     "kind": "receives the domain's mail (MX)",
+     "where": "mills-reeve.com",
+     "evidence": {
+      "name": "mills-reeve.com",
+      "rtype": "MX",
+      "value": "10 eu-smtp-inbound-2.mimecast.com",
+      "checked_at": "2026-10-11T19:47:09+00:00"
+     },
+     "supporting": []
+    },
+    {
+     "service": "Mimecast",
+     "kind": "receives the domain's mail (MX)",
+     "where": "mills-reeve.com",
+     "evidence": {
+      "name": "mills-reeve.com",
+      "rtype": "MX",
+      "value": "10 eu-smtp-inbound-1.mimecast.com",
+      "checked_at": "2026-10-11T19:47:09+00:00"
+     },
+     "supporting": []
+    },
+    {
+     "service": "Mimecast",
+     "kind": "included in SPF",
+     "where": "mills-reeve.com",
+     "evidence": {
+      "name": "mills-reeve.com",
+      "rtype": "TXT",
+      "value": "include:eu._netblocks.mimecast.com",
+      "checked_at": "2026-10-11T19:47:09+00:00"
+     },
+     "supporting": []
+    },
+    {
+     "service": "Mimecast",
+     "kind": "included in SPF",
+     "where": "update.mills-reeve.com",
+     "evidence": {
+      "name": "update.mills-reeve.com",
+      "rtype": "TXT",
+      "value": "include:_netblocks.mimecast.com",
+      "checked_at": "2026-10-11T19:47:09+00:00"
+     },
+     "supporting": []
+    }
+   ]
+  },
+  {
+   "name": "Freshdesk",
+   "category": "Support and CRM",
+   "tier": "Configured",
+   "role": "sender",
+   "claims": [
+    {
+     "service": "Freshdesk",
+     "kind": "owns a network listed in SPF",
+     "where": "mills-reeve.com",
+     "evidence": {
+      "name": "fsspfeuc.freshemail.io",
+      "rtype": "TXT",
+      "value": "ip4:3.120.181.200/29",
+      "checked_at": "2026-10-11T19:47:09+00:00"
+     },
+     "supporting": [
+      {
+       "name": "fdspfeuc.freshemail.io",
+       "rtype": "TXT",
+       "value": "ip4:3.120.181.192/28",
+       "checked_at": "2026-10-11T19:47:09+00:00"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "name": "Microsoft 365",
+   "category": "Mailbox",
+   "tier": "Configured",
+   "role": "sender",
+   "claims": [
+    {
+     "service": "Microsoft 365",
+     "kind": "included in SPF",
+     "where": "mills-reeve.com",
+     "evidence": {
+      "name": "mills-reeve.com",
+      "rtype": "TXT",
+      "value": "include:spf.protection.outlook.com",
+      "checked_at": "2026-10-11T19:47:09+00:00"
+     },
+     "supporting": []
+    },
+    {
+     "service": "Microsoft 365",
+     "kind": "verification token",
+     "where": "mills-reeve.com",
+     "evidence": {
+      "name": "mills-reeve.com",
+      "rtype": "TXT",
+      "value": "MS=ms75548982",
+      "checked_at": "2026-10-11T19:47:09+00:00"
+     },
+     "supporting": []
+    },
+    {
+     "service": "Microsoft 365",
+     "kind": "autodiscover CNAME",
+     "where": "mills-reeve.com",
+     "evidence": {
+      "name": "autodiscover.mills-reeve.com",
+      "rtype": "CNAME",
+      "value": "autodiscover.outlook.com",
+      "checked_at": "2026-10-11T19:47:09+00:00"
+     },
+     "supporting": []
+    }
+   ]
+  },
+  {
+   "name": "SendGrid",
+   "category": "Transactional",
+   "tier": "Configured",
+   "role": "sender",
+   "claims": [
+    {
+     "service": "SendGrid",
+     "kind": "hosts a DKIM key (CNAME)",
+     "where": "mills-reeve.com",
+     "evidence": {
+      "name": "s1._domainkey.mills-reeve.com",
+      "rtype": "TXT",
+      "value": "k=rsa; t=s (strict); p=MIIBIjANBgkq..., 2048-bit, fp ae8406c18072b4fc via s1.domainkey.u10198980.wl231.sendgrid.net",
+      "checked_at": "2026-10-11T19:47:09+00:00"
+     },
+     "supporting": []
+    },
+    {
+     "service": "SendGrid",
+     "kind": "hosts a DKIM key (CNAME)",
+     "where": "mills-reeve.com",
+     "evidence": {
+      "name": "s2._domainkey.mills-reeve.com",
+      "rtype": "TXT",
+      "value": "k=rsa; t=s (strict); p=MIGfMA0GCSqG..., 1024-bit, fp 1d0c1f3114d84753 via s2.domainkey.u10198980.wl231.sendgrid.net",
+      "checked_at": "2026-10-11T19:47:09+00:00"
+     },
+     "supporting": []
+    }
+   ]
+  },
+  {
+   "name": "Mimecast DMARC Analyzer",
+   "category": "DMARC reporting",
+   "tier": null,
+   "role": "reporting",
+   "claims": [
+    {
+     "service": "Mimecast DMARC Analyzer",
+     "kind": "receives DMARC reports",
+     "where": "mills-reeve.com",
+     "evidence": {
+      "name": "_dmarc.mills-reeve.com",
+      "rtype": "TXT",
+      "value": "v=DMARC1; p=reject; rua=mailto:dbaf5ee8973e712@rep.dmarcanalyzer.com; ruf=mailto:dbaf5ee8973e712@for.dmarcanalyzer.com; fo=1;",
+      "checked_at": "2026-10-11T19:47:09+00:00"
+     },
+     "supporting": []
+    }
+   ]
+  }
+ ],
+ "run": {
+  "checked_at": "2026-10-11T19:47:09+00:00"
+ },
+ "findings": [
+  {
+   "severity": "warning",
+   "title": "The s2 key at mills-reeve.com is 1024-bit",
+   "detail": "Some receivers already treat 1024-bit RSA keys as weak. Rotate to 2048-bit.",
+   "evidence": [
+    {
+     "name": "s2._domainkey.mills-reeve.com",
+     "rtype": "TXT",
+     "value": "k=rsa; t=s (strict); p=MIGfMA0GCSqG..., 1024-bit, fp 1d0c1f3114d84753 via s2.domainkey.u10198980.wl231.sendgrid.net",
+     "checked_at": "2026-10-11T19:47:09+00:00"
+    }
+   ]
+  },
+  {
+   "severity": "note",
+   "title": "MX at mills-reeve.com points at Mimecast, a security gateway",
+   "detail": "Inferred from the MX records: a security gateway filters incoming mail and hands it on to the server that holds the mailboxes, and MX records do not say which server that is.",
+   "evidence": [
+    {
+     "name": "mills-reeve.com",
+     "rtype": "MX",
+     "value": "10 eu-smtp-inbound-2.mimecast.com",
+     "checked_at": "2026-10-11T19:47:09+00:00"
+    },
+    {
+     "name": "mills-reeve.com",
+     "rtype": "MX",
+     "value": "10 eu-smtp-inbound-1.mimecast.com",
+     "checked_at": "2026-10-11T19:47:09+00:00"
+    }
+   ]
+  }
+ ],
+ "unknowns": [
+  {
+   "what": "SPF include",
+   "value": "emaileuc.freshservice.com",
+   "where": "mills-reeve.com",
+   "evidence": {
+    "name": "mills-reeve.com",
+    "rtype": "TXT",
+    "value": "include:emaileuc.freshservice.com",
+    "checked_at": "2026-10-11T19:47:09+00:00"
+   }
+  },
+  {
+   "what": "SPF include",
+   "value": "fsspfeuc.freshemail.io",
+   "where": "mills-reeve.com",
+   "evidence": {
+    "name": "emaileuc.freshservice.com",
+    "rtype": "TXT",
+    "value": "include:fsspfeuc.freshemail.io",
+    "checked_at": "2026-10-11T19:47:09+00:00"
+   }
+  },
+  {
+   "what": "SPF include",
+   "value": "spf-uk.vx-email.com",
+   "where": "mills-reeve.com",
+   "evidence": {
+    "name": "mills-reeve.com",
+    "rtype": "TXT",
+    "value": "include:spf-uk.vx-email.com",
+    "checked_at": "2026-10-11T19:47:09+00:00"
+   }
+  },
+  {
+   "what": "SPF include",
+   "value": "docebosaas.com",
+   "where": "mills-reeve.com",
+   "evidence": {
+    "name": "mills-reeve.com",
+    "rtype": "TXT",
+    "value": "include:docebosaas.com",
+    "checked_at": "2026-10-11T19:47:09+00:00"
+   }
+  },
+  {
+   "what": "IP address in SPF",
+   "value": "51.145.78.124 (AS8075, Microsoft)",
+   "where": "mills-reeve.com",
+   "evidence": {
+    "name": "mills-reeve.com",
+    "rtype": "TXT",
+    "value": "ip4:51.145.78.124",
+    "checked_at": "2026-10-11T19:47:09+00:00"
+   }
+  },
+  {
+   "what": "IP range in SPF",
+   "value": "35.159.219.224/28 (AS16509, Amazon Web Services)",
+   "where": "mills-reeve.com",
+   "evidence": {
+    "name": "fsspfeuc.freshemail.io",
+    "rtype": "TXT",
+    "value": "ip4:35.159.219.224/28",
+    "checked_at": "2026-10-11T19:47:09+00:00"
+   }
+  },
+  {
+   "what": "IP range in SPF",
+   "value": "18.199.180.160/27 (AS16509, Amazon Web Services)",
+   "where": "mills-reeve.com",
+   "evidence": {
+    "name": "fsspfeuc.freshemail.io",
+    "rtype": "TXT",
+    "value": "ip4:18.199.180.160/27",
+    "checked_at": "2026-10-11T19:47:09+00:00"
+   }
+  },
+  {
+   "what": "IP range in SPF",
+   "value": "193.5.144.0/24 (AS14618, Amazon Web Services)",
+   "where": "mills-reeve.com",
+   "evidence": {
+    "name": "spf-uk.vx-email.com",
+    "rtype": "TXT",
+    "value": "ip4:193.5.144.0/24",
+    "checked_at": "2026-10-11T19:47:09+00:00"
+   }
+  },
+  {
+   "what": "IP address in SPF",
+   "value": "107.20.91.250 (AS16509, Amazon Web Services)",
+   "where": "mills-reeve.com",
+   "evidence": {
+    "name": "docebosaas.com",
+    "rtype": "TXT",
+    "value": "ip4:107.20.91.250",
+    "checked_at": "2026-10-11T19:47:09+00:00"
+   }
+  },
+  {
+   "what": "IP address in SPF",
+   "value": "3.209.231.65 (AS16509, Amazon Web Services)",
+   "where": "mills-reeve.com",
+   "evidence": {
+    "name": "docebosaas.com",
+    "rtype": "TXT",
+    "value": "ip4:3.209.231.65",
+    "checked_at": "2026-10-11T19:47:09+00:00"
+   }
+  },
+  {
+   "what": "IP address in SPF",
+   "value": "3.96.249.213 (AS16509, Amazon Web Services)",
+   "where": "mills-reeve.com",
+   "evidence": {
+    "name": "docebosaas.com",
+    "rtype": "TXT",
+    "value": "ip4:3.96.249.213",
+    "checked_at": "2026-10-11T19:47:09+00:00"
+   }
+  },
+  {
+   "what": "IP address in SPF",
+   "value": "34.242.156.53 (AS16509, Amazon Web Services)",
+   "where": "mills-reeve.com",
+   "evidence": {
+    "name": "docebosaas.com",
+    "rtype": "TXT",
+    "value": "ip4:34.242.156.53",
+    "checked_at": "2026-10-11T19:47:09+00:00"
+   }
+  },
+  {
+   "what": "IP address in SPF",
+   "value": "34.251.63.7 (AS16509, Amazon Web Services)",
+   "where": "mills-reeve.com",
+   "evidence": {
+    "name": "docebosaas.com",
+    "rtype": "TXT",
+    "value": "ip4:34.251.63.7",
+    "checked_at": "2026-10-11T19:47:09+00:00"
+   }
+  },
+  {
+   "what": "IP address in SPF",
+   "value": "52.64.32.126 (AS16509, Amazon Web Services)",
+   "where": "mills-reeve.com",
+   "evidence": {
+    "name": "docebosaas.com",
+    "rtype": "TXT",
+    "value": "ip4:52.64.32.126",
+    "checked_at": "2026-10-11T19:47:09+00:00"
+   }
+  },
+  {
+   "what": "IP address in SPF",
+   "value": "52.4.156.8 (AS14618, Amazon Web Services)",
+   "where": "mills-reeve.com",
+   "evidence": {
+    "name": "docebosaas.com",
+    "rtype": "TXT",
+    "value": "ip4:52.4.156.8",
+    "checked_at": "2026-10-11T19:47:09+00:00"
+   }
+  },
+  {
+   "what": "IP address in SPF",
+   "value": "13.202.86.121 (AS16509, Amazon Web Services)",
+   "where": "mills-reeve.com",
+   "evidence": {
+    "name": "docebosaas.com",
+    "rtype": "TXT",
+    "value": "ip4:13.202.86.121",
+    "checked_at": "2026-10-11T19:47:09+00:00"
+   }
+  },
+  {
+   "what": "IP address in SPF",
+   "value": "13.210.149.194 (AS16509, Amazon Web Services)",
+   "where": "mills-reeve.com",
+   "evidence": {
+    "name": "docebosaas.com",
+    "rtype": "TXT",
+    "value": "ip4:13.210.149.194",
+    "checked_at": "2026-10-11T19:47:09+00:00"
+   }
+  },
+  {
+   "what": "IP address in SPF",
+   "value": "13.210.30.79 (AS16509, Amazon Web Services)",
+   "where": "mills-reeve.com",
+   "evidence": {
+    "name": "docebosaas.com",
+    "rtype": "TXT",
+    "value": "ip4:13.210.30.79",
+    "checked_at": "2026-10-11T19:47:09+00:00"
+   }
+  },
+  {
+   "what": "IP address in SPF",
+   "value": "15.156.36.228 (AS16509, Amazon Web Services)",
+   "where": "mills-reeve.com",
+   "evidence": {
+    "name": "docebosaas.com",
+    "rtype": "TXT",
+    "value": "ip4:15.156.36.228",
+    "checked_at": "2026-10-11T19:47:09+00:00"
+   }
+  },
+  {
+   "what": "IP address in SPF",
+   "value": "15.156.98.116 (AS16509, Amazon Web Services)",
+   "where": "mills-reeve.com",
+   "evidence": {
+    "name": "docebosaas.com",
+    "rtype": "TXT",
+    "value": "ip4:15.156.98.116",
+    "checked_at": "2026-10-11T19:47:09+00:00"
+   }
+  },
+  {
+   "what": "IP address in SPF",
+   "value": "15.157.101.221 (AS16509, Amazon Web Services)",
+   "where": "mills-reeve.com",
+   "evidence": {
+    "name": "docebosaas.com",
+    "rtype": "TXT",
+    "value": "ip4:15.157.101.221",
+    "checked_at": "2026-10-11T19:47:09+00:00"
+   }
+  },
+  {
+   "what": "IP address in SPF",
+   "value": "18.132.189.127 (AS16509, Amazon Web Services)",
+   "where": "mills-reeve.com",
+   "evidence": {
+    "name": "docebosaas.com",
+    "rtype": "TXT",
+    "value": "ip4:18.132.189.127",
+    "checked_at": "2026-10-11T19:47:09+00:00"
+   }
+  },
+  {
+   "what": "IP address in SPF",
+   "value": "18.197.43.76 (AS16509, Amazon Web Services)",
+   "where": "mills-reeve.com",
+   "evidence": {
+    "name": "docebosaas.com",
+    "rtype": "TXT",
+    "value": "ip4:18.197.43.76",
+    "checked_at": "2026-10-11T19:47:09+00:00"
+   }
+  },
+  {
+   "what": "IP address in SPF",
+   "value": "18.233.38.249 (AS14618, Amazon Web Services)",
+   "where": "mills-reeve.com",
+   "evidence": {
+    "name": "docebosaas.com",
+    "rtype": "TXT",
+    "value": "ip4:18.233.38.249",
+    "checked_at": "2026-10-11T19:47:09+00:00"
+   }
+  },
+  {
+   "what": "IP address in SPF",
+   "value": "3.105.157.127 (AS16509, Amazon Web Services)",
+   "where": "mills-reeve.com",
+   "evidence": {
+    "name": "docebosaas.com",
+    "rtype": "TXT",
+    "value": "ip4:3.105.157.127",
+    "checked_at": "2026-10-11T19:47:09+00:00"
+   }
+  },
+  {
+   "what": "IP address in SPF",
+   "value": "3.105.27.226 (AS16509, Amazon Web Services)",
+   "where": "mills-reeve.com",
+   "evidence": {
+    "name": "docebosaas.com",
+    "rtype": "TXT",
+    "value": "ip4:3.105.27.226",
+    "checked_at": "2026-10-11T19:47:09+00:00"
+   }
+  },
+  {
+   "what": "IP address in SPF",
+   "value": "3.107.216.134 (AS16509, Amazon Web Services)",
+   "where": "mills-reeve.com",
+   "evidence": {
+    "name": "docebosaas.com",
+    "rtype": "TXT",
+    "value": "ip4:3.107.216.134",
+    "checked_at": "2026-10-11T19:47:09+00:00"
+   }
+  },
+  {
+   "what": "IP address in SPF",
+   "value": "3.11.129.102 (AS16509, Amazon Web Services)",
+   "where": "mills-reeve.com",
+   "evidence": {
+    "name": "docebosaas.com",
+    "rtype": "TXT",
+    "value": "ip4:3.11.129.102",
+    "checked_at": "2026-10-11T19:47:09+00:00"
+   }
+  },
+  {
+   "what": "SPF include",
+   "value": "spf-uk.vx-email.com",
+   "where": "update.mills-reeve.com",
+   "evidence": {
+    "name": "update.mills-reeve.com",
+    "rtype": "TXT",
+    "value": "include:spf-uk.vx-email.com",
+    "checked_at": "2026-10-11T19:47:09+00:00"
+   }
+  },
+  {
+   "what": "mail server",
+   "value": "mx02.mail.vx-email.com",
+   "where": "update.mills-reeve.com",
+   "evidence": {
+    "name": "update.mills-reeve.com",
+    "rtype": "MX",
+    "value": "20 mx02.mail.vx-email.com",
+    "checked_at": "2026-10-11T19:47:09+00:00"
+   }
+  },
+  {
+   "what": "mail server",
+   "value": "mx01.mail.vx-email.com",
+   "where": "update.mills-reeve.com",
+   "evidence": {
+    "name": "update.mills-reeve.com",
+    "rtype": "MX",
+    "value": "10 mx01.mail.vx-email.com",
+    "checked_at": "2026-10-11T19:47:09+00:00"
+   }
+  },
+  {
+   "what": "IP range in SPF",
+   "value": "193.5.144.0/24 (AS14618, Amazon Web Services)",
+   "where": "update.mills-reeve.com",
+   "evidence": {
+    "name": "spf-uk.vx-email.com",
+    "rtype": "TXT",
+    "value": "ip4:193.5.144.0/24",
+    "checked_at": "2026-10-11T19:47:09+00:00"
+   }
+  },
+  {
+   "what": "SPF include",
+   "value": "cecollect.com",
+   "where": "updates.mills-reeve.com",
+   "evidence": {
+    "name": "updates.mills-reeve.com",
+    "rtype": "TXT",
+    "value": "include:cecollect.com",
+    "checked_at": "2026-10-11T19:47:09+00:00"
+   }
+  },
+  {
+   "what": "mail server",
+   "value": "mail.cecollect.com",
+   "where": "updates.mills-reeve.com",
+   "evidence": {
+    "name": "updates.mills-reeve.com",
+    "rtype": "MX",
+    "value": "10 mail.cecollect.com",
+    "checked_at": "2026-10-11T19:47:09+00:00"
+   }
+  },
+  {
+   "what": "IP address in SPF",
+   "value": "62.73.189.146 (AS2914, NTT-DATA-2914 - NTT America, Inc., US)",
+   "where": "updates.mills-reeve.com",
+   "evidence": {
+    "name": "cecollect.com",
+    "rtype": "TXT",
+    "value": "ip4:62.73.189.146",
+    "checked_at": "2026-10-11T19:47:09+00:00"
+   }
+  },
+  {
+   "what": "IP range in SPF",
+   "value": "83.231.138.176/28 (AS2914, NTT-DATA-2914 - NTT America, Inc., US)",
+   "where": "updates.mills-reeve.com",
+   "evidence": {
+    "name": "cecollect.com",
+    "rtype": "TXT",
+    "value": "ip4:83.231.138.176/28",
+    "checked_at": "2026-10-11T19:47:09+00:00"
+   }
+  },
+  {
+   "what": "IP address in SPF",
+   "value": "62.73.162.65 (AS2914, NTT-DATA-2914 - NTT America, Inc., US)",
+   "where": "updates.mills-reeve.com",
+   "evidence": {
+    "name": "cecollect.com",
+    "rtype": "TXT",
+    "value": "ip4:62.73.162.65",
+    "checked_at": "2026-10-11T19:47:09+00:00"
+   }
+  },
+  {
+   "what": "IP address in SPF",
+   "value": "62.73.162.66 (AS2914, NTT-DATA-2914 - NTT America, Inc., US)",
+   "where": "updates.mills-reeve.com",
+   "evidence": {
+    "name": "cecollect.com",
+    "rtype": "TXT",
+    "value": "ip4:62.73.162.66",
+    "checked_at": "2026-10-11T19:47:09+00:00"
+   }
+  },
+  {
+   "what": "IP address in SPF",
+   "value": "62.73.162.67 (AS2914, NTT-DATA-2914 - NTT America, Inc., US)",
+   "where": "updates.mills-reeve.com",
+   "evidence": {
+    "name": "cecollect.com",
+    "rtype": "TXT",
+    "value": "ip4:62.73.162.67",
+    "checked_at": "2026-10-11T19:47:09+00:00"
+   }
+  },
+  {
+   "what": "IP address in SPF",
+   "value": "62.73.162.68 (AS2914, NTT-DATA-2914 - NTT America, Inc., US)",
+   "where": "updates.mills-reeve.com",
+   "evidence": {
+    "name": "cecollect.com",
+    "rtype": "TXT",
+    "value": "ip4:62.73.162.68",
+    "checked_at": "2026-10-11T19:47:09+00:00"
+   }
+  },
+  {
+   "what": "IP address in SPF",
+   "value": "62.73.162.69 (AS2914, NTT-DATA-2914 - NTT America, Inc., US)",
+   "where": "updates.mills-reeve.com",
+   "evidence": {
+    "name": "cecollect.com",
+    "rtype": "TXT",
+    "value": "ip4:62.73.162.69",
+    "checked_at": "2026-10-11T19:47:09+00:00"
+   }
+  },
+  {
+   "what": "IP address in SPF",
+   "value": "62.73.162.70 (AS2914, NTT-DATA-2914 - NTT America, Inc., US)",
+   "where": "updates.mills-reeve.com",
+   "evidence": {
+    "name": "cecollect.com",
+    "rtype": "TXT",
+    "value": "ip4:62.73.162.70",
+    "checked_at": "2026-10-11T19:47:09+00:00"
+   }
+  },
+  {
+   "what": "IP address in SPF",
+   "value": "62.73.162.71 (AS2914, NTT-DATA-2914 - NTT America, Inc., US)",
+   "where": "updates.mills-reeve.com",
+   "evidence": {
+    "name": "cecollect.com",
+    "rtype": "TXT",
+    "value": "ip4:62.73.162.71",
+    "checked_at": "2026-10-11T19:47:09+00:00"
+   }
+  },
+  {
+   "what": "IP address in SPF",
+   "value": "62.73.162.72 (AS2914, NTT-DATA-2914 - NTT America, Inc., US)",
+   "where": "updates.mills-reeve.com",
+   "evidence": {
+    "name": "cecollect.com",
+    "rtype": "TXT",
+    "value": "ip4:62.73.162.72",
+    "checked_at": "2026-10-11T19:47:09+00:00"
+   }
+  },
+  {
+   "what": "IP address in SPF",
+   "value": "62.73.162.73 (AS2914, NTT-DATA-2914 - NTT America, Inc., US)",
+   "where": "updates.mills-reeve.com",
+   "evidence": {
+    "name": "cecollect.com",
+    "rtype": "TXT",
+    "value": "ip4:62.73.162.73",
+    "checked_at": "2026-10-11T19:47:09+00:00"
+   }
+  },
+  {
+   "what": "IP address in SPF",
+   "value": "62.73.162.74 (AS2914, NTT-DATA-2914 - NTT America, Inc., US)",
+   "where": "updates.mills-reeve.com",
+   "evidence": {
+    "name": "cecollect.com",
+    "rtype": "TXT",
+    "value": "ip4:62.73.162.74",
+    "checked_at": "2026-10-11T19:47:09+00:00"
+   }
+  }
+ ],
+ "gaps": [
+  {
+   "asked": "the website",
+   "happened": "not read: web checks were turned off (--no-web)"
+  },
+  {
+   "asked": "published ranges: SPF of HubSpot",
+   "happened": "includes more than 3 levels deep not read (cap)"
+  },
+  {
+   "asked": "published ranges: SPF of Mimecast",
+   "happened": "includes more than 3 levels deep not read (cap)"
+  },
+  {
+   "asked": "network owners of the IP ranges in SPF at mills-reeve.com",
+   "happened": "25 of 49 not looked up: only the first 24 were (cap)"
+  },
+  {
+   "asked": "DKIM selectors at update.mills-reeve.com",
+   "happened": "77 of 106 not asked: only the first 27 and the names its own SPF or MX backs were (cap)"
+  },
+  {
+   "asked": "DKIM selectors at updates.mills-reeve.com",
+   "happened": "79 of 106 not asked: only the first 27 and the names its own SPF or MX backs were (cap)"
+  }
+ ],
+ "subdomains_checked": [
+  "update.mills-reeve.com",
+  "updates.mills-reeve.com"
+ ],
+ "checked": [
+  {
+   "where": "mills-reeve.com",
+   "dkim_selectors": [
+    "selector1",
+    "selector2",
+    "acdkim1",
+    "acdkim2",
+    "ses",
+    "aweber_key_a",
+    "aweber_key_b",
+    "aweber_key_c",
+    "brevo",
+    "brevo1",
+    "brevo2",
+    "cm",
+    "cf2024-1",
+    "ctct1",
+    "ctct2",
+    "krs",
+    "e2ma-k1",
+    "e2ma-k2",
+    "e2ma-k3",
+    "everlytickey1",
+    "everlytickey2",
+    "fm2",
+    "fm1",
+    "fm3",
+    "mesmtp",
+    "secureserver1",
+    "secureserver2",
+    "google",
+    "gapps",
+    "gor",
+    "strong1",
+    "strong2",
+    "hs1",
+    "hs2",
+    "intercom",
+    "s1-ionos",
+    "s42582890",
+    "cka",
+    "kl",
+    "kl1",
+    "kl2",
+    "k2",
+    "k1",
+    "k3",
+    "litesrv",
+    "mg",
+    "mailgun",
+    "mg1",
+    "pdk1",
+    "pdk2",
+    "mailjet",
+    "mailpoet2",
+    "mailpoet1",
+    "mandrill",
+    "mte1",
+    "mte2",
+    "marketo",
+    "mkto",
+    "mkto1",
+    "mimecast",
+    "mimecast20190719",
+    "pepipost",
+    "pp1",
+    "protonmail",
+    "protonmail2",
+    "protonmail3",
+    "resend",
+    "sailthru",
+    "salesforce",
+    "salesforce2",
+    "salesforce1",
+    "sf",
+    "sf1",
+    "sf2",
+    "sfdc",
+    "200608",
+    "pardot",
+    "sfmc",
+    "s1",
+    "s2",
+    "smtpapi",
+    "scph0819",
+    "sparkpost",
+    "squarespace",
+    "zendesk1",
+    "zendesk2",
+    "zoho",
+    "api",
+    "default",
+    "dk",
+    "dkim",
+    "dkim1",
+    "dkim2",
+    "email",
+    "k",
+    "key",
+    "key1",
+    "key2",
+    "mail",
+    "mta",
+    "mx",
+    "pm",
+    "s",
+    "selector",
+    "smtp",
+    "sp"
+   ],
+   "labels": [
+    "bounce",
+    "bounces",
+    "em",
+    "email",
+    "mail",
+    "send",
+    "mta",
+    "rp",
+    "pm-bounces",
+    "links",
+    "link",
+    "click",
+    "track",
+    "tracking",
+    "url",
+    "go",
+    "autodiscover",
+    "cf-bounce",
+    "eversrv",
+    "fwdkim1",
+    "bnc3",
+    "bounces.cloud.em",
+    "bounces.cloud2.em"
+   ],
+   "pages": [],
+   "denial": "none by rcode"
+  },
+  {
+   "where": "update.mills-reeve.com",
+   "dkim_selectors": [
+    "acdkim1",
+    "acdkim2",
+    "ses",
+    "aweber_key_a",
+    "aweber_key_b",
+    "aweber_key_c",
+    "brevo",
+    "brevo1",
+    "brevo2",
+    "cm",
+    "cf2024-1",
+    "ctct1",
+    "ctct2",
+    "krs",
+    "e2ma-k1",
+    "e2ma-k2",
+    "e2ma-k3",
+    "everlytickey1",
+    "everlytickey2",
+    "fm2",
+    "fm1",
+    "fm3",
+    "mesmtp",
+    "secureserver1",
+    "secureserver2",
+    "google",
+    "gapps",
+    "mimecast",
+    "mimecast20190719"
+   ],
+   "labels": [],
+   "pages": [],
+   "denial": "none by rcode"
+  },
+  {
+   "where": "updates.mills-reeve.com",
+   "dkim_selectors": [
+    "acdkim1",
+    "acdkim2",
+    "ses",
+    "aweber_key_a",
+    "aweber_key_b",
+    "aweber_key_c",
+    "brevo",
+    "brevo1",
+    "brevo2",
+    "cm",
+    "cf2024-1",
+    "ctct1",
+    "ctct2",
+    "krs",
+    "e2ma-k1",
+    "e2ma-k2",
+    "e2ma-k3",
+    "everlytickey1",
+    "everlytickey2",
+    "fm2",
+    "fm1",
+    "fm3",
+    "mesmtp",
+    "secureserver1",
+    "secureserver2",
+    "google",
+    "gapps"
+   ],
+   "labels": [],
+   "pages": [],
+   "denial": "none by rcode"
+  }
+ ],
+ "ct": {
+  "status": "off",
+  "logged": 0,
+  "resolved": 0,
+  "gone_unnamed": 0
+ },
+ "historical": [],
+ "logo": null,
+ "schema": "sendermap/1",
+ "absences": []
+}
