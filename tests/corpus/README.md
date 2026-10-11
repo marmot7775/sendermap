@@ -11,12 +11,14 @@ The rule: every bug found on a live domain becomes a case here. Record it with
 `python tools/record_corpus.py <domain>` (add `--web` to read the homepage), fix the code, run
 `python tools/record_corpus.py --update`, and review the diff to `expected.json`.
 
-Recorded 2026-10-11, with `--ct` off and the website off except for example.com:
+Recorded 2026-10-11 through Google's DNS over HTTPS (`--doh google`), with `--ct` off and the
+website off except for example.com:
 
 - `allbirds.com`: SPF flattened through EasyDMARC, SendGrid's ranges named by the network that
   announces them, and sending subdomains.
 - `mills-reeve.com`: Microsoft 365 behind a Mimecast security gateway in MX.
-- `casper.com`: Google Workspace with Campaign Monitor and other marketing platforms.
+- `casper.com`: Google Workspace with Campaign Monitor and other marketing platforms, and
+  `mail.casper.com` delegated by NS to Salesforce Marketing Cloud.
 - `glossier.com`: SPF hosted through a Valimail macro include, the only term in the record.
 - `example.com`: no mail footprint (a null MX, SPF `-all`, a revoked wildcard DKIM key), with its
   homepage recorded.

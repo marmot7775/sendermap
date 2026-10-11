@@ -13,7 +13,7 @@ import httpx
 from rich.console import Console
 
 from . import __version__
-from .dns import DohResolver, Resolver, SystemResolver
+from .dns import DohResolver, Resolver, SystemResolver, doh_client
 from .engine import map_domain
 from .reconcile import names, split
 from .render import markdown, text
@@ -38,8 +38,8 @@ def main(argv: list[str] | None = None) -> int:
 
 async def _run(args: argparse.Namespace) -> int:
     console = Console(stderr=True)
-    async with httpx.AsyncClient() as http:
-        resolver: Resolver = DohResolver(http) if args.doh else SystemResolver()
+    async with httpx.AsyncClient() as http, doh_client() as dns_http:
+        resolver: Resolver = DohResolver(dns_http) if args.doh else SystemResolver()
         with console.status(f"Mapping {args.domain}...", spinner="dots") as status:
 
             async def progress(step: str) -> None:

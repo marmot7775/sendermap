@@ -149,7 +149,8 @@ def _nx_chain(error: dns.resolver.NXDOMAIN, name: str) -> tuple[str, ...]:
 
 
 class DohResolver:
-    """Cloudflare's or Google's JSON API, for machines whose resolver cannot be trusted."""
+    """Cloudflare's or Google's JSON API, for machines whose resolver cannot be trusted. Give it
+    its own client from `doh_client`."""
 
     CLOUDFLARE = "https://cloudflare-dns.com/dns-query"
     GOOGLE = "https://dns.google/resolve"
@@ -171,6 +172,14 @@ class DohResolver:
         except (httpx.HTTPError, json.JSONDecodeError):
             return Answer(name, rtype, Status.FAILED)
         return parse_doh(name, rtype, body)
+
+
+def doh_client() -> httpx.AsyncClient:
+    """A client for DohResolver alone: a map asks hundreds of questions in a burst, and through
+    one endpoint at httpx's defaults (a 5 second timeout, connections without limit) about a
+    third of them time out and read as lookup failed. Eight connections and 30 seconds answer
+    them all."""
+    return httpx.AsyncClient(timeout=30, limits=httpx.Limits(max_connections=8))
 
 
 _DOH_TYPES = {"A": 1, "CNAME": 5, "MX": 15, "TXT": 16, "AAAA": 28, "NS": 2}

@@ -61,7 +61,9 @@ that supports it, so you can check it yourself.
 - **DKIM** keys are found by scanning the names services use, and credited by where they point.
 - **Raw IP ranges** in SPF are named by matching them against the ranges each service publishes,
   then by who owns the network.
-- **Sending subdomains** come from the names services ask for and from certificate logs.
+- **Sending subdomains** come from the names services ask for and from certificate logs. A
+  subdomain delegated by NS to a service's nameservers, as Klaviyo and Salesforce Marketing
+  Cloud set up, counts as that service's.
 - **The website** shows the scripts and stylesheets it loads, the services it mentions, and the
   services its subprocessor page names. Every page fetch goes through one guard: https only,
   with the host's addresses checked first, so a domain cannot point a fetch at a private or

@@ -27,7 +27,15 @@ from .model import Need
 from .proofs import Proof
 from .selectors import Rule, build_dictionary, parse_rules
 
-_HOST_FIELDS = ("spf_includes", "mx", "dkim_cname", "reporting", "return_path", "tracking")
+_HOST_FIELDS = (
+    "spf_includes",
+    "mx",
+    "dkim_cname",
+    "reporting",
+    "return_path",
+    "tracking",
+    "delegation_ns",
+)
 # Every field whose entries are a value and its proof. other_cname entries are a label, a
 # target and a proof.
 PATTERN_FIELDS = (
@@ -138,6 +146,10 @@ class Catalog:
 
     def reporting(self, host: str) -> str | None:
         return self.tables["reporting"].match(host)
+
+    def delegation(self, host: str) -> str | None:
+        """The service whose nameserver `host` is, when a subdomain is delegated to it."""
+        return self.tables["delegation_ns"].match(host)
 
     def network(self, asn: str) -> str | None:
         return self.networks.get(asn.upper())

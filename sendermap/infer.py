@@ -39,13 +39,19 @@ def _order(service: Service) -> tuple[bool, int, str]:
     return (service.role is Role.REPORTING, rank, service.name.lower())
 
 
+# The claims that show a service set up at a name, so the selector names it uses count there.
+BACKING_KINDS = frozenset(
+    {Kind.MX, Kind.SUBDOMAIN_MAILBOX, Kind.SPF_INCLUDE, Kind.SPF_NETWORK, Kind.DELEGATION}
+)
+
+
 def backed_selectors(claims: Iterable[Claim], catalog: Catalog) -> dict[str, Claim]:
-    """{selector: the SPF or MX claim of a service the domain already shows}, so a generic
-    selector name on that service's list counts as theirs, backed by that claim's record. The
-    first service to claim a name keeps it."""
+    """{selector: the SPF, MX or NS delegation claim of a service the domain already shows}, so
+    a generic selector name on that service's list counts as theirs, backed by that claim's
+    record. The first service to claim a name keeps it."""
     backed: dict[str, Claim] = {}
     for claim in claims:
-        if claim.kind in (Kind.MX, Kind.SUBDOMAIN_MAILBOX, Kind.SPF_INCLUDE, Kind.SPF_NETWORK):
+        if claim.kind in BACKING_KINDS:
             for selector in sorted(catalog.selectors_of(claim.service)):
                 backed.setdefault(selector, claim)
     return backed

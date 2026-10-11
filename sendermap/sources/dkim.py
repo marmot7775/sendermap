@@ -196,9 +196,9 @@ async def collect(
             happened = (
                 f"{NO_SELECTORS}: {base} does not exist and the zone returns no such name for "
                 f"names that do not exist. The sweep of {len(names)} names was not run for that "
-                f"reason; only the {len(check)} names the domain's MX and SPF back or hint at were "
-                "asked, as a check on servers that answer no such name for a name with names "
-                "below it (RFC 8020 section 5)"
+                f"reason; only the {len(check)} names the domain's MX, SPF and delegations back "
+                "or hint at were asked, as a check on servers that answer no such name for a "
+                "name with names below it (RFC 8020 section 5)"
             )
             evidence = (negative(node, ctx.checked_at), negative(canary, ctx.checked_at))
             absence = Absence(f"DKIM keys at {where}", happened, evidence)

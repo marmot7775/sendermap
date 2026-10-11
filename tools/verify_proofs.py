@@ -6,6 +6,8 @@ what is published there now. What counts as found depends on the kind of pattern
 - a DKIM selector: a TXT record holding a key (p=), directly or through a CNAME;
 - an SPF include: one SPF record at the name, with an include or redirect to the pattern;
 - an MX host: an MX record at the name whose host is the pattern or a name under it;
+- a delegation: an NS record at the name itself, not reached through a CNAME, whose host is the
+  pattern or a name under it;
 - a DKIM, bounce, tracking or other CNAME: a CNAME chain from the name with a hop at or under the
   pattern (for other_cname, the pattern's target);
 - a report address: a DMARC or TLS-RPT record at the name with a mailto: address at or under the
@@ -24,10 +26,11 @@ lookup or request that fails, or a page that answers with anything but 200, 404 
 not check: it says nothing about the proof, so it is listed but never fails the run. Exits 1 if
 any proof is not found.
 
-Usage: python tools/verify_proofs.py [--json]
+Usage: python tools/verify_proofs.py [--json] [--doh]
 
 --json prints one JSON object per proof, one per line, with vendor, field, pattern, domain,
-record, expected, observed and status; the totals line goes to stderr.
+record, expected, observed and status; the totals line goes to stderr. --doh asks Cloudflare's
+DNS over HTTPS instead of the machine's resolver.
 """
 
 from __future__ import annotations
@@ -47,7 +50,16 @@ import httpx
 
 from sendermap import catalog
 from sendermap.catalog import Pattern, SetupRule
-from sendermap.dns import Answer, Lookups, Resolver, Status, SystemResolver, norm
+from sendermap.dns import (
+    Answer,
+    DohResolver,
+    Lookups,
+    Resolver,
+    Status,
+    SystemResolver,
+    doh_client,
+    norm,
+)
 from sendermap.proofs import Proof
 from sendermap.selectors import Rule
 from sendermap.sources import Context, networks
@@ -65,6 +77,7 @@ EXPECTED = {
     "selectors": "TXT record holding a DKIM key (p=)",
     "spf_includes": "SPF record with an include or redirect to {}",
     "mx": "MX record with a host at or under {}",
+    "delegation_ns": "NS record at the name with a host at or under {}",
     "dkim_cname": "CNAME chain through a name at or under {}",
     "return_path": "CNAME chain through a name at or under {}",
     "tracking": "CNAME chain through a name at or under {}",
@@ -149,6 +162,12 @@ async def _spf(checker: Checker, record: str, pattern: str) -> Seen:
 async def _mx(checker: Checker, record: str, pattern: str) -> Seen:
     answer = await checker.query(record, "MX")
     return _seen(answer, any(_under(r.partition(" ")[2], pattern) for r in answer.records))
+
+
+async def _ns(checker: Checker, record: str, pattern: str) -> Seen:
+    """NS records reached through a CNAME are the target's, so they delegate nothing here."""
+    answer = await checker.query(record, "NS")
+    return _seen(answer, not answer.chain and any(_under(r, pattern) for r in answer.records))
 
 
 async def _cname(checker: Checker, record: str, pattern: str) -> Seen:
@@ -243,6 +262,7 @@ CHECKS: dict[str, Check] = {
     "selectors": _key,
     "spf_includes": _spf,
     "mx": _mx,
+    "delegation_ns": _ns,
     "dkim_cname": _cname,
     "return_path": _cname,
     "tracking": _cname,
@@ -348,12 +368,14 @@ def load() -> list[Item]:
 async def main(argv: list[str] | None = None, http: httpx.AsyncClient | None = None) -> int:
     parser = argparse.ArgumentParser(description="Check every vendor proof against live DNS.")
     parser.add_argument("--json", action="store_true", help="print one JSON object per proof")
+    parser.add_argument("--doh", action="store_true", help="look up DNS over HTTPS (Cloudflare)")
     args = parser.parse_args(argv)
 
-    async with http or httpx.AsyncClient() as client:
+    async with http or httpx.AsyncClient() as client, doh_client() as dns_http:
         todo = load()
         owners = {i.pattern: i.vendor for i in todo if i.field == "networks"}
-        checked = await verify(Checker(SystemResolver(timeout=TIMEOUT), client, owners), todo)
+        resolver: Resolver = DohResolver(dns_http) if args.doh else SystemResolver(timeout=TIMEOUT)
+        checked = await verify(Checker(resolver, client, owners), todo)
     results = [result for result, _ in checked]
     for result, line in checked:
         print(json.dumps(asdict(result)) if args.json else line)

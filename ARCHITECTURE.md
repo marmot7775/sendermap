@@ -27,7 +27,8 @@ Everything Sendermap reports is built from a few frozen dataclasses in `senderma
   - **In use**: an MX record at the domain.
   - **Configured**: an authorizing SPF include, a range in SPF that a service publishes or
     whose network it owns, a DKIM key served through a CNAME into the service's zone, a bounce
-    or tracking CNAME, a sending service's MX on a subdomain, a permitted MX host in the
+    or tracking CNAME, a sending service's MX on a subdomain, a subdomain delegated by NS to
+    the service's nameservers, a permitted MX host in the
     MTA-STS policy (the policy lists hosts allowed to receive, in any mode, not where mail
     goes), or a mailbox provider's or security gateway's MX on a subdomain. That last claim
     reads "in use for a subdomain's mail" and is in use there only, so it does not make the
@@ -90,14 +91,15 @@ Phase 1, concurrent
   mx, tokens, reports, labels, mta_sts, web   -> claims, unknowns, findings, gaps
   bimi.logo             -> logo URL, not evidence
   ct.read_logs          -> logged names, once per map: Cert Spotter, + crt.sh with --ct
-    subdomains.discover -> wordlist + those names, the ones that publish SPF or MX
+    subdomains.discover -> wordlist + those names, the ones that publish SPF or MX or are
+                           delegated by NS to a service (that delegation is a claim)
     ct.collect (--ct)   -> those names, each resolved for CNAME, A and MX and matched
 Phase 2, the domain itself
   backed = generic DKIM names that belong to services SPF or MX already shows
   probe order = selector rules ranked by MX and SPF hints, then the generic names
   dkim.collect  ||  networks.collect (SPF IP ranges: published vendor ranges, then ASN)
 Phase 3, each sending subdomain (first 30)
-  spf + mx -> backed -> dkim (27 names + backed)  ||  networks
+  spf + mx + its delegation -> backed -> dkim (27 names + backed)  ||  networks
 Assembly
   all Observed summed -> infer.services: group by service,
      tier = strongest Kind, report-only services -> role "reporting"
@@ -124,8 +126,8 @@ provider's name and what happened, and each provider asked is recorded as a page
 `--no-subdomains` and no `--ct`, nothing reads the logs and no provider is asked.
 
 Every cap that leaves names unasked records a gap naming the cap and the count it dropped: 30
-sending subdomains, 27 DKIM names per sending subdomain beyond the ones its SPF or MX backs, 24
-SPF ranges for the network lookup, 60 names from the certificate log and names more than two
+sending subdomains, 27 DKIM names per sending subdomain beyond the ones its SPF, MX or delegation
+backs, 24 SPF ranges for the network lookup, 60 names from the certificate log and names more than two
 labels below the domain, an SPF depth of 10, a vendor's own SPF read 3 levels deep for its
 published ranges, 2,000,000 bytes of a web page, 5 redirects of a web page, and 200 names from
 the certificate logs.
@@ -187,8 +189,8 @@ These live in `catalog.py` and the sources, and each has a test.
 - A hostname pattern matches the host or any name under it, on a label boundary, and the
   longest pattern wins: `u161779.wl030.sendgrid.net` is Klaviyo, not SendGrid.
 - A DKIM key belongs to a service by CNAME first. `selector1` and `selector2` name nobody
-  without the Microsoft CNAME. Next, a selector on the list of a service that SPF or MX already
-  shows is that service's. Last, the name table, except for generic names (`default`, `mail`,
+  without the Microsoft CNAME. Next, a selector on the list of a service that SPF, MX or an NS
+  delegation already shows is that service's. Last, the name table, except for generic names (`default`, `mail`,
   any two-letter name not explicitly allowed).
 - The SPF lookup count follows receivers: an include met twice adds the lookups of everything
   below it each time, read from the lookup cache, so no record is asked twice. An include that
@@ -199,6 +201,16 @@ These live in `catalog.py` and the sources, and each has a test.
   domain's own senders.
 - A hosted SPF service (Valimail, OnDMARC, EasyDMARC) or a macro include is reported as a note,
   since it can authorize services without naming them.
+- A subdomain delegated by NS is the service's when its NS records name the service's
+  nameservers (`delegation_ns`), as Klaviyo's recommended setup delegates `send.example.com` to
+  `ns1.klaviyo.com` through `ns4`. The claim is Configured and its evidence is the first NS
+  record that names the service. NS records reached through a CNAME are the target's and credit
+  nobody, and a delegation to nameservers no service is known by (a DNS host such as Route 53)
+  says nothing about mail and is not asked about further. The gap: Klaviyo's nameservers answer
+  no such name at `_domainkey.send.<domain>` while serving `s1` and `s2` below it as CNAMEs into
+  its own SendGrid account, so the triage below asks only the names the delegation backs
+  (Klaviyo's `kl`, `kl1` and `kl2`), and those two keys are not read. `s1` and `s2` stay
+  SendGrid's names: no selector name belongs to two vendors.
 - A wildcard answers every name, so DKIM probes and label CNAMEs first ask a fixed name nobody
   publishes (`sendermap-wildcard-check`). A wildcard DKIM key ends the DKIM scan at that name
   with a note; a label CNAME that matches the wildcard target is ignored.
@@ -220,7 +232,7 @@ answer is the zone's denial class, recorded on Checked:
 - **unknown**: the check failed. The sweep runs, with the gap it has always had.
 
 In a classic zone whose `_domainkey` is no such name, the full sweep is not run. Only the names
-the domain's MX and SPF back or hint at are asked (every backed name and the first 8 of the
+the domain's MX, SPF and delegations back or hint at are asked (every backed name and the first 8 of the
 ranked order), as a check on servers that answer no such name for a name with names below it
 (RFC 8020 section 5). If none of them exists, the result is an Absence, "DKIM keys at <where>:
 no selectors exist", whose text says the sweep was not run and why, so the unasked names are
@@ -417,22 +429,23 @@ selector names, bounce and tracking CNAMEs, report addresses, verification token
 website hosts, the names a subprocessor page would list it by), plus shared `rules` (generic selectors, hosted SPF services, cloud networks,
 the labels to probe). `catalog.load` reads the file once per process, selector rules included.
 
-Every SPF include, MX host, DKIM CNAME target, bounce, tracking and other CNAME, report address,
-verification token, network, website host and subprocessor name is an entry with its value and
+Every SPF include, MX host, DKIM CNAME target, bounce, tracking and other CNAME, delegation
+nameserver, report address, verification token, network, website host and subprocessor name is an entry with its value and
 a proof: a domain that publishes it, the record (a DNS name, or a page's URL) and the date
 checked. A subprocessor name's proof is a page on the vendor's own site that uses the name; only
 sending services list one, and a name that is also an ordinary word ("Kit", "Wix") is not
 listed, so the web source has no rule of its own about which names count. `catalog.build`
 refuses an entry without one, and checks that the record could show the pattern: a report
 address at `_dmarc.` or `_smtp._tls.` of the domain, a token at the domain itself, a DKIM CNAME
-under its `_domainkey`, a website host or subprocessor name on an https page of the domain,
-anything else at or under the domain. `proofs.py` holds those checks.
+under its `_domainkey`, a delegation at a name under the domain (the domain's own nameservers are
+its DNS host, not a sending setup), a website host or subprocessor name on an https page of the
+domain, anything else at or under the domain. `proofs.py` holds those checks.
 
 A `selectors` entry names a vendor's DKIM selectors with how they are known (the vendor's docs,
 a pattern, an aggregate report, or the vendor's own domain) and a proof per name: a live domain
 that publishes the record, the record name and the date checked. Loading refuses an entry
 without one. These entries are the only list of vendor selectors: they credit a key by its
-name, give the names a service shown by SPF or MX backs, and make the probe sweep, which is
+name, give the names a service shown by SPF, MX or an NS delegation backs, and make the probe sweep, which is
 every name they claim, in rule order with the rules the domain's MX and SPF hint at first, then
 the generic names (`default`, `dkim`, `mail` and the rest), which credit nobody by name but show
 that a key is there.
@@ -455,11 +468,15 @@ A vendor's own domain rarely publishes what it asks its customers to publish, so
 the top 2,000 of a Tranco list (its id and date on the first line) and three retail brands. At each
 domain it reads what the engine reads (SPF down the whole include chain, MX, DKIM keys at every
 proven, pending and generic selector name, the bounce and tracking labels, report addresses,
-tokens, networks, the sending subdomains and one fetch of the homepage), one query at a time per
+tokens, networks, the sending subdomains with their NS delegations and one fetch of the
+homepage), one query at a time per
 domain with domains in parallel, and confirms each find with the check `verify_proofs.py` defines
 for its kind, so found means the same in both. A name under a wildcard proves nothing. Answers and
 pages are cached on disk, so a rerun asks only what failed. The highest ranked domain that shows a
-pattern becomes its proof; `--move` moves proven patterns into vendors.json.
+pattern becomes its proof; `--move` moves proven patterns into vendors.json. Both tools, and
+`tools/record_corpus.py`, take `--doh` to ask Cloudflare's DNS over HTTPS, for a machine whose
+resolver cannot be trusted (one that answers MX and TXT with nothing, as some sandboxes do); the
+recorder keeps the answers, not those requests.
 
 ## Surfaces
 
@@ -514,7 +531,9 @@ the fingerprint and which keys raise which flag; `test_determinism.py` requires 
 proof on every vendor pattern and one proofed selector list read once; `test_pending_vendors.py`
 requires that the engine never opens the pending file and that a host only a pending pattern
 matches shows as not recognised; `test_hunt_proofs.py` holds where the hunt may find each kind of
-pattern, which domain's proof wins, that a rerun asks nothing and that a moved proof loads. `test_verify_proofs.py` holds what each kind of proof needs, among them a network proof on an
+pattern, which domain's proof wins, that a rerun asks nothing and that a moved proof loads. `test_delegation.py` holds the delegation pattern's loading
+rules, the claim and the sending subdomain it makes, that an unknown delegation or one reached
+through a CNAME credits nobody, and the delegation proof's check. `test_verify_proofs.py` holds what each kind of proof needs, among them a network proof on an
 address with two origins, in both orders. `test_ct.py` runs the CT source on a recorded crt.sh answer
 (`tests/fixtures/crtsh_allbirds.json`) beside Cert Spotter answers, and holds that the logs are
 read once per map, crt.sh only with `--ct`, one gap per provider that failed or was off, and the
