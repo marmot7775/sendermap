@@ -333,7 +333,10 @@ the domain as "CNAME at <label>" with its target, and a DKIM key behind a CNAME 
 is served through. A test watches every file the engine opens and fails if the pending file is
 one. `tools/verify_proofs.py` rechecks every proof against live DNS and, for website hosts, the
 page; the `Verify proofs` workflow runs it weekly and on any pull request that touches
-vendors.json.
+vendors.json. A network proof reads an address's origins with the map's own `networks.owner`
+and credits them by its rule (`networks.credited`): it holds only when every origin network is
+the vendor's, so an address two networks announce gives the same verdict in any order. The hunt
+reads origins the same way and confirms with the same check.
 
 A vendor's own domain rarely publishes what it asks its customers to publish, so
 `tools/hunt_proofs.py` looks for the pending patterns on customer domains: `data/hunt_domains.txt`,
@@ -391,7 +394,8 @@ the fingerprint and which keys raise which flag; `test_determinism.py` requires 
 proof on every vendor pattern and one proofed selector list read once; `test_pending_vendors.py`
 requires that the engine never opens the pending file and that a host only a pending pattern
 matches shows as not recognised; `test_hunt_proofs.py` holds where the hunt may find each kind of
-pattern, which domain's proof wins, that a rerun asks nothing and that a moved proof loads. `test_ct.py` runs the CT source on a recorded crt.sh answer
+pattern, which domain's proof wins, that a rerun asks nothing and that a moved proof loads. `test_verify_proofs.py` holds what each kind of proof needs, among them a network proof on an
+address with two origins, in both orders. `test_ct.py` runs the CT source on a recorded crt.sh answer
 (`tests/fixtures/crtsh_allbirds.json`) beside Cert Spotter answers, and holds that the logs are
 read once per map, crt.sh only with `--ct`, one gap per provider that failed or was off, and the
 cache per provider.

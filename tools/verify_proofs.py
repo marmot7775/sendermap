@@ -11,7 +11,9 @@ what is published there now. What counts as found depends on the kind of pattern
 - a report address: a DMARC or TLS-RPT record at the name with a mailto: address at or under the
   pattern;
 - a verification token: a TXT record at the name that the pattern matches, with a value after it;
-- a network: an address of the name that, by Team Cymru's answer, the network announces;
+- a network: an address of the name that, by Team Cymru's answers, the network announces, with
+  every origin network of that address the vendor's, read by the map's own networks.owner and
+  credited by its rule, so an address two networks announce counts the same in any order;
 - a website host: the page at the URL loads a script or stylesheet from the pattern's host;
 - a subprocessor name: the page at the URL has the name as a whole word in its text.
 
@@ -30,20 +32,23 @@ from __future__ import annotations
 
 import argparse
 import asyncio
+import ipaddress
 import json
 import re
 import sys
-from collections.abc import Awaitable, Callable
-from dataclasses import asdict, dataclass
+from collections.abc import Awaitable, Callable, Mapping
+from dataclasses import asdict, dataclass, replace
+from datetime import UTC, datetime
 from urllib.parse import urljoin, urlsplit
 
 import httpx
 
 from sendermap import catalog
 from sendermap.catalog import Pattern
-from sendermap.dns import Answer, Resolver, Status, SystemResolver, norm
+from sendermap.dns import Answer, Lookups, Resolver, Status, SystemResolver, norm
 from sendermap.proofs import Proof
 from sendermap.selectors import Rule
+from sendermap.sources import Context, networks
 from sendermap.sources.reports import report_domains
 from sendermap.sources.spf import spf_records, terms
 from sendermap.sources.web import _LOADED, USER_AGENT
@@ -96,10 +101,19 @@ Check = Callable[["Checker", str, str], Awaitable[Seen]]
 
 
 class Checker:
-    """Asks for proof records through one resolver and one HTTP client."""
+    """Asks for proof records through one resolver and one HTTP client. `owners` says which
+    vendor each network (ASN) belongs to, for the network proofs: they read an address's origins
+    through the map's own Context, whose catalog credits networks by it."""
 
-    def __init__(self, resolver: Resolver, http: httpx.AsyncClient) -> None:
+    def __init__(
+        self, resolver: Resolver, http: httpx.AsyncClient, owners: Mapping[str, str] | None = None
+    ) -> None:
         self.resolver, self.http = resolver, http
+        loaded = catalog.load()
+        credits = {asn.upper(): vendor for asn, vendor in (owners or {}).items()}
+        self.ctx = Context(
+            "", Lookups(resolver), replace(loaded, networks=credits), datetime.now(UTC)
+        )
 
     async def query(self, name: str, rtype: str) -> Answer:
         return await self.resolver.query(name, rtype)
@@ -154,19 +168,27 @@ async def _token(checker: Checker, record: str, pattern: str) -> Seen:
 
 
 async def _network(checker: Checker, record: str, asn: str) -> Seen:
+    """An address the network announces, credited as the map credits it: every origin network
+    Team Cymru answers with must be the vendor's, whatever order the answers come in."""
     answer = await checker.query(record, "A")
     if not answer.ok:
         return _seen(answer, False)
+    asn = asn.upper()
+    vendor = checker.ctx.catalog.network(asn)
     announced: list[str] = []
+    shows = False
     for ip in answer.records:
-        origin = await checker.query(
-            ".".join(reversed(ip.split("."))) + ".origin.asn.cymru.com", "TXT"
-        )
-        if not origin.answered:
-            return Seen(False, _observed(origin), False)
-        if origin.ok:
-            announced.append(f"{ip} AS{origin.records[0].split('|')[0].split()[0]}")
-    shows = any(a.endswith(f" {asn.upper()}") for a in announced)
+        try:
+            address = ipaddress.ip_address(ip)
+        except ValueError:
+            continue
+        owner = await networks.owner(checker.ctx, address)
+        if owner is None:
+            return Seen(False, f"{ip}: network lookup failed", False)
+        if owner.asns:
+            announced.append(f"{ip} {' and '.join(owner.asns)}")
+        credited = networks.credited(checker.ctx, owner)
+        shows |= asn in owner.asns and credited is not None and credited == vendor
     return Seen(shows, "; ".join(announced) or "no network announces its addresses")
 
 
@@ -306,7 +328,9 @@ async def main(argv: list[str] | None = None, http: httpx.AsyncClient | None = N
     args = parser.parse_args(argv)
 
     async with http or httpx.AsyncClient() as client:
-        checked = await verify(Checker(SystemResolver(timeout=TIMEOUT), client), load())
+        todo = load()
+        owners = {i.pattern: i.vendor for i in todo if i.field == "networks"}
+        checked = await verify(Checker(SystemResolver(timeout=TIMEOUT), client, owners), todo)
     results = [result for result, _ in checked]
     for result, line in checked:
         print(json.dumps(asdict(result)) if args.json else line)

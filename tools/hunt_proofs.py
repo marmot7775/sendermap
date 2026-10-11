@@ -40,6 +40,7 @@ from __future__ import annotations
 
 import argparse
 import asyncio
+import ipaddress
 import json
 import sqlite3
 import sys
@@ -58,7 +59,7 @@ from sendermap.catalog import PATTERN_FIELDS, Catalog
 from sendermap.dns import Answer, Resolver, Status, SystemResolver, norm
 from sendermap.engine import MAX_SUBDOMAINS, SUBDOMAIN_PROBES
 from sendermap.proofs import Proof
-from sendermap.sources import CANARY
+from sendermap.sources import CANARY, networks
 from sendermap.sources.spf import MAX_DEPTH, spf_records, terms
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -463,19 +464,21 @@ class _Domain:
         return list(dict.fromkeys((*first, *self.h.pending_names)))
 
     async def networks(self, subdomains: list[str]) -> None:
+        """Every origin network of each address, read by the map's own networks.owner; a wanted
+        one is confirmed by verify_proofs' check, which credits it as the map does."""
         wanted_asns = {w.value.upper(): w for w in self.h.by_field["networks"]}
         names = (self.domain, f"www.{self.domain}", f"mail.{self.domain}", *subdomains)
         for name in dict.fromkeys(names):
             answer = await self.ask(name, "A")
             for ip in answer.records:
-                origin = await self.ask(
-                    ".".join(reversed(ip.split("."))) + ".origin.asn.cymru.com", "TXT"
-                )
-                if not origin.ok:
+                try:
+                    address = ipaddress.ip_address(ip)
+                except ValueError:
                     continue
-                asn = "AS" + origin.records[0].split("|")[0].split()[0]
-                if w := wanted_asns.get(asn.upper()):
-                    await self.confirm(w, name, "A")
+                owner = await networks.owner(self.h.checker.ctx, address)
+                for asn in owner.asns if owner else ():
+                    if w := wanted_asns.get(asn):
+                        await self.confirm(w, name, "A")
 
     async def homepage(self) -> None:
         url = f"https://{self.domain}/"
@@ -684,7 +687,10 @@ async def main(
     resolver = CachedResolver(SystemResolver(timeout=TIMEOUT, nameservers=args.nameserver), cache)
     try:
         async with httpx.AsyncClient(transport=CachedTransport(cache, transport)) as http:
-            hunter = Hunter(Checker(resolver, http), cache, catalog.load(), todo)
+            loaded = catalog.load()
+            # Whose each network is, proven or pending, for the map's rule in the network check.
+            owners = loaded.networks | {w.value: w.vendor for w in todo if w.field == "networks"}
+            hunter = Hunter(Checker(resolver, http, owners), cache, loaded, todo)
             hunts = await hunt_all(hunter, domains, args.parallel)
     finally:
         cache.close()
