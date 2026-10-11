@@ -98,7 +98,32 @@ Every cap that leaves names unasked records a gap naming the cap and the count i
 sending subdomains, 27 DKIM names per sending subdomain beyond the ones its SPF or MX backs, 24
 SPF ranges for the network lookup, 60 names from the certificate log and names more than two
 labels below the domain, an SPF depth of 10, a vendor's own SPF read 3 levels deep for its
-published ranges, 2,000,000 bytes of a web page, and 200 names from crt.sh.
+published ranges, 2,000,000 bytes of a web page, 5 redirects of a web page, and 200 names from
+crt.sh.
+
+## Fetching pages
+
+A domain chooses the address its pages are served from, so on the server a page fetch could be
+pointed back at the server itself or at a cloud metadata address. Every page fetch, the
+homepage, the subprocessor page (which may sit on another host) and the MTA-STS policy, goes
+through one guard in `sources/web.py`:
+
+- https on port 443 only;
+- before the request, the host's A and AAAA records are asked through the map's lookups (cached,
+  counted, and faked in tests); the fetch is refused when either lookup failed, when the host
+  has no address, or when any address is private, loopback, link local, multicast, reserved or
+  unspecified (an IPv4 address inside IPv6 is judged as IPv4); a host that is an address
+  literal is judged as that address;
+- redirects are not followed by the HTTP client: up to 5 are followed by hand, each Location
+  checked the same way before it is requested, and a sixth is a gap. The MTA-STS policy follows
+  none, as RFC 8461 requires.
+
+A refused fetch sends no request and is a gap worded `not fetched: <reason>`. Each request keeps
+the 10 second timeout (8 for the MTA-STS policy) and the 2,000,000 byte cap on a web page.
+
+The guard's limit: the address is checked before the request and not pinned during it. The HTTP
+client resolves the name again when it connects, so a name that answers with a public address
+for the check and a private one a moment later (DNS rebinding) is not caught.
 
 ## Modules
 
@@ -113,6 +138,7 @@ published ranges, 2,000,000 bytes of a web page, and 200 names from crt.sh.
 | `engine.py` | `map_domain`: input cleaning, the phase order, subdomain scans, limits, the gateway note |
 | `sources/spf.py` | Walking the SPF tree: credited includes, IP ranges, the lookup count, SPF findings |
 | `sources/mx.py`, `sources/mta_sts.py` | Where the domain receives mail |
+| `sources/web.py` | The homepage and subprocessor page, and the guard every page fetch goes through |
 | `sources/dkim.py` | DKIM probing, the wildcard check, reading keys, dangling and short keys |
 | `sources/labels.py`, `tokens.py`, `reports.py`, `bimi.py` | Fixed-label CNAMEs, verification TXT, report addresses, the BIMI logo |
 | `sources/networks.py` | Naming SPF IP ranges by the ranges services publish, then by network owner |
@@ -254,13 +280,16 @@ pattern becomes its proof; `--move` moves proven patterns into vendors.json.
 `tests/conftest.py` provides a fake DNS zone (`Zone`) with CNAMEs, wildcards and names that fail
 on purpose, and an HTTP client that answers the certificate log with nothing and fails the test
 on any other request, so the suite never reaches the network (the web test serves on loopback
-only). Run `pytest`. `mypy` (strict, over `sendermap/`, `tests/` and `tools/`), `ruff check` and
+only). `Zone.public` gives a host a public address, which a fake page needs to pass the fetch
+guard. Run `pytest`. `mypy` (strict, over `sendermap/`, `tests/` and `tools/`), `ruff check` and
 `ruff format --check` pass on the whole repository.
 
 Tests that hold the rules: `test_evidence.py` maps a fake domain that reaches every kind of
 claim and requires evidence on every claim, unknown and finding, and the supporting records on
 every claim whose evidence does not name its service; `test_gaps.py` and `test_caps.py`
-require a gap for each failed question and each cap; `test_checked.py` requires the record of
+require a gap for each failed question and each cap; `test_web_guard.py` requires that a
+refused fetch sends nothing and is a gap, for each reason the guard refuses, on every redirect
+and on the subprocessor and MTA-STS pages; `test_checked.py` requires the record of
 what was asked and its rendering; `test_labels_say_what_was_seen.py` holds the wording of the
 labels; `test_determinism.py` requires the same map from the same answers;
 `test_vendor_proofs.py`, `test_one_selector_list.py` and `test_subprocessor_names.py` require a

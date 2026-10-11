@@ -49,7 +49,7 @@ async def test_a_reporting_service_has_no_tier(offline: httpx.AsyncClient) -> No
 
 
 async def test_an_mta_sts_mx_line_is_configured_not_in_use() -> None:
-    zone = Zone().add("_mta-sts.example.com", "TXT", "v=STSv1; id=1")
+    zone = Zone().public("mta-sts.example.com").add("_mta-sts.example.com", "TXT", "v=STSv1; id=1")
     policy = "version: STSv1\nmode: testing\nmx: *.mail.protection.outlook.com\n"
 
     def serve(request: httpx.Request) -> httpx.Response:

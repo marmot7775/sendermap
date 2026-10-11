@@ -12,6 +12,7 @@ from sendermap.render import markdown, text
 def acme() -> Zone:
     return (
         Zone(failing={"_dmarc.acme.test"})
+        .public("acme.test")
         .add("acme.test", "TXT", "v=spf1 include:_spf.google.com ~all")
         .add("email.acme.test", "TXT", "v=spf1 include:mailgun.org ~all")
     )

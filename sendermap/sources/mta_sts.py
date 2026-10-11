@@ -7,6 +7,7 @@ import httpx
 
 from ..model import Checked, Claim, Evidence, Gap, Kind, Observed
 from . import Context, http_failure
+from .web import refusal
 
 
 async def collect(ctx: Context) -> Observed:
@@ -20,6 +21,9 @@ async def collect(ctx: Context) -> Observed:
     if ctx.http is None:
         skipped = "not fetched: web and subdomain checks were both turned off"
         return Observed(gaps=(Gap(f"MTA-STS policy: GET {url}", skipped),))
+    if refused := await refusal(ctx.dns, url):
+        gap = Gap(f"MTA-STS policy: GET {url}", f"not fetched: {refused}")
+        return Observed(gaps=(gap,), checked=(Checked(ctx.domain, pages=(url,)),))
     try:
         response = await ctx.http.get(url, timeout=8)
         response.raise_for_status()

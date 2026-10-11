@@ -103,7 +103,7 @@ async def test_the_website_names_its_scripts_and_subprocessors() -> None:
         return httpx.Response(200, text=body, headers={"content-type": "text/html"})
 
     async with httpx.AsyncClient(transport=httpx.MockTransport(handler)) as http:
-        ctx = context(Zone())
+        ctx = context(Zone().public("example.com"))
         ctx = Context(ctx.domain, ctx.dns, ctx.catalog, ctx.checked_at, http)
         observed = await web.collect(ctx)
     assert {(c.service, c.kind, c.evidence.value) for c in observed.claims} == {
@@ -124,7 +124,7 @@ async def test_a_link_form_or_text_on_the_website_is_a_mention_not_a_load() -> N
         return httpx.Response(200, text=html, headers={"content-type": "text/html"})
 
     async with httpx.AsyncClient(transport=httpx.MockTransport(handler)) as http:
-        ctx = context(Zone())
+        ctx = context(Zone().public("example.com"))
         ctx = Context(ctx.domain, ctx.dns, ctx.catalog, ctx.checked_at, http)
         observed = await web.collect(ctx)
     assert {(c.service, c.kind, c.evidence.value) for c in observed.claims} == {

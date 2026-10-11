@@ -91,7 +91,7 @@ async def test_a_page_cut_at_the_size_cap_is_a_gap(monkeypatch: pytest.MonkeyPat
         return httpx.Response(200, text="<p>" + "x" * 50, headers={"content-type": "text/html"})
 
     async with httpx.AsyncClient(transport=httpx.MockTransport(page)) as http:
-        ctx = context(Zone())
+        ctx = context(Zone().public("example.com"))
         ctx = Context(ctx.domain, ctx.dns, ctx.catalog, ctx.checked_at, http)
         observed = await web.collect(ctx)
     assert asked(observed)["the website: GET https://example.com/"].startswith(

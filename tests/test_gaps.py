@@ -62,7 +62,7 @@ async def test_a_failed_dkim_wildcard_check_is_a_gap() -> None:
 
 
 async def test_an_mta_sts_policy_that_does_not_load_is_a_gap() -> None:
-    zone = Zone().add("_mta-sts.example.com", "TXT", "v=STSv1; id=1")
+    zone = Zone().public("mta-sts.example.com").add("_mta-sts.example.com", "TXT", "v=STSv1; id=1")
     ctx, http = with_http(zone, lambda request: httpx.Response(404))
     async with http:
         gaps = asked(await mta_sts.collect(ctx))
@@ -91,7 +91,7 @@ async def test_a_subprocessor_page_that_does_not_load_is_a_gap() -> None:
             return httpx.Response(200, text=html, headers={"content-type": "text/html"})
         return httpx.Response(500)
 
-    ctx, http = with_http(Zone(), handler)
+    ctx, http = with_http(Zone().public("example.com"), handler)
     async with http:
         gaps = asked(await web.collect(ctx))
     assert gaps == {
