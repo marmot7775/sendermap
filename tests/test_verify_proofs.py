@@ -188,3 +188,28 @@ async def test_could_not_check_does_not_fail_the_run(
     )
     assert code == 0
     assert err == "3 of 4 proofs found, 1 could not be checked\n"
+
+
+@pytest.mark.parametrize("flipped", [False, True], ids=["in order", "reversed"])
+async def test_a_network_proof_needs_every_origin_to_be_the_vendors_in_either_order(
+    flipped: bool,
+) -> None:
+    tool = load_tool()
+    origins = ["64500 | 192.0.2.0/24 | US | arin", "64501 | 192.0.2.0/23 | US | arin"]
+    if flipped:
+        origins.reverse()
+    dns = (
+        Zone()
+        .add("shared.vendor.test", "A", "192.0.2.9")
+        .add("9.2.0.192.origin.asn.cymru.com", "TXT", *origins)
+    )
+    async with httpx.AsyncClient(transport=httpx.MockTransport(web)) as http:
+        # AS64501 is someone else's: the address is shared, so it proves nothing.
+        alone = tool.Checker(dns, http, {"AS64500": "Vendor"})
+        seen = await tool.CHECKS["networks"](alone, "shared.vendor.test", "AS64500")
+        assert not seen.shows and seen.answered
+        assert seen.observed == "192.0.2.9 AS64500 and AS64501"
+        # Both networks are the vendor's: the proof holds.
+        both = tool.Checker(dns, http, {"AS64500": "Vendor", "as64501": "Vendor"})
+        seen = await tool.CHECKS["networks"](both, "shared.vendor.test", "AS64500")
+        assert seen.shows
