@@ -30,7 +30,7 @@ jobs:
           cache: pip
           cache-dependency-path: pyproject.toml
       - name: Install
-        run: pip install -e ".[dev]"
+        run: pip install -e ".[dev,web]"  # web too: mypy and the web test read fastapi
       - name: ruff check
         run: ruff check
       - name: ruff format --check

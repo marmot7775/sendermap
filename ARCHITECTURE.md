@@ -390,15 +390,17 @@ so a test that opens a network socket fails, while the loopback web test keeps r
 
 ### Workflows
 
-- `.github/workflows/test.yml` runs `ruff check`, `ruff format --check`, `mypy` and `pytest` on
-  Python 3.12 and 3.13, on every push to main, every pull request and by hand. pytest takes its
-  addopts from `pyproject.toml`, so the network is blocked in CI as it is locally.
+- `.github/workflows/test.yml` installs the dev and web extras and runs `ruff check`, `ruff
+  format --check`, `mypy` and `pytest` on Python 3.12 and 3.13, on every push to main, every
+  pull request and by hand. pytest takes its addopts from `pyproject.toml`, so the network is
+  blocked in CI as it is locally.
 - `.github/workflows/recheck-corpus.yml` maps every corpus case live again on Mondays at 10:00
   UTC, an hour after the proofs job, and by hand, with `tools/record_corpus.py DOMAIN --recheck
-  DIR` (held by `tests/test_recheck_corpus.py`): the case's own options and a fresh `checked_at`, compared with `expected.json` without
-  `checked_at`, the two run fields or the order of lists. The diff for each domain goes to the
-  job summary and the fresh recordings to an artifact kept 30 days. Drift fails nothing; only a
-  live map that could not be built fails the job. The job commits nothing.
+  DIR` (held by `tests/test_recheck_corpus.py`): the case's own options and a fresh
+  `checked_at`, compared with `expected.json` without `checked_at`, the two run fields or the
+  order of lists. The diff for each domain goes to the job summary and the fresh recordings to
+  an artifact kept 30 days. Drift fails nothing; only a live map that could not be built fails
+  the job. The job commits nothing.
 
 The rule: a drifted case is re-recorded by hand with `python tools/record_corpus.py DOMAIN`,
 after reading the diff, never by the job.
