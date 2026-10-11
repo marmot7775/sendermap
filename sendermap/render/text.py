@@ -10,8 +10,8 @@ from rich.panel import Panel
 from rich.table import Table
 from rich.text import Text
 
-from ..model import Claim, SenderMap, Service, Severity, Tier
-from . import asked, asked_in_full, ct_lines
+from ..model import Claim, SenderMap, Service, Severity, Tier, Unknown
+from . import NetworkGroup, asked, asked_in_full, ct_lines, grouped_unknowns
 
 _TIER_STYLE = {
     Tier.IN_USE: "bold green",
@@ -47,10 +47,8 @@ def render(result: SenderMap, console: Console, *, evidence: bool = False) -> No
             console.print(Text(f"    {f.detail}", style="bright_black"))
     if result.unknowns:
         console.print(Text("\nNOT RECOGNISED", style="bold"))
-        for u in result.unknowns:
-            where = "" if u.where == result.domain else f"  at {u.where}"
-            console.print(Text(f"  {u.what}: {u.value}{where}", style="bright_black"))
-            console.print(Text(f"    {u.evidence}", style="bright_black"))
+        for item in grouped_unknowns(result.unknowns):
+            _unknown(item, result.domain, console, evidence)
     if lines := ct_lines(result):
         console.print(Text("\nCERTIFICATE TRANSPARENCY", style="bold"))
         for line in lines:
@@ -69,6 +67,23 @@ def render(result: SenderMap, console: Console, *, evidence: bool = False) -> No
                 f"\n  {heading}: {', '.join(names)}" for heading, names in asked_in_full(record)
             ]
     console.print(Text("\n" + " ".join(footer), style="bright_black"))
+
+
+def _unknown(item: Unknown | NetworkGroup, domain: str, console: Console, evidence: bool) -> None:
+    """One unknown with its record, or one network's group: its count line, its ranges and
+    addresses, and the first record, or every record with --evidence."""
+    where = "" if item.where == domain else f"  at {item.where}"
+    if isinstance(item, Unknown):
+        console.print(Text(f"  {item.what}: {item.value}{where}", style="bright_black"))
+        console.print(Text(f"    {item.evidence}", style="bright_black"))
+        return
+    console.print(Text(f"  {item.heading()}{where}", style="bright_black"))
+    console.print(Text(f"    {', '.join(cidr for cidr, _ in item.members)}", style="bright_black"))
+    shown = item.members if evidence else item.members[:1]
+    for _, u in shown:
+        console.print(Text(f"    {u.evidence}", style="bright_black"))
+    if len(shown) < len(item.members):
+        console.print(Text(f"    + {len(item.members) - len(shown)} more", style="bright_black"))
 
 
 def _absences(result: SenderMap, console: Console) -> None:

@@ -284,10 +284,65 @@ function renderUnknowns(unknowns, domain) {
   box.append(h("h3", { class: "section-title" }, "Not recognised"));
   const d = h("details", { class: "unknowns" }, h("summary", {}, `${unknowns.length} record${unknowns.length === 1 ? "" : "s"} that point at a sender nobody can name yet`));
   const ul = h("ul");
-  unknowns.forEach((u) => ul.append(h("li", {}, `${u.what}: `, h("span", { class: "mono" }, u.value), u.where === domain ? "" : ` at ${u.where}`,
-    h("span", { class: "ev mono" }, evidence(u.evidence)))));
+  for (const item of groupUnknowns(unknowns)) {
+    const at = item.where === domain ? "" : ` at ${item.where}`;
+    if (!item.members) {
+      ul.append(h("li", {}, `${item.what}: `, h("span", { class: "mono" }, item.value), at,
+        h("span", { class: "ev mono" }, evidence(item.evidence))));
+      continue;
+    }
+    const lines = item.members.map((m, i) => {
+      const line = h("span", { class: "ev mono" }, evidence(m.unknown.evidence));
+      line.hidden = i > 0;
+      return line;
+    });
+    const li = h("li", {}, groupHeading(item), at,
+      h("span", { class: "ev mono" }, item.members.map((m) => m.cidr).join(", ")), ...lines);
+    const more = h("button", { class: "more", type: "button" }, `+ ${lines.length - 1} more`);
+    more.addEventListener("click", () => { lines.forEach((l) => { l.hidden = false; }); more.remove(); });
+    li.append(more);
+    ul.append(li);
+  }
   d.append(ul);
   box.append(d);
+}
+
+// The same grouping as sendermap/render/__init__.py: the IP ranges and addresses at one name
+// that one network announces, under one owner name and one list of publishers, gathered where
+// the first of them stood. A range with no network, one alone in its network, and anything that
+// is not an IP range stay single. The pattern is NETWORK_VALUE there, the shape networks.py writes.
+const NETWORK_VALUE = /^(\S+) \((AS\d+), (.+?)(?:; listed by (.+))?\)$/;
+const IP_KINDS = ["IP range in SPF", "IP address in SPF"];
+
+function groupUnknowns(unknowns) {
+  const groups = new Map();
+  const order = [];
+  for (const u of unknowns) {
+    const match = IP_KINDS.includes(u.what) ? NETWORK_VALUE.exec(u.value) : null;
+    if (!match) { order.push(u); continue; }
+    const [, cidr, asn, name, listed = ""] = match;
+    const key = JSON.stringify([asn, name, listed, u.where]);
+    if (!groups.has(key)) {
+      groups.set(key, { asn, name, listed, where: u.where, members: [] });
+      order.push(key);
+    }
+    groups.get(key).members.push({ cidr, unknown: u });
+  }
+  return order.map((item) => {
+    if (typeof item !== "string") return item;
+    const group = groups.get(item);
+    return group.members.length === 1 ? group.members[0].unknown : group;
+  });
+}
+
+function groupHeading(group) {
+  const ranges = group.members.filter((m) => m.unknown.what === IP_KINDS[0]).length;
+  const addresses = group.members.length - ranges;
+  const parts = [];
+  if (ranges) parts.push(`${ranges} range${ranges === 1 ? "" : "s"}`);
+  if (addresses) parts.push(`${addresses} address${addresses === 1 ? "" : "es"}`);
+  const listed = group.listed ? `; listed by ${group.listed}` : "";
+  return `${parts.join(" and ")} in ${group.asn} (${group.name})${listed}`;
 }
 
 function renderFootnote(map) {

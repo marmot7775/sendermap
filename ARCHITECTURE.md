@@ -151,7 +151,7 @@ for the check and a private one a moment later (DNS rebinding) is not caught.
 | `sources/networks.py` | Naming SPF IP ranges by the ranges services publish, then by network owner |
 | `sources/ct.py` | Certificate transparency (`--ct`): crt.sh with retries and a one-day disk cache, then each logged name resolved and matched by the same catalog matchers as the DNS sources |
 | `sources/subdomains.py` | Finding sending subdomains from a wordlist and the certificate log |
-| `render/text.py`, `render/markdown.py` | The terminal and Markdown views; both show the gaps and what was asked at each name, as the web page does |
+| `render/text.py`, `render/markdown.py` | The terminal and Markdown views; both show the gaps and what was asked at each name, as the web page does, and group unrecognised IP ranges by network |
 | `cli.py` | The `sendermap` command |
 | `web/app.py` | The site: a page, and an API that streams progress and the finished map |
 
@@ -219,7 +219,14 @@ Checked's class as `denial`.
   range goes to the service the vendor data lists as owning that network. Anything left is
   listed as unknown, with the cloud named when the network is a shared cloud and the services
   that publish the range. A cloud is never credited: 74.125.0.0/16, published by Google
-  Workspace and HubSpot and announced by Google's network, stays unknown.
+  Workspace and HubSpot and announced by Google's network, stays unknown. The data keeps one
+  Unknown per range. The views group them: the ranges and addresses at one name that share a
+  network, an owner name and a list of publishers are one line, "2 ranges and 1 address in
+  AS16509 (Amazon Web Services)", with the publishers once after it, then the ranges, the first
+  record and "+ N more" (every record with `--evidence`). `render.grouped_unknowns` does this
+  for the text and Markdown views by reading the value networks.py writes, and app.js does the
+  same with the same pattern, `render.NETWORK_VALUE`. A range with no network, one alone in its
+  network, and any unknown that is not an IP range stay single lines.
 - A name from certificate logs (`--ct`) is matched with the matchers the DNS path uses: each
   hop of its CNAME chain through `label_cname` with the name's first label, as a label CNAME
   is; then its MX hosts through the MX table; then its addresses through the published ranges
@@ -350,7 +357,7 @@ require a gap for each failed question and each cap; `test_web_guard.py` require
 refused fetch sends nothing and is a gap, for each reason the guard refuses, on every redirect
 and on the subprocessor and MTA-STS pages; `test_checked.py` requires the record of
 what was asked and its rendering; `test_labels_say_what_was_seen.py` holds the wording of the
-labels, the key flag and same key findings among them; `test_dkim.py` holds the key reading,
+labels, the key flag and same key findings and the grouping of unrecognised ranges by network among them; `test_dkim.py` holds the key reading,
 the fingerprint and which keys raise which flag; `test_determinism.py` requires the same map from the same answers;
 `test_vendor_proofs.py`, `test_one_selector_list.py` and `test_subprocessor_names.py` require a
 proof on every vendor pattern and one proofed selector list read once; `test_pending_vendors.py`

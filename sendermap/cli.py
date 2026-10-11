@@ -52,7 +52,7 @@ async def _run(args: argparse.Namespace) -> int:
     if args.json:
         print(json.dumps(result.to_dict(), indent=2, default=str))
     elif args.markdown:
-        print(markdown.render(result), end="")
+        print(markdown.render(result, evidence=args.evidence), end="")
     else:
         text.render(result, Console(), evidence=args.evidence)
     return 0

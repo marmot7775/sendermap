@@ -4,11 +4,11 @@ from __future__ import annotations
 
 from datetime import UTC
 
-from ..model import SenderMap, Service
-from . import asked, asked_in_full, ct_lines
+from ..model import SenderMap, Service, Unknown
+from . import NetworkGroup, asked, asked_in_full, ct_lines, grouped_unknowns
 
 
-def render(result: SenderMap) -> str:
+def render(result: SenderMap, *, evidence: bool = False) -> str:
     lines = [f"# Sendermap: {result.domain}", ""]
     checked = result.run.checked_at.astimezone(UTC).strftime("%Y-%m-%d %H:%M UTC")
     lines.append(
@@ -24,12 +24,8 @@ def render(result: SenderMap) -> str:
         lines += [f"- **{f.title}** ({f.severity.value}). {f.detail}" for f in result.findings]
     if result.unknowns:
         lines += ["", "## Not recognised", ""]
-        lines += [
-            f"- {u.what}: `{u.value}`"
-            + ("" if u.where == result.domain else f" at {u.where}")
-            + f", from `{u.evidence}`"
-            for u in result.unknowns
-        ]
+        for item in grouped_unknowns(result.unknowns):
+            lines += _unknown(item, result.domain, evidence)
     if ct := ct_lines(result):
         lines += ["", "## Certificate transparency", ""]
         lines += [f"- {line}" for line in ct]
@@ -58,3 +54,18 @@ def _row(service: Service, domain: str) -> str:
     via = "".join(f" via `{e}`" for e in claim.supporting)
     cell = f"{claim.kind.value}{at}: `{claim.evidence}`{via}".replace("|", "\\|")
     return f"| {service.name} | {service.category} | {service.tier or ''} | {cell} |"
+
+
+def _unknown(item: Unknown | NetworkGroup, domain: str, evidence: bool) -> list[str]:
+    """One unknown with its record, or one network's group with its ranges and addresses and the
+    first record, or every record when `evidence` is set."""
+    at = "" if item.where == domain else f" at {item.where}"
+    if isinstance(item, Unknown):
+        return [f"- {item.what}: `{item.value}`{at}, from `{item.evidence}`"]
+    cidrs = ", ".join(f"`{cidr}`" for cidr, _ in item.members)
+    if evidence:
+        return [f"- {item.heading()}{at}: {cidrs}"] + [
+            f"  - `{u.evidence}`" for _, u in item.members
+        ]
+    more = len(item.members) - 1
+    return [f"- {item.heading()}{at}: {cidrs}, from `{item.members[0][1].evidence}` + {more} more"]
