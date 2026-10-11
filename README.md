@@ -1,5 +1,8 @@
 # Sendermap
 
+[![Test](https://github.com/marmot7775/sendermap/actions/workflows/test.yml/badge.svg)](https://github.com/marmot7775/sendermap/actions/workflows/test.yml)
+[![Verify proofs](https://github.com/marmot7775/sendermap/actions/workflows/verify-proofs.yml/badge.svg)](https://github.com/marmot7775/sendermap/actions/workflows/verify-proofs.yml)
+
 Type a domain, see every service that sends email as it, and the public evidence for each one.
 
 **Status: in development.** Not usable yet. Watch or star the repo to follow along.

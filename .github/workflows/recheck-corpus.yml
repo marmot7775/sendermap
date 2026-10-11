@@ -1,0 +1,49 @@
+# Map every case in tests/corpus live again, weekly (an hour after the proofs job) and by hand,
+# and report how each live map differs from its expected.json, leaving out checked_at and the
+# two run fields. Drift is reported in the job summary and fails nothing: the world changing is
+# not a bug, and a drifted case is re-recorded by hand after reading the diff. The fresh
+# recordings are uploaded for 30 days; nothing is committed. The job fails only when a live map
+# could not be built at all.
+
+name: Recheck corpus
+
+on:
+  schedule:
+    - cron: "0 10 * * 1"  # Monday 10:00 UTC
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  recheck:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+      - name: Install
+        run: pip install .
+      - name: Map each case live and compare
+        run: |
+          failed=()
+          for case in tests/corpus/*/case.json; do
+            domain=$(basename "$(dirname "$case")")
+            if ! python tools/record_corpus.py "$domain" --recheck recheck >>"$GITHUB_STEP_SUMMARY"; then
+              failed+=("$domain")
+              printf '### %s\n\nThe live map could not be built.\n\n' "$domain" >>"$GITHUB_STEP_SUMMARY"
+            fi
+          done
+          if (( ${#failed[@]} )); then
+            echo "::error::no live map for: ${failed[*]}"
+            exit 1
+          fi
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: corpus-recheck-${{ github.run_id }}
+          path: recheck/
+          retention-days: 30
+          if-no-files-found: ignore

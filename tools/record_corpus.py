@@ -3,6 +3,7 @@
     python tools/record_corpus.py DOMAIN [--web]
     python tools/record_corpus.py DOMAIN --update
     python tools/record_corpus.py --update
+    python tools/record_corpus.py DOMAIN --recheck DIR
 
 The first form maps DOMAIN live through the recorders, with checked_at fixed to the moment of
 recording, CT off, and the website off unless --web is given, and writes
@@ -14,12 +15,19 @@ tool fails if the replay differs from the live map, so a case that is saved repl
 
 --update rebuilds expected.json from the recorded answers without the network, for one case or
 every case: for when a code change rightly changes the map. The diff it causes is the review.
+
+--recheck maps a recorded case live again, with its own options and a fresh checked_at, records
+into DIR/<domain>/ and prints, as markdown, how that map differs from expected.json, leaving out
+checked_at and the order of lists. It writes nothing under tests/corpus and exits 0 on drift:
+the world changing is not a bug. A drifted case is re-recorded by hand with the first form,
+after reading the diff.
 """
 
 from __future__ import annotations
 
 import argparse
 import asyncio
+import difflib
 import json
 import sys
 from datetime import UTC, datetime
@@ -46,10 +54,8 @@ def _write_json(path: Path, data: dict[str, Any]) -> None:
     path.write_text(json.dumps(data, indent=1, ensure_ascii=False) + "\n", encoding="utf-8")
 
 
-async def record(domain: str, *, use_web: bool) -> Path:
-    case = Case(
-        clean_domain(domain), datetime.now(UTC).replace(microsecond=0), use_web, use_subdomains=True
-    )
+async def _map_live(case: Case, directory: Path) -> dict[str, Any]:
+    """Map the case's domain live through the recorders and save what they kept in directory."""
     resolver = RecordingResolver(SystemResolver())
     transport = RecordingTransport()
     async with httpx.AsyncClient(transport=transport) as http:
@@ -62,7 +68,6 @@ async def record(domain: str, *, use_web: bool) -> Path:
             use_subdomains=case.use_subdomains,
             use_ct=False,
         )
-    directory = CORPUS / case.domain
     directory.mkdir(parents=True, exist_ok=True)
     resolver.save(directory / "dns.json")
     pages = directory / "http.json"
@@ -71,10 +76,54 @@ async def record(domain: str, *, use_web: bool) -> Path:
     else:
         pages.unlink(missing_ok=True)
     _write_json(directory / "case.json", case.to_dict())
+    return comparable(live)
+
+
+def _now() -> datetime:
+    return datetime.now(UTC).replace(microsecond=0)
+
+
+async def record(domain: str, *, use_web: bool) -> Path:
+    case = Case(clean_domain(domain), _now(), use_web, use_subdomains=True)
+    directory = CORPUS / case.domain
+    live = await _map_live(case, directory)
     replayed = await update(directory)
-    if replayed != comparable(live):
+    if replayed != live:
         raise SystemExit(f"{case.domain}: the replay differs from the live map; not deterministic")
     return directory
+
+
+def _canonical(data: Any) -> Any:
+    """data without checked_at at any depth and with every list sorted: a resolver may hand back
+    an RRset in any order, and the map keeps the order it was given, so order is not drift."""
+    if isinstance(data, dict):
+        return {k: _canonical(v) for k, v in data.items() if k != "checked_at"}
+    if isinstance(data, list | tuple):
+        return sorted((_canonical(v) for v in data), key=lambda v: json.dumps(v, sort_keys=True))
+    return data
+
+
+def drift(expected: dict[str, Any], live: dict[str, Any]) -> list[str]:
+    """The unified diff from expected to live, both without checked_at and with lists sorted;
+    empty when they agree."""
+    before, after = (
+        json.dumps(_canonical(m), indent=1, ensure_ascii=False).splitlines()
+        for m in (expected, live)
+    )
+    return list(difflib.unified_diff(before, after, "expected.json", "live", lineterm=""))
+
+
+async def recheck(domain: str, out: Path) -> str:
+    """Map a recorded case live into out/<domain>/; return the drift report as markdown."""
+    recorded = Case.load(CORPUS / clean_domain(domain))
+    case = Case(recorded.domain, _now(), recorded.use_web, recorded.use_subdomains)
+    live = await _map_live(case, out / case.domain)
+    expected = json.loads((CORPUS / case.domain / "expected.json").read_text(encoding="utf-8"))
+    diff = drift(expected, live)
+    if not diff:
+        return f"### {case.domain}\n\nNo drift: the live map is the recorded one.\n"
+    body = "\n".join(diff)
+    return f"### {case.domain}\n\nDrifted ({len(diff)} diff lines):\n\n```diff\n{body}\n```\n"
 
 
 async def update(directory: Path) -> dict[str, Any]:
@@ -95,7 +144,15 @@ async def main(argv: list[str] | None = None) -> int:
     parser.add_argument(
         "--update", action="store_true", help="rebuild expected.json offline, for one or all"
     )
+    parser.add_argument(
+        "--recheck", type=Path, metavar="DIR", help="map a case live into DIR and print the drift"
+    )
     args = parser.parse_args(argv)
+    if args.recheck:
+        if not args.domain:
+            parser.error("--recheck needs the domain of a recorded case")
+        print(await recheck(args.domain, args.recheck))
+        return 0
     if args.update:
         cases = [CORPUS / clean_domain(args.domain)] if args.domain else _cases()
         for directory in cases:
