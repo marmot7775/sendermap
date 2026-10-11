@@ -308,10 +308,10 @@ function renderUnknowns(unknowns, domain) {
 }
 
 // The same grouping as sendermap/render/__init__.py: the IP ranges and addresses at one name
-// that one network announces, under one owner name and one list of publishers, gathered where
+// that one set of networks announces, under one owner name and one list of publishers, gathered where
 // the first of them stood. A range with no network, one alone in its network, and anything that
 // is not an IP range stay single. The pattern is NETWORK_VALUE there, the shape networks.py writes.
-const NETWORK_VALUE = /^(\S+) \((AS\d+), (.+?)(?:; listed by (.+))?\)$/;
+const NETWORK_VALUE = /^(\S+) \((AS\d+(?: and AS\d+)*), ((?:(?!; AS\d).)+?)(?:; listed by (.+))?\)$/;
 const IP_KINDS = ["IP range in SPF", "IP address in SPF"];
 
 function groupUnknowns(unknowns) {

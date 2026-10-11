@@ -162,7 +162,7 @@ async def _by_address(
             ((service, source),) = candidates.items()
             support = (source,)
         elif announced := await networks.owner(ctx, network[0]):
-            service, support = ctx.catalog.network(announced.asn), announced.evidence
+            service, support = networks.credited(ctx, announced), announced.evidence
         if service:
             evidence = _evidence(ctx, logged, "A", ip)
             claim = Claim(service, Kind.CT_ADDRESS, logged.name, evidence, support)

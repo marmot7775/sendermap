@@ -309,7 +309,7 @@
   },
   {
    "what": "IP address in SPF",
-   "value": "107.20.91.250 (AS14618, Amazon Web Services)",
+   "value": "107.20.91.250 (AS14618 and AS16509, Amazon Web Services)",
    "where": "mills-reeve.com",
    "evidence": {
     "name": "docebosaas.com",
@@ -320,7 +320,7 @@
   },
   {
    "what": "IP address in SPF",
-   "value": "3.209.231.65 (AS14618, Amazon Web Services)",
+   "value": "3.209.231.65 (AS14618 and AS16509, Amazon Web Services)",
    "where": "mills-reeve.com",
    "evidence": {
     "name": "docebosaas.com",
@@ -375,7 +375,7 @@
   },
   {
    "what": "IP address in SPF",
-   "value": "52.4.156.8 (AS14618, Amazon Web Services)",
+   "value": "52.4.156.8 (AS14618 and AS16509, Amazon Web Services)",
    "where": "mills-reeve.com",
    "evidence": {
     "name": "docebosaas.com",
