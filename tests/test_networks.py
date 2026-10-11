@@ -56,6 +56,24 @@ async def test_a_services_own_network_names_it() -> None:
     assert [c.service for c in observed.claims] == ["Mailchimp"]
 
 
+async def test_a_range_inside_sendgrids_network_is_sendgrid_by_team_cymrus_answers() -> None:
+    # A flattened record copies a range SendGrid and HubSpot both publish, so the network decides.
+    zone = (
+        Zone()
+        .add("sendgrid.net", "TXT", "v=spf1 ip4:223.165.113.0/24 -all")
+        .add("hubspot.com", "TXT", "v=spf1 ip4:223.165.113.0/24 -all")
+    )
+    owner(zone, "223.165.113.1", "AS11377", "SENDGRID - SendGrid, Inc., US")
+    observed = await networks.collect(context(zone), "example.com", [("223.165.113.0/24", EV)])
+    (claim,) = observed.claims
+    assert (claim.service, claim.kind, claim.evidence) == ("SendGrid", Kind.SPF_NETWORK, EV)
+    assert [(e.name, e.value) for e in claim.supporting] == [
+        ("1.113.165.223.origin.asn.cymru.com", "11377 | 223.165.113.1/24 | US | arin | 2020-01-01"),
+        ("as11377.asn.cymru.com", "11377 | US | arin | 2005-01-01 | SENDGRID - SendGrid, Inc., US"),
+    ]
+    assert observed.unknowns == ()
+
+
 async def test_a_large_range_follows_the_majority_of_its_blocks() -> None:
     # Its first /24 is announced by Amazon, as with SendGrid's 149.72.0.0/16; the other two
     # samples by Mailchimp.

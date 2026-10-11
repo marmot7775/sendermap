@@ -1005,6 +1005,16 @@
         }
       ],
       "category": "Mailbox",
+      "networks": [
+        {
+          "value": "AS151847",
+          "proof": {
+            "domain": "fastmail.com",
+            "record": "smtp.fastmail.com",
+            "date": "2026-10-11"
+          }
+        }
+      ],
       "selectors": [
         {
           "shape": {
@@ -1619,6 +1629,16 @@
         }
       ],
       "category": "Mailbox",
+      "networks": [
+        {
+          "value": "AS8560",
+          "proof": {
+            "domain": "ionos.com",
+            "record": "mx00.ionos.com",
+            "date": "2026-10-11"
+          }
+        }
+      ],
       "selectors": [
         {
           "shape": {
@@ -2591,7 +2611,17 @@
           }
         }
       ],
-      "category": "Transactional"
+      "category": "Transactional",
+      "networks": [
+        {
+          "value": "AS203376",
+          "proof": {
+            "domain": "mailkit.eu",
+            "record": "mailkit.eu",
+            "date": "2026-10-11"
+          }
+        }
+      ]
     },
     "Outlook.com (consumer)": {
       "mx": [
@@ -3234,6 +3264,16 @@
         }
       ],
       "category": "Transactional",
+      "networks": [
+        {
+          "value": "AS11377",
+          "proof": {
+            "domain": "sendgrid.net",
+            "record": "xtrwsqhx.outbound-mail.sendgrid.net",
+            "date": "2026-10-11"
+          }
+        }
+      ],
       "mx": [
         {
           "value": "sendgrid.net",
