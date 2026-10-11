@@ -1,0 +1,1883 @@
+{
+ "domain": "casper.com",
+ "services": [
+  {
+   "name": "Google Workspace",
+   "category": "Mailbox",
+   "tier": "In use",
+   "role": "sender",
+   "claims": [
+    {
+     "service": "Google Workspace",
+     "kind": "receives the domain's mail (MX)",
+     "where": "casper.com",
+     "evidence": {
+      "name": "casper.com",
+      "rtype": "MX",
+      "value": "10 aspmx3.googlemail.com",
+      "checked_at": "2026-10-11T19:47:14+00:00"
+     },
+     "supporting": []
+    },
+    {
+     "service": "Google Workspace",
+     "kind": "receives the domain's mail (MX)",
+     "where": "casper.com",
+     "evidence": {
+      "name": "casper.com",
+      "rtype": "MX",
+      "value": "5 alt1.aspmx.l.google.com",
+      "checked_at": "2026-10-11T19:47:14+00:00"
+     },
+     "supporting": []
+    },
+    {
+     "service": "Google Workspace",
+     "kind": "receives the domain's mail (MX)",
+     "where": "casper.com",
+     "evidence": {
+      "name": "casper.com",
+      "rtype": "MX",
+      "value": "5 alt2.aspmx.l.google.com",
+      "checked_at": "2026-10-11T19:47:14+00:00"
+     },
+     "supporting": []
+    },
+    {
+     "service": "Google Workspace",
+     "kind": "receives the domain's mail (MX)",
+     "where": "casper.com",
+     "evidence": {
+      "name": "casper.com",
+      "rtype": "MX",
+      "value": "1 aspmx.l.google.com",
+      "checked_at": "2026-10-11T19:47:14+00:00"
+     },
+     "supporting": []
+    },
+    {
+     "service": "Google Workspace",
+     "kind": "receives the domain's mail (MX)",
+     "where": "casper.com",
+     "evidence": {
+      "name": "casper.com",
+      "rtype": "MX",
+      "value": "10 aspmx2.googlemail.com",
+      "checked_at": "2026-10-11T19:47:14+00:00"
+     },
+     "supporting": []
+    },
+    {
+     "service": "Google Workspace",
+     "kind": "included in SPF",
+     "where": "casper.com",
+     "evidence": {
+      "name": "casper.com",
+      "rtype": "TXT",
+      "value": "include:_spf.google.com",
+      "checked_at": "2026-10-11T19:47:14+00:00"
+     },
+     "supporting": []
+    },
+    {
+     "service": "Google Workspace",
+     "kind": "in use for a subdomain's mail (MX)",
+     "where": "e.casper.com",
+     "evidence": {
+      "name": "e.casper.com",
+      "rtype": "MX",
+      "value": "5 alt1.aspmx.l.google.com",
+      "checked_at": "2026-10-11T19:47:14+00:00"
+     },
+     "supporting": []
+    },
+    {
+     "service": "Google Workspace",
+     "kind": "in use for a subdomain's mail (MX)",
+     "where": "e.casper.com",
+     "evidence": {
+      "name": "e.casper.com",
+      "rtype": "MX",
+      "value": "5 alt2.aspmx.l.google.com",
+      "checked_at": "2026-10-11T19:47:14+00:00"
+     },
+     "supporting": []
+    },
+    {
+     "service": "Google Workspace",
+     "kind": "in use for a subdomain's mail (MX)",
+     "where": "e.casper.com",
+     "evidence": {
+      "name": "e.casper.com",
+      "rtype": "MX",
+      "value": "1 aspmx.l.google.com",
+      "checked_at": "2026-10-11T19:47:14+00:00"
+     },
+     "supporting": []
+    },
+    {
+     "service": "Google Workspace",
+     "kind": "in use for a subdomain's mail (MX)",
+     "where": "e.casper.com",
+     "evidence": {
+      "name": "e.casper.com",
+      "rtype": "MX",
+      "value": "10 alt3.aspmx.l.google.com",
+      "checked_at": "2026-10-11T19:47:14+00:00"
+     },
+     "supporting": []
+    },
+    {
+     "service": "Google Workspace",
+     "kind": "in use for a subdomain's mail (MX)",
+     "where": "e.casper.com",
+     "evidence": {
+      "name": "e.casper.com",
+      "rtype": "MX",
+      "value": "10 alt4.aspmx.l.google.com",
+      "checked_at": "2026-10-11T19:47:14+00:00"
+     },
+     "supporting": []
+    },
+    {
+     "service": "Google Workspace",
+     "kind": "in use for a subdomain's mail (MX)",
+     "where": "mail.casper.com",
+     "evidence": {
+      "name": "mail.casper.com",
+      "rtype": "MX",
+      "value": "5 alt2.aspmx.l.google.com",
+      "checked_at": "2026-10-11T19:47:14+00:00"
+     },
+     "supporting": []
+    },
+    {
+     "service": "Google Workspace",
+     "kind": "in use for a subdomain's mail (MX)",
+     "where": "mail.casper.com",
+     "evidence": {
+      "name": "mail.casper.com",
+      "rtype": "MX",
+      "value": "1 aspmx.l.google.com",
+      "checked_at": "2026-10-11T19:47:14+00:00"
+     },
+     "supporting": []
+    },
+    {
+     "service": "Google Workspace",
+     "kind": "in use for a subdomain's mail (MX)",
+     "where": "mail.casper.com",
+     "evidence": {
+      "name": "mail.casper.com",
+      "rtype": "MX",
+      "value": "10 alt3.aspmx.l.google.com",
+      "checked_at": "2026-10-11T19:47:14+00:00"
+     },
+     "supporting": []
+    },
+    {
+     "service": "Google Workspace",
+     "kind": "in use for a subdomain's mail (MX)",
+     "where": "mail.casper.com",
+     "evidence": {
+      "name": "mail.casper.com",
+      "rtype": "MX",
+      "value": "10 alt4.aspmx.l.google.com",
+      "checked_at": "2026-10-11T19:47:14+00:00"
+     },
+     "supporting": []
+    },
+    {
+     "service": "Google Workspace",
+     "kind": "in use for a subdomain's mail (MX)",
+     "where": "mail.casper.com",
+     "evidence": {
+      "name": "mail.casper.com",
+      "rtype": "MX",
+      "value": "5 alt1.aspmx.l.google.com",
+      "checked_at": "2026-10-11T19:47:14+00:00"
+     },
+     "supporting": []
+    },
+    {
+     "service": "Google Workspace",
+     "kind": "in use for a subdomain's mail (MX)",
+     "where": "orders.casper.com",
+     "evidence": {
+      "name": "orders.casper.com",
+      "rtype": "MX",
+      "value": "30 alt2.aspmx.l.google.com",
+      "checked_at": "2026-10-11T19:47:14+00:00"
+     },
+     "supporting": []
+    },
+    {
+     "service": "Google Workspace",
+     "kind": "in use for a subdomain's mail (MX)",
+     "where": "orders.casper.com",
+     "evidence": {
+      "name": "orders.casper.com",
+      "rtype": "MX",
+      "value": "35 aspmx2.googlemail.com",
+      "checked_at": "2026-10-11T19:47:14+00:00"
+     },
+     "supporting": []
+    },
+    {
+     "service": "Google Workspace",
+     "kind": "in use for a subdomain's mail (MX)",
+     "where": "orders.casper.com",
+     "evidence": {
+      "name": "orders.casper.com",
+      "rtype": "MX",
+      "value": "35 aspmx3.googlemail.com",
+      "checked_at": "2026-10-11T19:47:14+00:00"
+     },
+     "supporting": []
+    },
+    {
+     "service": "Google Workspace",
+     "kind": "in use for a subdomain's mail (MX)",
+     "where": "orders.casper.com",
+     "evidence": {
+      "name": "orders.casper.com",
+      "rtype": "MX",
+      "value": "25 aspmx.l.google.com",
+      "checked_at": "2026-10-11T19:47:14+00:00"
+     },
+     "supporting": []
+    },
+    {
+     "service": "Google Workspace",
+     "kind": "in use for a subdomain's mail (MX)",
+     "where": "orders.casper.com",
+     "evidence": {
+      "name": "orders.casper.com",
+      "rtype": "MX",
+      "value": "30 alt1.aspmx.l.google.com",
+      "checked_at": "2026-10-11T19:47:14+00:00"
+     },
+     "supporting": []
+    },
+    {
+     "service": "Google Workspace",
+     "kind": "DKIM key named for it",
+     "where": "casper.com",
+     "evidence": {
+      "name": "google._domainkey.casper.com",
+      "rtype": "TXT",
+      "value": "v=DKIM1; k=rsa; p=MIGfMA0GCSqG..., 1024-bit, fp e6d74f2ed99fdbb5",
+      "checked_at": "2026-10-11T19:47:14+00:00"
+     },
+     "supporting": [
+      {
+       "name": "casper.com",
+       "rtype": "TXT",
+       "value": "include:_spf.google.com",
+       "checked_at": "2026-10-11T19:47:14+00:00"
+      }
+     ]
+    },
+    {
+     "service": "Google Workspace",
+     "kind": "DKIM key named for it",
+     "where": "orders.casper.com",
+     "evidence": {
+      "name": "google._domainkey.orders.casper.com",
+      "rtype": "TXT",
+      "value": "v=DKIM1; k=rsa; p=MIIBIjANBgkq..., 2048-bit, fp 66efacf170b65970",
+      "checked_at": "2026-10-11T19:47:14+00:00"
+     },
+     "supporting": [
+      {
+       "name": "orders.casper.com",
+       "rtype": "MX",
+       "value": "30 alt2.aspmx.l.google.com",
+       "checked_at": "2026-10-11T19:47:14+00:00"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "name": "Campaign Monitor",
+   "category": "Marketing",
+   "tier": "Configured",
+   "role": "sender",
+   "claims": [
+    {
+     "service": "Campaign Monitor",
+     "kind": "included in SPF",
+     "where": "casper.com",
+     "evidence": {
+      "name": "casper.com",
+      "rtype": "TXT",
+      "value": "include:_spf.createsend.com",
+      "checked_at": "2026-10-11T19:47:14+00:00"
+     },
+     "supporting": []
+    },
+    {
+     "service": "Campaign Monitor",
+     "kind": "DKIM key named for it",
+     "where": "casper.com",
+     "evidence": {
+      "name": "cm._domainkey.casper.com",
+      "rtype": "TXT",
+      "value": "k=rsa; p=MIGfMA0GCSqG..., 1024-bit, fp 9347c624a5a8cd6f",
+      "checked_at": "2026-10-11T19:47:14+00:00"
+     },
+     "supporting": [
+      {
+       "name": "casper.com",
+       "rtype": "TXT",
+       "value": "include:_spf.createsend.com",
+       "checked_at": "2026-10-11T19:47:14+00:00"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "name": "Iterable",
+   "category": "Marketing",
+   "tier": "Configured",
+   "role": "sender",
+   "claims": [
+    {
+     "service": "Iterable",
+     "kind": "link tracking CNAME",
+     "where": "casper.com",
+     "evidence": {
+      "name": "links.casper.com",
+      "rtype": "CNAME",
+      "value": "links.iterable.com",
+      "checked_at": "2026-10-11T19:47:14+00:00"
+     },
+     "supporting": []
+    }
+   ]
+  },
+  {
+   "name": "Mailchimp",
+   "category": "Marketing",
+   "tier": "Configured",
+   "role": "sender",
+   "claims": [
+    {
+     "service": "Mailchimp",
+     "kind": "hosts a DKIM key (CNAME)",
+     "where": "casper.com",
+     "evidence": {
+      "name": "k1._domainkey.casper.com",
+      "rtype": "TXT",
+      "value": "k=rsa; p=MIGfMA0GCSqG..., 1024-bit, fp 53d7bb0466c8346d via dkim.mcsv.net",
+      "checked_at": "2026-10-11T19:47:14+00:00"
+     },
+     "supporting": []
+    }
+   ]
+  },
+  {
+   "name": "Mailgun",
+   "category": "Transactional",
+   "tier": "Configured",
+   "role": "sender",
+   "claims": [
+    {
+     "service": "Mailgun",
+     "kind": "receives replies and bounces for a sending subdomain (MX)",
+     "where": "e.casper.com",
+     "evidence": {
+      "name": "e.casper.com",
+      "rtype": "MX",
+      "value": "10 mxa.mailgun.org",
+      "checked_at": "2026-10-11T19:47:14+00:00"
+     },
+     "supporting": []
+    },
+    {
+     "service": "Mailgun",
+     "kind": "receives replies and bounces for a sending subdomain (MX)",
+     "where": "e.casper.com",
+     "evidence": {
+      "name": "e.casper.com",
+      "rtype": "MX",
+      "value": "10 mxb.mailgun.org",
+      "checked_at": "2026-10-11T19:47:14+00:00"
+     },
+     "supporting": []
+    },
+    {
+     "service": "Mailgun",
+     "kind": "receives replies and bounces for a sending subdomain (MX)",
+     "where": "t.casper.com",
+     "evidence": {
+      "name": "t.casper.com",
+      "rtype": "MX",
+      "value": "10 mxa.mailgun.org",
+      "checked_at": "2026-10-11T19:47:14+00:00"
+     },
+     "supporting": []
+    },
+    {
+     "service": "Mailgun",
+     "kind": "receives replies and bounces for a sending subdomain (MX)",
+     "where": "t.casper.com",
+     "evidence": {
+      "name": "t.casper.com",
+      "rtype": "MX",
+      "value": "10 mxb.mailgun.org",
+      "checked_at": "2026-10-11T19:47:14+00:00"
+     },
+     "supporting": []
+    },
+    {
+     "service": "Mailgun",
+     "kind": "included in SPF",
+     "where": "e.casper.com",
+     "evidence": {
+      "name": "e.casper.com",
+      "rtype": "TXT",
+      "value": "include:mailgun.org",
+      "checked_at": "2026-10-11T19:47:14+00:00"
+     },
+     "supporting": []
+    },
+    {
+     "service": "Mailgun",
+     "kind": "included in SPF",
+     "where": "t.casper.com",
+     "evidence": {
+      "name": "t.casper.com",
+      "rtype": "TXT",
+      "value": "include:mailgun.org",
+      "checked_at": "2026-10-11T19:47:14+00:00"
+     },
+     "supporting": []
+    }
+   ]
+  },
+  {
+   "name": "Mandrill",
+   "category": "Transactional",
+   "tier": "Configured",
+   "role": "sender",
+   "claims": [
+    {
+     "service": "Mandrill",
+     "kind": "hosts a DKIM key (CNAME)",
+     "where": "casper.com",
+     "evidence": {
+      "name": "mte1._domainkey.casper.com",
+      "rtype": "TXT",
+      "value": "v=DKIM1; k=rsa; p=MIIBIjANBgkq..., 2048-bit, fp 402b5aebde0f1c9f via dkim1.mandrillapp.com",
+      "checked_at": "2026-10-11T19:47:14+00:00"
+     },
+     "supporting": []
+    },
+    {
+     "service": "Mandrill",
+     "kind": "hosts a DKIM key (CNAME)",
+     "where": "casper.com",
+     "evidence": {
+      "name": "mte2._domainkey.casper.com",
+      "rtype": "TXT",
+      "value": "v=DKIM1; k=rsa; p=MIIBIjANBgkq..., 2048-bit, fp bd970c8868f21f9b via dkim2.mandrillapp.com",
+      "checked_at": "2026-10-11T19:47:14+00:00"
+     },
+     "supporting": []
+    },
+    {
+     "service": "Mandrill",
+     "kind": "included in SPF",
+     "where": "email.casper.com",
+     "evidence": {
+      "name": "email.casper.com",
+      "rtype": "TXT",
+      "value": "include:spf.mandrillapp.com",
+      "checked_at": "2026-10-11T19:47:14+00:00"
+     },
+     "supporting": []
+    },
+    {
+     "service": "Mandrill",
+     "kind": "hosts a DKIM key (CNAME)",
+     "where": "email.casper.com",
+     "evidence": {
+      "name": "mte1._domainkey.email.casper.com",
+      "rtype": "TXT",
+      "value": "v=DKIM1; k=rsa; p=MIIBIjANBgkq..., 2048-bit, fp 402b5aebde0f1c9f via dkim1.mandrillapp.com",
+      "checked_at": "2026-10-11T19:47:14+00:00"
+     },
+     "supporting": []
+    },
+    {
+     "service": "Mandrill",
+     "kind": "hosts a DKIM key (CNAME)",
+     "where": "email.casper.com",
+     "evidence": {
+      "name": "mte2._domainkey.email.casper.com",
+      "rtype": "TXT",
+      "value": "v=DKIM1; k=rsa; p=MIIBIjANBgkq..., 2048-bit, fp bd970c8868f21f9b via dkim2.mandrillapp.com",
+      "checked_at": "2026-10-11T19:47:14+00:00"
+     },
+     "supporting": []
+    },
+    {
+     "service": "Mandrill",
+     "kind": "DKIM key named for it",
+     "where": "casper.com",
+     "evidence": {
+      "name": "mandrill._domainkey.casper.com",
+      "rtype": "TXT",
+      "value": "v=DKIM1; k=rsa; p=MIGfMA0GCSqG..., 1024-bit, fp 9cee89b6f986543a",
+      "checked_at": "2026-10-11T19:47:14+00:00"
+     },
+     "supporting": []
+    }
+   ]
+  },
+  {
+   "name": "Postmark",
+   "category": "Transactional",
+   "tier": "Configured",
+   "role": "sender",
+   "claims": [
+    {
+     "service": "Postmark",
+     "kind": "bounce address CNAME",
+     "where": "casper.com",
+     "evidence": {
+      "name": "pm-bounces.casper.com",
+      "rtype": "CNAME",
+      "value": "pm.mtasv.net",
+      "checked_at": "2026-10-11T19:47:14+00:00"
+     },
+     "supporting": []
+    }
+   ]
+  },
+  {
+   "name": "Salesforce",
+   "category": "Support and CRM",
+   "tier": "Configured",
+   "role": "sender",
+   "claims": [
+    {
+     "service": "Salesforce",
+     "kind": "included in SPF",
+     "where": "casper.com",
+     "evidence": {
+      "name": "casper.com",
+      "rtype": "TXT",
+      "value": "include:_spf.salesforce.com",
+      "checked_at": "2026-10-11T19:47:14+00:00"
+     },
+     "supporting": []
+    },
+    {
+     "service": "Salesforce",
+     "kind": "DKIM key named for it",
+     "where": "casper.com",
+     "evidence": {
+      "name": "salesforce._domainkey.casper.com",
+      "rtype": "TXT",
+      "value": "v=DKIM1; k=rsa; p=MIGfMA0GCSqG..., 1024-bit, fp 2b895d381a879705",
+      "checked_at": "2026-10-11T19:47:14+00:00"
+     },
+     "supporting": [
+      {
+       "name": "casper.com",
+       "rtype": "TXT",
+       "value": "include:_spf.salesforce.com",
+       "checked_at": "2026-10-11T19:47:14+00:00"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "name": "Salesforce Account Engagement",
+   "category": "Marketing",
+   "tier": "Configured",
+   "role": "sender",
+   "claims": [
+    {
+     "service": "Salesforce Account Engagement",
+     "kind": "owns a network listed in SPF",
+     "where": "mail.casper.com",
+     "evidence": {
+      "name": "cust-spf.exacttarget.com",
+      "rtype": "TXT",
+      "value": "ip4:13.111.191.0/24",
+      "checked_at": "2026-10-11T19:47:14+00:00"
+     },
+     "supporting": [
+      {
+       "name": "et._spf.pardot.com",
+       "rtype": "TXT",
+       "value": "ip4:13.111.0.0/16",
+       "checked_at": "2026-10-11T19:47:14+00:00"
+      }
+     ]
+    },
+    {
+     "service": "Salesforce Account Engagement",
+     "kind": "owns a network listed in SPF",
+     "where": "mail.casper.com",
+     "evidence": {
+      "name": "cust-spf.exacttarget.com",
+      "rtype": "TXT",
+      "value": "ip4:13.111.0.0/16",
+      "checked_at": "2026-10-11T19:47:14+00:00"
+     },
+     "supporting": [
+      {
+       "name": "et._spf.pardot.com",
+       "rtype": "TXT",
+       "value": "ip4:13.111.0.0/16",
+       "checked_at": "2026-10-11T19:47:14+00:00"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "name": "SendGrid",
+   "category": "Transactional",
+   "tier": "Configured",
+   "role": "sender",
+   "claims": [
+    {
+     "service": "SendGrid",
+     "kind": "hosts a DKIM key (CNAME)",
+     "where": "casper.com",
+     "evidence": {
+      "name": "s1._domainkey.casper.com",
+      "rtype": "TXT",
+      "value": "k=rsa; t=s (strict); p=MIIBIjANBgkq..., 2048-bit, fp fdc0f9d77c779856 via s1.domainkey.u895984.wl235.sendgrid.net",
+      "checked_at": "2026-10-11T19:47:14+00:00"
+     },
+     "supporting": []
+    },
+    {
+     "service": "SendGrid",
+     "kind": "hosts a DKIM key (CNAME)",
+     "where": "casper.com",
+     "evidence": {
+      "name": "s2._domainkey.casper.com",
+      "rtype": "TXT",
+      "value": "k=rsa; t=s (strict); p=MIGfMA0GCSqG..., 1024-bit, fp ea13ef38e66c6769 via s2.domainkey.u895984.wl235.sendgrid.net",
+      "checked_at": "2026-10-11T19:47:14+00:00"
+     },
+     "supporting": []
+    },
+    {
+     "service": "SendGrid",
+     "kind": "DKIM key named for it",
+     "where": "casper.com",
+     "evidence": {
+      "name": "smtpapi._domainkey.casper.com",
+      "rtype": "TXT",
+      "value": "k=rsa; t=s (strict); p=MIGfMA0GCSqG..., 1024-bit, fp 303963420cfee1c6",
+      "checked_at": "2026-10-11T19:47:14+00:00"
+     },
+     "supporting": []
+    }
+   ]
+  },
+  {
+   "name": "Customer.io",
+   "category": "Marketing",
+   "tier": "Likely",
+   "role": "sender",
+   "claims": [
+    {
+     "service": "Customer.io",
+     "kind": "DKIM key named for it",
+     "where": "e.casper.com",
+     "evidence": {
+      "name": "krs._domainkey.e.casper.com",
+      "rtype": "TXT",
+      "value": "k=rsa; p=MIIBIjANBgkq..., 2048-bit, fp 1eb1e97f362ad520",
+      "checked_at": "2026-10-11T19:47:14+00:00"
+     },
+     "supporting": []
+    }
+   ]
+  },
+  {
+   "name": "Microsoft 365",
+   "category": "Mailbox",
+   "tier": "Account only",
+   "role": "sender",
+   "claims": [
+    {
+     "service": "Microsoft 365",
+     "kind": "verification token",
+     "where": "casper.com",
+     "evidence": {
+      "name": "casper.com",
+      "rtype": "TXT",
+      "value": "MS=ms55520198",
+      "checked_at": "2026-10-11T19:47:14+00:00"
+     },
+     "supporting": []
+    }
+   ]
+  },
+  {
+   "name": "DMARCian",
+   "category": "DMARC reporting",
+   "tier": null,
+   "role": "reporting",
+   "claims": [
+    {
+     "service": "DMARCian",
+     "kind": "receives DMARC reports",
+     "where": "casper.com",
+     "evidence": {
+      "name": "_dmarc.casper.com",
+      "rtype": "TXT",
+      "value": "v=DMARC1; p=reject;  rua=mailto:pyzv2eqw@ag.dmarcian.com;",
+      "checked_at": "2026-10-11T19:47:14+00:00"
+     },
+     "supporting": []
+    }
+   ]
+  }
+ ],
+ "run": {
+  "checked_at": "2026-10-11T19:47:14+00:00"
+ },
+ "findings": [
+  {
+   "severity": "warning",
+   "title": "The google key at casper.com is 1024-bit",
+   "detail": "Some receivers already treat 1024-bit RSA keys as weak. Rotate to 2048-bit.",
+   "evidence": [
+    {
+     "name": "google._domainkey.casper.com",
+     "rtype": "TXT",
+     "value": "v=DKIM1; k=rsa; p=MIGfMA0GCSqG..., 1024-bit, fp e6d74f2ed99fdbb5",
+     "checked_at": "2026-10-11T19:47:14+00:00"
+    }
+   ]
+  },
+  {
+   "severity": "warning",
+   "title": "The cm key at casper.com is 1024-bit",
+   "detail": "Some receivers already treat 1024-bit RSA keys as weak. Rotate to 2048-bit.",
+   "evidence": [
+    {
+     "name": "cm._domainkey.casper.com",
+     "rtype": "TXT",
+     "value": "k=rsa; p=MIGfMA0GCSqG..., 1024-bit, fp 9347c624a5a8cd6f",
+     "checked_at": "2026-10-11T19:47:14+00:00"
+    }
+   ]
+  },
+  {
+   "severity": "warning",
+   "title": "The k1 key at casper.com is 1024-bit",
+   "detail": "Some receivers already treat 1024-bit RSA keys as weak. Rotate to 2048-bit.",
+   "evidence": [
+    {
+     "name": "k1._domainkey.casper.com",
+     "rtype": "TXT",
+     "value": "k=rsa; p=MIGfMA0GCSqG..., 1024-bit, fp 53d7bb0466c8346d via dkim.mcsv.net",
+     "checked_at": "2026-10-11T19:47:14+00:00"
+    }
+   ]
+  },
+  {
+   "severity": "warning",
+   "title": "The mandrill key at casper.com is 1024-bit",
+   "detail": "Some receivers already treat 1024-bit RSA keys as weak. Rotate to 2048-bit.",
+   "evidence": [
+    {
+     "name": "mandrill._domainkey.casper.com",
+     "rtype": "TXT",
+     "value": "v=DKIM1; k=rsa; p=MIGfMA0GCSqG..., 1024-bit, fp 9cee89b6f986543a",
+     "checked_at": "2026-10-11T19:47:14+00:00"
+    }
+   ]
+  },
+  {
+   "severity": "warning",
+   "title": "The salesforce key at casper.com is 1024-bit",
+   "detail": "Some receivers already treat 1024-bit RSA keys as weak. Rotate to 2048-bit.",
+   "evidence": [
+    {
+     "name": "salesforce._domainkey.casper.com",
+     "rtype": "TXT",
+     "value": "v=DKIM1; k=rsa; p=MIGfMA0GCSqG..., 1024-bit, fp 2b895d381a879705",
+     "checked_at": "2026-10-11T19:47:14+00:00"
+    }
+   ]
+  },
+  {
+   "severity": "warning",
+   "title": "The s2 key at casper.com is 1024-bit",
+   "detail": "Some receivers already treat 1024-bit RSA keys as weak. Rotate to 2048-bit.",
+   "evidence": [
+    {
+     "name": "s2._domainkey.casper.com",
+     "rtype": "TXT",
+     "value": "k=rsa; t=s (strict); p=MIGfMA0GCSqG..., 1024-bit, fp ea13ef38e66c6769 via s2.domainkey.u895984.wl235.sendgrid.net",
+     "checked_at": "2026-10-11T19:47:14+00:00"
+    }
+   ]
+  },
+  {
+   "severity": "warning",
+   "title": "The smtpapi key at casper.com is 1024-bit",
+   "detail": "Some receivers already treat 1024-bit RSA keys as weak. Rotate to 2048-bit.",
+   "evidence": [
+    {
+     "name": "smtpapi._domainkey.casper.com",
+     "rtype": "TXT",
+     "value": "k=rsa; t=s (strict); p=MIGfMA0GCSqG..., 1024-bit, fp 303963420cfee1c6",
+     "checked_at": "2026-10-11T19:47:14+00:00"
+    }
+   ]
+  },
+  {
+   "severity": "warning",
+   "title": "The mx key at casper.com is 1024-bit",
+   "detail": "Some receivers already treat 1024-bit RSA keys as weak. Rotate to 2048-bit.",
+   "evidence": [
+    {
+     "name": "mx._domainkey.casper.com",
+     "rtype": "TXT",
+     "value": "v=DKIM1; k=rsa; p=MIGfMA0GCSqG..., 1024-bit, fp 273e0630e2eb6478",
+     "checked_at": "2026-10-11T19:47:14+00:00"
+    }
+   ]
+  },
+  {
+   "severity": "note",
+   "title": "The mte1 key at casper.com and the mte1 key at email.casper.com are the same key",
+   "detail": "They publish one public key, fp 402b5aebde0f1c9f, so one private key signs for all of them, and replacing the key at one selector leaves it live at the others.",
+   "evidence": [
+    {
+     "name": "mte1._domainkey.casper.com",
+     "rtype": "TXT",
+     "value": "v=DKIM1; k=rsa; p=MIIBIjANBgkq..., 2048-bit, fp 402b5aebde0f1c9f via dkim1.mandrillapp.com",
+     "checked_at": "2026-10-11T19:47:14+00:00"
+    },
+    {
+     "name": "mte1._domainkey.email.casper.com",
+     "rtype": "TXT",
+     "value": "v=DKIM1; k=rsa; p=MIIBIjANBgkq..., 2048-bit, fp 402b5aebde0f1c9f via dkim1.mandrillapp.com",
+     "checked_at": "2026-10-11T19:47:14+00:00"
+    }
+   ]
+  },
+  {
+   "severity": "note",
+   "title": "The mte2 key at casper.com and the mte2 key at email.casper.com are the same key",
+   "detail": "They publish one public key, fp bd970c8868f21f9b, so one private key signs for all of them, and replacing the key at one selector leaves it live at the others.",
+   "evidence": [
+    {
+     "name": "mte2._domainkey.casper.com",
+     "rtype": "TXT",
+     "value": "v=DKIM1; k=rsa; p=MIIBIjANBgkq..., 2048-bit, fp bd970c8868f21f9b via dkim2.mandrillapp.com",
+     "checked_at": "2026-10-11T19:47:14+00:00"
+    },
+    {
+     "name": "mte2._domainkey.email.casper.com",
+     "rtype": "TXT",
+     "value": "v=DKIM1; k=rsa; p=MIIBIjANBgkq..., 2048-bit, fp bd970c8868f21f9b via dkim2.mandrillapp.com",
+     "checked_at": "2026-10-11T19:47:14+00:00"
+    }
+   ]
+  }
+ ],
+ "unknowns": [
+  {
+   "what": "SPF include",
+   "value": "_spf.q4press.com",
+   "where": "casper.com",
+   "evidence": {
+    "name": "casper.com",
+    "rtype": "TXT",
+    "value": "include:_spf.q4press.com",
+    "checked_at": "2026-10-11T19:47:14+00:00"
+   }
+  },
+  {
+   "what": "SPF include",
+   "value": "docebosaas.com",
+   "where": "casper.com",
+   "evidence": {
+    "name": "casper.com",
+    "rtype": "TXT",
+    "value": "include:docebosaas.com",
+    "checked_at": "2026-10-11T19:47:14+00:00"
+   }
+  },
+  {
+   "what": "DKIM key",
+   "value": "mx",
+   "where": "casper.com",
+   "evidence": {
+    "name": "mx._domainkey.casper.com",
+    "rtype": "TXT",
+    "value": "v=DKIM1; k=rsa; p=MIGfMA0GCSqG..., 1024-bit, fp 273e0630e2eb6478",
+    "checked_at": "2026-10-11T19:47:14+00:00"
+   }
+  },
+  {
+   "what": "IP address in SPF",
+   "value": "208.89.14.209 (AS11054, LIVEPERSON - LivePerson, Inc., US)",
+   "where": "casper.com",
+   "evidence": {
+    "name": "casper.com",
+    "rtype": "TXT",
+    "value": "ip4:208.89.14.209",
+    "checked_at": "2026-10-11T19:47:14+00:00"
+   }
+  },
+  {
+   "what": "IP address in SPF",
+   "value": "107.20.91.250 (AS16509, Amazon Web Services)",
+   "where": "casper.com",
+   "evidence": {
+    "name": "docebosaas.com",
+    "rtype": "TXT",
+    "value": "ip4:107.20.91.250",
+    "checked_at": "2026-10-11T19:47:14+00:00"
+   }
+  },
+  {
+   "what": "IP address in SPF",
+   "value": "3.209.231.65 (AS14618, Amazon Web Services)",
+   "where": "casper.com",
+   "evidence": {
+    "name": "docebosaas.com",
+    "rtype": "TXT",
+    "value": "ip4:3.209.231.65",
+    "checked_at": "2026-10-11T19:47:14+00:00"
+   }
+  },
+  {
+   "what": "IP address in SPF",
+   "value": "3.96.249.213 (AS16509, Amazon Web Services)",
+   "where": "casper.com",
+   "evidence": {
+    "name": "docebosaas.com",
+    "rtype": "TXT",
+    "value": "ip4:3.96.249.213",
+    "checked_at": "2026-10-11T19:47:14+00:00"
+   }
+  },
+  {
+   "what": "IP address in SPF",
+   "value": "34.242.156.53 (AS16509, Amazon Web Services)",
+   "where": "casper.com",
+   "evidence": {
+    "name": "docebosaas.com",
+    "rtype": "TXT",
+    "value": "ip4:34.242.156.53",
+    "checked_at": "2026-10-11T19:47:14+00:00"
+   }
+  },
+  {
+   "what": "IP address in SPF",
+   "value": "34.251.63.7 (AS16509, Amazon Web Services)",
+   "where": "casper.com",
+   "evidence": {
+    "name": "docebosaas.com",
+    "rtype": "TXT",
+    "value": "ip4:34.251.63.7",
+    "checked_at": "2026-10-11T19:47:14+00:00"
+   }
+  },
+  {
+   "what": "IP address in SPF",
+   "value": "52.64.32.126 (AS16509, Amazon Web Services)",
+   "where": "casper.com",
+   "evidence": {
+    "name": "docebosaas.com",
+    "rtype": "TXT",
+    "value": "ip4:52.64.32.126",
+    "checked_at": "2026-10-11T19:47:14+00:00"
+   }
+  },
+  {
+   "what": "IP address in SPF",
+   "value": "52.4.156.8 (AS14618, Amazon Web Services)",
+   "where": "casper.com",
+   "evidence": {
+    "name": "docebosaas.com",
+    "rtype": "TXT",
+    "value": "ip4:52.4.156.8",
+    "checked_at": "2026-10-11T19:47:14+00:00"
+   }
+  },
+  {
+   "what": "IP address in SPF",
+   "value": "13.202.86.121 (AS16509, Amazon Web Services)",
+   "where": "casper.com",
+   "evidence": {
+    "name": "docebosaas.com",
+    "rtype": "TXT",
+    "value": "ip4:13.202.86.121",
+    "checked_at": "2026-10-11T19:47:14+00:00"
+   }
+  },
+  {
+   "what": "IP address in SPF",
+   "value": "13.210.149.194 (AS16509, Amazon Web Services)",
+   "where": "casper.com",
+   "evidence": {
+    "name": "docebosaas.com",
+    "rtype": "TXT",
+    "value": "ip4:13.210.149.194",
+    "checked_at": "2026-10-11T19:47:14+00:00"
+   }
+  },
+  {
+   "what": "IP address in SPF",
+   "value": "13.210.30.79 (AS16509, Amazon Web Services)",
+   "where": "casper.com",
+   "evidence": {
+    "name": "docebosaas.com",
+    "rtype": "TXT",
+    "value": "ip4:13.210.30.79",
+    "checked_at": "2026-10-11T19:47:14+00:00"
+   }
+  },
+  {
+   "what": "IP address in SPF",
+   "value": "15.156.36.228 (AS16509, Amazon Web Services)",
+   "where": "casper.com",
+   "evidence": {
+    "name": "docebosaas.com",
+    "rtype": "TXT",
+    "value": "ip4:15.156.36.228",
+    "checked_at": "2026-10-11T19:47:14+00:00"
+   }
+  },
+  {
+   "what": "IP address in SPF",
+   "value": "15.156.98.116 (AS16509, Amazon Web Services)",
+   "where": "casper.com",
+   "evidence": {
+    "name": "docebosaas.com",
+    "rtype": "TXT",
+    "value": "ip4:15.156.98.116",
+    "checked_at": "2026-10-11T19:47:14+00:00"
+   }
+  },
+  {
+   "what": "IP address in SPF",
+   "value": "15.157.101.221 (AS16509, Amazon Web Services)",
+   "where": "casper.com",
+   "evidence": {
+    "name": "docebosaas.com",
+    "rtype": "TXT",
+    "value": "ip4:15.157.101.221",
+    "checked_at": "2026-10-11T19:47:14+00:00"
+   }
+  },
+  {
+   "what": "IP address in SPF",
+   "value": "18.132.189.127 (AS16509, Amazon Web Services)",
+   "where": "casper.com",
+   "evidence": {
+    "name": "docebosaas.com",
+    "rtype": "TXT",
+    "value": "ip4:18.132.189.127",
+    "checked_at": "2026-10-11T19:47:14+00:00"
+   }
+  },
+  {
+   "what": "IP address in SPF",
+   "value": "18.197.43.76 (AS16509, Amazon Web Services)",
+   "where": "casper.com",
+   "evidence": {
+    "name": "docebosaas.com",
+    "rtype": "TXT",
+    "value": "ip4:18.197.43.76",
+    "checked_at": "2026-10-11T19:47:14+00:00"
+   }
+  },
+  {
+   "what": "IP address in SPF",
+   "value": "18.233.38.249 (AS14618, Amazon Web Services)",
+   "where": "casper.com",
+   "evidence": {
+    "name": "docebosaas.com",
+    "rtype": "TXT",
+    "value": "ip4:18.233.38.249",
+    "checked_at": "2026-10-11T19:47:14+00:00"
+   }
+  },
+  {
+   "what": "IP address in SPF",
+   "value": "3.105.157.127 (AS16509, Amazon Web Services)",
+   "where": "casper.com",
+   "evidence": {
+    "name": "docebosaas.com",
+    "rtype": "TXT",
+    "value": "ip4:3.105.157.127",
+    "checked_at": "2026-10-11T19:47:14+00:00"
+   }
+  },
+  {
+   "what": "IP address in SPF",
+   "value": "3.105.27.226 (AS16509, Amazon Web Services)",
+   "where": "casper.com",
+   "evidence": {
+    "name": "docebosaas.com",
+    "rtype": "TXT",
+    "value": "ip4:3.105.27.226",
+    "checked_at": "2026-10-11T19:47:14+00:00"
+   }
+  },
+  {
+   "what": "IP address in SPF",
+   "value": "3.107.216.134 (AS16509, Amazon Web Services)",
+   "where": "casper.com",
+   "evidence": {
+    "name": "docebosaas.com",
+    "rtype": "TXT",
+    "value": "ip4:3.107.216.134",
+    "checked_at": "2026-10-11T19:47:14+00:00"
+   }
+  },
+  {
+   "what": "IP address in SPF",
+   "value": "3.11.129.102 (AS16509, Amazon Web Services)",
+   "where": "casper.com",
+   "evidence": {
+    "name": "docebosaas.com",
+    "rtype": "TXT",
+    "value": "ip4:3.11.129.102",
+    "checked_at": "2026-10-11T19:47:14+00:00"
+   }
+  },
+  {
+   "what": "IP address in SPF",
+   "value": "3.248.148.18 (AS16509, Amazon Web Services)",
+   "where": "casper.com",
+   "evidence": {
+    "name": "docebosaas.com",
+    "rtype": "TXT",
+    "value": "ip4:3.248.148.18",
+    "checked_at": "2026-10-11T19:47:14+00:00"
+   }
+  },
+  {
+   "what": "IP address in SPF",
+   "value": "3.97.84.192 (AS16509, Amazon Web Services)",
+   "where": "casper.com",
+   "evidence": {
+    "name": "docebosaas.com",
+    "rtype": "TXT",
+    "value": "ip4:3.97.84.192",
+    "checked_at": "2026-10-11T19:47:14+00:00"
+   }
+  },
+  {
+   "what": "IP address in SPF",
+   "value": "3.98.111.232 (AS16509, Amazon Web Services)",
+   "where": "casper.com",
+   "evidence": {
+    "name": "docebosaas.com",
+    "rtype": "TXT",
+    "value": "ip4:3.98.111.232",
+    "checked_at": "2026-10-11T19:47:14+00:00"
+   }
+  },
+  {
+   "what": "mail server",
+   "value": "incoming.bm23.com",
+   "where": "email.casper.com",
+   "evidence": {
+    "name": "email.casper.com",
+    "rtype": "MX",
+    "value": "20 incoming.bm23.com",
+    "checked_at": "2026-10-11T19:47:14+00:00"
+   }
+  },
+  {
+   "what": "SPF include",
+   "value": "cust-spf.exacttarget.com",
+   "where": "mail.casper.com",
+   "evidence": {
+    "name": "mail.casper.com",
+    "rtype": "TXT",
+    "value": "include:cust-spf.exacttarget.com",
+    "checked_at": "2026-10-11T19:47:14+00:00"
+   }
+  },
+  {
+   "what": "IP range in SPF",
+   "value": "64.132.92.0/24 (AS22606, EXACT-7 - Salesforce.com, Inc., US)",
+   "where": "mail.casper.com",
+   "evidence": {
+    "name": "cust-spf.exacttarget.com",
+    "rtype": "TXT",
+    "value": "ip4:64.132.92.0/24",
+    "checked_at": "2026-10-11T19:47:14+00:00"
+   }
+  },
+  {
+   "what": "IP range in SPF",
+   "value": "64.132.88.0/23 (AS22606, EXACT-7 - Salesforce.com, Inc., US)",
+   "where": "mail.casper.com",
+   "evidence": {
+    "name": "cust-spf.exacttarget.com",
+    "rtype": "TXT",
+    "value": "ip4:64.132.88.0/23",
+    "checked_at": "2026-10-11T19:47:14+00:00"
+   }
+  },
+  {
+   "what": "IP range in SPF",
+   "value": "66.231.80.0/20 (AS14340, SALESFORCE - Salesforce.com, Inc., US)",
+   "where": "mail.casper.com",
+   "evidence": {
+    "name": "cust-spf.exacttarget.com",
+    "rtype": "TXT",
+    "value": "ip4:66.231.80.0/20",
+    "checked_at": "2026-10-11T19:47:14+00:00"
+   }
+  },
+  {
+   "what": "IP range in SPF",
+   "value": "68.232.192.0/20 (AS14340, SALESFORCE - Salesforce.com, Inc., US)",
+   "where": "mail.casper.com",
+   "evidence": {
+    "name": "cust-spf.exacttarget.com",
+    "rtype": "TXT",
+    "value": "ip4:68.232.192.0/20",
+    "checked_at": "2026-10-11T19:47:14+00:00"
+   }
+  },
+  {
+   "what": "IP range in SPF",
+   "value": "199.122.120.0/21 (AS14340, SALESFORCE - Salesforce.com, Inc., US)",
+   "where": "mail.casper.com",
+   "evidence": {
+    "name": "cust-spf.exacttarget.com",
+    "rtype": "TXT",
+    "value": "ip4:199.122.120.0/21",
+    "checked_at": "2026-10-11T19:47:14+00:00"
+   }
+  },
+  {
+   "what": "IP range in SPF",
+   "value": "207.67.38.0/24 (AS3549, LVLT-3549 - Level 3 Parent, LLC, US)",
+   "where": "mail.casper.com",
+   "evidence": {
+    "name": "cust-spf.exacttarget.com",
+    "rtype": "TXT",
+    "value": "ip4:207.67.38.0/24",
+    "checked_at": "2026-10-11T19:47:14+00:00"
+   }
+  },
+  {
+   "what": "IP range in SPF",
+   "value": "128.17.0.0/20 (AS14340, SALESFORCE - Salesforce.com, Inc., US)",
+   "where": "mail.casper.com",
+   "evidence": {
+    "name": "cust-spf.exacttarget.com",
+    "rtype": "TXT",
+    "value": "ip4:128.17.0.0/20",
+    "checked_at": "2026-10-11T19:47:14+00:00"
+   }
+  },
+  {
+   "what": "IP range in SPF",
+   "value": "128.17.64.0/20 (AS14340, SALESFORCE - Salesforce.com, Inc., US)",
+   "where": "mail.casper.com",
+   "evidence": {
+    "name": "cust-spf.exacttarget.com",
+    "rtype": "TXT",
+    "value": "ip4:128.17.64.0/20",
+    "checked_at": "2026-10-11T19:47:14+00:00"
+   }
+  },
+  {
+   "what": "IP range in SPF",
+   "value": "128.17.128.0/20 (AS14340, SALESFORCE - Salesforce.com, Inc., US)",
+   "where": "mail.casper.com",
+   "evidence": {
+    "name": "cust-spf.exacttarget.com",
+    "rtype": "TXT",
+    "value": "ip4:128.17.128.0/20",
+    "checked_at": "2026-10-11T19:47:14+00:00"
+   }
+  },
+  {
+   "what": "IP range in SPF",
+   "value": "128.17.192.0/20 (AS14340, SALESFORCE - Salesforce.com, Inc., US)",
+   "where": "mail.casper.com",
+   "evidence": {
+    "name": "cust-spf.exacttarget.com",
+    "rtype": "TXT",
+    "value": "ip4:128.17.192.0/20",
+    "checked_at": "2026-10-11T19:47:14+00:00"
+   }
+  },
+  {
+   "what": "IP range in SPF",
+   "value": "128.245.0.0/20 (AS14340, SALESFORCE - Salesforce.com, Inc., US)",
+   "where": "mail.casper.com",
+   "evidence": {
+    "name": "cust-spf.exacttarget.com",
+    "rtype": "TXT",
+    "value": "ip4:128.245.0.0/20",
+    "checked_at": "2026-10-11T19:47:14+00:00"
+   }
+  },
+  {
+   "what": "IP range in SPF",
+   "value": "128.245.64.0/20 (AS14340, SALESFORCE - Salesforce.com, Inc., US)",
+   "where": "mail.casper.com",
+   "evidence": {
+    "name": "cust-spf.exacttarget.com",
+    "rtype": "TXT",
+    "value": "ip4:128.245.64.0/20",
+    "checked_at": "2026-10-11T19:47:14+00:00"
+   }
+  },
+  {
+   "what": "IP range in SPF",
+   "value": "128.245.242.0/24 (AS14340, SALESFORCE - Salesforce.com, Inc., US)",
+   "where": "mail.casper.com",
+   "evidence": {
+    "name": "cust-spf.exacttarget.com",
+    "rtype": "TXT",
+    "value": "ip4:128.245.242.0/24",
+    "checked_at": "2026-10-11T19:47:14+00:00"
+   }
+  },
+  {
+   "what": "IP range in SPF",
+   "value": "128.245.243.0/24 (AS14340, SALESFORCE - Salesforce.com, Inc., US)",
+   "where": "mail.casper.com",
+   "evidence": {
+    "name": "cust-spf.exacttarget.com",
+    "rtype": "TXT",
+    "value": "ip4:128.245.243.0/24",
+    "checked_at": "2026-10-11T19:47:14+00:00"
+   }
+  },
+  {
+   "what": "IP range in SPF",
+   "value": "128.245.244.0/24 (AS14340, SALESFORCE - Salesforce.com, Inc., US)",
+   "where": "mail.casper.com",
+   "evidence": {
+    "name": "cust-spf.exacttarget.com",
+    "rtype": "TXT",
+    "value": "ip4:128.245.244.0/24",
+    "checked_at": "2026-10-11T19:47:14+00:00"
+   }
+  },
+  {
+   "what": "IP range in SPF",
+   "value": "128.245.245.0/24 (AS14340, SALESFORCE - Salesforce.com, Inc., US)",
+   "where": "mail.casper.com",
+   "evidence": {
+    "name": "cust-spf.exacttarget.com",
+    "rtype": "TXT",
+    "value": "ip4:128.245.245.0/24",
+    "checked_at": "2026-10-11T19:47:14+00:00"
+   }
+  },
+  {
+   "what": "IP range in SPF",
+   "value": "128.245.246.0/24 (AS14340, SALESFORCE - Salesforce.com, Inc., US)",
+   "where": "mail.casper.com",
+   "evidence": {
+    "name": "cust-spf.exacttarget.com",
+    "rtype": "TXT",
+    "value": "ip4:128.245.246.0/24",
+    "checked_at": "2026-10-11T19:47:14+00:00"
+   }
+  },
+  {
+   "what": "IP range in SPF",
+   "value": "128.245.247.0/24 (AS14340, SALESFORCE - Salesforce.com, Inc., US)",
+   "where": "mail.casper.com",
+   "evidence": {
+    "name": "cust-spf.exacttarget.com",
+    "rtype": "TXT",
+    "value": "ip4:128.245.247.0/24",
+    "checked_at": "2026-10-11T19:47:14+00:00"
+   }
+  },
+  {
+   "what": "IP range in SPF",
+   "value": "128.245.176.0/20 (AS14340, SALESFORCE - Salesforce.com, Inc., US)",
+   "where": "mail.casper.com",
+   "evidence": {
+    "name": "cust-spf.exacttarget.com",
+    "rtype": "TXT",
+    "value": "ip4:128.245.176.0/20",
+    "checked_at": "2026-10-11T19:47:14+00:00"
+   }
+  },
+  {
+   "what": "IP range in SPF",
+   "value": "136.147.224.0/20 (AS14340, SALESFORCE - Salesforce.com, Inc., US)",
+   "where": "mail.casper.com",
+   "evidence": {
+    "name": "cust-spf.exacttarget.com",
+    "rtype": "TXT",
+    "value": "ip4:136.147.224.0/20",
+    "checked_at": "2026-10-11T19:47:14+00:00"
+   }
+  },
+  {
+   "what": "IP range in SPF",
+   "value": "207.67.98.192/27 (AS3549, LVLT-3549 - Level 3 Parent, LLC, US)",
+   "where": "mail.casper.com",
+   "evidence": {
+    "name": "cust-spf.exacttarget.com",
+    "rtype": "TXT",
+    "value": "ip4:207.67.98.192/27",
+    "checked_at": "2026-10-11T19:47:14+00:00"
+   }
+  },
+  {
+   "what": "IP range in SPF",
+   "value": "207.250.68.0/24 (AS22606, EXACT-7 - Salesforce.com, Inc., US)",
+   "where": "mail.casper.com",
+   "evidence": {
+    "name": "cust-spf.exacttarget.com",
+    "rtype": "TXT",
+    "value": "ip4:207.250.68.0/24",
+    "checked_at": "2026-10-11T19:47:14+00:00"
+   }
+  },
+  {
+   "what": "IP range in SPF",
+   "value": "209.43.22.0/28 (AS13767, DATABANK-DFW - DataBank Holdings, Ltd., US)",
+   "where": "mail.casper.com",
+   "evidence": {
+    "name": "cust-spf.exacttarget.com",
+    "rtype": "TXT",
+    "value": "ip4:209.43.22.0/28",
+    "checked_at": "2026-10-11T19:47:14+00:00"
+   }
+  },
+  {
+   "what": "IP range in SPF",
+   "value": "198.245.80.0/20 (AS14340, SALESFORCE - Salesforce.com, Inc., US)",
+   "where": "mail.casper.com",
+   "evidence": {
+    "name": "cust-spf.exacttarget.com",
+    "rtype": "TXT",
+    "value": "ip4:198.245.80.0/20",
+    "checked_at": "2026-10-11T19:47:14+00:00"
+   }
+  }
+ ],
+ "gaps": [
+  {
+   "asked": "the website",
+   "happened": "not read: web checks were turned off (--no-web)"
+  },
+  {
+   "asked": "published ranges: SPF of HubSpot",
+   "happened": "includes more than 3 levels deep not read (cap)"
+  },
+  {
+   "asked": "published ranges: SPF of Mimecast",
+   "happened": "includes more than 3 levels deep not read (cap)"
+  },
+  {
+   "asked": "network owners of the IP ranges in SPF at casper.com",
+   "happened": "18 of 42 not looked up: only the first 24 were (cap)"
+  },
+  {
+   "asked": "DKIM selectors at e.casper.com",
+   "happened": "74 of 106 not asked: only the first 27 and the names its own SPF or MX backs were (cap)"
+  },
+  {
+   "asked": "DKIM selectors at email.casper.com",
+   "happened": "76 of 106 not asked: only the first 27 and the names its own SPF or MX backs were (cap)"
+  },
+  {
+   "asked": "network owners of the IP ranges in SPF at mail.casper.com",
+   "happened": "24 of 48 not looked up: only the first 24 were (cap)"
+  },
+  {
+   "asked": "DKIM selectors at mail.casper.com",
+   "happened": "79 of 106 not asked: only the first 27 and the names its own SPF or MX backs were (cap)"
+  },
+  {
+   "asked": "DKIM selectors at orders.casper.com",
+   "happened": "79 of 106 not asked: only the first 27 and the names its own SPF or MX backs were (cap)"
+  },
+  {
+   "asked": "DKIM selectors at t.casper.com",
+   "happened": "74 of 106 not asked: only the first 27 and the names its own SPF or MX backs were (cap)"
+  }
+ ],
+ "subdomains_checked": [
+  "e.casper.com",
+  "email.casper.com",
+  "mail.casper.com",
+  "orders.casper.com",
+  "t.casper.com"
+ ],
+ "checked": [
+  {
+   "where": "casper.com",
+   "dkim_selectors": [
+    "google",
+    "gapps",
+    "acdkim1",
+    "acdkim2",
+    "ses",
+    "aweber_key_a",
+    "aweber_key_b",
+    "aweber_key_c",
+    "brevo",
+    "brevo1",
+    "brevo2",
+    "cm",
+    "cf2024-1",
+    "ctct1",
+    "ctct2",
+    "krs",
+    "e2ma-k1",
+    "e2ma-k2",
+    "e2ma-k3",
+    "everlytickey1",
+    "everlytickey2",
+    "fm2",
+    "fm1",
+    "fm3",
+    "mesmtp",
+    "secureserver1",
+    "secureserver2",
+    "gor",
+    "strong1",
+    "strong2",
+    "hs1",
+    "hs2",
+    "intercom",
+    "s1-ionos",
+    "s42582890",
+    "cka",
+    "kl",
+    "kl1",
+    "kl2",
+    "k2",
+    "k1",
+    "k3",
+    "litesrv",
+    "mg",
+    "mailgun",
+    "mg1",
+    "pdk1",
+    "pdk2",
+    "mailjet",
+    "mailpoet2",
+    "mailpoet1",
+    "mandrill",
+    "mte1",
+    "mte2",
+    "marketo",
+    "mkto",
+    "mkto1",
+    "selector1",
+    "selector2",
+    "mimecast",
+    "mimecast20190719",
+    "pepipost",
+    "pp1",
+    "protonmail",
+    "protonmail2",
+    "protonmail3",
+    "resend",
+    "sailthru",
+    "salesforce",
+    "salesforce2",
+    "salesforce1",
+    "sf",
+    "sf1",
+    "sf2",
+    "sfdc",
+    "200608",
+    "pardot",
+    "sfmc",
+    "s1",
+    "s2",
+    "smtpapi",
+    "scph0819",
+    "sparkpost",
+    "squarespace",
+    "zendesk1",
+    "zendesk2",
+    "zoho",
+    "api",
+    "default",
+    "dk",
+    "dkim",
+    "dkim1",
+    "dkim2",
+    "email",
+    "k",
+    "key",
+    "key1",
+    "key2",
+    "mail",
+    "mta",
+    "mx",
+    "pm",
+    "s",
+    "selector",
+    "smtp",
+    "sp"
+   ],
+   "labels": [
+    "bounce",
+    "bounces",
+    "em",
+    "email",
+    "mail",
+    "send",
+    "mta",
+    "rp",
+    "pm-bounces",
+    "links",
+    "link",
+    "click",
+    "track",
+    "tracking",
+    "url",
+    "go",
+    "autodiscover",
+    "cf-bounce",
+    "eversrv",
+    "fwdkim1",
+    "bnc3",
+    "bounces.cloud.em",
+    "bounces.cloud2.em"
+   ],
+   "pages": [],
+   "denial": "none by rcode"
+  },
+  {
+   "where": "e.casper.com",
+   "dkim_selectors": [
+    "acdkim1",
+    "acdkim2",
+    "ses",
+    "aweber_key_a",
+    "aweber_key_b",
+    "aweber_key_c",
+    "brevo",
+    "brevo1",
+    "brevo2",
+    "cm",
+    "cf2024-1",
+    "ctct1",
+    "ctct2",
+    "krs",
+    "e2ma-k1",
+    "e2ma-k2",
+    "e2ma-k3",
+    "everlytickey1",
+    "everlytickey2",
+    "fm2",
+    "fm1",
+    "fm3",
+    "mesmtp",
+    "secureserver1",
+    "secureserver2",
+    "google",
+    "gapps",
+    "mailgun",
+    "mg",
+    "mg1",
+    "pdk1",
+    "pdk2"
+   ],
+   "labels": [],
+   "pages": [],
+   "denial": "classic"
+  },
+  {
+   "where": "email.casper.com",
+   "dkim_selectors": [
+    "acdkim1",
+    "acdkim2",
+    "ses",
+    "aweber_key_a",
+    "aweber_key_b",
+    "aweber_key_c",
+    "brevo",
+    "brevo1",
+    "brevo2",
+    "cm",
+    "cf2024-1",
+    "ctct1",
+    "ctct2",
+    "krs",
+    "e2ma-k1",
+    "e2ma-k2",
+    "e2ma-k3",
+    "everlytickey1",
+    "everlytickey2",
+    "fm2",
+    "fm1",
+    "fm3",
+    "mesmtp",
+    "secureserver1",
+    "secureserver2",
+    "google",
+    "gapps",
+    "mandrill",
+    "mte1",
+    "mte2"
+   ],
+   "labels": [],
+   "pages": [],
+   "denial": "classic"
+  },
+  {
+   "where": "mail.casper.com",
+   "dkim_selectors": [
+    "acdkim1",
+    "acdkim2",
+    "ses",
+    "aweber_key_a",
+    "aweber_key_b",
+    "aweber_key_c",
+    "brevo",
+    "brevo1",
+    "brevo2",
+    "cm",
+    "cf2024-1",
+    "ctct1",
+    "ctct2",
+    "krs",
+    "e2ma-k1",
+    "e2ma-k2",
+    "e2ma-k3",
+    "everlytickey1",
+    "everlytickey2",
+    "fm2",
+    "fm1",
+    "fm3",
+    "mesmtp",
+    "secureserver1",
+    "secureserver2",
+    "google",
+    "gapps"
+   ],
+   "labels": [],
+   "pages": [],
+   "denial": "classic"
+  },
+  {
+   "where": "orders.casper.com",
+   "dkim_selectors": [
+    "acdkim1",
+    "acdkim2",
+    "ses",
+    "aweber_key_a",
+    "aweber_key_b",
+    "aweber_key_c",
+    "brevo",
+    "brevo1",
+    "brevo2",
+    "cm",
+    "cf2024-1",
+    "ctct1",
+    "ctct2",
+    "krs",
+    "e2ma-k1",
+    "e2ma-k2",
+    "e2ma-k3",
+    "everlytickey1",
+    "everlytickey2",
+    "fm2",
+    "fm1",
+    "fm3",
+    "mesmtp",
+    "secureserver1",
+    "secureserver2",
+    "google",
+    "gapps"
+   ],
+   "labels": [],
+   "pages": [],
+   "denial": "classic"
+  },
+  {
+   "where": "t.casper.com",
+   "dkim_selectors": [
+    "acdkim1",
+    "acdkim2",
+    "ses",
+    "aweber_key_a",
+    "aweber_key_b",
+    "aweber_key_c",
+    "brevo",
+    "brevo1",
+    "brevo2",
+    "cm",
+    "cf2024-1",
+    "ctct1",
+    "ctct2",
+    "krs",
+    "e2ma-k1",
+    "e2ma-k2",
+    "e2ma-k3",
+    "everlytickey1",
+    "everlytickey2",
+    "fm2",
+    "fm1",
+    "fm3",
+    "mesmtp",
+    "secureserver1",
+    "secureserver2",
+    "google",
+    "gapps",
+    "mailgun",
+    "mg",
+    "mg1",
+    "pdk1",
+    "pdk2"
+   ],
+   "labels": [],
+   "pages": [],
+   "denial": "classic"
+  }
+ ],
+ "ct": {
+  "status": "off",
+  "logged": 0,
+  "resolved": 0,
+  "gone_unnamed": 0
+ },
+ "historical": [],
+ "logo": null,
+ "schema": "sendermap/1",
+ "absences": [
+  {
+   "asked": "DKIM keys at t.casper.com",
+   "happened": "selectors exist but none of the 32 names asked is one",
+   "evidence": [
+    {
+     "name": "_domainkey.t.casper.com",
+     "rtype": "TXT",
+     "value": "no record of this type",
+     "checked_at": "2026-10-11T19:47:14+00:00"
+    }
+   ]
+  }
+ ]
+}

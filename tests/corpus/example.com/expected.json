@@ -1,0 +1,83 @@
+{
+ "domain": "example.com",
+ "services": [],
+ "run": {
+  "checked_at": "2026-10-11T19:50:28+00:00"
+ },
+ "findings": [
+  {
+   "severity": "note",
+   "title": "The domain accepts no mail",
+   "detail": "It publishes a null MX record, which tells senders it receives no email.",
+   "evidence": [
+    {
+     "name": "example.com",
+     "rtype": "MX",
+     "value": "0 ",
+     "checked_at": "2026-10-11T19:50:28+00:00"
+    }
+   ]
+  },
+  {
+   "severity": "note",
+   "title": "Every name under _domainkey.example.com answers with a key",
+   "detail": "A wildcard record makes every selector look published, so keys there say nothing about which services sign for the domain.",
+   "evidence": [
+    {
+     "name": "*._domainkey.example.com",
+     "rtype": "TXT",
+     "value": "v=DKIM1; p=",
+     "checked_at": "2026-10-11T19:50:28+00:00"
+    }
+   ]
+  }
+ ],
+ "unknowns": [],
+ "gaps": [],
+ "subdomains_checked": [],
+ "checked": [
+  {
+   "where": "example.com",
+   "dkim_selectors": [],
+   "labels": [
+    "bounce",
+    "bounces",
+    "em",
+    "email",
+    "mail",
+    "send",
+    "mta",
+    "rp",
+    "pm-bounces",
+    "links",
+    "link",
+    "click",
+    "track",
+    "tracking",
+    "url",
+    "go",
+    "autodiscover",
+    "cf-bounce",
+    "eversrv",
+    "fwdkim1",
+    "bnc3",
+    "bounces.cloud.em",
+    "bounces.cloud2.em"
+   ],
+   "pages": [
+    "https://example.com/"
+   ],
+   "denial": "wildcard"
+  }
+ ],
+ "ct": {
+  "status": "off",
+  "logged": 0,
+  "resolved": 0,
+  "gone_unnamed": 0
+ },
+ "historical": [],
+ "logo": null,
+ "schema": "sendermap/1",
+ "absences": []
+}
