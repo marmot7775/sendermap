@@ -1,7 +1,7 @@
 """Sendermap: which services send email as a domain, and the public evidence for each."""
 
 import json
-from importlib import resources
+from importlib import metadata, resources
 from typing import Any
 
 from .engine import map_domain
@@ -17,4 +17,7 @@ def schema() -> dict[str, Any]:
     return loaded
 
 
-__version__ = "0.1.0.dev0"
+try:
+    __version__ = metadata.version(__name__)  # set at build time from the git tag
+except metadata.PackageNotFoundError:  # running from a source tree that was never installed
+    __version__ = "0.0.0"

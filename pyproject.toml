@@ -1,6 +1,6 @@
 [project]
 name = "sendermap"
-version = "0.1.0.dev0"
+dynamic = ["version"]  # from the git tag, by hatch-vcs
 description = "Type a domain, see every service that sends email as it, with the public evidence for each."
 readme = "README.md"
 license = "MIT"
@@ -23,6 +23,8 @@ classifiers = [
 
 [project.optional-dependencies]
 web = ["fastapi>=0.115", "uvicorn>=0.32"]
+
+[dependency-groups]
 dev = [
     "pytest>=8",
     "pytest-asyncio>=0.24",
@@ -42,8 +44,12 @@ sendermap = "sendermap.cli:main"
 Homepage = "https://github.com/marmot7775/sendermap"
 
 [build-system]
-requires = ["hatchling>=1.26"]
+requires = ["hatchling>=1.26", "hatch-vcs>=0.4"]
 build-backend = "hatchling.build"
+
+[tool.hatch.version]
+source = "vcs"
+fallback-version = "0.0.0"  # no git metadata at all, as in a bare source copy
 
 [tool.hatch.build.targets.wheel]
 packages = ["sendermap"]
