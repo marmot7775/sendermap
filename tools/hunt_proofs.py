@@ -368,13 +368,16 @@ class _Domain:
 
     async def sending(self) -> list[str]:
         """The engine's sending subdomains: labels that publish SPF or MX, or are delegated by NS
-        to a service's nameservers, proven or pending."""
+        to a service's nameservers, proven or pending. NS is asked at every label beside SPF and
+        MX, as the engine asks it, so a delegated label that also publishes either is seen as
+        delegated."""
         found = []
         for label in self.h.catalog.sending_labels:
             name = f"{label}.{self.domain}"
             txt = await self.ask(name, "TXT")
             mx = await self.ask(name, "MX")
-            if spf_records(txt) or mx.ok or await self.delegation(name):
+            delegated = await self.delegation(name)
+            if spf_records(txt) or mx.ok or delegated:
                 found.append(name)
         return sorted(found)[:MAX_SUBDOMAINS]
 
