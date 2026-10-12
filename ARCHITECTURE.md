@@ -714,8 +714,8 @@ so a test that opens a network socket fails, while the loopback web test keeps r
 
 ### Workflows
 
-- `.github/workflows/test.yml` installs the dev and web extras and runs `ruff check`, `ruff
-  format --check`, `mypy` and `pytest` on Python 3.12 and 3.13, on every push to main, every
+- `.github/workflows/test.yml` installs from `uv.lock` with `uv sync --locked --extra web` (the
+  dev group comes by default) and runs `ruff check`, `ruff format --check`, `mypy` and `pytest` on Python 3.12 and 3.13, on every push to main, every
   pull request and by hand. pytest takes its addopts from `pyproject.toml`, so the network is
   blocked in CI as it is locally.
 - `.github/workflows/recheck-corpus.yml` maps every corpus case live again on Mondays at 10:00
@@ -726,5 +726,18 @@ so a test that opens a network socket fails, while the loopback web test keeps r
   an artifact kept 30 days. Drift fails nothing; only a live map that could not be built fails
   the job. The job commits nothing.
 
+The proofs and recheck jobs install the runtime alone, `uv sync --locked --no-dev`, from the
+same lock.
+
 The rule: a drifted case is re-recorded by hand with `python tools/record_corpus.py DOMAIN`,
 after reading the diff, never by the job.
+
+### Packaging
+
+The version comes from the git tag through hatch-vcs (`v0.1.0` builds 0.1.0; an untagged commit
+builds a dev version; a copy with no git metadata builds 0.0.0), and `sendermap.__version__`
+reads it from the installed package's metadata, 0.0.0 when it was never installed.
+`sendermap/py.typed` marks the package as typed. The tools to develop it are the `dev`
+dependency group, not an extra, so `pip install sendermap[...]` offers only `web`. `uv.lock`
+pins every dependency, and CI installs from it with `--locked`, so a dependency change lands as a
+lock change in review. `CHANGELOG.md` keeps an Unreleased section that the next release takes.

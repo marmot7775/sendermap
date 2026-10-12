@@ -29,14 +29,14 @@ jobs:
     timeout-minutes: 10
     steps:
       - uses: actions/checkout@v5
-      - uses: actions/setup-python@v6
+      - uses: astral-sh/setup-uv@v6
         with:
           python-version: "3.12"
       - name: Install
-        run: pip install .
+        run: uv sync --locked --no-dev
       - name: Check every proof
         id: verify
-        run: python tools/verify_proofs.py --json | tee results.jsonl
+        run: uv run --no-sync python tools/verify_proofs.py --json | tee results.jsonl
       - name: Open or update an issue per failing proof
         if: failure() && steps.verify.outcome == 'failure' && github.event_name == 'schedule'
         env:

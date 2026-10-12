@@ -21,17 +21,17 @@ jobs:
     timeout-minutes: 20
     steps:
       - uses: actions/checkout@v5
-      - uses: actions/setup-python@v6
+      - uses: astral-sh/setup-uv@v6
         with:
           python-version: "3.12"
       - name: Install
-        run: pip install .
+        run: uv sync --locked --no-dev
       - name: Map each case live and compare
         run: |
           failed=()
           for case in tests/corpus/*/case.json; do
             domain=$(basename "$(dirname "$case")")
-            if ! python tools/record_corpus.py "$domain" --recheck recheck >>"$GITHUB_STEP_SUMMARY"; then
+            if ! uv run --no-sync python tools/record_corpus.py "$domain" --recheck recheck >>"$GITHUB_STEP_SUMMARY"; then
               failed+=("$domain")
               printf '### %s\n\nThe live map could not be built.\n\n' "$domain" >>"$GITHUB_STEP_SUMMARY"
             fi

@@ -1,7 +1,7 @@
 # Run the suite on every push to main, on every pull request and by hand: ruff check, ruff
-# format --check, mypy and pytest, on each supported Python. pytest takes its addopts from
-# pyproject.toml, so the network is blocked here the same way it is locally. Any of the four
-# failing fails the job.
+# format --check, mypy and pytest, on each supported Python, installed from uv.lock exactly.
+# pytest takes its addopts from pyproject.toml, so the network is blocked here the same way it
+# is locally. Any of the four failing fails the job.
 
 name: Test
 
@@ -24,18 +24,17 @@ jobs:
         python-version: ["3.12", "3.13"]
     steps:
       - uses: actions/checkout@v5
-      - uses: actions/setup-python@v6
+      - uses: astral-sh/setup-uv@v6
         with:
           python-version: ${{ matrix.python-version }}
-          cache: pip
-          cache-dependency-path: pyproject.toml
+          enable-cache: true
       - name: Install
-        run: pip install -e ".[dev,web]"  # web too: mypy and the web test read fastapi
+        run: uv sync --locked --extra web  # web too: mypy and the web test read fastapi
       - name: ruff check
-        run: ruff check
+        run: uv run --no-sync ruff check
       - name: ruff format --check
-        run: ruff format --check
+        run: uv run --no-sync ruff format --check
       - name: mypy
-        run: mypy
+        run: uv run --no-sync mypy
       - name: pytest
-        run: pytest
+        run: uv run --no-sync pytest
