@@ -48,7 +48,13 @@ Everything Sendermap reports is built from a few frozen dataclasses in `senderma
   with the Evidence that shows it, which every view prints with it.
 - **Gap**: a question that got no usable answer: what was `asked` (the record type and name,
   the page, or the check) and what `happened` (the lookup failed, HTTP 404, the check was turned
-  off, the source crashed), so its silence is not read as absence.
+  off, the source crashed), so its silence is not read as absence. Its **GapKind**, set by the
+  source that records it, says what it leaves unchecked: `website`, `page` (the subprocessor
+  page), `certificate_log`, `subdomains`, `dkim`, `labels`, `spf`, `mx`, `networks`,
+  `published_ranges`, `reports`, `tokens`, `mta_sts`, or `off` for a check the caller turned
+  off. The default, `other`, is never left on a gap the engine records. `count` is how many
+  names, ranges or selectors it leaves unanswered when the source counted them (0: the check as
+  a whole), and `cap` the limit that left them unasked (0: a failure). All three are in JSON.
 - **Absence**: a question answered "not there": what was `asked`, what `happened`, and the
   negative answers that show it as `evidence` (each an Evidence whose value is the status in
   words, such as `no such name`). Unlike a gap, it can be read as absent. Today only the DKIM
@@ -397,15 +403,29 @@ map and left out when they are absent:
 3. **Senders**: the Configured senders grouped by category, groups and names in the map's order
    ("eleven other services are set up to send as the domain: four transactional (...)", "other"
    when sentence 2 named a receiver), then the Likely ones grouped by the kind of the claim that
-   decided them ("two more are likely from a DKIM key name alone (...)").
+   decided them ("two more are likely from a DKIM key name alone (...)"). When the map has no
+   sender and no unknown, and records what was asked at the domain, the sentence states the
+   absence from what was checked there: "No sending service shows in DNS for example.com: no
+   MX, no sender in SPF, and no DKIM key at the 106 names asked." A null MX is said as one, and
+   a DKIM wildcard as "a wildcard that answers every DKIM name". The map keeps what SPF names,
+   not the SPF record, so a domain with `v=spf1 -all` and one with no SPF record both read "no
+   sender in SPF". A part whose kind has a gap is left out; the last sentence names it.
 4. **Traces and reports**: the Account only services, then who receives the DMARC and the TLS
    reports, by the report claims.
-5. **Not checked**: every gap, one clause each as the text view words it, the website first
-   when it was not read. A gap in reading another service's own SPF for its published ranges is
-   about the vendor data, not the domain, and would name a service the map did not find, so
-   those are counted instead, one clause per reason.
+5. **Not checked**: one clause per gap kind, in plain words and counted from the gaps'
+   `count` and `cap`, the detail left to the Not checked section below the map: "Not checked:
+   the website (turned off), DKIM selectors past the first 27 on five subdomains, network owners
+   for 12 of 36 ranges, six subdomains whose lookups failed, and the crt.sh certificate log (read
+   only with --ct)." The website comes first, then the kinds in a fixed order (page, DKIM,
+   networks, subdomains, SPF, MX, published ranges, labels, reports, tokens, MTA-STS, certificate
+   logs), then the other checks turned off. Caps and failures of one kind fold into one clause
+   ("DKIM selectors past the first 27 on five subdomains and one that could not be read"). No
+   URL, no raw gap text, no nested brackets and no flag but the one that turns a check on. A gap
+   in reading another service's own SPF for its published ranges is about the vendor data, not
+   the domain, and would name a service the map did not find, so those services are counted.
 
-Counts are in words up to twenty and counted in the function that writes the sentence. The
+Counts are in words up to twenty, a pair such as "12 of 36" both in digits once either is
+past it, and counted in the function that writes the sentence. The
 words are plain, with no abbreviation the map does not already print, no adjectives and no
 advice. The engine writes the story before the reconciliation, so a claimed list never changes
 it. The text view prints it under the headline, the Markdown view as the first paragraph, the
@@ -552,16 +572,21 @@ guard. Run `pytest`. `mypy` (strict, over `sendermap/`, `tests/` and `tools/`), 
 Tests that hold the rules: `test_evidence.py` maps a fake domain that reaches every kind of
 claim and requires evidence on every claim, unknown and finding, and the supporting records on
 every claim whose evidence does not name its service; `test_story.py` holds a map that reaches every sentence and one
-that reaches none, each receiver's wording, that every service the story names is a service of
-the map and every count is the map's count (on the fake map and every corpus case), the views
-and the optional wording; `test_reconcile.py` holds the normaliser, the aliases and the loading
+that reaches none, each receiver's wording, each gap kind's clause and the folding, the
+sentence for a domain with no sender, that every service the story names is a service of the
+map and every count is the map's count, and that the last sentence holds no URL, raw gap text,
+nested bracket or other flag (on the fake map and every corpus case), the views and the
+optional wording; `test_reconcile.py` holds the normaliser, the aliases and the loading
 rules, each of the four parts on a fake map, that claiming asks nothing more, the CLI flags, the
 JSON field, the API parameter and the views; `test_setup.py` holds each setup state
 with its evidence, the findings, the bounce domain, `complete`, the views, the loading rules and
 that a setup asks nothing more; `test_dkim_denial.py` holds the
 _domainkey triage for each denial class, the absences with their evidence, and their rendering;
 `test_gaps.py` and `test_caps.py`
-require a gap for each failed question and each cap; `test_web_guard.py` requires that a
+require a gap for each failed question and each cap; `test_gap_kinds.py` maps the busy fake
+domain with every source failing, every cap reached, each check turned off and each guarded
+source crashing, and requires every kind and no gap at the default, and that every `Gap` in the
+package is given a kind; `test_web_guard.py` requires that a
 refused fetch sends nothing and is a gap, for each reason the guard refuses, on every redirect
 and on the subprocessor and MTA-STS pages; `test_checked.py` requires the record of
 what was asked and its rendering; `test_labels_say_what_was_seen.py` holds the wording of the

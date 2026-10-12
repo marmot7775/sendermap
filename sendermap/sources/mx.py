@@ -2,14 +2,29 @@
 
 from __future__ import annotations
 
-from ..model import Claim, Evidence, Finding, Gap, Kind, Observed, Outcome, Read, Severity, Unknown
+from ..model import (
+    Claim,
+    Evidence,
+    Finding,
+    Gap,
+    GapKind,
+    Kind,
+    Observed,
+    Outcome,
+    Read,
+    Severity,
+    Unknown,
+)
 from . import Context, negative
+
+# The title of the finding a null MX at the domain raises (RFC 7505).
+NULL_MX = "The domain accepts no mail"
 
 
 async def collect(ctx: Context, where: str) -> Observed:
     answer = await ctx.dns.query(where, "MX")
     if not answer.answered:
-        gap = Gap(f"mail servers: MX at {where}", answer.status.value)
+        gap = Gap(f"mail servers: MX at {where}", answer.status.value, GapKind.MX, 1)
         read = Read("mx", where, Outcome.FAILED, reason=f"{gap.asked}: {gap.happened}")
         return Observed(gaps=(gap,), reads=(read,))
     if not answer.ok:
@@ -26,7 +41,7 @@ async def collect(ctx: Context, where: str) -> Observed:
                 findings.append(
                     Finding(
                         Severity.NOTE,
-                        "The domain accepts no mail",
+                        NULL_MX,
                         "It publishes a null MX record, which tells senders it receives no email.",
                         (evidence,),
                     )

@@ -36,7 +36,10 @@
  "gaps": [
   {
    "asked": "certificate transparency, crt.sh: GET https://crt.sh/?q=%25.example.com&output=json",
-   "happened": "not asked: read only with --ct (it also holds expired certificates)"
+   "happened": "not asked: read only with --ct (it also holds expired certificates)",
+   "kind": "off",
+   "count": 0,
+   "cap": 0
   }
  ],
  "subdomains_checked": [],
@@ -98,5 +101,5 @@
  "logo": null,
  "schema": "sendermap/1",
  "absences": [],
- "story": "Not checked: certificate transparency, crt.sh: GET https://crt.sh/?q=%25.example.com&output=json (not asked: read only with --ct (it also holds expired certificates))."
+ "story": "No sending service shows in DNS for example.com: a null MX that says it accepts no mail, no sender in SPF, and a wildcard that answers every DKIM name. Not checked: the crt.sh certificate log (read only with --ct)."
 }

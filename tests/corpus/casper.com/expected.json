@@ -2945,47 +2945,80 @@
  "gaps": [
   {
    "asked": "the website",
-   "happened": "not read: web checks were turned off (--no-web)"
+   "happened": "not read: web checks were turned off (--no-web)",
+   "kind": "off",
+   "count": 0,
+   "cap": 0
   },
   {
    "asked": "certificate transparency, crt.sh: GET https://crt.sh/?q=%25.casper.com&output=json",
-   "happened": "not asked: read only with --ct (it also holds expired certificates)"
+   "happened": "not asked: read only with --ct (it also holds expired certificates)",
+   "kind": "off",
+   "count": 0,
+   "cap": 0
   },
   {
    "asked": "published ranges: SPF of HubSpot",
-   "happened": "includes more than 3 levels deep not read (cap)"
+   "happened": "includes more than 3 levels deep not read (cap)",
+   "kind": "published_ranges",
+   "count": 0,
+   "cap": 3
   },
   {
    "asked": "published ranges: SPF of Mimecast",
-   "happened": "includes more than 3 levels deep not read (cap)"
+   "happened": "includes more than 3 levels deep not read (cap)",
+   "kind": "published_ranges",
+   "count": 0,
+   "cap": 3
   },
   {
    "asked": "network owners of the IP ranges in SPF at casper.com",
-   "happened": "18 of 42 not looked up: only the first 24 were (cap)"
+   "happened": "18 of 42 not looked up: only the first 24 were (cap)",
+   "kind": "networks",
+   "count": 18,
+   "cap": 24
   },
   {
    "asked": "DKIM selectors at e.casper.com",
-   "happened": "74 of 106 not asked: only the first 27 and the names its own SPF, MX or delegation backs were (cap)"
+   "happened": "74 of 106 not asked: only the first 27 and the names its own SPF, MX or delegation backs were (cap)",
+   "kind": "dkim",
+   "count": 74,
+   "cap": 27
   },
   {
    "asked": "DKIM selectors at email.casper.com",
-   "happened": "76 of 106 not asked: only the first 27 and the names its own SPF, MX or delegation backs were (cap)"
+   "happened": "76 of 106 not asked: only the first 27 and the names its own SPF, MX or delegation backs were (cap)",
+   "kind": "dkim",
+   "count": 76,
+   "cap": 27
   },
   {
    "asked": "network owners of the IP ranges in SPF at mail.casper.com",
-   "happened": "24 of 48 not looked up: only the first 24 were (cap)"
+   "happened": "24 of 48 not looked up: only the first 24 were (cap)",
+   "kind": "networks",
+   "count": 24,
+   "cap": 24
   },
   {
    "asked": "DKIM selectors at mail.casper.com",
-   "happened": "78 of 106 not asked: only the first 27 and the names its own SPF, MX or delegation backs were (cap)"
+   "happened": "78 of 106 not asked: only the first 27 and the names its own SPF, MX or delegation backs were (cap)",
+   "kind": "dkim",
+   "count": 78,
+   "cap": 27
   },
   {
    "asked": "DKIM selectors at orders.casper.com",
-   "happened": "79 of 106 not asked: only the first 27 and the names its own SPF, MX or delegation backs were (cap)"
+   "happened": "79 of 106 not asked: only the first 27 and the names its own SPF, MX or delegation backs were (cap)",
+   "kind": "dkim",
+   "count": 79,
+   "cap": 27
   },
   {
    "asked": "DKIM selectors at t.casper.com",
-   "happened": "74 of 106 not asked: only the first 27 and the names its own SPF, MX or delegation backs were (cap)"
+   "happened": "74 of 106 not asked: only the first 27 and the names its own SPF, MX or delegation backs were (cap)",
+   "kind": "dkim",
+   "count": 74,
+   "cap": 27
   }
  ],
  "subdomains_checked": [
@@ -3361,5 +3394,5 @@
    ]
   }
  ],
- "story": "Google Workspace receives the domain's mail and has a DKIM key in place to sign it. Ten other services are set up to send as the domain: five marketing (Campaign Monitor, Iterable, Mailchimp, Salesforce Account Engagement, Salesforce Marketing Cloud Engagement), four transactional (Mailgun, Mandrill, Postmark, SendGrid), one support and CRM (Salesforce); one more is likely from a DKIM key name alone (Customer.io). One service shows an account and nothing set up to send (Microsoft 365); DMARC reports go to DMARCian. Not checked: the website (not read: web checks were turned off (--no-web)); certificate transparency, crt.sh: GET https://crt.sh/?q=%25.casper.com&output=json (not asked: read only with --ct (it also holds expired certificates)); network owners of the IP ranges in SPF at casper.com (18 of 42 not looked up: only the first 24 were (cap)); DKIM selectors at e.casper.com (74 of 106 not asked: only the first 27 and the names its own SPF, MX or delegation backs were (cap)); DKIM selectors at email.casper.com (76 of 106 not asked: only the first 27 and the names its own SPF, MX or delegation backs were (cap)); network owners of the IP ranges in SPF at mail.casper.com (24 of 48 not looked up: only the first 24 were (cap)); DKIM selectors at mail.casper.com (78 of 106 not asked: only the first 27 and the names its own SPF, MX or delegation backs were (cap)); DKIM selectors at orders.casper.com (79 of 106 not asked: only the first 27 and the names its own SPF, MX or delegation backs were (cap)); DKIM selectors at t.casper.com (74 of 106 not asked: only the first 27 and the names its own SPF, MX or delegation backs were (cap)); the IP ranges two services publish in their own SPF (includes more than 3 levels deep not read (cap))."
+ "story": "Google Workspace receives the domain's mail and has a DKIM key in place to sign it. Ten other services are set up to send as the domain: five marketing (Campaign Monitor, Iterable, Mailchimp, Salesforce Account Engagement, Salesforce Marketing Cloud Engagement), four transactional (Mailgun, Mandrill, Postmark, SendGrid), one support and CRM (Salesforce); one more is likely from a DKIM key name alone (Customer.io). One service shows an account and nothing set up to send (Microsoft 365); DMARC reports go to DMARCian. Not checked: the website (turned off), DKIM selectors past the first 27 on five subdomains, network owners for 42 of 90 ranges at two names, the IP ranges two services publish in their own SPF (past three include levels), and the crt.sh certificate log (read only with --ct)."
 }

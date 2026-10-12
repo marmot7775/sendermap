@@ -30,6 +30,7 @@ from ..model import (
     Evidence,
     Finding,
     Gap,
+    GapKind,
     KeyPrint,
     Kind,
     Observed,
@@ -210,7 +211,7 @@ async def collect(
             f"the server answered no such name at {base} but {what} exists at {found.name}, so "
             "existence could not be read from it"
         )
-        contradicted = Observed(gaps=(Gap(f"DKIM keys at {where}", happened),))
+        contradicted = Observed(gaps=(Gap(f"DKIM keys at {where}", happened, GapKind.DKIM, 1),))
     answers = await _ask(ctx, base, names)
     observed = (
         _scan(ctx, where, names, answers, backed=backed, canary=canary, denial=denial)
@@ -274,12 +275,14 @@ def _scan(
             Gap(
                 f"wildcard check: TXT at {canary.name}",
                 f"{canary.status.value}, so a wildcard key was not ruled out for the selectors",
+                GapKind.DKIM,
+                1,
             )
         )
     if failed:
         base = f"_domainkey.{where}"
         asked = f"DKIM keys: TXT at {len(failed)} selectors under {base} ({', '.join(failed)})"
-        gaps.append(Gap(asked, "lookup failed"))
+        gaps.append(Gap(asked, "lookup failed", GapKind.DKIM, len(failed)))
     checked = Checked(where, tuple(names), denial=denial)
     return observed + Observed(gaps=tuple(gaps), checked=(checked,))
 

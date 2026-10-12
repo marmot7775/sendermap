@@ -284,13 +284,40 @@ class CtSummary:
     providers: tuple[CtProvider, ...] = ()
 
 
+class GapKind(StrEnum):
+    """What a gap leaves unchecked, set by the source that records it, so the story can count
+    gaps of one kind together. `off` is a check the caller turned off. `other` is the default,
+    and nothing the engine records is left at it."""
+
+    WEBSITE = "website"
+    PAGE = "page"
+    CERTIFICATE_LOG = "certificate_log"
+    SUBDOMAINS = "subdomains"
+    DKIM = "dkim"
+    LABELS = "labels"
+    SPF = "spf"
+    MX = "mx"
+    NETWORKS = "networks"
+    PUBLISHED_RANGES = "published_ranges"
+    REPORTS = "reports"
+    TOKENS = "tokens"
+    MTA_STS = "mta_sts"
+    OFF = "off"
+    OTHER = "other"
+
+
 @dataclass(frozen=True, slots=True)
 class Gap:
     """A question that got no usable answer: what was asked, and what happened instead. Its
-    silence says nothing, so it is never to be read as absent."""
+    silence says nothing, so it is never to be read as absent. `count` is how many names,
+    ranges or selectors it leaves unanswered when the source counted them (0: the check as a
+    whole), and `cap` the limit that left them unasked (0: a failure, not a cap)."""
 
     asked: str
     happened: str
+    kind: GapKind = GapKind.OTHER
+    count: int = 0
+    cap: int = 0
 
 
 @dataclass(frozen=True, slots=True)

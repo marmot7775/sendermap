@@ -21,6 +21,7 @@ from ..model import (
     Evidence,
     Finding,
     Gap,
+    GapKind,
     Kind,
     Observed,
     Outcome,
@@ -83,7 +84,7 @@ class SpfTree:
 async def collect(ctx: Context, where: str) -> tuple[Observed, SpfTree]:
     answer = await ctx.dns.txt(where)
     if not answer.answered:
-        gap = Gap(f"SPF: TXT at {where}", answer.status.value)
+        gap = Gap(f"SPF: TXT at {where}", answer.status.value, GapKind.SPF, 1)
         read = Read("spf", where, Outcome.FAILED, reason=f"{gap.asked}: {gap.happened}")
         return Observed(gaps=(gap,), reads=(read,)), SpfTree()
     records = spf_records(answer)
@@ -114,7 +115,8 @@ async def collect(ctx: Context, where: str) -> tuple[Observed, SpfTree]:
     if too_deep := list(dict.fromkeys(walked.too_deep)):
         asked = f"SPF includes more than {MAX_DEPTH} levels below {where}: {', '.join(too_deep)}"
         happened = f"{len(too_deep)} not walked (cap of {MAX_DEPTH} levels)"
-        walked += _Walked(observed=Observed(gaps=(Gap(asked, happened),)))
+        gap = Gap(asked, happened, GapKind.SPF, len(too_deep), MAX_DEPTH)
+        walked += _Walked(observed=Observed(gaps=(gap,)))
     tree = SpfTree(
         record=record,
         lookups=walked.lookups,
@@ -284,7 +286,7 @@ class _Walk:
         """Everything the target's own record contributes, walked for the first time."""
         answer = await self.ctx.dns.txt(link.target)
         if not answer.answered:
-            gap = Gap(f"SPF {link.how}: TXT at {link.target}", answer.status.value)
+            gap = Gap(f"SPF {link.how}: TXT at {link.target}", answer.status.value, GapKind.SPF, 1)
             return _Walked(observed=Observed(gaps=(gap,)))
         records = spf_records(answer)
         if len(records) != 1:
