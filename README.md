@@ -77,7 +77,14 @@ that supports it, so you can check it yourself.
   for a day, and a log that never answers is listed as not checked while the map finishes
   without it.
 
-Run it from the command line:
+Run it from the command line. From 0.1.0, it installs from PyPI:
+
+```
+pip install sendermap                 # available from 0.1.0
+uvx sendermap example.com             # run without installing, available from 0.1.0
+```
+
+Until then, install it from GitHub:
 
 ```
 pip install git+https://github.com/marmot7775/sendermap

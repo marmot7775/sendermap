@@ -3,6 +3,10 @@
 Every release of Sendermap, newest first. The JSON a map gives keeps the `sendermap/1` contract:
 it grows by addition only.
 
+To release: rename Unreleased to the version (`## 0.1.0`), commit, and push the tag `v0.1.0`.
+The publish workflow builds from the tag, takes that section as the release notes, publishes to
+PyPI and makes the GitHub release; a tag with no section fails before anything is published.
+
 ## Unreleased
 
 What 0.1.0 holds:
