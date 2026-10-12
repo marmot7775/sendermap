@@ -29,7 +29,7 @@ jobs:
           python-version: ${{ matrix.python-version }}
           enable-cache: true
       - name: Install
-        run: uv sync --locked --extra web  # web too: mypy and the web test read fastapi
+        run: uv sync --locked --extra web --extra mcp  # mypy and the tests read fastapi and fastmcp
       - name: ruff check
         run: uv run --no-sync ruff check
       - name: ruff format --check

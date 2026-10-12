@@ -205,7 +205,8 @@ for the check and a private one a moment later (DNS rebinding) is not caught.
 | `sources/ct.py` | Certificate transparency: the only reader of certificate logs. Reads them once per map through a provider list (Cert Spotter always, crt.sh with `--ct`), each with its own tries, timeout and one-day disk cache, into one set of names; with `--ct`, each logged name resolved and matched by the same catalog matchers as the DNS sources |
 | `sources/subdomains.py` | Finding sending subdomains from a wordlist and the names `ct.py` read |
 | `render/text.py`, `render/markdown.py` | The terminal and Markdown views; both show the gaps and what was asked at each name, as the web page does, and group unrecognised IP ranges by network |
-| `cli.py` | The `sendermap` command |
+| `cli.py` | The `sendermap` command, and `sendermap mcp`, which starts the MCP server |
+| `mcp_server.py` | The MCP server: its two tools, two resources and instructions, and the summary of a map |
 | `testing.py` | Recording and replaying DNS answers and pages, and replaying a recorded case |
 | `web/app.py` | The site: a page, and an API that streams progress and the finished map |
 
@@ -634,6 +635,25 @@ recorder keeps the answers, not those requests.
   certificate logs are cached in `$XDG_CACHE_HOME/sendermap/ct` or `~/.cache/sendermap/ct`, one
   directory per provider. The web site does not use `--ct` or the cache: it reads Cert Spotter
   for the subdomain search on each map it builds.
+- **MCP server**: `sendermap mcp` serves `sendermap/mcp_server.py` over stdio, with the `mcp`
+  extra (fastmcp 4). Two tools, each with a title and `readOnlyHint`. `sendermap_map` takes
+  `domain`, `claimed`, `website`, `subdomains`, `certificate_log` and `detail` and returns the
+  sendermap/1 JSON as structured content, validated against the schema file, which is also the
+  tool's declared output schema: `full` is `to_dict()` as it is; `summary` keeps the same shape
+  with each service's deciding claim alone beside its setups and leaves out `checked` and
+  `subdomains_checked`. Its text block is the story, then one line per finding, then the claimed
+  sections in `render.claimed_parts`'s words when a list was given. Each step the engine reports
+  goes out as MCP progress, counted. A malformed domain, a map whose own records could not be
+  read (the CLI's exit 3) and a map that breaks the schema are tool errors. `sendermap_vendor`
+  takes a name or alias, matched by `catalog.named`, and returns the vendor's block from
+  vendors.json as JSON, name, category and aliases first. Two resources: the schema
+  (`sendermap://schema/sendermap-1.json`) and the vendor list (`sendermap://vendors`: name,
+  category, aliases). The server instructions say what the four tiers mean, that absences and
+  gaps are read as written and silence is not absence, that a Likely service is a guess from a
+  name, and that nothing in a result is advice. `create(build)` takes the function that builds
+  the map, so the tests map the fake zone through an in-memory client (`tests/test_mcp.py`),
+  which also holds the limits: names under 64 characters, descriptions of three or four
+  sentences, instructions under 2,048 characters.
 - **Web site**: a FastAPI app. `GET /api/map?d=` returns the map as JSON, `GET /api/map.md?d=`
   as Markdown, and `GET /api/map/stream?d=` streams progress then the map as server-sent events.
   Each takes `claimed`, a comma separated list, for the map's reconciliation.
@@ -719,7 +739,7 @@ so a test that opens a network socket fails, while the loopback web test keeps r
 
 ### Workflows
 
-- `.github/workflows/test.yml` installs from `uv.lock` with `uv sync --locked --extra web` (the
+- `.github/workflows/test.yml` installs from `uv.lock` with `uv sync --locked --extra web --extra mcp` (the
   dev group comes by default) and runs `ruff check`, `ruff format --check`, `mypy` and `pytest` on Python 3.12 and 3.13, on every push to main, every
   pull request and by hand. pytest takes its addopts from `pyproject.toml`, so the network is
   blocked in CI as it is locally.
@@ -751,6 +771,6 @@ The version comes from the git tag through hatch-vcs (`v0.1.0` builds 0.1.0; an 
 builds a dev version; a copy with no git metadata builds 0.0.0), and `sendermap.__version__`
 reads it from the installed package's metadata, 0.0.0 when it was never installed.
 `sendermap/py.typed` marks the package as typed. The tools to develop it are the `dev`
-dependency group, not an extra, so `pip install sendermap[...]` offers only `web`. `uv.lock`
+dependency group, not an extra, so `pip install sendermap[...]` offers only `web` and `mcp`. `uv.lock`
 pins every dependency, and CI installs from it with `--locked`, so a dependency change lands as a
 lock change in review. `CHANGELOG.md` keeps an Unreleased section that the next release takes.

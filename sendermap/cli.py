@@ -33,6 +33,12 @@ UNREADABLE = 3
 
 
 def main(argv: list[str] | None = None) -> int:
+    argv = sys.argv[1:] if argv is None else argv
+    # No domain is called mcp, since a domain has a dot.
+    return _mcp(argv[1:]) if argv[:1] == ["mcp"] else _mapped(argv)
+
+
+def _mapped(argv: list[str]) -> int:
     args = _parser().parse_args(argv)  # argparse exits with 2 on a bad flag
     try:
         args.claimed = _claimed(args)
@@ -58,6 +64,25 @@ def main(argv: list[str] | None = None) -> int:
     except OSError as e:
         print(f"sendermap: cannot write {args.output}: {e.strerror}", file=sys.stderr)
         return BAD_INPUT
+    return MAPPED
+
+
+def _mcp(argv: list[str]) -> int:
+    """`sendermap mcp`: the MCP server over stdio, until the client closes it."""
+    argparse.ArgumentParser(
+        prog="sendermap mcp",
+        description="Serve Sendermap's tools over MCP on stdio. Needs the mcp extra.",
+    ).parse_args(argv)
+    try:
+        from .mcp_server import serve  # noqa: PLC0415 (only this command needs fastmcp)
+    except ImportError:
+        print(
+            "sendermap: the mcp command needs the mcp extra: uvx --from 'sendermap[mcp]' "
+            "sendermap mcp",
+            file=sys.stderr,
+        )
+        return BAD_INPUT
+    serve()
     return MAPPED
 
 
@@ -125,6 +150,9 @@ def _claimed(args: argparse.Namespace) -> list[str]:
 
 
 EPILOG = """\
+commands:
+  sendermap mcp  serve the map and vendor tools over MCP on stdio (needs the mcp extra).
+
 exit codes:
   0  the map was built and written.
   2  bad input: a malformed domain, an unknown flag, a --claimed-file that cannot be read, or an

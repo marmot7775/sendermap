@@ -22,9 +22,9 @@ def test_the_package_is_typed() -> None:
     assert resources.files("sendermap").joinpath("py.typed").is_file()
 
 
-def test_development_tools_are_a_group_and_web_the_only_extra() -> None:
+def test_development_tools_are_a_group_and_web_and_mcp_the_only_extras() -> None:
     pyproject = tomllib.loads((ROOT / "pyproject.toml").read_text())
-    assert list(pyproject["project"]["optional-dependencies"]) == ["web"]
+    assert list(pyproject["project"]["optional-dependencies"]) == ["web", "mcp"]
     assert any(d.startswith("pytest") for d in pyproject["dependency-groups"]["dev"])
     assert (ROOT / "uv.lock").is_file()
 
