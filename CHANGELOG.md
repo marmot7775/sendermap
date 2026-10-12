@@ -20,5 +20,5 @@ What 0.1.0 holds:
 - The services a client says they use held against the map: confirmed, unclaimed, unfound, unknown.
 - Every gap named: each failed lookup and each cap says what was left unchecked.
 - Vendor data in one file, every pattern with a live proof, rechecked weekly.
-- A command line (text, Markdown, JSON) and a website that streams the map and keeps no record of the domains looked up.
+- A command line (text, Markdown, JSON, --output to a file) with exit codes for scripts and agents (0 mapped, 2 bad input, 3 the domain's own records unreadable), and a website that streams the map and keeps no record of the domains looked up.
 - The JSON Schema of a map, `sendermap/1`, served by the site and returned by `sendermap.schema()`.

@@ -87,7 +87,12 @@ sendermap example.com --markdown     # a summary to paste
 sendermap example.com --json         # everything, for scripts
 sendermap example.com --ct           # resolve every name in certificate logs, crt.sh too
 sendermap example.com --claimed "Office 365, Mailchimp"   # hold the services you were told of against the map
+sendermap example.com --json --output map.json            # write the map to a file
 ```
+
+For scripts and agents: the exit code is 0 when the map was built, 2 for bad input and 3 when
+the domain's own records could not be read (no map). Progress goes to stderr, and only to a
+terminal, so stdout holds the map alone. `sendermap --help` explains every flag.
 
 The website keeps no record of the domains looked up.
 
