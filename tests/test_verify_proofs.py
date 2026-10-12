@@ -249,3 +249,34 @@ async def test_a_setup_proof_holds_when_the_page_contains_every_value(
         ("setup tracking", "could not check", "HTTP 403"),
     ]
     assert code == 1
+
+
+async def test_a_sending_ip_proof_is_a_range_in_the_services_spf_or_a_hosts_address() -> None:
+    tool = load_tool()
+    dns = (
+        Zone()
+        .add("_spf.vendor.test", "TXT", "v=spf1 ip4:192.0.2.0/25 -ip4:192.0.2.128/25 ~all")
+        .add("out1.vendor.test", "A", "192.0.2.200")
+        .add("out1.vendor.test", "TXT", "v=spf1 a -all")  # a host's own HELO record
+        .add("out6.vendor.test", "AAAA", "2001:db8::25")
+    )
+    dns.timeouts.add(("down.vendor.test", "TXT"))
+
+    async def seen(record: str, address: str) -> tuple[bool, bool, str]:
+        async with httpx.AsyncClient(transport=httpx.MockTransport(web)) as http:
+            result = await tool.CHECKS["sending_ip"](tool.Checker(dns, http), record, address)
+        return result.shows, result.answered, result.observed
+
+    assert (await seen("_spf.vendor.test", "192.0.2.10"))[0]
+    # A range the record names but does not authorize proves nothing, and neither does an
+    # address outside every range.
+    assert not (await seen("_spf.vendor.test", "192.0.2.200"))[0]
+    assert not (await seen("_spf.vendor.test", "198.51.100.1"))[0]
+    assert await seen("out1.vendor.test", "192.0.2.200") == (True, True, "192.0.2.200")
+    assert not (await seen("out1.vendor.test", "192.0.2.201"))[0]
+    assert (await seen("out6.vendor.test", "2001:db8::25"))[0]
+    assert await seen("down.vendor.test", "192.0.2.10") == (
+        False,
+        False,
+        "TXT lookup failed; A NXDOMAIN",
+    )

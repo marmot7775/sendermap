@@ -1,5 +1,5 @@
 {
-  "about": "Email services recognisable from a domain's own DNS. One block per vendor; imported from dns-audit (MIT) at fac9e2e. Hostname patterns match the host itself or any name under it, and the longest match wins. Every pattern is an entry with its value and a proof: a live domain that publishes it, the record name (or, for a website host or a subprocessor name, the page) as found, and the date it was checked. Networks are autonomous system numbers a service owns outright; shared clouds are listed under rules.cloud_networks and never credited to a service. Each selectors entry names a vendor's DKIM selectors with their source and a proof; a fixed shape with several names takes a list of proofs, one per name in order. These entries are the only selector list: they credit keys by name, back generic names, and with rules.generic_selectors make the probe sweep. Hints are MX and SPF values the vendor's customers publish, with the pages that list them. Patterns not yet proven wait in vendors_pending.json, which Sendermap never reads. A setup list names the records the vendor's documentation says a complete setup publishes: each item's record, whether it is needed, its values (patterns of the same block) and a proof whose record is the documentation page that names them all. Aliases are other names a client calls the vendor by, a plain list with no proof: an alias matches text a person typed, never anything in DNS.",
+  "about": "Email services recognisable from a domain's own DNS. One block per vendor; imported from dns-audit (MIT) at fac9e2e. Hostname patterns match the host itself or any name under it, and the longest match wins. Every pattern is an entry with its value and a proof: a live domain that publishes it, the record name (or, for a website host or a subprocessor name, the page) as found, and the date it was checked. Networks are autonomous system numbers a service owns outright; shared clouds are listed under rules.cloud_networks and never credited to a service. Each selectors entry names a vendor's DKIM selectors with their source and a proof; a fixed shape with several names takes a list of proofs, one per name in order. These entries are the only selector list: they credit keys by name, back generic names, and with rules.generic_selectors make the probe sweep. A sending_ip entry is one address the service sends from, for SPF evaluation; its proof's record is either the service's own SPF record, publishing a range that holds the address, or a host of the service's whose A record is the address; each shipped one is an outbound host whose PTR name leads back to the address, which SPF evaluation gives as the HELO name. Hints are MX and SPF values the vendor's customers publish, with the pages that list them. Patterns not yet proven wait in vendors_pending.json, which Sendermap never reads. A setup list names the records the vendor's documentation says a complete setup publishes: each item's record, whether it is needed, its values (patterns of the same block) and a proof whose record is the documentation page that names them all. Aliases are other names a client calls the vendor by, a plain list with no proof: an alias matches text a person typed, never anything in DNS.",
   "categories": [
     "Mailbox",
     "Security gateway",
@@ -204,6 +204,16 @@
             "date": "2026-10-10"
           }
         }
+      ],
+      "sending_ip": [
+        {
+          "value": "52.128.44.2",
+          "proof": {
+            "domain": "acems1.com",
+            "record": "mail2.use2.acems1.com",
+            "date": "2026-10-11"
+          }
+        }
       ]
     },
     "Agari": {
@@ -230,6 +240,16 @@
             "domain": "amazon.com",
             "record": "amazon.com",
             "date": "2026-10-09"
+          }
+        }
+      ],
+      "sending_ip": [
+        {
+          "value": "199.255.192.1",
+          "proof": {
+            "domain": "amazonses.com",
+            "record": "a192-1.smtp-out.amazonses.com",
+            "date": "2026-10-11"
           }
         }
       ],
@@ -408,6 +428,16 @@
             "date": "2026-10-10"
           }
         }
+      ],
+      "sending_ip": [
+        {
+          "value": "204.194.223.1",
+          "proof": {
+            "domain": "aweber.com",
+            "record": "smtp-coi-g01-001.aweber.com",
+            "date": "2026-10-11"
+          }
+        }
       ]
     },
     "Barracuda": {
@@ -418,6 +448,16 @@
             "domain": "barracuda.com",
             "record": "spf2.barracuda.com",
             "date": "2026-10-09"
+          }
+        }
+      ],
+      "sending_ip": [
+        {
+          "value": "209.222.82.4",
+          "proof": {
+            "domain": "barracudanetworks.com",
+            "record": "egress.ess.barracudanetworks.com",
+            "date": "2026-10-11"
           }
         }
       ],
@@ -491,6 +531,16 @@
             "domain": "brevo.com",
             "record": "m.brevo.com",
             "date": "2026-10-09"
+          }
+        }
+      ],
+      "sending_ip": [
+        {
+          "value": "185.41.28.3",
+          "proof": {
+            "domain": "sp2-brevo.net",
+            "record": "shared-p200-i3.d.sp2-brevo.net",
+            "date": "2026-10-11"
           }
         }
       ],
@@ -610,6 +660,16 @@
           }
         }
       ],
+      "sending_ip": [
+        {
+          "value": "103.28.42.1",
+          "proof": {
+            "domain": "createsend.com",
+            "record": "mx1.g.outbound.createsend.com",
+            "date": "2026-10-11"
+          }
+        }
+      ],
       "category": "Marketing",
       "selectors": [
         {
@@ -678,6 +738,16 @@
             "domain": "cloudflare.com",
             "record": "notify.cloudflare.com",
             "date": "2026-10-09"
+          }
+        }
+      ],
+      "sending_ip": [
+        {
+          "value": "104.30.0.1",
+          "proof": {
+            "domain": "cloudflare-email.net",
+            "record": "a-b.cloudflare-email.net",
+            "date": "2026-10-11"
           }
         }
       ],
@@ -761,6 +831,16 @@
             "domain": "constantcontact.com",
             "record": "constantcontact.com",
             "date": "2026-10-09"
+          }
+        }
+      ],
+      "sending_ip": [
+        {
+          "value": "205.207.106.10",
+          "proof": {
+            "domain": "creativ.email",
+            "record": "bbm10.send.creativ.email",
+            "date": "2026-10-11"
           }
         }
       ],
@@ -903,6 +983,16 @@
             "domain": "mailhop.org",
             "record": "outbound.mailhop.org",
             "date": "2026-10-09"
+          }
+        }
+      ],
+      "sending_ip": [
+        {
+          "value": "52.26.49.97",
+          "proof": {
+            "domain": "mailhop.org",
+            "record": "outbound1f.ore.mailhop.org",
+            "date": "2026-10-11"
           }
         }
       ],
@@ -1049,6 +1139,16 @@
             }
           ]
         }
+      ],
+      "sending_ip": [
+        {
+          "value": "139.60.0.129",
+          "proof": {
+            "domain": "e2ma.net",
+            "record": "mail129-2z9c.e2ma.net",
+            "date": "2026-10-11"
+          }
+        }
       ]
     },
     "Everlytic": {
@@ -1059,6 +1159,16 @@
             "domain": "everlytic.com",
             "record": "eversrv.everlytic.com",
             "date": "2026-10-09"
+          }
+        }
+      ],
+      "sending_ip": [
+        {
+          "value": "69.63.146.128",
+          "proof": {
+            "domain": "eversrv.com",
+            "record": "mail128.outbound.eversrv.com",
+            "date": "2026-10-11"
           }
         }
       ],
@@ -1127,6 +1237,16 @@
             "domain": "fastmail.com",
             "record": "fastmail.com",
             "date": "2026-10-09"
+          }
+        }
+      ],
+      "sending_ip": [
+        {
+          "value": "103.168.172.134",
+          "proof": {
+            "domain": "messagingengine.com",
+            "record": "fsystem-a1-smtp.messagingengine.com",
+            "date": "2026-10-11"
           }
         }
       ],
@@ -1328,6 +1448,16 @@
             "date": "2026-10-10"
           }
         }
+      ],
+      "sending_ip": [
+        {
+          "value": "3.238.137.129",
+          "proof": {
+            "domain": "freshemail.io",
+            "record": "mail-us62.freshemail.io",
+            "date": "2026-10-11"
+          }
+        }
       ]
     },
     "GetResponse": {
@@ -1339,6 +1469,16 @@
             "domain": "getresponse.com",
             "record": "https://getresponse.com/",
             "date": "2026-10-09"
+          }
+        }
+      ],
+      "sending_ip": [
+        {
+          "value": "104.160.65.1",
+          "proof": {
+            "domain": "gr-mail1.com",
+            "record": "mta-1.gamma.gr-mail1.com",
+            "date": "2026-10-11"
           }
         }
       ]
@@ -1364,6 +1504,16 @@
             "domain": "godaddy.com",
             "record": "spf.gem.godaddy.com",
             "date": "2026-10-09"
+          }
+        }
+      ],
+      "sending_ip": [
+        {
+          "value": "97.74.135.1",
+          "proof": {
+            "domain": "secureserver.net",
+            "record": "osplsmtpa02-01.prod.phx3.secureserver.net",
+            "date": "2026-10-11"
           }
         }
       ],
@@ -1501,6 +1651,16 @@
             "domain": "telegram.org",
             "record": "accounts.telegram.org",
             "date": "2026-10-10"
+          }
+        }
+      ],
+      "sending_ip": [
+        {
+          "value": "209.85.220.41",
+          "proof": {
+            "domain": "google.com",
+            "record": "mail-sor-f41.google.com",
+            "date": "2026-10-11"
           }
         }
       ],
@@ -1693,6 +1853,16 @@
           }
         }
       ],
+      "sending_ip": [
+        {
+          "value": "52.0.20.102",
+          "proof": {
+            "domain": "helpscout.net",
+            "record": "mail4.helpscout.net",
+            "date": "2026-10-11"
+          }
+        }
+      ],
       "dkim_cname": [
         {
           "value": "helpscout.net",
@@ -1756,6 +1926,16 @@
             "domain": "hubspot.com",
             "record": "events.hubspot.com",
             "date": "2026-10-09"
+          }
+        }
+      ],
+      "sending_ip": [
+        {
+          "value": "3.93.157.66",
+          "proof": {
+            "domain": "hubspotemail.net",
+            "record": "7wka8.7wka8.cs.hubspotemail.net",
+            "date": "2026-10-11"
           }
         }
       ],
@@ -1947,6 +2127,16 @@
             "domain": "ionos.com",
             "record": "mail.ionos.com",
             "date": "2026-10-09"
+          }
+        }
+      ],
+      "sending_ip": [
+        {
+          "value": "74.208.4.194",
+          "proof": {
+            "domain": "perfora.net",
+            "record": "mout.perfora.net",
+            "date": "2026-10-11"
           }
         }
       ],
@@ -2283,6 +2473,16 @@
           }
         }
       ],
+      "sending_ip": [
+        {
+          "value": "205.201.128.1",
+          "proof": {
+            "domain": "mcsv.net",
+            "record": "mail1.us4.mcsv.net",
+            "date": "2026-10-11"
+          }
+        }
+      ],
       "dkim_cname": [
         {
           "value": "mcsv.net",
@@ -2428,6 +2628,16 @@
             "date": "2026-10-09"
           }
         }
+      ],
+      "sending_ip": [
+        {
+          "value": "185.249.220.1",
+          "proof": {
+            "domain": "mlsend.com",
+            "record": "mail001.on.mlsend.com",
+            "date": "2026-10-11"
+          }
+        }
       ]
     },
     "Mailgun": {
@@ -2438,6 +2648,16 @@
             "domain": "mailgun.com",
             "record": "mailgun.com",
             "date": "2026-10-09"
+          }
+        }
+      ],
+      "sending_ip": [
+        {
+          "value": "159.135.140.81",
+          "proof": {
+            "domain": "mailgun.net",
+            "record": "m140-81.mailgun.net",
+            "date": "2026-10-11"
           }
         }
       ],
@@ -2621,6 +2841,16 @@
             "domain": "mailjet.com",
             "record": "mailjet.com",
             "date": "2026-10-09"
+          }
+        }
+      ],
+      "sending_ip": [
+        {
+          "value": "45.14.148.1",
+          "proof": {
+            "domain": "mailjet.com",
+            "record": "o1.p40.mailjet.com",
+            "date": "2026-10-11"
           }
         }
       ],
@@ -2877,6 +3107,16 @@
           }
         }
       ],
+      "sending_ip": [
+        {
+          "value": "130.248.172.1",
+          "proof": {
+            "domain": "mktomail.com",
+            "record": "em-nld1-01.mktomail.com",
+            "date": "2026-10-11"
+          }
+        }
+      ],
       "category": "Marketing",
       "aliases": [
         "Adobe Marketo",
@@ -2973,6 +3213,16 @@
             "domain": "microsoft.com",
             "record": "comms.microsoft.com",
             "date": "2026-10-09"
+          }
+        }
+      ],
+      "sending_ip": [
+        {
+          "value": "40.107.0.1",
+          "proof": {
+            "domain": "outlook.com",
+            "record": "mail-eopbgr00001.outbound.protection.outlook.com",
+            "date": "2026-10-11"
           }
         }
       ],
@@ -3155,6 +3405,16 @@
             "domain": "hp.com",
             "record": "hp.com",
             "date": "2026-10-10"
+          }
+        }
+      ],
+      "sending_ip": [
+        {
+          "value": "205.139.110.129",
+          "proof": {
+            "domain": "mimecast.com",
+            "record": "us-smtp-delivery-7.mimecast.com",
+            "date": "2026-10-11"
           }
         }
       ],
@@ -3359,6 +3619,16 @@
           }
         }
       ],
+      "sending_ip": [
+        {
+          "value": "50.31.156.104",
+          "proof": {
+            "domain": "mtasv.net",
+            "record": "sc-ord-mail1.mtasv.net",
+            "date": "2026-10-11"
+          }
+        }
+      ],
       "reporting": [
         {
           "value": "dmarc.postmarkapp.com",
@@ -3523,6 +3793,16 @@
           }
         }
       ],
+      "sending_ip": [
+        {
+          "value": "185.70.40.27",
+          "proof": {
+            "domain": "protonmail.ch",
+            "record": "mail-4027.protonmail.ch",
+            "date": "2026-10-11"
+          }
+        }
+      ],
       "mx": [
         {
           "value": "protonmail.ch",
@@ -3662,6 +3942,16 @@
             "domain": "ip-api.com",
             "record": "ip-api.com",
             "date": "2026-10-10"
+          }
+        }
+      ],
+      "sending_ip": [
+        {
+          "value": "108.166.43.129",
+          "proof": {
+            "domain": "emailsrvr.com",
+            "record": "smtp129.ord1c.emailsrvr.com",
+            "date": "2026-10-11"
           }
         }
       ],
@@ -3851,6 +4141,16 @@
             "date": "2026-10-11"
           }
         }
+      ],
+      "sending_ip": [
+        {
+          "value": "192.64.236.2",
+          "proof": {
+            "domain": "sailthru.com",
+            "record": "mta236-2.sailthru.com",
+            "date": "2026-10-11"
+          }
+        }
       ]
     },
     "Salesforce": {
@@ -4002,6 +4302,16 @@
           }
         }
       ],
+      "sending_ip": [
+        {
+          "value": "198.245.81.1",
+          "proof": {
+            "domain": "salesforce.com",
+            "record": "mta.mktgc.salesforce.com",
+            "date": "2026-10-11"
+          }
+        }
+      ],
       "tracking": [
         {
           "value": "pardot.com",
@@ -4107,6 +4417,16 @@
             "domain": "sendgrid.com",
             "record": "alerts.sendgrid.com",
             "date": "2026-10-09"
+          }
+        }
+      ],
+      "sending_ip": [
+        {
+          "value": "223.165.113.1",
+          "proof": {
+            "domain": "sendgrid.net",
+            "record": "dfxrtkhk.outbound-mail.sendgrid.net",
+            "date": "2026-10-11"
           }
         }
       ],
@@ -4499,6 +4819,16 @@
             "date": "2026-10-10"
           }
         }
+      ],
+      "sending_ip": [
+        {
+          "value": "142.0.181.1",
+          "proof": {
+            "domain": "squarespace-mail.com",
+            "record": "out1-1.transactional.squarespace-mail.com",
+            "date": "2026-10-11"
+          }
+        }
       ]
     },
     "Stripe": {
@@ -4522,6 +4852,16 @@
             "domain": "symantec.com",
             "record": "symantec.com",
             "date": "2026-10-09"
+          }
+        }
+      ],
+      "sending_ip": [
+        {
+          "value": "85.158.140.1",
+          "proof": {
+            "domain": "messagelabs.com",
+            "record": "mail1.bemta34.messagelabs.com",
+            "date": "2026-10-11"
           }
         }
       ],
@@ -4628,6 +4968,16 @@
           }
         }
       ],
+      "sending_ip": [
+        {
+          "value": "103.151.192.1",
+          "proof": {
+            "domain": "zdsys.com",
+            "record": "mta-out1.pod25.apne1.zdsys.com",
+            "date": "2026-10-11"
+          }
+        }
+      ],
       "category": "Support and CRM",
       "website": [
         {
@@ -4726,6 +5076,16 @@
           }
         }
       ],
+      "sending_ip": [
+        {
+          "value": "135.84.81.1",
+          "proof": {
+            "domain": "zcsend.net",
+            "record": "sendera1.zcsend.net",
+            "date": "2026-10-11"
+          }
+        }
+      ],
       "category": "Marketing",
       "subprocessor_names": [
         {
@@ -4762,6 +5122,16 @@
             "domain": "iscorp.com",
             "record": "iscorp.com",
             "date": "2026-10-10"
+          }
+        }
+      ],
+      "sending_ip": [
+        {
+          "value": "136.143.188.1",
+          "proof": {
+            "domain": "zoho.com",
+            "record": "sender4.zoho.com",
+            "date": "2026-10-11"
           }
         }
       ],

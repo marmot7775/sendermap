@@ -16,6 +16,9 @@ what is published there now. What counts as found depends on the kind of pattern
 - a network: an address of the name that, by Team Cymru's answers, the network announces, with
   every origin network of that address the vendor's, read by the map's own networks.owner and
   credited by its rule, so an address two networks announce counts the same in any order;
+- a sending address: one SPF record at the name with an authorizing ip4 or ip6 range that holds
+  the address (the service's own record publishing it), or an A or AAAA record at the name that
+  is the address (a host of the service's that sends from it);
 - a website host: the page at the URL loads a script or stylesheet from the pattern's host;
 - a subprocessor name: the page at the URL has the name as a whole word in its text;
 - a setup item: the vendor's documentation page at the URL contains every value the item names
@@ -85,6 +88,7 @@ EXPECTED = {
     "reporting": "report address at or under {}",
     "verification_txt": "TXT record matching {}",
     "networks": "an address announced by {}",
+    "sending_ip": "an SPF range holding {} at the name, or the name's own address",
     "website": "a page that loads a script or stylesheet from {}",
     "subprocessor_names": "a page that names {}",
     "setup": "a documentation page that contains {}",  # with no values, the page alone
@@ -214,6 +218,33 @@ async def _network(checker: Checker, record: str, asn: str) -> Seen:
     return Seen(shows, "; ".join(announced) or "no network announces its addresses")
 
 
+async def _sending_ip(checker: Checker, record: str, address: str) -> Seen:
+    """The service's own SPF record at the name publishes a range holding the address, or the
+    name's own address is it. An outbound host may publish a HELO record of its own ("v=spf1 a
+    -all"), so both are read."""
+    ip = ipaddress.ip_address(address)
+    answer = await checker.query(record, "TXT")
+    records = spf_records(answer)
+    if len(records) == 1 and any(
+        t.authorizes and t.mechanism in ("ip4", "ip6") and _holds(t.value, ip)
+        for t in terms(records[0])
+    ):
+        return _seen(answer, True)
+    host = await checker.query(record, "A" if ip.version == 4 else "AAAA")
+    if any(_holds(r, ip) for r in host.records):
+        return _seen(host, True)
+    # Neither shows it; a lookup that failed leaves the proof unchecked, not disproved.
+    observed = f"TXT {_observed(answer)}; {host.rtype} {_observed(host)}"
+    return Seen(False, observed, answer.answered and host.answered)
+
+
+def _holds(cidr: str, ip: ipaddress.IPv4Address | ipaddress.IPv6Address) -> bool:
+    try:
+        return ip in ipaddress.ip_network(cidr, strict=False)
+    except ValueError:
+        return False
+
+
 async def _page(checker: Checker, url: str) -> httpx.Response | Seen:
     """The page at `url`, or what to report when it could not be read. A page that is gone is
     not found; any other refusal says nothing about the proof."""
@@ -270,6 +301,7 @@ CHECKS: dict[str, Check] = {
     "reporting": _reports,
     "verification_txt": _token,
     "networks": _network,
+    "sending_ip": _sending_ip,
     "website": _website,
     "subprocessor_names": _named,
     "setup": _setup,
