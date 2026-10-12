@@ -79,6 +79,22 @@ class SpfTree:
     # Include and redirect targets in the domain's record and one level below, lowercase.
     # A hint for ordering the DKIM scan, not evidence: qualifiers are not checked.
     includes: list[str] = field(default_factory=list)
+    # Include and redirect targets past MAX_DEPTH, not walked.
+    too_deep: list[str] = field(default_factory=list)
+
+    @property
+    def unnamed(self) -> str | None:
+        """Why the walk could not name everything the record authorizes, or None when it
+        could: a hosted service whose record it did not read, a macro include, or links past
+        the depth cap. A flattened record the walk read names its senders as ranges, which the
+        networks source names or leaves unknown, so that case is the engine's to judge."""
+        if self.hosted_by and self.hosted_by not in self.flattened:
+            return f"managed through {self.hosted_by}"
+        if self.macros:
+            return "a macro include"
+        if self.too_deep:
+            return f"includes more than {MAX_DEPTH} levels deep"
+        return None
 
 
 async def collect(ctx: Context, where: str) -> tuple[Observed, SpfTree]:
@@ -125,6 +141,7 @@ async def collect(ctx: Context, where: str) -> tuple[Observed, SpfTree]:
         flattened=list(walked.flattened),
         macros=list(walked.macros),
         includes=list(walked.includes),
+        too_deep=too_deep,
     )
     return walked.observed + _findings(ctx, where, tree) + _read(ctx, where, tree), tree
 

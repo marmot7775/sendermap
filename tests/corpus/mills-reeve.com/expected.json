@@ -15,7 +15,7 @@
       "name": "mills-reeve.com",
       "rtype": "MX",
       "value": "10 eu-smtp-inbound-1.mimecast.com",
-      "checked_at": "2026-10-11T22:12:24+00:00"
+      "checked_at": "2026-10-12T01:24:55+00:00"
      },
      "supporting": []
     },
@@ -27,7 +27,7 @@
       "name": "mills-reeve.com",
       "rtype": "MX",
       "value": "10 eu-smtp-inbound-2.mimecast.com",
-      "checked_at": "2026-10-11T22:12:24+00:00"
+      "checked_at": "2026-10-12T01:24:55+00:00"
      },
      "supporting": []
     },
@@ -39,7 +39,7 @@
       "name": "mills-reeve.com",
       "rtype": "TXT",
       "value": "include:eu._netblocks.mimecast.com",
-      "checked_at": "2026-10-11T22:12:24+00:00"
+      "checked_at": "2026-10-12T01:24:55+00:00"
      },
      "supporting": []
     },
@@ -51,7 +51,7 @@
       "name": "update.mills-reeve.com",
       "rtype": "TXT",
       "value": "include:_netblocks.mimecast.com",
-      "checked_at": "2026-10-11T22:12:24+00:00"
+      "checked_at": "2026-10-12T01:24:55+00:00"
      },
      "supporting": []
     }
@@ -72,14 +72,14 @@
       "name": "fsspfeuc.freshemail.io",
       "rtype": "TXT",
       "value": "ip4:3.120.181.200/29",
-      "checked_at": "2026-10-11T22:12:24+00:00"
+      "checked_at": "2026-10-12T01:24:55+00:00"
      },
      "supporting": [
       {
        "name": "fdspfeuc.freshemail.io",
        "rtype": "TXT",
        "value": "ip4:3.120.181.192/28",
-       "checked_at": "2026-10-11T22:12:24+00:00"
+       "checked_at": "2026-10-12T01:24:55+00:00"
       }
      ]
     }
@@ -100,7 +100,7 @@
       "name": "mills-reeve.com",
       "rtype": "TXT",
       "value": "include:spf.protection.outlook.com",
-      "checked_at": "2026-10-11T22:12:24+00:00"
+      "checked_at": "2026-10-12T01:24:55+00:00"
      },
      "supporting": []
     },
@@ -112,7 +112,7 @@
       "name": "mills-reeve.com",
       "rtype": "TXT",
       "value": "MS=ms75548982",
-      "checked_at": "2026-10-11T22:12:24+00:00"
+      "checked_at": "2026-10-12T01:24:55+00:00"
      },
      "supporting": []
     },
@@ -124,7 +124,7 @@
       "name": "autodiscover.mills-reeve.com",
       "rtype": "CNAME",
       "value": "autodiscover.outlook.com",
-      "checked_at": "2026-10-11T22:12:24+00:00"
+      "checked_at": "2026-10-12T01:24:55+00:00"
      },
      "supporting": []
     }
@@ -143,7 +143,7 @@
          "name": "mills-reeve.com",
          "rtype": "TXT",
          "value": "include:spf.protection.outlook.com",
-         "checked_at": "2026-10-11T22:12:24+00:00"
+         "checked_at": "2026-10-12T01:24:55+00:00"
         }
        ],
        "asked": "TXT at mills-reeve.com",
@@ -158,13 +158,13 @@
          "name": "selector1._domainkey.mills-reeve.com",
          "rtype": "TXT",
          "value": "no record of this type",
-         "checked_at": "2026-10-11T22:12:24+00:00"
+         "checked_at": "2026-10-12T01:24:55+00:00"
         },
         {
          "name": "selector2._domainkey.mills-reeve.com",
          "rtype": "TXT",
          "value": "no record of this type",
-         "checked_at": "2026-10-11T22:12:24+00:00"
+         "checked_at": "2026-10-12T01:24:55+00:00"
         }
        ],
        "asked": "TXT at selector1._domainkey.mills-reeve.com and TXT at selector2._domainkey.mills-reeve.com",
@@ -179,13 +179,13 @@
          "name": "mills-reeve.com",
          "rtype": "MX",
          "value": "10 eu-smtp-inbound-1.mimecast.com",
-         "checked_at": "2026-10-11T22:12:24+00:00"
+         "checked_at": "2026-10-12T01:24:55+00:00"
         },
         {
          "name": "mills-reeve.com",
          "rtype": "MX",
          "value": "10 eu-smtp-inbound-2.mimecast.com",
-         "checked_at": "2026-10-11T22:12:24+00:00"
+         "checked_at": "2026-10-12T01:24:55+00:00"
         }
        ],
        "asked": "MX at mills-reeve.com",
@@ -218,7 +218,7 @@
       "name": "s1._domainkey.mills-reeve.com",
       "rtype": "TXT",
       "value": "k=rsa; t=s (strict); p=MIIBIjANBgkq..., 2048-bit, fp ae8406c18072b4fc via s1.domainkey.u10198980.wl231.sendgrid.net",
-      "checked_at": "2026-10-11T22:12:24+00:00"
+      "checked_at": "2026-10-12T01:24:55+00:00"
      },
      "supporting": []
     },
@@ -230,7 +230,7 @@
       "name": "s2._domainkey.mills-reeve.com",
       "rtype": "TXT",
       "value": "k=rsa; t=s (strict); p=MIGfMA0GCSqG..., 1024-bit, fp 1d0c1f3114d84753 via s2.domainkey.u10198980.wl231.sendgrid.net",
-      "checked_at": "2026-10-11T22:12:24+00:00"
+      "checked_at": "2026-10-12T01:24:55+00:00"
      },
      "supporting": []
     }
@@ -249,13 +249,13 @@
          "name": "s1._domainkey.mills-reeve.com",
          "rtype": "TXT",
          "value": "k=rsa; t=s (strict); p=MIIBIjANBgkq..., 2048-bit, fp ae8406c18072b4fc via s1.domainkey.u10198980.wl231.sendgrid.net",
-         "checked_at": "2026-10-11T22:12:24+00:00"
+         "checked_at": "2026-10-12T01:24:55+00:00"
         },
         {
          "name": "s2._domainkey.mills-reeve.com",
          "rtype": "TXT",
          "value": "k=rsa; t=s (strict); p=MIGfMA0GCSqG..., 1024-bit, fp 1d0c1f3114d84753 via s2.domainkey.u10198980.wl231.sendgrid.net",
-         "checked_at": "2026-10-11T22:12:24+00:00"
+         "checked_at": "2026-10-12T01:24:55+00:00"
         }
        ],
        "asked": "TXT at s1._domainkey.mills-reeve.com and TXT at s2._domainkey.mills-reeve.com",
@@ -270,139 +270,139 @@
          "name": "bounce.mills-reeve.com",
          "rtype": "CNAME",
          "value": "no record of this type",
-         "checked_at": "2026-10-11T22:12:24+00:00"
+         "checked_at": "2026-10-12T01:24:55+00:00"
         },
         {
          "name": "bounces.mills-reeve.com",
          "rtype": "CNAME",
          "value": "no record of this type",
-         "checked_at": "2026-10-11T22:12:24+00:00"
+         "checked_at": "2026-10-12T01:24:55+00:00"
         },
         {
          "name": "em.mills-reeve.com",
          "rtype": "CNAME",
          "value": "no record of this type",
-         "checked_at": "2026-10-11T22:12:24+00:00"
+         "checked_at": "2026-10-12T01:24:55+00:00"
         },
         {
          "name": "email.mills-reeve.com",
          "rtype": "CNAME",
          "value": "no record of this type",
-         "checked_at": "2026-10-11T22:12:24+00:00"
+         "checked_at": "2026-10-12T01:24:55+00:00"
         },
         {
          "name": "mail.mills-reeve.com",
          "rtype": "CNAME",
          "value": "no record of this type",
-         "checked_at": "2026-10-11T22:12:24+00:00"
+         "checked_at": "2026-10-12T01:24:55+00:00"
         },
         {
          "name": "send.mills-reeve.com",
          "rtype": "CNAME",
          "value": "no record of this type",
-         "checked_at": "2026-10-11T22:12:24+00:00"
+         "checked_at": "2026-10-12T01:24:55+00:00"
         },
         {
          "name": "mta.mills-reeve.com",
          "rtype": "CNAME",
          "value": "no record of this type",
-         "checked_at": "2026-10-11T22:12:24+00:00"
+         "checked_at": "2026-10-12T01:24:55+00:00"
         },
         {
          "name": "rp.mills-reeve.com",
          "rtype": "CNAME",
          "value": "no record of this type",
-         "checked_at": "2026-10-11T22:12:24+00:00"
+         "checked_at": "2026-10-12T01:24:55+00:00"
         },
         {
          "name": "pm-bounces.mills-reeve.com",
          "rtype": "CNAME",
          "value": "no record of this type",
-         "checked_at": "2026-10-11T22:12:24+00:00"
+         "checked_at": "2026-10-12T01:24:55+00:00"
         },
         {
          "name": "links.mills-reeve.com",
          "rtype": "CNAME",
          "value": "no record of this type",
-         "checked_at": "2026-10-11T22:12:24+00:00"
+         "checked_at": "2026-10-12T01:24:55+00:00"
         },
         {
          "name": "link.mills-reeve.com",
          "rtype": "CNAME",
          "value": "no record of this type",
-         "checked_at": "2026-10-11T22:12:24+00:00"
+         "checked_at": "2026-10-12T01:24:55+00:00"
         },
         {
          "name": "click.mills-reeve.com",
          "rtype": "CNAME",
          "value": "no record of this type",
-         "checked_at": "2026-10-11T22:12:24+00:00"
+         "checked_at": "2026-10-12T01:24:55+00:00"
         },
         {
          "name": "track.mills-reeve.com",
          "rtype": "CNAME",
          "value": "no record of this type",
-         "checked_at": "2026-10-11T22:12:24+00:00"
+         "checked_at": "2026-10-12T01:24:55+00:00"
         },
         {
          "name": "tracking.mills-reeve.com",
          "rtype": "CNAME",
          "value": "no record of this type",
-         "checked_at": "2026-10-11T22:12:24+00:00"
+         "checked_at": "2026-10-12T01:24:55+00:00"
         },
         {
          "name": "url.mills-reeve.com",
          "rtype": "CNAME",
          "value": "no record of this type",
-         "checked_at": "2026-10-11T22:12:24+00:00"
+         "checked_at": "2026-10-12T01:24:55+00:00"
         },
         {
          "name": "go.mills-reeve.com",
          "rtype": "CNAME",
          "value": "no record of this type",
-         "checked_at": "2026-10-11T22:12:24+00:00"
+         "checked_at": "2026-10-12T01:24:55+00:00"
         },
         {
          "name": "autodiscover.mills-reeve.com",
          "rtype": "CNAME",
          "value": "autodiscover.outlook.com",
-         "checked_at": "2026-10-11T22:12:24+00:00"
+         "checked_at": "2026-10-12T01:24:55+00:00"
         },
         {
          "name": "cf-bounce.mills-reeve.com",
          "rtype": "CNAME",
          "value": "no record of this type",
-         "checked_at": "2026-10-11T22:12:24+00:00"
+         "checked_at": "2026-10-12T01:24:55+00:00"
         },
         {
          "name": "eversrv.mills-reeve.com",
          "rtype": "CNAME",
          "value": "no record of this type",
-         "checked_at": "2026-10-11T22:12:24+00:00"
+         "checked_at": "2026-10-12T01:24:55+00:00"
         },
         {
          "name": "fwdkim1.mills-reeve.com",
          "rtype": "CNAME",
          "value": "no record of this type",
-         "checked_at": "2026-10-11T22:12:24+00:00"
+         "checked_at": "2026-10-12T01:24:55+00:00"
         },
         {
          "name": "bnc3.mills-reeve.com",
          "rtype": "CNAME",
          "value": "no record of this type",
-         "checked_at": "2026-10-11T22:12:24+00:00"
+         "checked_at": "2026-10-12T01:24:55+00:00"
         },
         {
          "name": "bounces.cloud.em.mills-reeve.com",
          "rtype": "CNAME",
          "value": "no record of this type",
-         "checked_at": "2026-10-11T22:12:24+00:00"
+         "checked_at": "2026-10-12T01:24:55+00:00"
         },
         {
          "name": "bounces.cloud2.em.mills-reeve.com",
          "rtype": "CNAME",
          "value": "no record of this type",
-         "checked_at": "2026-10-11T22:12:24+00:00"
+         "checked_at": "2026-10-12T01:24:55+00:00"
         }
        ],
        "asked": "CNAME at 23 labels under mills-reeve.com",
@@ -425,139 +425,139 @@
          "name": "bounce.mills-reeve.com",
          "rtype": "CNAME",
          "value": "no record of this type",
-         "checked_at": "2026-10-11T22:12:24+00:00"
+         "checked_at": "2026-10-12T01:24:55+00:00"
         },
         {
          "name": "bounces.mills-reeve.com",
          "rtype": "CNAME",
          "value": "no record of this type",
-         "checked_at": "2026-10-11T22:12:24+00:00"
+         "checked_at": "2026-10-12T01:24:55+00:00"
         },
         {
          "name": "em.mills-reeve.com",
          "rtype": "CNAME",
          "value": "no record of this type",
-         "checked_at": "2026-10-11T22:12:24+00:00"
+         "checked_at": "2026-10-12T01:24:55+00:00"
         },
         {
          "name": "email.mills-reeve.com",
          "rtype": "CNAME",
          "value": "no record of this type",
-         "checked_at": "2026-10-11T22:12:24+00:00"
+         "checked_at": "2026-10-12T01:24:55+00:00"
         },
         {
          "name": "mail.mills-reeve.com",
          "rtype": "CNAME",
          "value": "no record of this type",
-         "checked_at": "2026-10-11T22:12:24+00:00"
+         "checked_at": "2026-10-12T01:24:55+00:00"
         },
         {
          "name": "send.mills-reeve.com",
          "rtype": "CNAME",
          "value": "no record of this type",
-         "checked_at": "2026-10-11T22:12:24+00:00"
+         "checked_at": "2026-10-12T01:24:55+00:00"
         },
         {
          "name": "mta.mills-reeve.com",
          "rtype": "CNAME",
          "value": "no record of this type",
-         "checked_at": "2026-10-11T22:12:24+00:00"
+         "checked_at": "2026-10-12T01:24:55+00:00"
         },
         {
          "name": "rp.mills-reeve.com",
          "rtype": "CNAME",
          "value": "no record of this type",
-         "checked_at": "2026-10-11T22:12:24+00:00"
+         "checked_at": "2026-10-12T01:24:55+00:00"
         },
         {
          "name": "pm-bounces.mills-reeve.com",
          "rtype": "CNAME",
          "value": "no record of this type",
-         "checked_at": "2026-10-11T22:12:24+00:00"
+         "checked_at": "2026-10-12T01:24:55+00:00"
         },
         {
          "name": "links.mills-reeve.com",
          "rtype": "CNAME",
          "value": "no record of this type",
-         "checked_at": "2026-10-11T22:12:24+00:00"
+         "checked_at": "2026-10-12T01:24:55+00:00"
         },
         {
          "name": "link.mills-reeve.com",
          "rtype": "CNAME",
          "value": "no record of this type",
-         "checked_at": "2026-10-11T22:12:24+00:00"
+         "checked_at": "2026-10-12T01:24:55+00:00"
         },
         {
          "name": "click.mills-reeve.com",
          "rtype": "CNAME",
          "value": "no record of this type",
-         "checked_at": "2026-10-11T22:12:24+00:00"
+         "checked_at": "2026-10-12T01:24:55+00:00"
         },
         {
          "name": "track.mills-reeve.com",
          "rtype": "CNAME",
          "value": "no record of this type",
-         "checked_at": "2026-10-11T22:12:24+00:00"
+         "checked_at": "2026-10-12T01:24:55+00:00"
         },
         {
          "name": "tracking.mills-reeve.com",
          "rtype": "CNAME",
          "value": "no record of this type",
-         "checked_at": "2026-10-11T22:12:24+00:00"
+         "checked_at": "2026-10-12T01:24:55+00:00"
         },
         {
          "name": "url.mills-reeve.com",
          "rtype": "CNAME",
          "value": "no record of this type",
-         "checked_at": "2026-10-11T22:12:24+00:00"
+         "checked_at": "2026-10-12T01:24:55+00:00"
         },
         {
          "name": "go.mills-reeve.com",
          "rtype": "CNAME",
          "value": "no record of this type",
-         "checked_at": "2026-10-11T22:12:24+00:00"
+         "checked_at": "2026-10-12T01:24:55+00:00"
         },
         {
          "name": "autodiscover.mills-reeve.com",
          "rtype": "CNAME",
          "value": "autodiscover.outlook.com",
-         "checked_at": "2026-10-11T22:12:24+00:00"
+         "checked_at": "2026-10-12T01:24:55+00:00"
         },
         {
          "name": "cf-bounce.mills-reeve.com",
          "rtype": "CNAME",
          "value": "no record of this type",
-         "checked_at": "2026-10-11T22:12:24+00:00"
+         "checked_at": "2026-10-12T01:24:55+00:00"
         },
         {
          "name": "eversrv.mills-reeve.com",
          "rtype": "CNAME",
          "value": "no record of this type",
-         "checked_at": "2026-10-11T22:12:24+00:00"
+         "checked_at": "2026-10-12T01:24:55+00:00"
         },
         {
          "name": "fwdkim1.mills-reeve.com",
          "rtype": "CNAME",
          "value": "no record of this type",
-         "checked_at": "2026-10-11T22:12:24+00:00"
+         "checked_at": "2026-10-12T01:24:55+00:00"
         },
         {
          "name": "bnc3.mills-reeve.com",
          "rtype": "CNAME",
          "value": "no record of this type",
-         "checked_at": "2026-10-11T22:12:24+00:00"
+         "checked_at": "2026-10-12T01:24:55+00:00"
         },
         {
          "name": "bounces.cloud.em.mills-reeve.com",
          "rtype": "CNAME",
          "value": "no record of this type",
-         "checked_at": "2026-10-11T22:12:24+00:00"
+         "checked_at": "2026-10-12T01:24:55+00:00"
         },
         {
          "name": "bounces.cloud2.em.mills-reeve.com",
          "rtype": "CNAME",
          "value": "no record of this type",
-         "checked_at": "2026-10-11T22:12:24+00:00"
+         "checked_at": "2026-10-12T01:24:55+00:00"
         }
        ],
        "asked": "CNAME at 23 labels under mills-reeve.com",
@@ -582,7 +582,7 @@
       "name": "_dmarc.mills-reeve.com",
       "rtype": "TXT",
       "value": "v=DMARC1; p=reject; rua=mailto:dbaf5ee8973e712@rep.dmarcanalyzer.com; ruf=mailto:dbaf5ee8973e712@for.dmarcanalyzer.com; fo=1;",
-      "checked_at": "2026-10-11T22:12:24+00:00"
+      "checked_at": "2026-10-12T01:24:55+00:00"
      },
      "supporting": []
     }
@@ -591,7 +591,7 @@
   }
  ],
  "run": {
-  "checked_at": "2026-10-11T22:12:24+00:00"
+  "checked_at": "2026-10-12T01:24:55+00:00"
  },
  "findings": [
   {
@@ -603,7 +603,7 @@
      "name": "s2._domainkey.mills-reeve.com",
      "rtype": "TXT",
      "value": "k=rsa; t=s (strict); p=MIGfMA0GCSqG..., 1024-bit, fp 1d0c1f3114d84753 via s2.domainkey.u10198980.wl231.sendgrid.net",
-     "checked_at": "2026-10-11T22:12:24+00:00"
+     "checked_at": "2026-10-12T01:24:55+00:00"
     }
    ]
   },
@@ -616,13 +616,13 @@
      "name": "selector1._domainkey.mills-reeve.com",
      "rtype": "TXT",
      "value": "no record of this type",
-     "checked_at": "2026-10-11T22:12:24+00:00"
+     "checked_at": "2026-10-12T01:24:55+00:00"
     },
     {
      "name": "selector2._domainkey.mills-reeve.com",
      "rtype": "TXT",
      "value": "no record of this type",
-     "checked_at": "2026-10-11T22:12:24+00:00"
+     "checked_at": "2026-10-12T01:24:55+00:00"
     }
    ]
   },
@@ -635,13 +635,13 @@
      "name": "mills-reeve.com",
      "rtype": "MX",
      "value": "10 eu-smtp-inbound-1.mimecast.com",
-     "checked_at": "2026-10-11T22:12:24+00:00"
+     "checked_at": "2026-10-12T01:24:55+00:00"
     },
     {
      "name": "mills-reeve.com",
      "rtype": "MX",
      "value": "10 eu-smtp-inbound-2.mimecast.com",
-     "checked_at": "2026-10-11T22:12:24+00:00"
+     "checked_at": "2026-10-12T01:24:55+00:00"
     }
    ]
   }
@@ -655,7 +655,7 @@
     "name": "mills-reeve.com",
     "rtype": "TXT",
     "value": "include:emaileuc.freshservice.com",
-    "checked_at": "2026-10-11T22:12:24+00:00"
+    "checked_at": "2026-10-12T01:24:55+00:00"
    }
   },
   {
@@ -666,7 +666,7 @@
     "name": "emaileuc.freshservice.com",
     "rtype": "TXT",
     "value": "include:fsspfeuc.freshemail.io",
-    "checked_at": "2026-10-11T22:12:24+00:00"
+    "checked_at": "2026-10-12T01:24:55+00:00"
    }
   },
   {
@@ -677,7 +677,7 @@
     "name": "mills-reeve.com",
     "rtype": "TXT",
     "value": "include:spf-uk.vx-email.com",
-    "checked_at": "2026-10-11T22:12:24+00:00"
+    "checked_at": "2026-10-12T01:24:55+00:00"
    }
   },
   {
@@ -688,7 +688,7 @@
     "name": "mills-reeve.com",
     "rtype": "TXT",
     "value": "include:docebosaas.com",
-    "checked_at": "2026-10-11T22:12:24+00:00"
+    "checked_at": "2026-10-12T01:24:55+00:00"
    }
   },
   {
@@ -699,7 +699,7 @@
     "name": "mills-reeve.com",
     "rtype": "TXT",
     "value": "ip4:51.145.78.124",
-    "checked_at": "2026-10-11T22:12:24+00:00"
+    "checked_at": "2026-10-12T01:24:55+00:00"
    }
   },
   {
@@ -710,7 +710,7 @@
     "name": "fsspfeuc.freshemail.io",
     "rtype": "TXT",
     "value": "ip4:35.159.219.224/28",
-    "checked_at": "2026-10-11T22:12:24+00:00"
+    "checked_at": "2026-10-12T01:24:55+00:00"
    }
   },
   {
@@ -721,7 +721,7 @@
     "name": "fsspfeuc.freshemail.io",
     "rtype": "TXT",
     "value": "ip4:18.199.180.160/27",
-    "checked_at": "2026-10-11T22:12:24+00:00"
+    "checked_at": "2026-10-12T01:24:55+00:00"
    }
   },
   {
@@ -732,7 +732,7 @@
     "name": "spf-uk.vx-email.com",
     "rtype": "TXT",
     "value": "ip4:193.5.144.0/24",
-    "checked_at": "2026-10-11T22:12:24+00:00"
+    "checked_at": "2026-10-12T01:24:55+00:00"
    }
   },
   {
@@ -743,7 +743,7 @@
     "name": "docebosaas.com",
     "rtype": "TXT",
     "value": "ip4:107.20.91.250",
-    "checked_at": "2026-10-11T22:12:24+00:00"
+    "checked_at": "2026-10-12T01:24:55+00:00"
    }
   },
   {
@@ -754,7 +754,7 @@
     "name": "docebosaas.com",
     "rtype": "TXT",
     "value": "ip4:3.209.231.65",
-    "checked_at": "2026-10-11T22:12:24+00:00"
+    "checked_at": "2026-10-12T01:24:55+00:00"
    }
   },
   {
@@ -765,7 +765,7 @@
     "name": "docebosaas.com",
     "rtype": "TXT",
     "value": "ip4:3.96.249.213",
-    "checked_at": "2026-10-11T22:12:24+00:00"
+    "checked_at": "2026-10-12T01:24:55+00:00"
    }
   },
   {
@@ -776,7 +776,7 @@
     "name": "docebosaas.com",
     "rtype": "TXT",
     "value": "ip4:34.242.156.53",
-    "checked_at": "2026-10-11T22:12:24+00:00"
+    "checked_at": "2026-10-12T01:24:55+00:00"
    }
   },
   {
@@ -787,7 +787,7 @@
     "name": "docebosaas.com",
     "rtype": "TXT",
     "value": "ip4:34.251.63.7",
-    "checked_at": "2026-10-11T22:12:24+00:00"
+    "checked_at": "2026-10-12T01:24:55+00:00"
    }
   },
   {
@@ -798,7 +798,7 @@
     "name": "docebosaas.com",
     "rtype": "TXT",
     "value": "ip4:52.64.32.126",
-    "checked_at": "2026-10-11T22:12:24+00:00"
+    "checked_at": "2026-10-12T01:24:55+00:00"
    }
   },
   {
@@ -809,7 +809,7 @@
     "name": "docebosaas.com",
     "rtype": "TXT",
     "value": "ip4:52.4.156.8",
-    "checked_at": "2026-10-11T22:12:24+00:00"
+    "checked_at": "2026-10-12T01:24:55+00:00"
    }
   },
   {
@@ -820,7 +820,7 @@
     "name": "docebosaas.com",
     "rtype": "TXT",
     "value": "ip4:13.202.86.121",
-    "checked_at": "2026-10-11T22:12:24+00:00"
+    "checked_at": "2026-10-12T01:24:55+00:00"
    }
   },
   {
@@ -831,7 +831,7 @@
     "name": "docebosaas.com",
     "rtype": "TXT",
     "value": "ip4:13.210.149.194",
-    "checked_at": "2026-10-11T22:12:24+00:00"
+    "checked_at": "2026-10-12T01:24:55+00:00"
    }
   },
   {
@@ -842,7 +842,7 @@
     "name": "docebosaas.com",
     "rtype": "TXT",
     "value": "ip4:13.210.30.79",
-    "checked_at": "2026-10-11T22:12:24+00:00"
+    "checked_at": "2026-10-12T01:24:55+00:00"
    }
   },
   {
@@ -853,7 +853,7 @@
     "name": "docebosaas.com",
     "rtype": "TXT",
     "value": "ip4:15.156.36.228",
-    "checked_at": "2026-10-11T22:12:24+00:00"
+    "checked_at": "2026-10-12T01:24:55+00:00"
    }
   },
   {
@@ -864,7 +864,7 @@
     "name": "docebosaas.com",
     "rtype": "TXT",
     "value": "ip4:15.156.98.116",
-    "checked_at": "2026-10-11T22:12:24+00:00"
+    "checked_at": "2026-10-12T01:24:55+00:00"
    }
   },
   {
@@ -875,7 +875,7 @@
     "name": "docebosaas.com",
     "rtype": "TXT",
     "value": "ip4:15.157.101.221",
-    "checked_at": "2026-10-11T22:12:24+00:00"
+    "checked_at": "2026-10-12T01:24:55+00:00"
    }
   },
   {
@@ -886,7 +886,7 @@
     "name": "docebosaas.com",
     "rtype": "TXT",
     "value": "ip4:18.132.189.127",
-    "checked_at": "2026-10-11T22:12:24+00:00"
+    "checked_at": "2026-10-12T01:24:55+00:00"
    }
   },
   {
@@ -897,7 +897,7 @@
     "name": "docebosaas.com",
     "rtype": "TXT",
     "value": "ip4:18.197.43.76",
-    "checked_at": "2026-10-11T22:12:24+00:00"
+    "checked_at": "2026-10-12T01:24:55+00:00"
    }
   },
   {
@@ -908,7 +908,7 @@
     "name": "docebosaas.com",
     "rtype": "TXT",
     "value": "ip4:18.233.38.249",
-    "checked_at": "2026-10-11T22:12:24+00:00"
+    "checked_at": "2026-10-12T01:24:55+00:00"
    }
   },
   {
@@ -919,7 +919,7 @@
     "name": "docebosaas.com",
     "rtype": "TXT",
     "value": "ip4:3.105.157.127",
-    "checked_at": "2026-10-11T22:12:24+00:00"
+    "checked_at": "2026-10-12T01:24:55+00:00"
    }
   },
   {
@@ -930,7 +930,7 @@
     "name": "docebosaas.com",
     "rtype": "TXT",
     "value": "ip4:3.105.27.226",
-    "checked_at": "2026-10-11T22:12:24+00:00"
+    "checked_at": "2026-10-12T01:24:55+00:00"
    }
   },
   {
@@ -941,7 +941,7 @@
     "name": "docebosaas.com",
     "rtype": "TXT",
     "value": "ip4:3.107.216.134",
-    "checked_at": "2026-10-11T22:12:24+00:00"
+    "checked_at": "2026-10-12T01:24:55+00:00"
    }
   },
   {
@@ -952,7 +952,7 @@
     "name": "docebosaas.com",
     "rtype": "TXT",
     "value": "ip4:3.11.129.102",
-    "checked_at": "2026-10-11T22:12:24+00:00"
+    "checked_at": "2026-10-12T01:24:55+00:00"
    }
   },
   {
@@ -963,7 +963,7 @@
     "name": "update.mills-reeve.com",
     "rtype": "TXT",
     "value": "include:spf-uk.vx-email.com",
-    "checked_at": "2026-10-11T22:12:24+00:00"
+    "checked_at": "2026-10-12T01:24:55+00:00"
    }
   },
   {
@@ -974,7 +974,7 @@
     "name": "update.mills-reeve.com",
     "rtype": "MX",
     "value": "10 mx01.mail.vx-email.com",
-    "checked_at": "2026-10-11T22:12:24+00:00"
+    "checked_at": "2026-10-12T01:24:55+00:00"
    }
   },
   {
@@ -985,7 +985,7 @@
     "name": "update.mills-reeve.com",
     "rtype": "MX",
     "value": "20 mx02.mail.vx-email.com",
-    "checked_at": "2026-10-11T22:12:24+00:00"
+    "checked_at": "2026-10-12T01:24:55+00:00"
    }
   },
   {
@@ -996,7 +996,7 @@
     "name": "spf-uk.vx-email.com",
     "rtype": "TXT",
     "value": "ip4:193.5.144.0/24",
-    "checked_at": "2026-10-11T22:12:24+00:00"
+    "checked_at": "2026-10-12T01:24:55+00:00"
    }
   },
   {
@@ -1007,7 +1007,7 @@
     "name": "updates.mills-reeve.com",
     "rtype": "TXT",
     "value": "include:cecollect.com",
-    "checked_at": "2026-10-11T22:12:24+00:00"
+    "checked_at": "2026-10-12T01:24:55+00:00"
    }
   },
   {
@@ -1018,7 +1018,7 @@
     "name": "updates.mills-reeve.com",
     "rtype": "MX",
     "value": "10 mail.cecollect.com",
-    "checked_at": "2026-10-11T22:12:24+00:00"
+    "checked_at": "2026-10-12T01:24:55+00:00"
    }
   },
   {
@@ -1029,7 +1029,7 @@
     "name": "cecollect.com",
     "rtype": "TXT",
     "value": "ip4:62.73.189.146",
-    "checked_at": "2026-10-11T22:12:24+00:00"
+    "checked_at": "2026-10-12T01:24:55+00:00"
    }
   },
   {
@@ -1040,7 +1040,7 @@
     "name": "cecollect.com",
     "rtype": "TXT",
     "value": "ip4:83.231.138.176/28",
-    "checked_at": "2026-10-11T22:12:24+00:00"
+    "checked_at": "2026-10-12T01:24:55+00:00"
    }
   },
   {
@@ -1051,7 +1051,7 @@
     "name": "cecollect.com",
     "rtype": "TXT",
     "value": "ip4:62.73.162.65",
-    "checked_at": "2026-10-11T22:12:24+00:00"
+    "checked_at": "2026-10-12T01:24:55+00:00"
    }
   },
   {
@@ -1062,7 +1062,7 @@
     "name": "cecollect.com",
     "rtype": "TXT",
     "value": "ip4:62.73.162.66",
-    "checked_at": "2026-10-11T22:12:24+00:00"
+    "checked_at": "2026-10-12T01:24:55+00:00"
    }
   },
   {
@@ -1073,7 +1073,7 @@
     "name": "cecollect.com",
     "rtype": "TXT",
     "value": "ip4:62.73.162.67",
-    "checked_at": "2026-10-11T22:12:24+00:00"
+    "checked_at": "2026-10-12T01:24:55+00:00"
    }
   },
   {
@@ -1084,7 +1084,7 @@
     "name": "cecollect.com",
     "rtype": "TXT",
     "value": "ip4:62.73.162.68",
-    "checked_at": "2026-10-11T22:12:24+00:00"
+    "checked_at": "2026-10-12T01:24:55+00:00"
    }
   },
   {
@@ -1095,7 +1095,7 @@
     "name": "cecollect.com",
     "rtype": "TXT",
     "value": "ip4:62.73.162.69",
-    "checked_at": "2026-10-11T22:12:24+00:00"
+    "checked_at": "2026-10-12T01:24:55+00:00"
    }
   },
   {
@@ -1106,7 +1106,7 @@
     "name": "cecollect.com",
     "rtype": "TXT",
     "value": "ip4:62.73.162.70",
-    "checked_at": "2026-10-11T22:12:24+00:00"
+    "checked_at": "2026-10-12T01:24:55+00:00"
    }
   },
   {
@@ -1117,7 +1117,7 @@
     "name": "cecollect.com",
     "rtype": "TXT",
     "value": "ip4:62.73.162.71",
-    "checked_at": "2026-10-11T22:12:24+00:00"
+    "checked_at": "2026-10-12T01:24:55+00:00"
    }
   },
   {
@@ -1128,7 +1128,7 @@
     "name": "cecollect.com",
     "rtype": "TXT",
     "value": "ip4:62.73.162.72",
-    "checked_at": "2026-10-11T22:12:24+00:00"
+    "checked_at": "2026-10-12T01:24:55+00:00"
    }
   },
   {
@@ -1139,7 +1139,7 @@
     "name": "cecollect.com",
     "rtype": "TXT",
     "value": "ip4:62.73.162.73",
-    "checked_at": "2026-10-11T22:12:24+00:00"
+    "checked_at": "2026-10-12T01:24:55+00:00"
    }
   },
   {
@@ -1150,7 +1150,7 @@
     "name": "cecollect.com",
     "rtype": "TXT",
     "value": "ip4:62.73.162.74",
-    "checked_at": "2026-10-11T22:12:24+00:00"
+    "checked_at": "2026-10-12T01:24:55+00:00"
    }
   }
  ],

@@ -35,9 +35,9 @@ from .sources.dkim import NO_SELECTORS
 
 KEY_KINDS = frozenset({Kind.DKIM_CNAME, Kind.DKIM_NAME})
 BROKEN_KEY_KINDS = frozenset({Kind.DKIM_REVOKED, Kind.DKIM_DANGLING})
-# Any claim that the domain's SPF evaluation authorizes the service counts, including kinds a
-# later evaluation adds.
-SPF_KINDS = frozenset({Kind.SPF_INCLUDE, Kind.SPF_NETWORK})
+# Any claim that the domain's SPF authorizes the service counts: an include, a range it owns,
+# or a pass when SPF evaluation asked about one of its addresses.
+SPF_KINDS = frozenset({Kind.SPF_INCLUDE, Kind.SPF_NETWORK, Kind.SPF_EVALUATED})
 CNAME_KINDS = {"return_path": Kind.RETURN_PATH, "tracking": Kind.TRACKING}
 MX_KINDS = frozenset({Kind.MX, Kind.SUBDOMAIN_MAILBOX, Kind.SUBDOMAIN_MX})
 RECEIVERS = frozenset({"Mailbox", "Security gateway"})
@@ -176,6 +176,13 @@ def _spf(rule: SetupRule, claims: list[Claim], where: str, asked: Asked) -> Setu
     read = asked.read("spf", where)
     if read is None:
         return _not_checked(rule, question, f"SPF at {where} was not read")
+    # Evaluation asked the record about one of the vendor's addresses and it did not pass.
+    if read.outcome in (Outcome.FOUND, Outcome.UNREADABLE) and (
+        evaluated := asked.read("spf_eval", where, rule.vendor)
+    ):
+        return SetupItem(
+            rule.record, rule.need, State.MISSING, evaluated.evidence, question, evaluated.reason
+        )
     if read.outcome is Outcome.FAILED or read.outcome is Outcome.UNREADABLE:
         return SetupItem(
             rule.record, rule.need, State.NOT_CHECKED, read.evidence, question, read.reason

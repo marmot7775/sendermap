@@ -50,6 +50,7 @@ from .sources import (
     networks,
     reports,
     spf,
+    spf_checks,
     subdomains,
     tokens,
     web,
@@ -156,7 +157,13 @@ async def map_domain(
             *(_subdomain(ctx, rules, name, discovered.delegations) for name in picked)
         )
 
-        observed = sum((*deep, *under), apex) + logged
+        observed = sum((*deep, *(found for found, _ in under)), apex) + logged
+        partial = [p for p in (_partial(domain, tree, deep[1]), *(p for _, p in under)) if p]
+        if partial:
+            await say(f"Evaluating SPF at {len(partial)} name{'s' if len(partial) > 1 else ''}")
+            observed += await _guard(
+                spf_checks.collect(ctx, partial, observed.claims), "SPF evaluation", GapKind.SPF
+            )
         checked = observed.checked_by_name()
         absences = tuple(dict.fromkeys(observed.absences))
         gaps = tuple(dict.fromkeys(observed.gaps))
@@ -199,7 +206,7 @@ async def map_domain(
 
 async def _subdomain(
     ctx: Context, rules: tuple[Rule, ...], name: str, delegations: Iterable[Claim]
-) -> Observed:
+) -> tuple[Observed, spf_checks.Partial | None]:
     (found, tree), received = await asyncio.gather(spf.collect(ctx, name), mx.collect(ctx, name))
     first = found + received + Observed(tuple(c for c in delegations if c.where == name))
     backed = backed_selectors(first.claims, ctx.catalog)
@@ -218,7 +225,20 @@ async def _subdomain(
         )
         gap = Gap(f"DKIM selectors at {name}", happened, GapKind.DKIM, unasked, SUBDOMAIN_PROBES)
         budget = Observed(gaps=(gap,))
-    return first + keys + owned + budget
+    return first + keys + owned + budget, _partial(name, tree, owned)
+
+
+def _partial(where: str, tree: spf.SpfTree, owned: Observed) -> spf_checks.Partial | None:
+    """Why SPF at `where` needs evaluating, or None when the walk named everything it
+    authorizes: a hosted or macro record, links past the depth cap, or a flattened record whose
+    ranges the networks source (`owned`) left unknown."""
+    if why := tree.unnamed:
+        return spf_checks.Partial(where, why)
+    unknown = sum(u.where == where and u.what in networks.RANGE_KINDS for u in owned.unknowns)
+    if tree.flattened and unknown:
+        ranges = f"{unknown} range{'s' if unknown > 1 else ''}"
+        return spf_checks.Partial(where, f"flattened by {tree.flattened[0]}, {ranges} unknown")
+    return None
 
 
 async def _probe_order(

@@ -24,6 +24,7 @@ LOGGED = [  # what crt.sh answers for %.mapped.test
     {"name_value": n, "not_before": "2026-01-01T00:00:00", "not_after": "2026-12-31T00:00:00"}
     for n in ("trk.mapped.test", "email.mapped.test", "www.mapped.test", "old.mapped.test")
 ]
+HOSTED = "_u.news.mapped.test._spf.smart.ondmarc.com"
 POLICY = "version: STSv1\nmode: enforce\nmx: *.mail.protection.outlook.com\nmax_age: 86400\n"
 
 
@@ -68,6 +69,10 @@ def mapped() -> Zone:
         .alias("trk.mapped.test", "u161779.wl030.sendgrid.net")
         .add("u161779.wl030.sendgrid.net", "A", "192.0.2.20")
         .alias("old.mapped.test", "gone.sparkpostmail.com")
+        # A hosted record that answers per address: evaluation finds Amazon SES's.
+        .add("news.mapped.test", "TXT", f"v=spf1 include:{HOSTED} -all")
+        .add(HOSTED, "TXT", "v=spf1 exists:%{i}._m.news.mapped.test._spf.smart.ondmarc.com ~all")
+        .add("199.255.192.1._m.news.mapped.test._spf.smart.ondmarc.com", "A", "127.0.0.2")
     )
 
 

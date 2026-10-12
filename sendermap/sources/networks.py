@@ -31,6 +31,8 @@ from . import Context
 from .spf import spf_records, terms
 
 MAX_RANGES = 24
+# What an unknown range in SPF is called, by whether it holds one address or more.
+RANGE_KINDS = frozenset({"IP address in SPF", "IP range in SPF"})
 # A gap in reading a service's own SPF record for its published ranges: this, then its name.
 PUBLISHED = "published ranges: SPF of "
 # How far below a service's own SPF record its published ranges are read.

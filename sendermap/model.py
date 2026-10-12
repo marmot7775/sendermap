@@ -41,6 +41,7 @@ class Kind(StrEnum):
     MTA_STS = "permitted MX host in the MTA-STS policy"
     SPF_INCLUDE = "included in SPF"
     SPF_NETWORK = "owns a network listed in SPF"
+    SPF_EVALUATED = "authorized by SPF for one of its addresses"
     DKIM_CNAME = "hosts a DKIM key (CNAME)"
     DKIM_NAME = "DKIM key named for it"
     RETURN_PATH = "bounce address CNAME"
@@ -73,6 +74,8 @@ _KIND_TIER = {
     Kind.SUBDOMAIN_MX: Tier.CONFIGURED,
     Kind.SPF_INCLUDE: Tier.CONFIGURED,
     Kind.SPF_NETWORK: Tier.CONFIGURED,
+    # The record passes one of the service's own addresses: set up, whether or not it sends.
+    Kind.SPF_EVALUATED: Tier.CONFIGURED,
     Kind.DKIM_CNAME: Tier.CONFIGURED,
     Kind.RETURN_PATH: Tier.CONFIGURED,
     # The subdomain's records are the service's to publish: its sending setup lives there.
