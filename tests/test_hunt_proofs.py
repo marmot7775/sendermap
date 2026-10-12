@@ -255,3 +255,24 @@ async def test_move_takes_proven_patterns_with_their_proofs(
 
 def tool_day(tool: ModuleType) -> str:
     return str(tool.date.today().isoformat())
+
+
+async def test_a_delegated_label_that_publishes_spf_is_still_seen_as_delegated(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """NS is asked beside SPF and MX at each sending label, not only when both are missing."""
+    _, pending, _ = files(tmp_path)
+    delegated = {
+        "category": "Marketing",
+        "delegation_ns": [{"value": "ns.deleg.test"}],
+        "checked": "the vendor's own domains.",
+    }
+    pending.write_text(json.dumps(PENDING | {"vendors": {"Delegated": delegated}}))
+    resolver = (
+        zone()
+        .add("send.small.test", "TXT", "v=spf1 include:spf.vendor.test -all")
+        .add("send.small.test", "NS", "ns1.ns.deleg.test", "ns2.ns.deleg.test")
+    )
+    await run(monkeypatch, tmp_path, resolver=resolver)
+    out = capsys.readouterr().out
+    assert "  Delegated delegation_ns ns.deleg.test: small.test, rank 2, send.small.test (" in out
