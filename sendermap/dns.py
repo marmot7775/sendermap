@@ -182,7 +182,7 @@ def doh_client() -> httpx.AsyncClient:
     return httpx.AsyncClient(timeout=30, limits=httpx.Limits(max_connections=8))
 
 
-_DOH_TYPES = {"A": 1, "CNAME": 5, "MX": 15, "TXT": 16, "AAAA": 28, "NS": 2}
+_DOH_TYPES = {"A": 1, "NS": 2, "CNAME": 5, "PTR": 12, "MX": 15, "TXT": 16, "AAAA": 28}
 
 
 def parse_doh(name: str, rtype: str, body: dict[str, object]) -> Answer:
