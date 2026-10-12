@@ -654,6 +654,13 @@ recorder keeps the answers, not those requests.
   the map, so the tests map the fake zone through an in-memory client (`tests/test_mcp.py`),
   which also holds the limits: names under 64 characters, descriptions of three or four
   sentences, instructions under 2,048 characters.
+- **Agent Skill**: `skills/sendermap/SKILL.md`, in the Agent Skills format, tells an agent how
+  to run a map (`uvx sendermap DOMAIN --json`, or the MCP tool when the server is connected), how
+  to read tiers, setups, absences, gaps and the claimed sections, the rules it must keep (quote
+  the record, say what was not checked, never raise Likely to Configured, never call a vendor
+  present without a claim), and three worked examples on reserved `.example` names and
+  example.com. `tests/test_skill.py` holds the format's limits and the rules; `skills-ref`
+  (`uvx --from skills-ref agentskills validate skills/sendermap`) passes. It is not in the wheel.
 - **Web site**: a FastAPI app. `GET /api/map?d=` returns the map as JSON, `GET /api/map.md?d=`
   as Markdown, and `GET /api/map/stream?d=` streams progress then the map as server-sent events.
   Each takes `claimed`, a comma separated list, for the map's reconciliation.
