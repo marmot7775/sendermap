@@ -83,9 +83,9 @@ def test_the_workflow_says_what_holds_publishing_and_where_it_is_set() -> None:
     )
 
 
-def test_the_changelog_holds_the_released_version_under_an_empty_unreleased() -> None:
+def test_the_changelog_holds_the_released_version_under_unreleased() -> None:
     """The real CHANGELOG.md: the version server.json names has its notes, and Unreleased sits
-    above it, open and empty."""
+    above it, open for the changes since."""
     tool = load_tool()
     changelog = (ROOT / "CHANGELOG.md").read_text(encoding="utf-8")
     version = json.loads((ROOT / "server.json").read_text())["version"]
@@ -94,4 +94,3 @@ def test_the_changelog_holds_the_released_version_under_an_empty_unreleased() ->
     headings = [line for line in changelog.splitlines() if line.startswith("## ")]
     assert headings[0] == "## Unreleased"
     assert headings[1].startswith(f"## {version} (")
-    assert tool.section(changelog, "Unreleased") is None  # open and empty

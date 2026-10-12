@@ -42,6 +42,9 @@ class Answer:
     status: Status
     records: tuple[str, ...] = ()
     chain: tuple[str, ...] = ()  # the CNAME hops the name led through, in order
+    # A failed lookup the domain's own servers caused: the resolver reached them and they
+    # refused or failed (SERVFAIL), as against no answer in time or a network error here.
+    servfail: bool = False
 
     def __post_init__(self) -> None:
         object.__setattr__(self, "records", sort_records(self.rtype, self.records))
@@ -113,7 +116,9 @@ class SystemResolver:
             result = await self._resolver.resolve(name, rtype, raise_on_no_answer=False)
         except dns.resolver.NXDOMAIN as e:
             return Answer(name, rtype, Status.NXDOMAIN, chain=_nx_chain(e, name))
-        except (dns.resolver.NoNameservers, dns.exception.DNSException):
+        except dns.resolver.NoNameservers:  # every server answered SERVFAIL or REFUSED
+            return Answer(name, rtype, Status.FAILED, servfail=True)
+        except dns.exception.DNSException:
             return Answer(name, rtype, Status.FAILED)
         chain = _cname_chain(result.response, name)
         if result.rrset is None:
@@ -207,6 +212,8 @@ def parse_doh(name: str, rtype: str, body: dict[str, object]) -> Answer:
             return Answer(name, rtype, Status.NOANSWER, chain=chain)
         case 3:
             return Answer(name, rtype, Status.NXDOMAIN, chain=chain)
+        case 2:
+            return Answer(name, rtype, Status.FAILED, servfail=True)
         case _:
             return Answer(name, rtype, Status.FAILED)
 

@@ -43,26 +43,43 @@ async def discover(ctx: Context, logged: Iterable[str]) -> Found:
     from_ct, ct_gaps = _from_certificates(ctx, logged)
     candidates = sorted(labels | from_ct)
     answers = await asyncio.gather(*(_sends(ctx, name) for name in candidates))
-    sending = tuple(name for name, (sends, _) in zip(candidates, answers, strict=True) if sends)
-    failed = [name for name, (sends, _) in zip(candidates, answers, strict=True) if sends is None]
+    sending = tuple(
+        name for name, (sends, _) in zip(candidates, answers, strict=True) if sends is True
+    )
     gaps = ct_gaps
-    if failed:
-        asked = f"sending subdomains: TXT, MX and NS at {', '.join(failed)}"
-        happened = "lookup failed, so whether they send is not known"
-        gaps += (Gap(asked, happened, GapKind.SUBDOMAINS, len(failed)),)
+    for servfail, happened in _FAILED:
+        failed = [n for n, (sends, _) in zip(candidates, answers, strict=True) if sends == servfail]
+        if failed:
+            asked = f"sending subdomains: TXT, MX and NS at {', '.join(failed)}"
+            gaps += (Gap(asked, happened, GapKind.SUBDOMAINS, len(failed)),)
     return Found(sending, gaps, tuple(c for _, claims in answers for c in claims))
 
 
-async def _sends(ctx: Context, name: str) -> tuple[bool | None, tuple[Claim, ...]]:
+# How a candidate whose lookups failed reads, by who failed: the domain's own servers (SERVFAIL,
+# often a subdomain delegated to nameservers that no longer serve it) or the lookup itself.
+SERVFAIL, NO_ANSWER = "servfail", "no answer"
+_FAILED = (
+    (
+        SERVFAIL,
+        "the domain's DNS servers failed to answer (SERVFAIL), so whether they send is not known",
+    ),
+    (NO_ANSWER, "lookup failed, so whether they send is not known"),
+)
+
+
+async def _sends(ctx: Context, name: str) -> tuple[bool | str, tuple[Claim, ...]]:
     """Whether `name` publishes SPF or MX or is delegated to a service, and the delegation
-    claims; None when a lookup failed and none of them was found."""
+    claims; SERVFAIL or NO_ANSWER when a lookup failed and none of them was found."""
     txt, mx, ns = await asyncio.gather(
         ctx.dns.txt(name), ctx.dns.query(name, "MX"), ctx.dns.query(name, "NS")
     )
     delegations = delegated(ctx, ns)
     if spf_records(txt) or mx.ok or delegations:
         return True, delegations
-    return (False if txt.answered and mx.answered and ns.answered else None), ()
+    failed = [a for a in (txt, mx, ns) if not a.answered]
+    if not failed:
+        return False, ()
+    return (SERVFAIL if all(a.servfail for a in failed) else NO_ANSWER), ()
 
 
 def delegated(ctx: Context, ns: Answer) -> tuple[Claim, ...]:

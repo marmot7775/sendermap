@@ -10,6 +10,8 @@ PyPI and makes the GitHub release; a tag with no section fails before anything i
 
 ## Unreleased
 
+- A sending subdomain the domain's own DNS servers fail to answer for (SERVFAIL, often a subdomain delegated to nameservers that no longer serve it) now says so, instead of reading as a lookup that failed here.
+
 ## 0.1.0 (2026-10-12)
 
 - A map of the services that send or receive a domain's mail, each with a tier (In use, Configured, Likely, Account only) and the record behind every claim.

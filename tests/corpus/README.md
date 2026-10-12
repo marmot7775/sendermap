@@ -15,7 +15,9 @@ Recorded 2026-10-11 through Google's DNS over HTTPS (`--doh google`), with `--ct
 website off except for example.com:
 
 - `allbirds.com`: SPF flattened through EasyDMARC, SendGrid's ranges named by the network that
-  announces them, and sending subdomains.
+  announces them, and sending subdomains. Its 18 failed answers were marked `servfail` by hand on
+  2026-10-12, when they were checked live as SERVFAIL (REFUSED by the Route 53 nameservers they are
+  delegated to) through Google, Cloudflare and the system resolver, rather than re-recorded.
 - `mills-reeve.com`: Microsoft 365 behind a Mimecast security gateway in MX.
 - `casper.com`: Google Workspace with Campaign Monitor and other marketing platforms, and
   `mail.casper.com` delegated by NS to Salesforce Marketing Cloud.
