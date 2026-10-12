@@ -55,8 +55,10 @@ absence. Silence is not absence: a service missing from the map may sit behind a
 SPF record or a selector nobody knows. Quote the record behind any claim you repeat, and say \
 what was not checked.
 Each setup holds what the domain publishes against what the vendor's documentation asks for.
-Nothing in a result is advice. It states what public records showed when they were checked; it \
-does not show sending volume or reputation, or that a published DKIM key signs anything."""
+A result states what public records showed when they were checked. A finding may name the \
+documented standard remedy for what it found; that is a statement about the standard, not advice \
+about this domain. A result does not show sending volume or reputation, or that a published DKIM \
+key signs anything."""
 
 MAP_DESCRIPTION = (
     "Maps the services that send email as a domain from public records (DNS, certificate logs "
