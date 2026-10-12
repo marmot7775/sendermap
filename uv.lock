@@ -1577,6 +1577,8 @@ mcp = [
 ]
 web = [
     { name = "fastapi" },
+    { name = "fastmcp" },
+    { name = "jsonschema" },
     { name = "uvicorn" },
 ]
 
@@ -1598,8 +1600,10 @@ requires-dist = [
     { name = "dnspython", specifier = ">=2.7" },
     { name = "fastapi", marker = "extra == 'web'", specifier = ">=0.115" },
     { name = "fastmcp", marker = "extra == 'mcp'", specifier = ">=4.1,<5" },
+    { name = "fastmcp", marker = "extra == 'web'", specifier = ">=4.1,<5" },
     { name = "httpx", specifier = ">=0.28" },
     { name = "jsonschema", marker = "extra == 'mcp'", specifier = ">=4.23" },
+    { name = "jsonschema", marker = "extra == 'web'", specifier = ">=4.23" },
     { name = "rich", specifier = ">=13.9" },
     { name = "uvicorn", marker = "extra == 'web'", specifier = ">=0.32" },
 ]

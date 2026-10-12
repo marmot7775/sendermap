@@ -5,6 +5,12 @@ record each request's query string, is turned off when the app starts. Results a
 memory for ten minutes so a shared link opens instantly, and a visitor's address is held in
 memory for one minute for the rate limit. Neither is written anywhere. The claimed names a
 request carries are used for its response only: the cached map does not hold them.
+
+The MCP server is mounted at /mcp over streamable HTTP, stateless, so it holds no session. Its
+map tool goes through the same limits as the API: each visitor's requests a minute, and each
+target domain's builds a minute, whoever asks. A map with the default checks comes from the
+same cache as the API's. Only the hosts named in SENDERMAP_MCP_HOSTS (comma separated), and
+localhost, may appear in a request's Host header there; any other host is refused.
 """
 
 from __future__ import annotations
@@ -12,6 +18,7 @@ from __future__ import annotations
 import asyncio
 import json
 import logging
+import os
 import time
 from collections.abc import AsyncIterator
 from contextlib import asynccontextmanager
@@ -21,10 +28,18 @@ from importlib import resources
 
 import httpx
 from fastapi import FastAPI, HTTPException, Query, Request
-from fastapi.responses import FileResponse, HTMLResponse, PlainTextResponse, StreamingResponse
+from fastapi.responses import (
+    FileResponse,
+    HTMLResponse,
+    JSONResponse,
+    PlainTextResponse,
+    StreamingResponse,
+)
 from fastapi.staticfiles import StaticFiles
+from fastmcp.exceptions import ToolError
+from fastmcp.server.dependencies import get_http_request
 
-from .. import SCHEMA_FILE, __version__, catalog
+from .. import SCHEMA_FILE, __version__, catalog, mcp_server
 from ..engine import Progress, clean_domain, map_domain
 from ..model import SenderMap
 from ..reconcile import split, with_claimed
@@ -34,6 +49,8 @@ ACCESS_LOG = "uvicorn.access"
 CACHE_SECONDS = 600
 MAX_RUNNING = 6
 REQUESTS_PER_MINUTE = 12
+DOMAIN_BUILDS_PER_MINUTE = 4  # fresh maps of one target domain, from every visitor together
+MCP_HOSTS = "SENDERMAP_MCP_HOSTS"
 STATIC = resources.files(__package__).joinpath("static")
 
 
@@ -44,6 +61,11 @@ class _State:
     running: dict[str, asyncio.Task[SenderMap]] = field(default_factory=dict)
     slots: asyncio.Semaphore = field(default_factory=lambda: asyncio.Semaphore(MAX_RUNNING))
     seen: dict[str, list[float]] = field(default_factory=dict)
+    built: dict[str, list[float]] = field(default_factory=dict)
+
+
+class LimitReachedError(Exception):
+    """A rate limit was reached: a 429 from the API, a tool error from MCP."""
 
 
 state = _State()
@@ -54,13 +76,18 @@ async def _lifespan(_: FastAPI) -> AsyncIterator[None]:
     # Uvicorn has configured its loggers by now; turning this one off keeps ?d= out of any log,
     # whatever flags the server was started with.
     logging.getLogger(ACCESS_LOG).disabled = True
-    async with httpx.AsyncClient() as http:
+    async with httpx.AsyncClient() as http, MCP_APP.lifespan(MCP_APP):
         state.http = http
         yield
 
 
 app = FastAPI(title="Sendermap", version=__version__, lifespan=_lifespan, docs_url=None)
 app.mount("/static", StaticFiles(directory=str(STATIC)), name="static")
+
+
+@app.exception_handler(LimitReachedError)
+async def _limited(_: Request, e: LimitReachedError) -> JSONResponse:
+    return JSONResponse({"detail": str(e)}, status_code=429)
 
 
 @app.get("/", response_class=HTMLResponse)
@@ -149,6 +176,7 @@ async def _shared(domain: str, progress: Progress) -> SenderMap:
         await progress("Done")
         return cached[1]
     if domain not in state.running:  # one build per domain, however many visitors ask
+        _limit_domain(domain)
         state.running[domain] = asyncio.create_task(_build(domain, progress))
     try:
         return await asyncio.shield(state.running[domain])
@@ -179,14 +207,67 @@ def _limit(request: Request) -> None:
     """A short sliding window per visitor. The address is held in memory for one minute and
     written nowhere."""
     who = request.headers.get("cf-connecting-ip") or (request.client.host if request.client else "")
+    if not _window(state.seen, who, REQUESTS_PER_MINUTE):
+        raise LimitReachedError("Too many maps in a minute. Try again shortly.")
+
+
+def _limit_domain(domain: str) -> None:
+    """A short sliding window per target domain, counting fresh builds only, so one domain's
+    nameservers are not asked for many maps in a minute however many visitors ask."""
+    if not _window(state.built, domain, DOMAIN_BUILDS_PER_MINUTE):
+        raise LimitReachedError(f"{domain} was mapped too often this minute. Try again shortly.")
+
+
+def _window(seen: dict[str, list[float]], key: str, most: int) -> bool:
+    """Count one more for `key` within the last minute, unless it already has `most`."""
     now = time.monotonic()
-    recent = [t for t in state.seen.get(who, []) if now - t < 60]
-    if len(recent) >= REQUESTS_PER_MINUTE:
-        raise HTTPException(429, "Too many maps in a minute. Try again shortly.")
-    state.seen[who] = [*recent, now]
-    if len(state.seen) > 10_000:
-        state.seen = {k: v for k, v in state.seen.items() if v and now - v[-1] < 60}
+    recent = [t for t in seen.get(key, []) if now - t < 60]
+    if len(recent) >= most:
+        return False
+    seen[key] = [*recent, now]
+    if len(seen) > 10_000:
+        for old in [k for k, v in seen.items() if not v or now - v[-1] >= 60]:
+            del seen[old]
+    return True
 
 
 async def _ignore(_: str) -> None:
     return None
+
+
+# ------------------------------------------------------------------ MCP
+
+
+async def _remote(domain: str, options: mcp_server.Options, progress: Progress) -> SenderMap:
+    """The MCP map tool's build: the API's limits, and its cache for the default checks."""
+    try:
+        _limit(get_http_request())
+        if options == mcp_server.Options():
+            return await _shared(domain, progress)
+        _limit_domain(domain)
+    except LimitReachedError as e:
+        raise ToolError(str(e)) from e
+    async with state.slots:
+        return await map_domain(
+            domain,
+            checked_at=datetime.now(UTC),
+            http=state.http,
+            use_web=options.use_web,
+            use_subdomains=options.use_subdomains,
+            use_ct=options.use_ct,
+            progress=progress,
+        )
+
+
+def mcp_hosts() -> list[str]:
+    """The hosts SENDERMAP_MCP_HOSTS names, besides localhost, that /mcp answers for."""
+    return [h.strip() for h in os.environ.get(MCP_HOSTS, "").split(",") if h.strip()]
+
+
+MCP_APP = mcp_server.create(_remote).http_app(
+    path="/mcp",
+    stateless_http=True,
+    host_origin_protection=True,
+    allowed_hosts=mcp_hosts(),
+)
+app.mount("/", MCP_APP)  # last, so every route above is matched first; it serves /mcp alone
