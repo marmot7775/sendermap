@@ -1,0 +1,739 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/marmot7775/sendermap/main/sendermap/data/schema/sendermap-1.json",
+  "title": "Sendermap map, sendermap/1",
+  "description": "The JSON of one Sendermap map (SenderMap.to_dict()). sendermap/1 grows by addition only: a later version may add fields and enum values, never remove or rename one or change what one means. Consumers must ignore fields they do not know and tolerate enum values they do not know. A breaking change is sendermap/2, with a schema of its own.",
+  "type": "object",
+  "properties": {
+    "schema": {
+      "description": "The contract this map keeps.",
+      "const": "sendermap/1"
+    },
+    "domain": {
+      "description": "The domain mapped, cleaned to its ASCII form.",
+      "type": "string"
+    },
+    "services": {
+      "description": "The services found, strongest first; reporting services last.",
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/Service"
+      }
+    },
+    "run": {
+      "$ref": "#/$defs/Run"
+    },
+    "findings": {
+      "description": "What needs attention, risks first.",
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/Finding"
+      }
+    },
+    "unknowns": {
+      "description": "Senders no service in the vendor data matches.",
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/Unknown"
+      }
+    },
+    "gaps": {
+      "description": "Questions that got no usable answer.",
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/Gap"
+      }
+    },
+    "subdomains_checked": {
+      "description": "The sending subdomains mapped.",
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "checked": {
+      "description": "What was asked at each name.",
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/Checked"
+      }
+    },
+    "ct": {
+      "$ref": "#/$defs/CtSummary"
+    },
+    "historical": {
+      "description": "Possible past vendors from certificate logs.",
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/Historical"
+      }
+    },
+    "logo": {
+      "description": "The BIMI logo's URL, if the domain publishes one. Not evidence.",
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "absences": {
+      "description": "Questions answered with 'not there'.",
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/Absence"
+      }
+    },
+    "reconciliation": {
+      "description": "The client's list of services against the map; null, or left out, when nothing was claimed.",
+      "anyOf": [
+        {
+          "$ref": "#/$defs/Reconciliation"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "story": {
+      "description": "One paragraph written by rules from the map itself.",
+      "type": "string"
+    }
+  },
+  "required": [
+    "schema",
+    "domain",
+    "services",
+    "run",
+    "findings",
+    "unknowns",
+    "gaps"
+  ],
+  "$defs": {
+    "Tier": {
+      "description": "How sure the map is that a service sends for the domain, strongest first. Consumers must tolerate values not listed here: the schema grows by addition, and a later sendermap/1 map may carry a value this list does not name yet.",
+      "type": "string",
+      "enum": [
+        "In use",
+        "Configured",
+        "Likely",
+        "Account only"
+      ]
+    },
+    "Role": {
+      "description": "Whether a service sends, or only receives the domain's reports. Consumers must tolerate values not listed here: the schema grows by addition, and a later sendermap/1 map may carry a value this list does not name yet.",
+      "type": "string",
+      "enum": [
+        "sender",
+        "reporting"
+      ]
+    },
+    "Kind": {
+      "description": "What a piece of evidence shows about a service, and so how much it counts. Consumers must tolerate values not listed here: the schema grows by addition, and a later sendermap/1 map may carry a value this list does not name yet.",
+      "type": "string",
+      "enum": [
+        "receives the domain's mail (MX)",
+        "in use for a subdomain's mail (MX)",
+        "receives replies and bounces for a sending subdomain (MX)",
+        "permitted MX host in the MTA-STS policy",
+        "included in SPF",
+        "owns a network listed in SPF",
+        "authorized by SPF for one of its addresses",
+        "hosts a DKIM key (CNAME)",
+        "DKIM key named for it",
+        "bounce address CNAME",
+        "hosts a sending subdomain's DNS (NS)",
+        "link tracking CNAME",
+        "website loads a script or stylesheet from it",
+        "mentioned on the website",
+        "named as a subprocessor",
+        "verification token",
+        "autodiscover CNAME",
+        "revoked DKIM key (empty p=)",
+        "DKIM CNAME to a missing key",
+        "CNAME into its zone at a name from certificate logs",
+        "address in its network at a name from certificate logs",
+        "receives DMARC reports",
+        "receives TLS reports"
+      ]
+    },
+    "Severity": {
+      "description": "How much a finding matters. Consumers must tolerate values not listed here: the schema grows by addition, and a later sendermap/1 map may carry a value this list does not name yet.",
+      "type": "string",
+      "enum": [
+        "risk",
+        "warning",
+        "note"
+      ]
+    },
+    "Need": {
+      "description": "Whether a vendor's documented setup needs a record. Consumers must tolerate values not listed here: the schema grows by addition, and a later sendermap/1 map may carry a value this list does not name yet.",
+      "type": "string",
+      "enum": [
+        "required",
+        "optional",
+        "none"
+      ]
+    },
+    "State": {
+      "description": "What the map shows of one setup item at one name. Consumers must tolerate values not listed here: the schema grows by addition, and a later sendermap/1 map may carry a value this list does not name yet.",
+      "type": "string",
+      "enum": [
+        "present",
+        "broken",
+        "missing",
+        "not checked",
+        "not needed"
+      ]
+    },
+    "GapKind": {
+      "description": "What a gap leaves unchecked. 'off' is a check the caller turned off. Consumers must tolerate values not listed here: the schema grows by addition, and a later sendermap/1 map may carry a value this list does not name yet.",
+      "type": "string",
+      "enum": [
+        "website",
+        "page",
+        "certificate_log",
+        "subdomains",
+        "dkim",
+        "labels",
+        "spf",
+        "mx",
+        "networks",
+        "published_ranges",
+        "reports",
+        "tokens",
+        "mta_sts",
+        "off",
+        "other"
+      ]
+    },
+    "Denial": {
+      "description": "How the zone under a name's _domainkey answers for a name that does not exist. Consumers must tolerate values not listed here: the schema grows by addition, and a later sendermap/1 map may carry a value this list does not name yet.",
+      "type": "string",
+      "enum": [
+        "classic",
+        "none by rcode",
+        "wildcard",
+        "unknown"
+      ]
+    },
+    "CtStatus": {
+      "description": "How a certificate transparency provider, or the source as a whole, went. Consumers must tolerate values not listed here: the schema grows by addition, and a later sendermap/1 map may carry a value this list does not name yet.",
+      "type": "string",
+      "enum": [
+        "off",
+        "read",
+        "read from the local cache",
+        "unavailable"
+      ]
+    },
+    "Evidence": {
+      "description": "One observed public fact: a record at a name, or a line on a web page, and when it was checked. Evidence from certificate logs also carries not_before, not_after and target.",
+      "type": "object",
+      "properties": {
+        "name": {
+          "description": "The DNS name, or the page's URL, the fact was found at.",
+          "type": "string"
+        },
+        "rtype": {
+          "description": "The record type asked (TXT, MX, CNAME, NS, A, ...), or 'page' or 'policy' for web content.",
+          "type": "string"
+        },
+        "value": {
+          "description": "What was found, or the negative answer in words ('no such name', 'no record of this type').",
+          "type": "string"
+        },
+        "checked_at": {
+          "description": "ISO 8601 date and time with a timezone.",
+          "type": "string",
+          "format": "date-time"
+        },
+        "not_before": {
+          "description": "Certificate evidence only: the start of the latest certificate's validity.",
+          "type": "string"
+        },
+        "not_after": {
+          "description": "Certificate evidence only: the end of the latest certificate's validity.",
+          "type": "string"
+        },
+        "target": {
+          "description": "Certificate evidence only: the CNAME hop that matched a service, if one did.",
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "required": [
+        "name",
+        "rtype",
+        "value",
+        "checked_at"
+      ]
+    },
+    "Claim": {
+      "description": "What one piece of evidence shows about one service at one name.",
+      "type": "object",
+      "properties": {
+        "service": {
+          "description": "The service's name in the vendor data.",
+          "type": "string"
+        },
+        "kind": {
+          "$ref": "#/$defs/Kind"
+        },
+        "where": {
+          "description": "The domain or the subdomain the claim is about.",
+          "type": "string"
+        },
+        "evidence": {
+          "$ref": "#/$defs/Evidence"
+        },
+        "supporting": {
+          "description": "The records that tie the evidence to the service when the evidence alone does not name it.",
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Evidence"
+          }
+        }
+      },
+      "required": [
+        "service",
+        "kind",
+        "where",
+        "evidence"
+      ]
+    },
+    "SetupItem": {
+      "description": "One record a vendor's setup publishes, and what the map shows of it at one name.",
+      "type": "object",
+      "properties": {
+        "record": {
+          "description": "The record: today spf, dkim, return_path, tracking or mx. Consumers must tolerate others.",
+          "type": "string"
+        },
+        "need": {
+          "$ref": "#/$defs/Need"
+        },
+        "state": {
+          "$ref": "#/$defs/State"
+        },
+        "evidence": {
+          "description": "The records that show the item present or broken, or the negative answers that show it missing.",
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Evidence"
+          }
+        },
+        "asked": {
+          "description": "The question those answers came from.",
+          "type": "string"
+        },
+        "detail": {
+          "description": "What a reader needs beside the state.",
+          "type": "string"
+        }
+      },
+      "required": [
+        "record",
+        "need",
+        "state"
+      ]
+    },
+    "Setup": {
+      "description": "A vendor's documented setup at one name where the map has claims for it.",
+      "type": "object",
+      "properties": {
+        "service": {
+          "description": "The service's name.",
+          "type": "string"
+        },
+        "where": {
+          "description": "The name the setup is at.",
+          "type": "string"
+        },
+        "items": {
+          "description": "One item per record the setup lists.",
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/SetupItem"
+          }
+        },
+        "complete": {
+          "description": "True when every required item is present, false when one is missing or broken, null when one could not be checked.",
+          "type": [
+            "boolean",
+            "null"
+          ]
+        }
+      },
+      "required": [
+        "service",
+        "where",
+        "items",
+        "complete"
+      ]
+    },
+    "Service": {
+      "description": "One row of the map.",
+      "type": "object",
+      "properties": {
+        "name": {
+          "description": "The service's name in the vendor data.",
+          "type": "string"
+        },
+        "category": {
+          "description": "The vendor data's category for the service.",
+          "type": "string"
+        },
+        "tier": {
+          "description": "The strongest tier among its claims; null for a service known only from report addresses.",
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Tier"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "role": {
+          "$ref": "#/$defs/Role"
+        },
+        "claims": {
+          "description": "Every claim for the service.",
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Claim"
+          }
+        },
+        "setups": {
+          "description": "Its setup at each name it has claims at, when the vendor data describes one.",
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Setup"
+          }
+        }
+      },
+      "required": [
+        "name",
+        "category",
+        "tier",
+        "role",
+        "claims"
+      ]
+    },
+    "Unknown": {
+      "description": "Something that clearly is a sender but matches no service in the vendor data, and the record that shows it.",
+      "type": "object",
+      "properties": {
+        "what": {
+          "description": "What it is, in words ('SPF include', 'IP range in SPF', ...).",
+          "type": "string"
+        },
+        "value": {
+          "description": "The value, with what is known about it.",
+          "type": "string"
+        },
+        "where": {
+          "description": "The name it was found at.",
+          "type": "string"
+        },
+        "evidence": {
+          "$ref": "#/$defs/Evidence"
+        }
+      },
+      "required": [
+        "what",
+        "value",
+        "where",
+        "evidence"
+      ]
+    },
+    "Finding": {
+      "description": "Something that needs attention, with the records that show it.",
+      "type": "object",
+      "properties": {
+        "severity": {
+          "$ref": "#/$defs/Severity"
+        },
+        "title": {
+          "description": "One line.",
+          "type": "string"
+        },
+        "detail": {
+          "description": "Why it matters.",
+          "type": "string"
+        },
+        "evidence": {
+          "description": "The records that show it.",
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Evidence"
+          }
+        }
+      },
+      "required": [
+        "severity",
+        "title",
+        "detail"
+      ]
+    },
+    "Gap": {
+      "description": "A question that got no usable answer. Its silence is never to be read as absent.",
+      "type": "object",
+      "properties": {
+        "asked": {
+          "description": "What was asked.",
+          "type": "string"
+        },
+        "happened": {
+          "description": "What happened instead.",
+          "type": "string"
+        },
+        "kind": {
+          "$ref": "#/$defs/GapKind"
+        },
+        "count": {
+          "description": "How many names, ranges, selectors or vendors it leaves unanswered; 0 for the check as a whole.",
+          "type": "integer",
+          "minimum": 0
+        },
+        "cap": {
+          "description": "The limit that left them unasked; 0 for a failure, not a cap.",
+          "type": "integer",
+          "minimum": 0
+        }
+      },
+      "required": [
+        "asked",
+        "happened"
+      ]
+    },
+    "Absence": {
+      "description": "A question answered with 'not there', and the negative answers that show it.",
+      "type": "object",
+      "properties": {
+        "asked": {
+          "description": "What was asked.",
+          "type": "string"
+        },
+        "happened": {
+          "description": "What came back.",
+          "type": "string"
+        },
+        "evidence": {
+          "description": "The negative answers.",
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Evidence"
+          }
+        }
+      },
+      "required": [
+        "asked",
+        "happened",
+        "evidence"
+      ]
+    },
+    "Checked": {
+      "description": "What was asked at one name. Silence about anything not listed says nothing.",
+      "type": "object",
+      "properties": {
+        "where": {
+          "description": "The name.",
+          "type": "string"
+        },
+        "dkim_selectors": {
+          "description": "The DKIM selectors probed, in the order asked.",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "labels": {
+          "description": "The labels whose CNAMEs were asked.",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "pages": {
+          "description": "The pages requested.",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "denial": {
+          "$ref": "#/$defs/Denial"
+        }
+      },
+      "required": [
+        "where"
+      ]
+    },
+    "Historical": {
+      "description": "A name in certificate logs that no longer resolves, whose leftover CNAME points at a service: possibly a past vendor, never a current sender.",
+      "type": "object",
+      "properties": {
+        "service": {
+          "description": "The service the leftover CNAME points at.",
+          "type": "string"
+        },
+        "evidence": {
+          "$ref": "#/$defs/Evidence"
+        }
+      },
+      "required": [
+        "service",
+        "evidence"
+      ]
+    },
+    "CtProvider": {
+      "description": "What one certificate log provider did for this map.",
+      "type": "object",
+      "properties": {
+        "name": {
+          "description": "The provider.",
+          "type": "string"
+        },
+        "status": {
+          "$ref": "#/$defs/CtStatus"
+        },
+        "logged": {
+          "description": "How many names under the domain it logged.",
+          "type": "integer",
+          "minimum": 0
+        }
+      },
+      "required": [
+        "name",
+        "status"
+      ]
+    },
+    "CtSummary": {
+      "description": "How the certificate transparency source went.",
+      "type": "object",
+      "properties": {
+        "status": {
+          "$ref": "#/$defs/CtStatus"
+        },
+        "logged": {
+          "description": "Names the providers logged together.",
+          "type": "integer",
+          "minimum": 0
+        },
+        "resolved": {
+          "description": "Names resolved.",
+          "type": "integer",
+          "minimum": 0
+        },
+        "gone_unnamed": {
+          "description": "Names that no longer resolve and name no service.",
+          "type": "integer",
+          "minimum": 0
+        },
+        "providers": {
+          "description": "Each provider.",
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/CtProvider"
+          }
+        }
+      },
+      "required": [
+        "status"
+      ]
+    },
+    "Reconciled": {
+      "description": "One service in a reconciliation.",
+      "type": "object",
+      "properties": {
+        "service": {
+          "description": "Its name in the vendor data.",
+          "type": "string"
+        },
+        "tier": {
+          "description": "Its tier in the map; null when the map did not find it or found it only receiving reports.",
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Tier"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "claimed_as": {
+          "description": "The names the client wrote for it, as written.",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "required": [
+        "service",
+        "tier"
+      ]
+    },
+    "Reconciliation": {
+      "description": "The services a client says they use, against the map.",
+      "type": "object",
+      "properties": {
+        "confirmed": {
+          "description": "Claimed and found.",
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Reconciled"
+          }
+        },
+        "unclaimed": {
+          "description": "Every sending service found that nobody claimed.",
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Reconciled"
+          }
+        },
+        "unfound": {
+          "description": "Claimed and known, with no claim at any name checked.",
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Reconciled"
+          }
+        },
+        "unknown": {
+          "description": "Claimed names that match no service in the vendor data, as written.",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "required": []
+    },
+    "Run": {
+      "description": "When and how the map was made. Two runs over the same DNS answers differ here only.",
+      "type": "object",
+      "properties": {
+        "checked_at": {
+          "description": "ISO 8601 date and time with a timezone.",
+          "type": "string",
+          "format": "date-time"
+        },
+        "elapsed": {
+          "description": "Seconds the map took. Always present in a map; a recorded test case leaves it out.",
+          "type": "number",
+          "minimum": 0
+        },
+        "lookups": {
+          "description": "DNS questions asked. Always present in a map; a recorded test case leaves it out.",
+          "type": "integer",
+          "minimum": 0
+        }
+      },
+      "required": [
+        "checked_at"
+      ]
+    }
+  }
+}

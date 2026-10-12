@@ -9,6 +9,7 @@ import pytest
 uvicorn = pytest.importorskip("uvicorn")
 pytest.importorskip("fastapi")
 
+import sendermap  # noqa: E402
 from sendermap.web import app as site  # noqa: E402
 
 
@@ -43,3 +44,12 @@ async def test_the_app_starts_with_access_logging_off() -> None:
         access.removeHandler(kept)
     assert [r.getMessage() for r in kept.records] == []
     assert access.disabled
+
+
+async def test_the_site_serves_the_schema() -> None:
+    transport = httpx.ASGITransport(app=site.app)
+    async with httpx.AsyncClient(transport=transport, base_url="http://site.test") as client:
+        reply = await client.get("/schema/sendermap-1.json")
+    assert reply.status_code == 200
+    assert reply.headers["content-type"].startswith("application/schema+json")
+    assert reply.json() == sendermap.schema()
