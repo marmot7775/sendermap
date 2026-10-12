@@ -1227,6 +1227,179 @@
           }
         }
       ]
+    },
+    "Mapp": {
+      "category": "Marketing",
+      "checked": "2026-10-11, the 2,049 domains of data/hunt_domains.txt plus 75 brands named in the E2 survey or likely customers (tools/hunt_proofs.py), NS asked by hand at every sending name whose SPF or MX names the vendor, and the vendor's documentation: spf_includes shortest-route.com: customers publish Mapp's ranges as ip4 terms (news.springer.com, newsletter.cnet.com), and only shortest-route.com itself redirects to spf.h.shortest-route.com.",
+      "spf_includes": [
+        {
+          "value": "shortest-route.com"
+        }
+      ]
+    },
+    "Cordial": {
+      "category": "Marketing",
+      "checked": "2026-10-11, the 2,049 domains of data/hunt_domains.txt plus 75 brands named in the E2 survey or likely customers (tools/hunt_proofs.py), NS asked by hand at every sending name whose SPF or MX names the vendor, and the vendor's documentation: spf_includes cordial.io: published only by Cordial's own domain crdl.io; customers include _spf.cordialmail.net instead.",
+      "spf_includes": [
+        {
+          "value": "cordial.io"
+        }
+      ]
+    },
+    "Dotdigital": {
+      "category": "Marketing",
+      "checked": "2026-10-11, the 2,049 domains of data/hunt_domains.txt plus 75 brands named in the E2 survey or likely customers (tools/hunt_proofs.py), NS asked by hand at every sending name whose SPF or MX names the vendor, and the vendor's documentation: tracking dotdigital.com, dmtrk.net, trackedlink.net: no tracking label asked carried a CNAME into them.",
+      "tracking": [
+        {
+          "value": "dotdigital.com"
+        },
+        {
+          "value": "dmtrk.net"
+        },
+        {
+          "value": "trackedlink.net"
+        }
+      ]
+    },
+    "Cheetah Digital": {
+      "category": "Marketing",
+      "checked": "2026-10-11, the 2,049 domains of data/hunt_domains.txt plus 75 brands named in the E2 survey or likely customers (tools/hunt_proofs.py), NS asked by hand at every sending name whose SPF or MX names the vendor, and the vendor's documentation: none of chtah.com, cheetahmail.com or chtah.net was found in any SPF, MX, NS or CNAME, including at the US retail, travel and publishing brands added for this search; no customer setup page was readable.",
+      "delegation_ns": [
+        {
+          "value": "chtah.com"
+        },
+        {
+          "value": "cheetahmail.com"
+        },
+        {
+          "value": "chtah.net"
+        }
+      ],
+      "mx": [
+        {
+          "value": "chtah.com"
+        },
+        {
+          "value": "cheetahmail.com"
+        },
+        {
+          "value": "chtah.net"
+        }
+      ],
+      "spf_includes": [
+        {
+          "value": "chtah.com"
+        },
+        {
+          "value": "cheetahmail.com"
+        },
+        {
+          "value": "chtah.net"
+        }
+      ],
+      "return_path": [
+        {
+          "value": "chtah.com"
+        },
+        {
+          "value": "chtah.net"
+        }
+      ],
+      "tracking": [
+        {
+          "value": "chtah.com"
+        },
+        {
+          "value": "chtah.net"
+        }
+      ],
+      "aliases": [
+        "CheetahMail"
+      ]
+    },
+    "Inxmail": {
+      "category": "Marketing",
+      "checked": "2026-10-11, the 2,049 domains of data/hunt_domains.txt plus 75 brands named in the E2 survey or likely customers (tools/hunt_proofs.py), NS asked by hand at every sending name whose SPF or MX names the vendor, and the vendor's documentation: no NS delegation to inxmail.com or inxserver.de was found (news.teamviewer.com is a CNAME to rdir.inxmail.com, which delegates nothing), and no MX, bounce or tracking CNAME at inxmail.com.",
+      "delegation_ns": [
+        {
+          "value": "inxmail.com"
+        },
+        {
+          "value": "inxserver.de"
+        }
+      ],
+      "mx": [
+        {
+          "value": "inxmail.com"
+        }
+      ],
+      "spf_includes": [
+        {
+          "value": "inxmail.com"
+        }
+      ],
+      "return_path": [
+        {
+          "value": "inxmail.com"
+        }
+      ],
+      "tracking": [
+        {
+          "value": "inxmail.com"
+        }
+      ]
+    },
+    "UniSender": {
+      "category": "Marketing",
+      "checked": "2026-10-11, the 2,049 domains of data/hunt_domains.txt plus 75 brands named in the E2 survey or likely customers (tools/hunt_proofs.py), NS asked by hand at every sending name whose SPF or MX names the vendor, and the vendor's documentation: no MX, NS delegation, bounce or tracking CNAME at unisender.com was found; customers show UniSender by SPF only.",
+      "delegation_ns": [
+        {
+          "value": "unisender.com"
+        }
+      ],
+      "mx": [
+        {
+          "value": "unisender.com"
+        }
+      ],
+      "return_path": [
+        {
+          "value": "unisender.com"
+        }
+      ],
+      "tracking": [
+        {
+          "value": "unisender.com"
+        }
+      ]
+    },
+    "Sendsay": {
+      "category": "Marketing",
+      "checked": "2026-10-11, the 2,049 domains of data/hunt_domains.txt plus 75 brands named in the E2 survey or likely customers (tools/hunt_proofs.py), NS asked by hand at every sending name whose SPF or MX names the vendor, and the vendor's documentation: no bounce or tracking CNAME into sendsay.ru was found.",
+      "return_path": [
+        {
+          "value": "sendsay.ru"
+        }
+      ],
+      "tracking": [
+        {
+          "value": "sendsay.ru"
+        }
+      ]
+    },
+    "Optimizely Campaign": {
+      "category": "Marketing",
+      "checked": "2026-10-11, the 2,049 domains of data/hunt_domains.txt plus 75 brands named in the E2 survey or likely customers (tools/hunt_proofs.py), NS asked by hand at every sending name whose SPF or MX names the vendor, and the vendor's documentation: return_path and tracking srv2.de: Optimizely's documentation sets the technical subdomain by A and MX records, not a CNAME, and none was found. The DKIM CNAME is at the selector mailing, which is not in the probe sweep.",
+      "return_path": [
+        {
+          "value": "srv2.de"
+        }
+      ],
+      "tracking": [
+        {
+          "value": "srv2.de"
+        }
+      ]
     }
   }
 }

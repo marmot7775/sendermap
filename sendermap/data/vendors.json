@@ -5249,6 +5249,305 @@
           "note": "include:one.zoho.com takes the place of include:zohomail.com when several Zoho services send."
         }
       ]
+    },
+    "Emarsys": {
+      "category": "Marketing",
+      "aliases": [
+        "SAP Emarsys"
+      ],
+      "spf_includes": [
+        {
+          "value": "emarsys.net",
+          "proof": {
+            "domain": "ebay.com",
+            "record": "p._spf.ebay.com",
+            "date": "2026-10-11"
+          }
+        },
+        {
+          "value": "emarsys.us",
+          "proof": {
+            "domain": "markt.de",
+            "record": "info.markt.de",
+            "date": "2026-10-11"
+          }
+        }
+      ],
+      "mx": [
+        {
+          "value": "emarsys.net",
+          "proof": {
+            "domain": "ebay.com",
+            "record": "mail.ebay.com",
+            "date": "2026-10-11"
+          }
+        },
+        {
+          "value": "eemms.net",
+          "proof": {
+            "domain": "ebay.com",
+            "record": "info.ebay.com",
+            "date": "2026-10-11"
+          }
+        }
+      ],
+      "return_path": [
+        {
+          "value": "emarsys.net",
+          "proof": {
+            "domain": "ebay.com",
+            "record": "mail.ebay.com",
+            "date": "2026-10-11"
+          }
+        }
+      ],
+      "tracking": [
+        {
+          "value": "emarsys.net",
+          "proof": {
+            "domain": "tp-link.com",
+            "record": "link.tp-link.com",
+            "date": "2026-10-11"
+          }
+        }
+      ],
+      "delegation_ns": [
+        {
+          "value": "emarsys.net",
+          "proof": {
+            "domain": "bild.de",
+            "record": "mail.bild.de",
+            "date": "2026-10-11"
+          }
+        }
+      ]
+    },
+    "Mapp": {
+      "category": "Marketing",
+      "aliases": [
+        "Mapp Engage",
+        "Mapp Digital",
+        "ecircle"
+      ],
+      "mx": [
+        {
+          "value": "shortest-route.com",
+          "proof": {
+            "domain": "springer.com",
+            "record": "alerts.springer.com",
+            "date": "2026-10-11"
+          }
+        }
+      ],
+      "delegation_ns": [
+        {
+          "value": "ecircle.de",
+          "proof": {
+            "domain": "springer.com",
+            "record": "alerts.springer.com",
+            "date": "2026-10-11"
+          }
+        },
+        {
+          "value": "shortest-route.com",
+          "proof": {
+            "domain": "cnet.com",
+            "record": "newsletter.cnet.com",
+            "date": "2026-10-11"
+          }
+        }
+      ]
+    },
+    "Cordial": {
+      "category": "Marketing",
+      "spf_includes": [
+        {
+          "value": "cordialmail.net",
+          "proof": {
+            "domain": "forbes.com",
+            "record": "email.forbes.com",
+            "date": "2026-10-11"
+          }
+        }
+      ],
+      "mx": [
+        {
+          "value": "cordial.mx.e.sparkpost.com",
+          "proof": {
+            "domain": "wtso.com",
+            "record": "hello.wtso.com",
+            "date": "2026-10-11"
+          }
+        }
+      ],
+      "delegation_ns": [
+        {
+          "value": "crdl.io",
+          "proof": {
+            "domain": "forbes.com",
+            "record": "email.forbes.com",
+            "date": "2026-10-11"
+          }
+        }
+      ]
+    },
+    "Dotdigital": {
+      "category": "Marketing",
+      "aliases": [
+        "dotmailer"
+      ],
+      "spf_includes": [
+        {
+          "value": "dotmailer.com",
+          "proof": {
+            "domain": "lg.com",
+            "record": "email.lg.com",
+            "date": "2026-10-11"
+          }
+        }
+      ],
+      "mx": [
+        {
+          "value": "dotdigital.com",
+          "proof": {
+            "domain": "lg.com",
+            "record": "email.lg.com",
+            "date": "2026-10-11"
+          }
+        },
+        {
+          "value": "dotmailer.co.uk",
+          "proof": {
+            "domain": "cam.ac.uk",
+            "record": "news.cam.ac.uk",
+            "date": "2026-10-11"
+          }
+        }
+      ],
+      "delegation_ns": [
+        {
+          "value": "dotdigital.com",
+          "proof": {
+            "domain": "lg.com",
+            "record": "email.lg.com",
+            "date": "2026-10-11"
+          }
+        },
+        {
+          "value": "dotmailer.co.uk",
+          "proof": {
+            "domain": "caliente.mx",
+            "record": "mail.caliente.mx",
+            "date": "2026-10-11"
+          }
+        }
+      ]
+    },
+    "Inxmail": {
+      "category": "Marketing",
+      "spf_includes": [
+        {
+          "value": "inxserver.com",
+          "proof": {
+            "domain": "teamviewer.com",
+            "record": "news.teamviewer.com",
+            "date": "2026-10-11"
+          }
+        }
+      ],
+      "mx": [
+        {
+          "value": "inxserver.de",
+          "proof": {
+            "domain": "teamviewer.com",
+            "record": "news.teamviewer.com",
+            "date": "2026-10-11"
+          }
+        }
+      ]
+    },
+    "UniSender": {
+      "category": "Marketing",
+      "spf_includes": [
+        {
+          "value": "unisender.com",
+          "proof": {
+            "domain": "drom.ru",
+            "record": "drom.ru",
+            "date": "2026-10-11"
+          }
+        }
+      ]
+    },
+    "Sendsay": {
+      "category": "Marketing",
+      "spf_includes": [
+        {
+          "value": "sendsay.ru",
+          "proof": {
+            "domain": "nic.ru",
+            "record": "nic.ru",
+            "date": "2026-10-11"
+          }
+        }
+      ],
+      "mx": [
+        {
+          "value": "sendsay.ru",
+          "proof": {
+            "domain": "ozon.ru",
+            "record": "news.ozon.ru",
+            "date": "2026-10-11"
+          }
+        }
+      ],
+      "delegation_ns": [
+        {
+          "value": "sendsay.ru",
+          "proof": {
+            "domain": "megafon.ru",
+            "record": "info.megafon.ru",
+            "date": "2026-10-11"
+          }
+        }
+      ]
+    },
+    "Optimizely Campaign": {
+      "category": "Marketing",
+      "aliases": [
+        "Episerver Campaign",
+        "optivo"
+      ],
+      "spf_includes": [
+        {
+          "value": "srv2.de",
+          "proof": {
+            "domain": "tchibo.de",
+            "record": "news.tchibo.de",
+            "date": "2026-10-11"
+          }
+        }
+      ],
+      "mx": [
+        {
+          "value": "srv2.de",
+          "proof": {
+            "domain": "tchibo.de",
+            "record": "news.tchibo.de",
+            "date": "2026-10-11"
+          }
+        }
+      ],
+      "dkim_cname": [
+        {
+          "value": "srv2.de",
+          "proof": {
+            "domain": "galeria.de",
+            "record": "mailing._domainkey.galeria.de",
+            "date": "2026-10-11"
+          }
+        }
+      ]
     }
   }
 }
