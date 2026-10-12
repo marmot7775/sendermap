@@ -1,0 +1,38 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "io.github.marmot7775/sendermap",
+  "title": "Sendermap",
+  "description": "Maps every service that sends email as a domain, with the public record behind each one.",
+  "version": "0.1.0",
+  "repository": {
+    "url": "https://github.com/marmot7775/sendermap",
+    "source": "github"
+  },
+  "packages": [
+    {
+      "registryType": "pypi",
+      "registryBaseUrl": "https://pypi.org",
+      "identifier": "sendermap",
+      "version": "0.1.0",
+      "runtimeHint": "uvx",
+      "runtimeArguments": [
+        {
+          "type": "named",
+          "name": "--from",
+          "value": "sendermap[mcp]==0.1.0",
+          "description": "Install Sendermap with the mcp extra, which brings the MCP server."
+        }
+      ],
+      "packageArguments": [
+        {
+          "type": "positional",
+          "value": "mcp",
+          "description": "The subcommand that serves Sendermap's tools over MCP on stdio."
+        }
+      ],
+      "transport": {
+        "type": "stdio"
+      }
+    }
+  ]
+}

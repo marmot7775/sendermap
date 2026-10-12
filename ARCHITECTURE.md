@@ -661,6 +661,14 @@ recorder keeps the answers, not those requests.
   present without a claim), and three worked examples on reserved `.example` names and
   example.com. `tests/test_skill.py` holds the format's limits and the rules; `skills-ref`
   (`uvx --from skills-ref agentskills validate skills/sendermap`) passes. It is not in the wheel.
+- **Listing**: `server.json` at the root lists the server in the MCP registry as
+  `io.github.marmot7775/sendermap`: the PyPI package, started by `uvx --from
+  sendermap[mcp]==VERSION sendermap mcp` over stdio. Its version is the next release's and moves
+  with the tag. The README carries the `mcp-name` line the registry checks on PyPI, as an HTML
+  comment. The site serves `llms.txt` (`sendermap/web/static/llms.txt`, at `/llms.txt`), which
+  points at the API, the schema, the MCP endpoint, the skill and the Honest limits section.
+  `tests/test_listing.py` validates `server.json` against the registry's 2025-12-11 schema, kept
+  in `tests/fixtures/`, and holds the README line and `llms.txt`.
 - **Web site**: a FastAPI app. `GET /api/map?d=` returns the map as JSON, `GET /api/map.md?d=`
   as Markdown, and `GET /api/map/stream?d=` streams progress then the map as server-sent events.
   Each takes `claimed`, a comma separated list, for the map's reconciliation.

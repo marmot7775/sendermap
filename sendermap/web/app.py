@@ -95,6 +95,12 @@ async def index() -> FileResponse:
     return FileResponse(str(STATIC.joinpath("index.html")))
 
 
+@app.get("/llms.txt", response_class=PlainTextResponse)
+async def llms() -> FileResponse:
+    """Where an agent finds the API, the schema, the MCP endpoint, the skill and the limits."""
+    return FileResponse(str(STATIC.joinpath("llms.txt")), media_type="text/plain; charset=utf-8")
+
+
 @app.get("/schema/sendermap-1.json")
 async def json_schema() -> FileResponse:
     """The contract the API's maps keep, as a JSON Schema."""
