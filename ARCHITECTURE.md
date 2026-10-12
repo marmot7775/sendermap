@@ -662,7 +662,17 @@ recorder keeps the answers, not those requests.
   memory for one minute for the rate limit.
   Results are kept in memory for ten minutes, keyed by domain only, and concurrent requests for
   one domain share one build. At most six maps build at once, and each visitor may make twelve
-  map requests a minute.
+  map requests a minute. A target domain gets at most four fresh builds a minute from every
+  visitor together (cached maps do not count), so its nameservers are not asked for many maps
+  at once; over either limit is a 429.
+- **Remote MCP**: the site mounts the same MCP server at `/mcp` over streamable HTTP, stateless,
+  so no session is held between requests. The map tool there keeps the API's limits per visitor
+  and per target domain, and its maps with the default checks come from the same cache; other
+  options always build, inside the same six slots. A request whose Host header is not localhost
+  or one of the hosts named in `SENDERMAP_MCP_HOSTS` (comma separated) is refused with 421, so a
+  deployment names its host there. The web extra pulls in the mcp extra for it.
+  `tests/test_web_mcp.py` serves the site on loopback and holds the tools, the Host check and
+  both limits. Not deployed.
 
 ## Tests
 
