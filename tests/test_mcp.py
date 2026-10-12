@@ -199,11 +199,12 @@ async def test_the_tools_declare_what_an_agent_needs_under_the_limits() -> None:
         assert name in tools["sendermap_map"].description
 
 
-def test_the_server_text_names_the_tiers_and_what_a_remedy_is() -> None:
+def test_the_server_text_names_the_tiers_and_the_advice_it_does_not_give() -> None:
     for tier in ("In use", "Configured", "Likely", "Account only"):
         assert f"- {tier}:" in mcp_server.INSTRUCTIONS
     assert "Silence is not absence" in mcp_server.INSTRUCTIONS
-    assert "not advice about this domain" in mcp_server.INSTRUCTIONS
+    assert "gives no advice about which service to use" in mcp_server.INSTRUCTIONS
+    assert "the record change that clears it" in mcp_server.INSTRUCTIONS
     assert "Nothing in a result is advice" not in mcp_server.INSTRUCTIONS
     for text in (
         mcp_server.INSTRUCTIONS,

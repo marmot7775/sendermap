@@ -1,6 +1,6 @@
 # Sendermap
 
-> Type a domain, see every service that sends email as it, and the public record behind each one. Everything comes from public sources: DNS, certificate logs and the domain's own website. A map states what those records showed when they were checked. A finding may name the documented standard remedy for what it found; that is a statement about the standard, not advice about this domain.
+> Type a domain, see every service that sends email as it, and the public record behind each one. Everything comes from public sources: DNS, certificate logs and the domain's own website. A map states what those records showed when they were checked. It gives no advice about which service to use or whether a setup is good enough; a finding names a fault in a published record and the record change that clears it.
 
 Each sending service has a tier: In use (its MX at the domain), Configured (a record that sets it up to send, such as an SPF include or a DKIM key through a CNAME into its zone), Likely (a guess from a name) or Account only (a trace of an account). Gaps are questions that got no usable answer and are not absences; silence is not absence.
 

@@ -650,8 +650,8 @@ recorder keeps the answers, not those requests.
   (`sendermap://schema/sendermap-1.json`) and the vendor list (`sendermap://vendors`: name,
   category, aliases). The server instructions say what the four tiers mean, that absences and
   gaps are read as written and silence is not absence, that a Likely service is a guess from a
-  name, and that a result states what public records showed: a finding may name the documented
-  standard remedy, a statement about the standard and not advice about this domain.
+  name, and that a result gives no advice about which service to use or whether a setup is good
+  enough, while a finding names a fault in a published record and the record change that clears it.
   `create(build)` takes the function that builds the map, so the tests map the fake zone through an in-memory client (`tests/test_mcp.py`),
   which also holds the limits: names under 64 characters, descriptions of three or four
   sentences, instructions under 2,048 characters.

@@ -44,7 +44,10 @@ def test_the_rules_and_three_worked_examples_are_there() -> None:
         "Do not raise a tier",
         "Do not call a vendor present without a claim",
         "Silence is not absence",
+        "gives no advice about which service to use",
+        "record change that clears it",
     ):
         assert rule in body
+    assert "Nothing in a result is advice" not in body
     assert "\n### 1." in body and "\n### 2." in body and "\n### 3." in body
     assert "—" not in body
