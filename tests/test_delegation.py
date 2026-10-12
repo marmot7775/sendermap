@@ -111,3 +111,32 @@ async def test_verify_proofs_finds_a_delegation_only_at_the_name_itself() -> Non
         assert not through.shows and through.answered
         other = await tool.CHECKS["delegation_ns"](checker, "send.other.test", "klaviyo.com")
         assert not other.shows
+
+
+@pytest.mark.parametrize(
+    ("nameserver", "vendor"),
+    [
+        ("ns1.emarsys.net", "Emarsys"),
+        ("ns1.shortest-route.com", "Mapp"),
+        ("ns1.ecircle.de", "Mapp"),
+        ("ns1.crdl.io", "Cordial"),
+        ("ns0.dns.dotdigital.com", "Dotdigital"),
+        ("ns0.dns.dotmailer.co.uk", "Dotdigital"),
+        ("gns194a.sendsay.ru", "Sendsay"),
+    ],
+)
+async def test_each_delegating_esp_is_credited_by_its_nameservers(
+    offline: httpx.AsyncClient, nameserver: str, vendor: str
+) -> None:
+    zone = Zone().add("email.acme.test", "NS", nameserver)
+    result = await map_domain(
+        "acme.test", checked_at=CHECKED, resolver=zone, http=offline, use_web=False
+    )
+    (service,) = result.services
+    assert service.name == vendor and service.tier is Tier.CONFIGURED
+    assert [c.kind for c in service.claims] == [Kind.DELEGATION]
+
+
+def test_cordials_mx_inside_sparkpost_is_cordials_by_the_longest_pattern() -> None:
+    assert catalog.load().mx("cordial.mx.e.sparkpost.com") == "Cordial"
+    assert catalog.load().mx("other.mx.e.sparkpost.com") != "Cordial"
