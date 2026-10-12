@@ -61,6 +61,8 @@ that supports it, so you can check it yourself.
 
 - **SPF** is walked as a tree, crediting only links that actually authorize senders.
 - **DKIM** keys are found by scanning the names services use, and credited by where they point.
+  A plain name many hosts use, such as `s1`, credits its service (Klaviyo) only where the
+  domain's SPF, MX or an NS delegation already shows that service.
 - **Raw IP ranges** in SPF are named by matching them against the ranges each service publishes,
   then by who owns the network.
 - **Sending subdomains** come from the names services ask for and from certificate logs. A

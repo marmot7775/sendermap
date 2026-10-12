@@ -217,8 +217,10 @@ These live in `catalog.py` and the sources, and each has a test.
 - A hostname pattern matches the host or any name under it, on a label boundary, and the
   longest pattern wins: `u161779.wl030.sendgrid.net` is Klaviyo, not SendGrid.
 - A DKIM key belongs to a service by CNAME first. `selector1` and `selector2` name nobody
-  without the Microsoft CNAME. Next, a selector on the list of a service that SPF, MX or an NS
-  delegation already shows is that service's. Last, the name table, except for generic names (`default`, `mail`,
+  without the Microsoft CNAME. Next, a backed only selector (`rules.backed_only_selectors`, each
+  with a proof: `s1` and `s2` for Klaviyo) credits its one vendor only when SPF, MX or an NS
+  delegation already shows that vendor, and nobody otherwise. Next, a selector on the list of a
+  service that SPF, MX or an NS delegation already shows is that service's. Last, the name table, except for generic names (`default`, `mail`,
   any two-letter name not explicitly allowed).
 - The SPF lookup count follows receivers: an include met twice adds the lookups of everything
   below it each time, read from the lookup cache, so no record is asked twice. An include that
@@ -234,11 +236,10 @@ These live in `catalog.py` and the sources, and each has a test.
   `ns1.klaviyo.com` through `ns4`. The claim is Configured and its evidence is the first NS
   record that names the service. NS records reached through a CNAME are the target's and credit
   nobody, and a delegation to nameservers no service is known by (a DNS host such as Route 53)
-  says nothing about mail and is not asked about further. The gap: Klaviyo's nameservers answer
-  no such name at `_domainkey.send.<domain>` while serving `s1` and `s2` below it as CNAMEs into
-  its own SendGrid account, so the triage below asks only the names the delegation backs
-  (Klaviyo's `kl`, `kl1` and `kl2`), and those two keys are not read. `s1` and `s2` stay
-  SendGrid's names: no selector name belongs to two vendors.
+  says nothing about mail and is not asked about further. Klaviyo's nameservers answer no such
+  name at `_domainkey.send.<domain>` while serving `s1` and `s2` below it as CNAMEs into its own
+  SendGrid account, so the triage below asks only the names the delegation backs; `s1` and `s2`
+  are among them as Klaviyo's backed only names, so those keys are read.
 - A wildcard answers every name, so DKIM probes and label CNAMEs first ask a fixed name nobody
   publishes (`sendermap-wildcard-check`). A wildcard DKIM key ends the DKIM scan at that name
   with a note; a label CNAME that matches the wildcard target is ignored.
