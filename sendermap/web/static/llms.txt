@@ -1,0 +1,28 @@
+# Sendermap
+
+> Type a domain, see every service that sends email as it, and the public record behind each one. Everything comes from public sources: DNS, certificate logs and the domain's own website. A map states what those records showed when they were checked; it is not advice.
+
+Each sending service has a tier: In use (its MX at the domain), Configured (a record that sets it up to send, such as an SPF include or a DKIM key through a CNAME into its zone), Likely (a guess from a name) or Account only (a trace of an account). Gaps are questions that got no usable answer and are not absences; silence is not absence.
+
+## API
+
+- [Map as JSON](/api/map?d=example.com): `GET /api/map?d=DOMAIN`, optionally `&claimed=Name, Name` to hold the services an owner says they use against the map.
+- [Map as Markdown](/api/map.md?d=example.com): `GET /api/map.md?d=DOMAIN`.
+- [Map as a stream](/api/map/stream?d=example.com): server-sent events, `progress` while the map builds, then one `map` event.
+
+## Schema
+
+- [sendermap/1 JSON Schema](/schema/sendermap-1.json): the contract every map keeps. It grows by addition only; ignore fields and values you do not know.
+
+## MCP
+
+- [MCP endpoint](/mcp): streamable HTTP, stateless. Tools: `sendermap_map` (the map, as sendermap/1 structured content) and `sendermap_vendor` (one vendor's patterns, proofs and setup). Locally: `uvx --from 'sendermap[mcp]' sendermap mcp` over stdio.
+
+## Skill
+
+- [Agent Skill](https://github.com/marmot7775/sendermap/blob/main/skills/sendermap/SKILL.md): how to run a map, read it, and report it without going past the evidence.
+
+## Optional
+
+- [Honest limits](https://github.com/marmot7775/sendermap#honest-limits): no volume, no proof a key is in use, no sight of vendors sending from their own domain, selector discovery never complete.
+- [Source](https://github.com/marmot7775/sendermap): MIT.

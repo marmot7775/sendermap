@@ -1,5 +1,7 @@
 # Sendermap
 
+<!-- mcp-name: io.github.marmot7775/sendermap -->
+
 [![Test](https://github.com/marmot7775/sendermap/actions/workflows/test.yml/badge.svg)](https://github.com/marmot7775/sendermap/actions/workflows/test.yml)
 [![Verify proofs](https://github.com/marmot7775/sendermap/actions/workflows/verify-proofs.yml/badge.svg)](https://github.com/marmot7775/sendermap/actions/workflows/verify-proofs.yml)
 
@@ -102,6 +104,24 @@ the domain's own records could not be read (no map). Progress goes to stderr, an
 terminal, so stdout holds the map alone. `sendermap --help` explains every flag.
 
 The website keeps no record of the domains looked up.
+
+## MCP
+
+With the `mcp` extra, `sendermap mcp` serves two tools over MCP on stdio: `sendermap_map`, whose
+structured content is the map as `sendermap/1` JSON (summary or full), and `sendermap_vendor`,
+one vendor's patterns, proofs and documented setup. The schema and the vendor list are resources.
+
+```json
+{
+  "mcpServers": {
+    "sendermap": { "command": "uvx", "args": ["--from", "sendermap[mcp]", "sendermap", "mcp"] }
+  }
+}
+```
+
+The website serves the same tools at `/mcp` over streamable HTTP. For agents without MCP,
+[`skills/sendermap/SKILL.md`](skills/sendermap/SKILL.md) is an Agent Skill that runs the command
+line and reads the JSON.
 
 ## Honest limits
 

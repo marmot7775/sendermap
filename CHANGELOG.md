@@ -3,7 +3,8 @@
 Every release of Sendermap, newest first. The JSON a map gives keeps the `sendermap/1` contract:
 it grows by addition only.
 
-To release: rename Unreleased to the version (`## 0.1.0`), commit, and push the tag `v0.1.0`.
+To release: rename Unreleased to the version (`## 0.1.0`), set the same version in `server.json`
+(three places), commit, and push the tag `v0.1.0`.
 The publish workflow builds from the tag, takes that section as the release notes, publishes to
 PyPI and makes the GitHub release; a tag with no section fails before anything is published.
 
@@ -28,3 +29,4 @@ What 0.1.0 holds:
 - The JSON Schema of a map, `sendermap/1`, served by the site and returned by `sendermap.schema()`.
 - An MCP server, `sendermap mcp` with the `mcp` extra: a map tool whose structured content is the `sendermap/1` JSON, in summary or full, and a vendor tool, with the schema and the vendor list as resources. The website mounts the same server at `/mcp` over streamable HTTP, under the API's limits per visitor and per target domain.
 - An Agent Skill, `skills/sendermap/SKILL.md`, that tells an agent how to run a map, read it, and report it without going past the evidence.
+- A listing for the MCP registry (`server.json`, `io.github.marmot7775/sendermap`) and an `llms.txt` on the site.
