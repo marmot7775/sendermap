@@ -1,5 +1,10 @@
 # Publish a release to PyPI when a tag v* is pushed, then make the GitHub release.
 #
+# PYPI_READY: publishing is held until the repository variable PYPI_READY is true. It is set
+# under Settings, Secrets and variables, Actions, Variables, once the PyPI trusted publisher
+# exists. Until then a v* tag still builds the sdist and wheel and uploads them as the workflow
+# artifact "dist", and the publish and release jobs are skipped, not failed.
+#
 # build: the sdist and wheel with python -m build, from a full clone so hatch-vcs reads the tag,
 #   checked to carry the tag's version; the tag's section of CHANGELOG.md becomes the release
 #   notes, and a tag without one fails here, before anything is published.
@@ -50,6 +55,7 @@ jobs:
 
   publish:
     needs: build
+    if: vars.PYPI_READY == 'true'
     runs-on: ubuntu-latest
     timeout-minutes: 10
     environment:

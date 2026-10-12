@@ -62,9 +62,21 @@ def test_the_workflow_publishes_a_tag_by_trusted_publishing() -> None:
     assert jobs["build"]["steps"][0]["with"]["fetch-depth"] == 0
     publish = jobs["publish"]
     assert publish["environment"]["name"] == "pypi"
+    assert publish["if"] == "vars.PYPI_READY == 'true'"  # held until the variable is set
     assert publish["permissions"] == {"id-token": "write"}
     (upload,) = [s for s in publish["steps"] if "gh-action-pypi-publish" in s.get("uses", "")]
     assert upload["uses"] == "pypa/gh-action-pypi-publish@release/v1"
     assert upload["with"]["attestations"] is True
     assert jobs["release"]["needs"] == "publish"
     assert "gh release create" in jobs["release"]["steps"][-1]["run"]
+
+
+def test_the_workflow_says_what_holds_publishing_and_where_it_is_set() -> None:
+    text = (ROOT / ".github/workflows/publish.yml").read_text()
+    head = text.split("\nname:", 1)[0]
+    assert "PYPI_READY" in head
+    assert "Settings, Secrets and variables, Actions, Variables" in head
+    readme = (ROOT / "README.md").read_text()
+    assert (
+        "`PYPI_READY`" in readme and "Settings, Secrets and variables, Actions, Variables" in readme
+    )
