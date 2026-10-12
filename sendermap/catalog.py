@@ -7,12 +7,17 @@ patterns and applies the matching rules, each of which was learned on a live dom
 
 data/vendors_pending.json holds patterns with no proof yet. Nothing here reads it.
 
+A block may carry `sending_ip`: one address the service sends from, proven by the service's own
+SPF record publishing a range that holds it, or by a host of its whose A record is the address.
+SPF evaluation asks a domain's record about that address.
+
 A block may also carry `aliases`: other names a client calls the service by, with no proof, since
 an alias matches text a person typed and nothing in DNS.
 """
 
 from __future__ import annotations
 
+import ipaddress
 import json
 import re
 from collections.abc import Iterable, Iterator
@@ -42,6 +47,7 @@ PATTERN_FIELDS = (
     *_HOST_FIELDS,
     "verification_txt",
     "networks",
+    "sending_ip",
     "website",
     "subprocessor_names",
 )
@@ -135,6 +141,8 @@ class Catalog:
     setups: dict[str, tuple[SetupRule, ...]] = field(default_factory=dict)
     # Every vendor's name and aliases, normalised, to the vendor.
     names: dict[str, str] = field(default_factory=dict)
+    # The one address each service with a sending_ip sends from, in file order.
+    sending_ips: dict[str, str] = field(default_factory=dict)
 
     # ------------------------------------------------------------ lookups by record
 
@@ -319,6 +327,7 @@ def build(raw: dict[str, Any]) -> Catalog:
             if (setup := _setup(name, block, selector_rules))
         },
         names=_names(raw["vendors"]),
+        sending_ips=_sending_ips(services),
     )
 
 
@@ -355,6 +364,22 @@ def _names(vendors: dict[str, Any]) -> dict[str, str]:
                 raise ValueError(f"{vendor} alias {text!r}: already names {names[key]}")
             names[key] = vendor
     return names
+
+
+def _sending_ips(services: dict[str, dict[str, Any]]) -> dict[str, str]:
+    """{service: its one sending address}. ValueError for more than one, or one that is not an
+    IP address."""
+    found: dict[str, str] = {}
+    for name, block in services.items():
+        values = block.get("sending_ip", ())
+        if len(values) > 1:
+            raise ValueError(f"{name} sending_ip: one address, not {len(values)}")
+        for value in values:
+            try:
+                found[name] = str(ipaddress.ip_address(value))
+            except ValueError:
+                raise ValueError(f"{name} sending_ip {value!r}: not an IP address") from None
+    return found
 
 
 def _setup(vendor: str, block: dict[str, Any], rules: tuple[Rule, ...]) -> tuple[SetupRule, ...]:

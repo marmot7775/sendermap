@@ -81,3 +81,20 @@ def test_an_other_cname_needs_a_proof_too() -> None:
         "Test Vendor",
         "autodiscover",
     )
+
+
+def test_a_sending_ip_is_one_address_with_a_proof() -> None:
+    proof = {**PROOF, "record": "_spf.vendor.test"}
+    built = catalog.build(with_entry("sending_ip", {"value": "192.0.2.10", "proof": proof}))
+    assert built.sending_ips["Test Vendor"] == "192.0.2.10"
+    with pytest.raises(ValueError, match="no proof"):
+        catalog.build(with_entry("sending_ip", {"value": "192.0.2.10"}))
+    with pytest.raises(ValueError, match="not an IP address"):
+        catalog.build(with_entry("sending_ip", {"value": "mail.vendor.test", "proof": proof}))
+    with pytest.raises(ValueError, match="the domain or a name under it"):
+        bad = {**PROOF, "record": "_spf.elsewhere.test"}
+        catalog.build(with_entry("sending_ip", {"value": "192.0.2.10", "proof": bad}))
+    two = with_entry("sending_ip", {"value": "192.0.2.10", "proof": proof})
+    two["vendors"]["Test Vendor"]["sending_ip"].append({"value": "192.0.2.11", "proof": proof})
+    with pytest.raises(ValueError, match="one address, not 2"):
+        catalog.build(two)

@@ -514,6 +514,20 @@ under its `_domainkey`, a delegation at a name under the domain (the domain's ow
 its DNS host, not a sending setup), a website host or subprocessor name on an https page of the
 domain, anything else at or under the domain. `proofs.py` holds those checks.
 
+A vendor block may carry `sending_ip`: one address the vendor sends from, for SPF evaluation
+to ask a domain's record about. Its proof's record is either the vendor's own SPF record host,
+publishing an authorizing range that holds the address, or a host of the vendor's whose A or
+AAAA record is the address; `verify_proofs.py` reads both at the record, since an outbound host
+may publish a HELO record of its own. Loading refuses a second address or a value that is not an
+IP address. Every shipped address is an outbound host's: one whose PTR name leads back to it,
+in a range the vendor's customer-facing SPF record publishes and no other vendor's does, and
+evaluation gives that host as the HELO name, as the vendor's server would. A HELO name matters:
+Valimail answers per address and HELO name, and passes Google's address for
+`mail-sor-f41.google.com` but not for a name no Google server uses. Vendors whose every range
+is another's (Mandrill inside Mailchimp, Atlassian and Customer.io inside SendGrid), whose ranges
+are per customer (Proofpoint), whose hosts carry no name of their own (Intercom, MailPoet), or
+that publish no range have none.
+
 A `selectors` entry names a vendor's DKIM selectors with how they are known (the vendor's docs,
 a pattern, an aggregate report, or the vendor's own domain) and a proof per name: a live domain
 that publishes the record, the record name and the date checked. Loading refuses an entry
