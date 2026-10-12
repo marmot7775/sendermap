@@ -106,6 +106,15 @@ The website keeps no record of the domains looked up.
   where the zone's denial class makes the answer trustworthy, and every such line carries the
   answers it rests on.
 
+## The JSON contract
+
+`sendermap DOMAIN --json` and the site's API give one map as JSON, schema `sendermap/1`,
+described by [`sendermap/data/schema/sendermap-1.json`](sendermap/data/schema/sendermap-1.json)
+(JSON Schema 2020-12; `sendermap.schema()` in Python, `/schema/sendermap-1.json` on the site).
+`sendermap/1` grows by addition only: new fields and new values (a new kind of evidence, a new
+gap kind) may appear, and nothing is removed, renamed or changed in meaning. Ignore fields you do
+not know and tolerate values you do not know. A breaking change would be `sendermap/2`.
+
 ## The vendor data
 
 All vendor knowledge lives in one file, [`sendermap/data/vendors.json`](sendermap/data/vendors.json), one block per

@@ -88,6 +88,18 @@ Everything Sendermap reports is built from a few frozen dataclasses in `senderma
   when nothing was claimed), the story and the Run. `to_dict()` gives JSON with
   schema `sendermap/1`.
 
+### The contract
+
+`sendermap/data/schema/sendermap-1.json` is the JSON Schema (2020-12) of `to_dict()`: the
+package returns it from `sendermap.schema()` and the site serves it at
+`/schema/sendermap-1.json`. `sendermap/1` grows by addition only. A field or an enum value may be
+added; none is removed, renamed or given a new meaning. Consumers ignore fields they do not know
+and tolerate values they do not know, so the schema forbids no added property and each enum's
+description says so. A breaking change is `sendermap/2`, with a schema of its own.
+`tests/test_schema.py` validates every corpus map and a fake map that reaches every kind of
+object, and requires every member of every enum in `model.py` in the schema (`Outcome` excepted:
+`Read` never leaves the engine), so a new Kind fails the suite until the schema lists it.
+
 ## From domain to result
 
 ```

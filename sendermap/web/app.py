@@ -24,7 +24,7 @@ from fastapi import FastAPI, HTTPException, Query, Request
 from fastapi.responses import FileResponse, HTMLResponse, PlainTextResponse, StreamingResponse
 from fastapi.staticfiles import StaticFiles
 
-from .. import __version__, catalog
+from .. import SCHEMA_FILE, __version__, catalog
 from ..engine import Progress, clean_domain, map_domain
 from ..model import SenderMap
 from ..reconcile import split, with_claimed
@@ -66,6 +66,13 @@ app.mount("/static", StaticFiles(directory=str(STATIC)), name="static")
 @app.get("/", response_class=HTMLResponse)
 async def index() -> FileResponse:
     return FileResponse(str(STATIC.joinpath("index.html")))
+
+
+@app.get("/schema/sendermap-1.json")
+async def json_schema() -> FileResponse:
+    """The contract the API's maps keep, as a JSON Schema."""
+    path = resources.files("sendermap").joinpath(SCHEMA_FILE)
+    return FileResponse(str(path), media_type="application/schema+json")
 
 
 @app.get("/api/health")

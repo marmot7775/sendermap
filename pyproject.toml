@@ -31,6 +31,8 @@ dev = [
     "ruff>=0.8",
     "pyyaml>=6",
     "types-pyyaml>=6",
+    "jsonschema>=4.23",
+    "types-jsonschema>=4.23",
 ]
 
 [project.scripts]
