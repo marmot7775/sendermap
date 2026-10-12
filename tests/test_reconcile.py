@@ -52,7 +52,7 @@ def fake_map() -> SenderMap:
             service("Shopify", Tier.LIKELY, Kind.WEBSITE, "cdn.shopify.com"),
             service("Agari", None, Kind.DMARC_REPORTS, "v=DMARC1; rua=mailto:x@rua.agari.com"),
         ),
-        run=Run(CHECKED, 0.0, 0),
+        run=Run(CHECKED, 0.0, 0, "fake zone"),
     )
 
 

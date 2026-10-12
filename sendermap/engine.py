@@ -183,6 +183,7 @@ async def map_domain(
                 checked_at=checked_at,
                 elapsed=round(time.perf_counter() - started, 2),
                 lookups=ctx.dns.count,
+                resolver=ctx.dns.name,
             ),
             findings=_sorted(
                 observed.findings

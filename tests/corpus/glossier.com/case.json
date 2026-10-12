@@ -3,5 +3,6 @@
  "checked_at": "2026-10-12T01:25:09+00:00",
  "use_web": false,
  "use_subdomains": true,
- "use_ct": false
+ "use_ct": false,
+ "resolver": "doh google"
 }

@@ -89,7 +89,11 @@ def _head(result: SenderMap, console: Console) -> None:
     headline = Text.assemble(
         (result.domain, "bold"),
         f"   {count} sending service{'s' if count != 1 else ''}",
-        (f"   {result.run.lookups} lookups in {result.run.elapsed:.1f} s", "bright_black"),
+        (
+            f"   {result.run.lookups} lookups in {result.run.elapsed:.1f} s "
+            f"over {result.run.resolver}",
+            "bright_black",
+        ),
     )
     console.print(Panel(headline, border_style="bright_black", expand=False))
     if result.story:

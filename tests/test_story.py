@@ -66,7 +66,7 @@ def every_sentence() -> SenderMap:
             service("Agari", Kind.DMARC_REPORTS),
             service("URIports", Kind.TLSRPT_REPORTS),
         ),
-        run=Run(CHECKED, 0.0, 0),
+        run=Run(CHECKED, 0.0, 0, "fake zone"),
         findings=(
             Finding(Severity.RISK, "The s1 DKIM record points at a name that does not exist", ""),
             Finding(Severity.RISK, f"SPF at {DOMAIN} needs 14 DNS lookups", ""),
@@ -100,7 +100,7 @@ def test_a_map_that_reaches_every_sentence() -> None:
 
 
 def test_a_map_that_reaches_no_sentence() -> None:
-    assert story.write(SenderMap(DOMAIN, (), Run(CHECKED, 0.0, 0))) == ""
+    assert story.write(SenderMap(DOMAIN, (), Run(CHECKED, 0.0, 0, "fake zone"))) == ""
 
 
 @pytest.mark.parametrize(
@@ -116,18 +116,20 @@ def test_the_receiver_sentence_says_what_the_dkim_setup_shows(state: State, word
     mapped = SenderMap(
         DOMAIN,
         (service("Microsoft 365", Kind.MX, DOMAIN, dkim("Microsoft 365", state)),),
-        Run(CHECKED, 0.0, 0),
+        Run(CHECKED, 0.0, 0, "fake zone"),
     )
     assert story.receivers(mapped) == f"Microsoft 365 receives the domain's mail and {words}."
 
 
 def test_a_receiver_with_no_setup_says_only_that_it_receives() -> None:
-    mapped = SenderMap(DOMAIN, (service("Fastmail", Kind.MX),), Run(CHECKED, 0.0, 0))
+    mapped = SenderMap(DOMAIN, (service("Fastmail", Kind.MX),), Run(CHECKED, 0.0, 0, "fake zone"))
     assert story.write(mapped) == "Fastmail receives the domain's mail."
 
 
 def test_likely_alone_and_one_of_each() -> None:
-    mapped = SenderMap(DOMAIN, (service("Customer.io", Kind.DKIM_NAME),), Run(CHECKED, 0.0, 0))
+    mapped = SenderMap(
+        DOMAIN, (service("Customer.io", Kind.DKIM_NAME),), Run(CHECKED, 0.0, 0, "fake zone")
+    )
     assert story.write(mapped) == (
         "One service is likely to send as the domain from a DKIM key name alone (Customer.io)."
     )
@@ -138,7 +140,7 @@ def gap(kind: GapKind, count: int = 0, cap: int = 0, asked: str = "asked") -> Ga
 
 
 def unchecked(*gaps: Gap) -> str:
-    return story.write(SenderMap(DOMAIN, (), Run(CHECKED, 0.0, 0), gaps=gaps))
+    return story.write(SenderMap(DOMAIN, (), Run(CHECKED, 0.0, 0, "fake zone"), gaps=gaps))
 
 
 def test_the_last_sentence_is_one_clause_per_kind_counted_in_plain_words() -> None:
@@ -227,7 +229,7 @@ def test_gaps_in_other_services_published_ranges_are_counted_not_named() -> None
 
 def nothing(*gaps: Gap, **checked: object) -> SenderMap:
     here = Checked(DOMAIN, **checked)  # type: ignore[arg-type]
-    return SenderMap(DOMAIN, (), Run(CHECKED, 0.0, 0), gaps=gaps, checked=(here,))
+    return SenderMap(DOMAIN, (), Run(CHECKED, 0.0, 0, "fake zone"), gaps=gaps, checked=(here,))
 
 
 def test_a_map_with_no_sender_states_what_was_checked() -> None:
@@ -259,7 +261,7 @@ def test_no_absence_is_stated_beside_an_unrecognised_sender_or_without_a_record_
     evidence = Evidence(DOMAIN, "MX", "10 mx.acme.test", CHECKED)
     unknown = Unknown("mail server", "mx.acme.test", DOMAIN, evidence)
     assert story.write(replace(nothing(), unknowns=(unknown,))) == ""
-    assert story.write(SenderMap(DOMAIN, (), Run(CHECKED, 0.0, 0))) == ""
+    assert story.write(SenderMap(DOMAIN, (), Run(CHECKED, 0.0, 0, "fake zone"))) == ""
 
 
 def test_numbers_are_words_to_twenty_and_digits_past() -> None:

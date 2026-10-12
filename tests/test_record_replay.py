@@ -31,7 +31,7 @@ async def test_a_replayed_answer_is_the_recorded_one(tmp_path: Path) -> None:
     live = [await recorder.query(name, rtype) for name, rtype in asked]
     recorder.save(tmp_path / "dns.json")
 
-    replayer = ReplayResolver(tmp_path / "dns.json")
+    replayer = ReplayResolver(tmp_path / "dns.json", "fake zone")
     assert [await replayer.query(name, rtype) for name, rtype in asked] == live
     assert live[1] == Answer("a.test", "TXT", Status.OK, ("v=spf1 -all",), ("b.test",))
     assert live[2].status is Status.FAILED  # could not check replays as could not check
@@ -54,7 +54,7 @@ async def test_the_file_is_sorted_one_object_per_question(tmp_path: Path) -> Non
 
 async def test_an_unrecorded_question_raises_and_is_named(tmp_path: Path) -> None:
     RecordingResolver(Zone()).save(tmp_path / "dns.json")
-    replayer = ReplayResolver(tmp_path / "dns.json")
+    replayer = ReplayResolver(tmp_path / "dns.json", "fake zone")
     with pytest.raises(UnrecordedError, match=r"TXT new\.test"):
         await replayer.query("New.Test.", "txt")
     assert replayer.missed == [("new.test", "TXT")]
@@ -105,7 +105,7 @@ async def test_a_recorded_map_replays_to_the_same_map(tmp_path: Path) -> None:
 
     resolver = RecordingResolver(zone)
     transport = RecordingTransport(httpx.MockTransport(pages))
-    case = Case("mixed.test", CHECKED, use_web=True, use_subdomains=True)
+    case = Case("mixed.test", CHECKED, use_web=True, use_subdomains=True, resolver=zone.name)
     async with httpx.AsyncClient(transport=transport) as http:
         live = await map_domain(case.domain, checked_at=CHECKED, resolver=resolver, http=http)
     resolver.save(tmp_path / "dns.json")
@@ -129,7 +129,7 @@ async def test_a_new_question_is_missed_not_answered(tmp_path: Path) -> None:
     )
     del resolver.answers[("_dmarc.mixed.test", "TXT")]
     resolver.save(tmp_path / "dns.json")
-    case = Case("mixed.test", CHECKED, use_web=False, use_subdomains=False)
+    case = Case("mixed.test", CHECKED, use_web=False, use_subdomains=False, resolver=resolver.name)
     (tmp_path / "case.json").write_text(json.dumps(case.to_dict()))
     replayed = await replay(tmp_path)
     assert replayed.missed == ["TXT _dmarc.mixed.test"]

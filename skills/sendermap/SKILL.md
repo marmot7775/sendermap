@@ -53,8 +53,8 @@ On 3, say the domain's records could not be read and try again or try `--doh`; d
 ## Reading the JSON
 
 Top level: `domain`, `story`, `services`, `findings`, `unknowns`, `gaps`, `absences`,
-`reconciliation`, `run` (when it was checked, and how many DNS lookups). The contract grows by
-addition only: ignore fields and enum values you do not know.
+`reconciliation`, `run` (when it was checked, how many DNS lookups, and which resolver
+answered). The contract grows by addition only: ignore fields and enum values you do not know.
 
 ### Services and tiers
 

@@ -73,3 +73,28 @@ async def test_a_recheck_records_outside_the_corpus_and_reports_drift(
     assert report.startswith("### shop.test\n\nDrifted (")
     assert any(line.startswith("+") and "mx.other.test" in line for line in report.splitlines())
     assert {p.name: p.read_bytes() for p in case.iterdir()} == recorded  # the corpus is untouched
+
+
+async def test_another_resolver_is_said_above_the_diff_not_in_it(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    tool = load_tool()
+    corpus, out = tmp_path / "corpus", tmp_path / "out"
+    zone = Zone().add("shop.test", "MX", "10 aspmx.l.google.com")
+    monkeypatch.setattr(tool, "CORPUS", corpus)
+    monkeypatch.setattr(tool, "SystemResolver", lambda: zone)
+    monkeypatch.setattr(
+        tool,
+        "RecordingTransport",
+        lambda: RecordingTransport(httpx.MockTransport(lambda _: httpx.Response(404))),
+    )
+    await tool.record("shop.test", use_web=False)
+    assert json.loads((corpus / "shop.test" / "case.json").read_text())["resolver"] == zone.name
+
+    monkeypatch.setattr(zone, "name", "system")
+    report = await tool.recheck("shop.test", out)
+    assert report == (
+        "### shop.test\n\nRecorded over fake zone, checked again over system.\n\n"
+        "No drift: the live map is the recorded one.\n"
+    )
+    assert json.loads((out / "shop.test" / "case.json").read_text())["resolver"] == "system"

@@ -2133,7 +2133,8 @@
   }
  ],
  "run": {
-  "checked_at": "2026-10-12T01:25:01+00:00"
+  "checked_at": "2026-10-12T01:25:01+00:00",
+  "resolver": "doh google"
  },
  "findings": [
   {

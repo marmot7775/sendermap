@@ -591,7 +591,8 @@
   }
  ],
  "run": {
-  "checked_at": "2026-10-12T01:24:55+00:00"
+  "checked_at": "2026-10-12T01:24:55+00:00",
+  "resolver": "doh google"
  },
  "findings": [
   {
