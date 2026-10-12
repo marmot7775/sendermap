@@ -625,7 +625,12 @@ recorder keeps the answers, not those requests.
   claim, not only the deciding one), `--no-web`, `--no-subdomains`, `--ct` (crt.sh read too,
   and every logged name resolved and matched), `--doh` (Cloudflare DNS over HTTPS), `--claimed`
   (a comma separated list of the services the client says they use) and `--claimed-file` (one
-  per line; both may be given). Both
+  per line; both may be given), and `--output PATH` (the chosen format to a file, text without
+  colour). Exit codes: 0 the map was built, 2 bad input (a malformed domain, a bad flag, a
+  claimed file that cannot be read, an output that cannot be written), 3 no map, because both
+  the TXT and the MX lookups at the domain itself failed, so the resolver decided the answer.
+  The spinner goes to stderr and only when stderr is a terminal, so stdout or the file holds the
+  map alone. `tests/test_cli.py` holds the exit codes, `--output` and the quiet stderr. Both
   certificate logs are cached in `$XDG_CACHE_HOME/sendermap/ct` or `~/.cache/sendermap/ct`, one
   directory per provider. The web site does not use `--ct` or the cache: it reads Cert Spotter
   for the subdomain search on each map it builds.
