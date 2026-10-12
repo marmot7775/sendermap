@@ -1,6 +1,6 @@
 ---
 name: sendermap
-description: Maps which services send email as a domain, from public records only (DNS, certificate logs and the domain's own website), with the record behind every claim, a confidence tier for each service, each vendor's documented setup checked item by item, and what was not checked. Use when someone asks who sends mail for a domain, which email vendors a company uses, whether a vendor is set up to send as a domain (SPF, DKIM, bounce or tracking records), why mail from a service might fail authentication, or how the services an owner says they use compare with what DNS shows. Runs as the sendermap command line (uvx sendermap DOMAIN --json) or through the sendermap_map tool when the Sendermap MCP server is connected. It reports what public records show; it does not measure sending volume or reputation, or prove that a DKIM key signs mail; a remedy a finding names is the documented standard, not advice about the domain.
+description: Maps which services send email as a domain, from public records only (DNS, certificate logs and the domain's own website), with the record behind every claim, a confidence tier for each service, each vendor's documented setup checked item by item, and what was not checked. Use when someone asks who sends mail for a domain, which email vendors a company uses, whether a vendor is set up to send as a domain (SPF, DKIM, bounce or tracking records), why mail from a service might fail authentication, or how the services an owner says they use compare with what DNS shows. Runs as the sendermap command line (uvx sendermap DOMAIN --json) or through the sendermap_map tool when the Sendermap MCP server is connected. It reports what public records show; it does not measure sending volume or reputation, or prove that a DKIM key signs mail, or advise which service to use or whether a setup is good enough.
 license: MIT
 ---
 
@@ -143,9 +143,9 @@ When a `claimed` list was given, `reconciliation` has four parts:
 5. **Do not go past the evidence.** A map does not show sending volume, reputation, whether
    mail passes DMARC, or that a published DKIM key signs anything ("has a DKIM key in place",
    not "signs its mail").
-6. **Give no advice from the map alone.** A result states what public records showed when they
-   were checked. A finding may name the documented standard remedy for what it found; that is a
-   statement about the standard, not advice about this domain. If the person asks what to do,
+6. **Give no advice from the map alone.** A result gives no advice about which service to use
+   or whether a setup is good enough. A finding names a fault in a published record and the
+   record change that clears it, and that is part of the finding. If the person asks what to do,
    keep what the records show apart from your own recommendation, and say which is which.
 7. **Date it.** Records change. Say when the map was checked (`run.checked_at`).
 
