@@ -88,7 +88,9 @@ pip install sendermap                 # available from 0.1.0
 uvx sendermap example.com             # run without installing, available from 0.1.0
 ```
 
-Until then, install it from GitHub:
+A tag builds the release files on every push, but they go to PyPI only once the repository
+variable `PYPI_READY` is `true` (Settings, Secrets and variables, Actions, Variables). Until then,
+install it from GitHub:
 
 ```
 pip install git+https://github.com/marmot7775/sendermap
