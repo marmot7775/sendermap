@@ -180,6 +180,7 @@ for the check and a private one a moment later (DNS rebinding) is not caught.
 | `setup.py` | Setups: each item's state from what the map already asked, `complete`, the findings a setup raises, and the setup line every view shows |
 | `engine.py` | `map_domain`: input cleaning, the phase order, subdomain scans, limits, the gateway note |
 | `sources/spf.py` | Walking the SPF tree: credited includes, IP ranges, the lookup count, SPF findings |
+| `sources/spf_eval.py` | `check_host()` from RFC 7208: the result one address gets from a domain's record, and what decided it |
 | `sources/mx.py`, `sources/mta_sts.py` | Where the domain receives mail |
 | `sources/web.py` | The homepage and subprocessor page, and the guard every page fetch goes through |
 | `sources/dkim.py` | DKIM probing, the wildcard check, reading keys and their flags, the key fingerprint, dangling, short and shared keys |
@@ -224,6 +225,21 @@ These live in `catalog.py` and the sources, and each has a test.
 - A wildcard answers every name, so DKIM probes and label CNAMEs first ask a fixed name nobody
   publishes (`sendermap-wildcard-check`). A wildcard DKIM key ends the DKIM scan at that name
   with a note; a label CNAME that matches the wildcard target is ignored.
+
+### SPF evaluation
+
+`sources/spf_eval.py` is `check_host()` from RFC 7208: given an address, a domain, a sender and
+a HELO name, it returns the result a receiver would reach (pass, fail, softfail, neutral, none,
+permerror, temperror) as a frozen `Verdict`. The Verdict names the term that matched and the
+record it sits in (for a match inside an include, the term inside the included record), the
+include and redirect links walked to that record as Evidence, the lookup count and the void
+lookup count. It keeps the limits of section 4.6.4 (ten lookups, two void lookups, ten MX
+records, ten PTR names), every mechanism, redirect (ignored when the record has `all`) and the
+macros of section 7; `exp` is checked for syntax and never looked up. It reads DNS only through
+the map's lookups, and a failed lookup is temperror with the question named in `reason`. A
+target name no query can be made of (an empty or overlong label) matches nothing, one of the two
+results the test suite allows. The walk above reads who a domain names; the evaluator answers
+whether a given address passes. Nothing in the map uses it yet: G2 wires it in.
 
 ## The _domainkey triage
 
@@ -562,10 +578,10 @@ recorder keeps the answers, not those requests.
 ## Tests
 
 `tests/conftest.py` provides a fake DNS zone (`Zone`) with CNAMEs, wildcards, names that fail
-on purpose, empty non-terminals that exist (RFC 8020), a compact denial mode and names forced to
-no such name, and an HTTP client that answers the certificate log with nothing and fails the test
-on any other request, so the suite never reaches the network (the web test serves on loopback
-only). `Zone.public` gives a host a public address, which a fake page needs to pass the fetch
+on purpose, types that fail at one name, empty non-terminals that exist (RFC 8020), a compact
+denial mode and names forced to no such name, and an HTTP client that answers the certificate
+log with nothing and fails the test on any other request, so the suite never reaches the
+network (the web test serves on loopback only). `Zone.public` gives a host a public address, which a fake page needs to pass the fetch
 guard. Run `pytest`. `mypy` (strict, over `sendermap/`, `tests/` and `tools/`), `ruff check` and
 `ruff format --check` pass on the whole repository.
 
@@ -599,7 +615,10 @@ matches shows as not recognised; `test_hunt_proofs.py` holds where the hunt may 
 pattern, which domain's proof wins, that a rerun asks nothing and that a moved proof loads. `test_delegation.py` holds the delegation pattern's loading
 rules, the claim and the sending subdomain it makes, that an unknown delegation or one reached
 through a CNAME credits nobody, and the delegation proof's check. `test_verify_proofs.py` holds what each kind of proof needs, among them a network proof on an
-address with two origins, in both orders. `test_ct.py` runs the CT source on a recorded crt.sh answer
+address with two origins, in both orders. `test_spf_eval.py` loads the RFC 7208 test suite (`tests/vectors/`, from pyspf, with its
+licence) into fake zones and runs every case, with the cases it does not pass listed at the
+top with a reason (none today), and holds hosted SPF shapes: a macro include, an exists record
+and a flattened record. `test_ct.py` runs the CT source on a recorded crt.sh answer
 (`tests/fixtures/crtsh_allbirds.json`) beside Cert Spotter answers, and holds that the logs are
 read once per map, crt.sh only with `--ct`, one gap per provider that failed or was off, and the
 cache per provider.
