@@ -7,9 +7,10 @@
 
 Type a domain, see every service that sends email as it, and the public evidence for each one.
 
-**Status: in development.** Not usable yet. Watch or star the repo to follow along.
+**Status: early release (0.1.0).** The command-line tool works; the website is not hosted yet.
+Needs Python 3.12 or later.
 
-## What it will show
+## What it shows
 
 For any domain, Sendermap builds a map of the services that send or receive its mail: mailbox
 providers, marketing and transactional platforms, support desks, security gateways and the
