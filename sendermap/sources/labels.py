@@ -12,7 +12,7 @@ from __future__ import annotations
 import asyncio
 
 from ..dns import norm
-from ..model import Checked, Claim, Evidence, Gap, Kind, Observed, Outcome, Read, Unknown
+from ..model import Checked, Claim, Evidence, Gap, GapKind, Kind, Observed, Outcome, Read, Unknown
 from . import CANARY, Context, negative
 
 KINDS = {
@@ -61,11 +61,14 @@ async def collect(ctx: Context, where: str) -> Observed:
             Gap(
                 f"wildcard check: CNAME at {CANARY}.{where}",
                 f"{canary.status.value}, so a wildcard CNAME was not ruled out for the labels",
+                GapKind.LABELS,
+                1,
             )
         )
     if failed:
         names = ", ".join(f"{label}.{where}" for label in failed)
-        gaps.append(Gap(f"bounce and tracking CNAMEs: CNAME at {names}", "lookup failed"))
+        asked = f"bounce and tracking CNAMEs: CNAME at {names}"
+        gaps.append(Gap(asked, "lookup failed", GapKind.LABELS, len(failed)))
     checked = (Checked(where, labels=labels),)
     return Observed(
         tuple(claims), tuple(unknowns), gaps=tuple(gaps), checked=checked, reads=tuple(reads)

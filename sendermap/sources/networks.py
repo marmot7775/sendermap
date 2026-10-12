@@ -26,7 +26,7 @@ import asyncio
 import ipaddress
 from dataclasses import dataclass
 
-from ..model import Claim, Evidence, Gap, Kind, Observed, Unknown
+from ..model import Claim, Evidence, Gap, GapKind, Kind, Observed, Unknown
 from . import Context
 from .spf import spf_records, terms
 
@@ -35,6 +35,7 @@ MAX_RANGES = 24
 PUBLISHED = "published ranges: SPF of "
 # How far below a service's own SPF record its published ranges are read.
 MAX_PUBLISHED_DEPTH = 3
+TOO_DEEP = f"includes more than {MAX_PUBLISHED_DEPTH} levels deep not read (cap)"
 
 Network = ipaddress.IPv4Network | ipaddress.IPv6Network
 # {network: {service: the term in that service's own SPF record that publishes it}}
@@ -88,7 +89,7 @@ async def collect(ctx: Context, where: str, ranges: list[tuple[str, Evidence]]) 
     if dropped := len(rest) - len(picked):
         asked = f"network owners of the IP ranges in SPF at {where}"
         happened = f"{dropped} of {len(rest)} not looked up: only the first {MAX_RANGES} were (cap)"
-        gaps += (Gap(asked, happened),)
+        gaps += (Gap(asked, happened, GapKind.NETWORKS, dropped, MAX_RANGES),)
     owners = await asyncio.gather(*(range_owner(ctx, n) for _, _, n, _ in picked))
     unknowns: list[Unknown] = []
     failed: list[str] = []
@@ -112,7 +113,7 @@ async def collect(ctx: Context, where: str, ranges: list[tuple[str, Evidence]]) 
         unknowns.append(Unknown(what, value, where, evidence))
     if failed:
         asked = f"network owners: Team Cymru TXT for {', '.join(failed)}"
-        gaps += (Gap(asked, "lookup failed"),)
+        gaps += (Gap(asked, "lookup failed", GapKind.NETWORKS, len(failed)),)
     return Observed(tuple(claims), tuple(unknowns), gaps=gaps)
 
 
@@ -202,7 +203,15 @@ async def published_ranges(ctx: Context) -> tuple[Published, tuple[Gap, ...]]:
         for network, evidence in networks:
             owners.setdefault(network, {}).setdefault(name, evidence)
         problems.update(dict.fromkeys((name, problem) for problem in missed))
-    gaps = tuple(Gap(f"{PUBLISHED}{name}", why) for name, why in problems)
+    gaps = tuple(
+        Gap(
+            f"{PUBLISHED}{name}",
+            why,
+            GapKind.PUBLISHED_RANGES,
+            cap=MAX_PUBLISHED_DEPTH if why == TOO_DEEP else 0,
+        )
+        for name, why in problems
+    )
     return owners, gaps
 
 
@@ -211,7 +220,7 @@ async def _ranges_of(
 ) -> tuple[list[tuple[Network, Evidence]], tuple[str, ...]]:
     """The ranges a service's record authorizes, and what kept any of them from being read."""
     if depth > MAX_PUBLISHED_DEPTH:
-        return [], (f"includes more than {MAX_PUBLISHED_DEPTH} levels deep not read (cap)",)
+        return [], (TOO_DEEP,)
     answer = await ctx.dns.txt(host)
     if not answer.answered:
         return [], ("lookup failed",)

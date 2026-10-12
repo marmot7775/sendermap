@@ -25,7 +25,7 @@ from urllib.parse import urljoin, urlsplit
 import httpx
 
 from ..dns import Lookups, Status
-from ..model import Checked, Claim, Evidence, Gap, Kind, Observed
+from ..model import Checked, Claim, Evidence, Gap, GapKind, Kind, Observed
 from . import Context, http_failure
 
 USER_AGENT = "Sendermap/0.1 (+https://github.com/marmot7775/sendermap)"
@@ -43,7 +43,8 @@ async def collect(ctx: Context) -> Observed:
     home = f"https://{ctx.domain}/"
     page = await _fetch(ctx, home)
     if isinstance(page, str):
-        return Observed(gaps=(Gap(f"the website: GET {home}", page),), checked=_page(ctx, home))
+        gap = Gap(f"the website: GET {home}", page, GapKind.WEBSITE)
+        return Observed(gaps=(gap,), checked=_page(ctx, home))
     url, html, cut = page
     loaded = (urlsplit(urljoin(url, src)).hostname or "" for src in _LOADED.findall(html))
     claims = [
@@ -56,7 +57,9 @@ async def collect(ctx: Context) -> Observed:
         for service, (host, loads) in ctx.catalog.website_services(html, loaded).items()
     ]
     observed = Observed(
-        tuple(claims), gaps=_cut(f"the website: GET {home}", cut), checked=_page(ctx, home)
+        tuple(claims),
+        gaps=_cut(f"the website: GET {home}", cut, GapKind.WEBSITE),
+        checked=_page(ctx, home),
     )
     if link := _SUBPROCESSOR_LINK.search(html):
         return observed + await _subprocessors(ctx, urljoin(url, link.group(1)))
@@ -67,7 +70,7 @@ async def _subprocessors(ctx: Context, url: str) -> Observed:
     assert ctx.http is not None
     page = await _fetch(ctx, url)
     if isinstance(page, str):
-        gap = Gap(f"the subprocessor page: GET {url}", page)
+        gap = Gap(f"the subprocessor page: GET {url}", page, GapKind.PAGE)
         return Observed(gaps=(gap,), checked=_page(ctx, url))
     final, html, cut = page
     text = re.sub(r"<[^>]+>", " ", html)
@@ -85,7 +88,7 @@ async def _subprocessors(ctx: Context, url: str) -> Observed:
         )
         for service, name in found.items()
     )
-    gaps = _cut(f"the subprocessor page: GET {url}", cut)
+    gaps = _cut(f"the subprocessor page: GET {url}", cut, GapKind.PAGE)
     return Observed(tuple(claims), gaps=gaps, checked=_page(ctx, url))
 
 
@@ -93,9 +96,9 @@ def _page(ctx: Context, url: str) -> tuple[Checked, ...]:
     return (Checked(ctx.domain, pages=(url,)),)
 
 
-def _cut(asked: str, cut: bool) -> tuple[Gap, ...]:
+def _cut(asked: str, cut: bool, kind: GapKind) -> tuple[Gap, ...]:
     happened = f"only the first {MAX_BYTES:,} bytes were read (cap); the rest was not"
-    return (Gap(asked, happened),) if cut else ()
+    return (Gap(asked, happened, kind, cap=MAX_BYTES),) if cut else ()
 
 
 async def _fetch(ctx: Context, url: str) -> tuple[str, str, bool] | str:

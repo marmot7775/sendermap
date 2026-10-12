@@ -1783,31 +1783,52 @@
  "gaps": [
   {
    "asked": "the website",
-   "happened": "not read: web checks were turned off (--no-web)"
+   "happened": "not read: web checks were turned off (--no-web)",
+   "kind": "off",
+   "count": 0,
+   "cap": 0
   },
   {
    "asked": "certificate transparency, crt.sh: GET https://crt.sh/?q=%25.glossier.com&output=json",
-   "happened": "not asked: read only with --ct (it also holds expired certificates)"
+   "happened": "not asked: read only with --ct (it also holds expired certificates)",
+   "kind": "off",
+   "count": 0,
+   "cap": 0
   },
   {
    "asked": "published ranges: SPF of HubSpot",
-   "happened": "includes more than 3 levels deep not read (cap)"
+   "happened": "includes more than 3 levels deep not read (cap)",
+   "kind": "published_ranges",
+   "count": 0,
+   "cap": 3
   },
   {
    "asked": "published ranges: SPF of Mimecast",
-   "happened": "includes more than 3 levels deep not read (cap)"
+   "happened": "includes more than 3 levels deep not read (cap)",
+   "kind": "published_ranges",
+   "count": 0,
+   "cap": 3
   },
   {
    "asked": "DKIM selectors at marketing.glossier.com",
-   "happened": "79 of 106 not asked: only the first 27 and the names its own SPF, MX or delegation backs were (cap)"
+   "happened": "79 of 106 not asked: only the first 27 and the names its own SPF, MX or delegation backs were (cap)",
+   "kind": "dkim",
+   "count": 79,
+   "cap": 27
   },
   {
    "asked": "DKIM selectors at receipts.glossier.com",
-   "happened": "79 of 106 not asked: only the first 27 and the names its own SPF, MX or delegation backs were (cap)"
+   "happened": "79 of 106 not asked: only the first 27 and the names its own SPF, MX or delegation backs were (cap)",
+   "kind": "dkim",
+   "count": 79,
+   "cap": 27
   },
   {
    "asked": "DKIM selectors at send.glossier.com",
-   "happened": "79 of 106 not asked: only the first 27 and the names its own SPF, MX or delegation backs were (cap)"
+   "happened": "79 of 106 not asked: only the first 27 and the names its own SPF, MX or delegation backs were (cap)",
+   "kind": "dkim",
+   "count": 79,
+   "cap": 27
   }
  ],
  "subdomains_checked": [
@@ -2084,5 +2105,5 @@
  "logo": null,
  "schema": "sendermap/1",
  "absences": [],
- "story": "Google Workspace receives the domain's mail and has a DKIM key in place to sign it. Six other services are set up to send as the domain: three support and CRM (Help Scout, Salesforce, Zendesk), one marketing (Klaviyo), two transactional (Postmark, SendGrid); two more are likely from a DKIM key name alone (Cloudflare Email Routing, Mandrill). One service shows an account and nothing set up to send (Amazon SES); DMARC reports go to Valimail. Not checked: the website (not read: web checks were turned off (--no-web)); certificate transparency, crt.sh: GET https://crt.sh/?q=%25.glossier.com&output=json (not asked: read only with --ct (it also holds expired certificates)); DKIM selectors at marketing.glossier.com (79 of 106 not asked: only the first 27 and the names its own SPF, MX or delegation backs were (cap)); DKIM selectors at receipts.glossier.com (79 of 106 not asked: only the first 27 and the names its own SPF, MX or delegation backs were (cap)); DKIM selectors at send.glossier.com (79 of 106 not asked: only the first 27 and the names its own SPF, MX or delegation backs were (cap)); the IP ranges two services publish in their own SPF (includes more than 3 levels deep not read (cap))."
+ "story": "Google Workspace receives the domain's mail and has a DKIM key in place to sign it. Six other services are set up to send as the domain: three support and CRM (Help Scout, Salesforce, Zendesk), one marketing (Klaviyo), two transactional (Postmark, SendGrid); two more are likely from a DKIM key name alone (Cloudflare Email Routing, Mandrill). One service shows an account and nothing set up to send (Amazon SES); DMARC reports go to Valimail. Not checked: the website (turned off), DKIM selectors past the first 27 on three subdomains, the IP ranges two services publish in their own SPF (past three include levels), and the crt.sh certificate log (read only with --ct)."
 }

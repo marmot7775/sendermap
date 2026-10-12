@@ -30,6 +30,7 @@ from .model import (
     Evidence,
     Finding,
     Gap,
+    GapKind,
     Kind,
     Observed,
     Run,
@@ -104,14 +105,18 @@ async def map_domain(
         async with asyncio.TaskGroup() as tg:
             spf_task = tg.create_task(spf.collect(ctx, domain))
             evidence = [
-                tg.create_task(_guard(source, what))
-                for source, what in (
-                    (mx.collect(ctx, domain), "MX"),
-                    (tokens.collect(ctx), "verification tokens"),
-                    (reports.collect(ctx), "report addresses"),
-                    (labels.collect(ctx, domain), "bounce and tracking CNAMEs"),
-                    (mta_sts.collect(ctx), "the MTA-STS policy"),
-                    (web.collect(ctx) if use_web else _skipped(_NO_WEB), "the website"),
+                tg.create_task(_guard(source, what, kind))
+                for source, what, kind in (
+                    (mx.collect(ctx, domain), "MX", GapKind.MX),
+                    (tokens.collect(ctx), "verification tokens", GapKind.TOKENS),
+                    (reports.collect(ctx), "report addresses", GapKind.REPORTS),
+                    (labels.collect(ctx, domain), "bounce and tracking CNAMEs", GapKind.LABELS),
+                    (mta_sts.collect(ctx), "the MTA-STS policy", GapKind.MTA_STS),
+                    (
+                        web.collect(ctx) if use_web else _skipped(_NO_WEB),
+                        "the website",
+                        GapKind.WEBSITE,
+                    ),
                 )
             ]
             logo_task = tg.create_task(bimi.logo(ctx))
@@ -144,7 +149,8 @@ async def map_domain(
                 f"{dropped} of {len(discovered.sending)} not checked: only the first "
                 f"{MAX_SUBDOMAINS} in alphabetical order were (cap)"
             )
-            apex += Observed(gaps=(Gap("sending subdomains", happened),))
+            gap = Gap("sending subdomains", happened, GapKind.SUBDOMAINS, dropped, MAX_SUBDOMAINS)
+            apex += Observed(gaps=(gap,))
         await say(f"Checking {len(picked)} sending subdomains")
         under = await asyncio.gather(
             *(_subdomain(ctx, rules, name, discovered.delegations) for name in picked)
@@ -210,7 +216,8 @@ async def _subdomain(
             f"{unasked} of {len(order)} not asked: only the first {SUBDOMAIN_PROBES} and the "
             "names its own SPF, MX or delegation backs were (cap)"
         )
-        budget = Observed(gaps=(Gap(f"DKIM selectors at {name}", happened),))
+        gap = Gap(f"DKIM selectors at {name}", happened, GapKind.DKIM, unasked, SUBDOMAIN_PROBES)
+        budget = Observed(gaps=(gap,))
     return first + keys + owned + budget
 
 
@@ -252,18 +259,20 @@ def _sorted(findings: tuple[Finding, ...]) -> tuple[Finding, ...]:
     return tuple(sorted(dict.fromkeys(findings), key=lambda f: order.index(f.severity)))
 
 
-_NO_WEB = Gap("the website", "not read: web checks were turned off (--no-web)")
+_NO_WEB = Gap("the website", "not read: web checks were turned off (--no-web)", GapKind.OFF)
 _NO_SUBDOMAINS = Gap(
-    "sending subdomains", "not searched: subdomain checks were turned off (--no-subdomains)"
+    "sending subdomains",
+    "not searched: subdomain checks were turned off (--no-subdomains)",
+    GapKind.OFF,
 )
 
 
-async def _guard(source: Awaitable[Observed], what: str) -> Observed:
+async def _guard(source: Awaitable[Observed], what: str, kind: GapKind) -> Observed:
     """Run one source; if it breaks, record a gap instead of losing the whole map."""
     try:
         return await source
     except Exception as e:  # a source bug must not take down every other source
-        return Observed(gaps=(Gap(what, f"the check crashed: {type(e).__name__}"),))
+        return Observed(gaps=(Gap(what, f"the check crashed: {type(e).__name__}", kind),))
 
 
 async def _logs(ctx: Context, cache: Path | None, expired: bool) -> ct.Logs:
@@ -271,7 +280,11 @@ async def _logs(ctx: Context, cache: Path | None, expired: bool) -> ct.Logs:
     try:
         return await ct.read_logs(ctx, cache, expired=expired)
     except Exception as e:  # a source bug must not take down every other source
-        crashed = Gap("certificate transparency", f"the check crashed: {type(e).__name__}")
+        crashed = Gap(
+            "certificate transparency",
+            f"the check crashed: {type(e).__name__}",
+            GapKind.CERTIFICATE_LOG,
+        )
         return ct.Logs(observed=Observed(gaps=(crashed,)))
 
 
@@ -284,7 +297,9 @@ async def _discover(ctx: Context, logs: Awaitable[ct.Logs]) -> subdomains.Found:
     try:
         return await subdomains.discover(ctx, (logged.name for logged in (await logs).names))
     except Exception as e:  # a source bug must not take down every other source
-        crashed = Gap("sending subdomains", f"the search crashed: {type(e).__name__}")
+        crashed = Gap(
+            "sending subdomains", f"the search crashed: {type(e).__name__}", GapKind.SUBDOMAINS
+        )
         return subdomains.Found(gaps=(crashed,))
 
 
@@ -294,7 +309,11 @@ async def _certificates(ctx: Context, logs: Awaitable[ct.Logs]) -> tuple[Observe
     try:
         return await ct.collect(ctx, read)
     except Exception as e:  # a source bug must not take down every other source
-        crashed = Gap("certificate transparency", f"the check crashed: {type(e).__name__}")
+        crashed = Gap(
+            "certificate transparency",
+            f"the check crashed: {type(e).__name__}",
+            GapKind.CERTIFICATE_LOG,
+        )
         return Observed(gaps=(crashed,)), CtSummary(CtStatus.UNAVAILABLE, providers=read.providers)
 
 

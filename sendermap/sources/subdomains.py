@@ -17,7 +17,7 @@ from collections.abc import Iterable
 from dataclasses import dataclass
 
 from ..dns import Answer
-from ..model import Claim, Evidence, Gap, Kind
+from ..model import Claim, Evidence, Gap, GapKind, Kind
 from . import Context
 from .spf import spf_records
 
@@ -48,7 +48,8 @@ async def discover(ctx: Context, logged: Iterable[str]) -> Found:
     gaps = ct_gaps
     if failed:
         asked = f"sending subdomains: TXT, MX and NS at {', '.join(failed)}"
-        gaps += (Gap(asked, "lookup failed, so whether they send is not known"),)
+        happened = "lookup failed, so whether they send is not known"
+        gaps += (Gap(asked, happened, GapKind.SUBDOMAINS, len(failed)),)
     return Found(sending, gaps, tuple(c for _, claims in answers for c in claims))
 
 
@@ -89,11 +90,15 @@ def _from_certificates(ctx: Context, logged: Iterable[str]) -> tuple[set[str], t
     gaps: tuple[Gap, ...] = ()
     if deep:
         happened = f"{len(deep)} not asked (cap of {MAX_CT_DEPTH} labels below the domain)"
-        gaps += (Gap(f"certificate log names more than {MAX_CT_DEPTH} labels deep", happened),)
+        asked = f"certificate log names more than {MAX_CT_DEPTH} labels deep"
+        gaps += (Gap(asked, happened, GapKind.CERTIFICATE_LOG, len(deep), MAX_CT_DEPTH),)
     if len(names) > MAX_FROM_CT:
         happened = (
             f"{len(names) - MAX_FROM_CT} of {len(names)} not asked: only the first {MAX_FROM_CT} "
             "in alphabetical order were (cap)"
         )
-        gaps += (Gap("certificate log names", happened),)
+        dropped = len(names) - MAX_FROM_CT
+        gaps += (
+            Gap("certificate log names", happened, GapKind.CERTIFICATE_LOG, dropped, MAX_FROM_CT),
+        )
     return set(sorted(names)[:MAX_FROM_CT]), gaps

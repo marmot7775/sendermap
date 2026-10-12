@@ -40,6 +40,7 @@ from ..model import (
     CtSummary,
     Evidence,
     Gap,
+    GapKind,
     Historical,
     Kind,
     Observed,
@@ -183,7 +184,8 @@ async def _ask(
     if rows is None:
         fetched = await _fetch(ctx.http, provider, ctx.domain)
         if isinstance(fetched, str):
-            gap = Gap(f"certificate transparency, {provider.name}: GET {page}", fetched)
+            question = f"certificate transparency, {provider.name}: GET {page}"
+            gap = Gap(question, fetched, GapKind.CERTIFICATE_LOG)
             unavailable = CtProvider(provider.name, CtStatus.UNAVAILABLE)
             return [], unavailable, asked + Observed(gaps=(gap,))
         rows, status = fetched, CtStatus.READ
@@ -194,7 +196,9 @@ async def _ask(
 
 async def _off(ctx: Context, provider: Provider) -> tuple[list[Row], CtProvider, Observed]:
     asked = f"certificate transparency, {provider.name}: GET {provider.page(ctx.domain)}"
-    gap = Gap(asked, "not asked: read only with --ct (it also holds expired certificates)")
+    gap = Gap(
+        asked, "not asked: read only with --ct (it also holds expired certificates)", GapKind.OFF
+    )
     return [], CtProvider(provider.name), Observed(gaps=(gap,))
 
 
@@ -210,7 +214,10 @@ async def collect(ctx: Context, logs: Logs) -> tuple[Observed, CtSummary]:
             f"{dropped} of {len(names)} not resolved: only the first {MAX_NAMES} in "
             "alphabetical order were (cap)"
         )
-        observed += Observed(gaps=(Gap("names from certificate logs", happened),))
+        gap = Gap(
+            "names from certificate logs", happened, GapKind.CERTIFICATE_LOG, dropped, MAX_NAMES
+        )
+        observed += Observed(gaps=(gap,))
     published, range_gaps = await networks.published_ranges(ctx)
     read = await asyncio.gather(*(_read(ctx, logged, published) for logged in picked))
     observed = sum((o for o, _ in read), observed) + Observed(gaps=range_gaps)
@@ -227,7 +234,8 @@ async def _read(
         ctx.dns.query(name, "CNAME"), ctx.dns.query(name, "A"), ctx.dns.query(name, "MX")
     )
     if not all(a.answered for a in (cname, address, mail)):
-        gap = Gap(f"name from certificate logs: CNAME, A and MX at {name}", "lookup failed")
+        asked = f"name from certificate logs: CNAME, A and MX at {name}"
+        gap = Gap(asked, "lookup failed", GapKind.CERTIFICATE_LOG, 1)
         return Observed(gaps=(gap,)), False
     label = name.split(".", 1)[0]
     chain = cname.chain or address.chain
