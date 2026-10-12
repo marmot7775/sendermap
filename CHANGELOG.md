@@ -26,3 +26,4 @@ What 0.1.0 holds:
 - Vendor data in one file, every pattern with a live proof, rechecked weekly.
 - A command line (text, Markdown, JSON, --output to a file) with exit codes for scripts and agents (0 mapped, 2 bad input, 3 the domain's own records unreadable), and a website that streams the map and keeps no record of the domains looked up.
 - The JSON Schema of a map, `sendermap/1`, served by the site and returned by `sendermap.schema()`.
+- An MCP server, `sendermap mcp` with the `mcp` extra: a map tool whose structured content is the `sendermap/1` JSON, in summary or full, and a vendor tool, with the schema and the vendor list as resources.
