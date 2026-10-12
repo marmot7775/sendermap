@@ -53,13 +53,16 @@ def _load(path: Path) -> list[dict[str, Any]]:
 
 
 def _answer_row(answer: Answer) -> dict[str, Any]:
-    return {
+    row: dict[str, Any] = {
         "name": answer.name,
         "rtype": answer.rtype,
         "status": answer.status.value,
         "records": list(answer.records),
         "chain": list(answer.chain),
     }
+    if answer.servfail:  # written only when set, so files recorded before it still read
+        row["servfail"] = True
+    return row
 
 
 class RecordingResolver:
@@ -96,6 +99,7 @@ class ReplayResolver:
                 Status(row["status"]),
                 tuple(row["records"]),
                 tuple(row["chain"]),
+                servfail=row.get("servfail", False),
             )
             self.answers[(norm(answer.name), answer.rtype.upper())] = answer
         self.missed: list[Question] = []

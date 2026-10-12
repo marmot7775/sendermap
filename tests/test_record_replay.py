@@ -24,10 +24,18 @@ from sendermap.testing import (
 
 async def test_a_replayed_answer_is_the_recorded_one(tmp_path: Path) -> None:
     zone = (
-        Zone(failing={"broken.test"}).add("b.test", "TXT", "v=spf1 -all").alias("a.test", "b.test")
+        Zone(failing={"broken.test"}, servfail={"lame.test"})
+        .add("b.test", "TXT", "v=spf1 -all")
+        .alias("a.test", "b.test")
     )
     recorder = RecordingResolver(zone)
-    asked = [("b.test", "TXT"), ("a.test", "TXT"), ("broken.test", "MX"), ("gone.test", "A")]
+    asked = [
+        ("b.test", "TXT"),
+        ("a.test", "TXT"),
+        ("broken.test", "MX"),
+        ("gone.test", "A"),
+        ("lame.test", "NS"),
+    ]
     live = [await recorder.query(name, rtype) for name, rtype in asked]
     recorder.save(tmp_path / "dns.json")
 
@@ -36,6 +44,7 @@ async def test_a_replayed_answer_is_the_recorded_one(tmp_path: Path) -> None:
     assert live[1] == Answer("a.test", "TXT", Status.OK, ("v=spf1 -all",), ("b.test",))
     assert live[2].status is Status.FAILED  # could not check replays as could not check
     assert live[3].status is Status.NXDOMAIN
+    assert live[4].servfail and not live[2].servfail  # who failed replays too
 
 
 async def test_the_file_is_sorted_one_object_per_question(tmp_path: Path) -> None:

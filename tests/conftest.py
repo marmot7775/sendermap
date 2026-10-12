@@ -17,7 +17,8 @@ PUBLIC = "93.184.215.14"  # any address the web guard counts as public
 
 class Zone:
     """Records keyed by (name, type), CNAMEs followed, "*." wildcards honoured, and names that
-    fail on purpose, wholly (`failing`) or for one type (`timeouts`, (name, type) pairs).
+    fail on purpose, wholly (`failing`), for one type (`timeouts`, (name, type) pairs) or
+    with a server failure from the domain's own servers (`servfail`).
     Anything else does not exist. `compact` answers an empty NOERROR for names that do not
     exist (compact denial, RFC 9824); `nxdomain` names answer no such name even when names
     below them exist, as a server that breaks RFC 8020 does."""
@@ -33,6 +34,7 @@ class Zone:
         compact: bool = False,
         nxdomain: set[str] | None = None,
         timeouts: set[tuple[str, str]] | None = None,
+        servfail: set[str] | None = None,
     ) -> None:
         self.records = {(norm(n), t): v for (n, t), v in (records or {}).items()}
         self.cnames = {norm(k): norm(v) for k, v in (cnames or {}).items()}
@@ -40,6 +42,7 @@ class Zone:
         self.compact = compact
         self.nxdomain = {norm(n) for n in nxdomain or ()}
         self.timeouts = {(norm(n), t) for n, t in timeouts or ()}
+        self.servfail = {norm(n) for n in servfail or ()}
         self.asked: list[tuple[str, str]] = []
 
     def add(self, name: str, rtype: str, *values: str) -> Zone:
@@ -64,8 +67,8 @@ class Zone:
     async def query(self, name: str, rtype: str) -> Answer:
         name = norm(name)
         self.asked.append((name, rtype))
-        if name in self.failing or (name, rtype) in self.timeouts:
-            return Answer(name, rtype, Status.FAILED)
+        if name in self.failing or (name, rtype) in self.timeouts or name in self.servfail:
+            return Answer(name, rtype, Status.FAILED, servfail=name in self.servfail)
         if name in self.nxdomain:
             return Answer(name, rtype, Status.NXDOMAIN)
         chain: list[str] = []

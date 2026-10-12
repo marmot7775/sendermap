@@ -93,6 +93,23 @@ async def test_a_failed_lookup_names_ns_among_the_questions() -> None:
     found = await subdomains.discover(context(Zone(failing={"send.example.com"})), ())
     (gap,) = found.gaps
     assert gap.asked == "sending subdomains: TXT, MX and NS at send.example.com"
+    assert gap.happened == "lookup failed, so whether they send is not known"
+
+
+async def test_a_server_failure_is_the_domains_not_the_lookups() -> None:
+    zone = Zone(failing={"send.example.com"}, servfail={"mail.example.com", "email.example.com"})
+    found = await subdomains.discover(context(zone), ())
+    by_what = {gap.happened: (gap.asked, gap.count) for gap in found.gaps}
+    assert by_what == {
+        "the domain's DNS servers failed to answer (SERVFAIL), so whether they send is not known": (
+            "sending subdomains: TXT, MX and NS at email.example.com, mail.example.com",
+            2,
+        ),
+        "lookup failed, so whether they send is not known": (
+            "sending subdomains: TXT, MX and NS at send.example.com",
+            1,
+        ),
+    }
 
 
 async def test_verify_proofs_finds_a_delegation_only_at_the_name_itself() -> None:

@@ -300,7 +300,7 @@ def _subdomains(gaps: Sequence[Gap]) -> str:
     caps, failed, whole = _parts(gaps)
     if whole:
         return "sending subdomains (could not be read)"
-    parts = [f"{number(failed)} subdomain{_s(failed)} whose lookups failed"] if failed else []
+    parts = [f"{number(failed)} subdomain{_s(failed)} whose DNS failed to answer"] if failed else []
     for cap, group in _by_cap(caps):
         more = sum(g.count for g in group)
         parts.append(f"sending subdomains past the first {number(cap)} ({number(more)} more)")

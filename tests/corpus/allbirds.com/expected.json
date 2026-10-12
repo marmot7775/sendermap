@@ -3823,7 +3823,7 @@
   },
   {
    "asked": "sending subdomains: TXT, MX and NS at apisdk.allbirds.com, community.allbirds.com, dataplane.allbirds.com, jssdk.allbirds.com, rerun.allbirds.com, www.jssdk.allbirds.com",
-   "happened": "lookup failed, so whether they send is not known",
+   "happened": "the domain's DNS servers failed to answer (SERVFAIL), so whether they send is not known",
    "kind": "subdomains",
    "count": 6,
    "cap": 0
@@ -4267,5 +4267,5 @@
    ]
   }
  ],
- "story": "Microsoft 365 receives the domain's mail and has a DKIM key in place to sign it. Twelve other services are set up to send as the domain: six transactional (Amazon SES, Mailgun, Mailjet, Postmark, SendGrid, SparkPost), two support and CRM (Freshdesk, Zendesk), one mailbox (Google Workspace), two marketing (Iterable, Mailchimp), one commerce and apps (Shopify); two more are likely from a DKIM key name alone (Customer.io, Mandrill). Not checked: the website (turned off), DKIM selectors past the first 27 on three subdomains, network owners for 12 of 36 ranges, six subdomains whose lookups failed, the IP ranges two services publish in their own SPF (past three include levels), 34 names from certificate logs left out by a limit, and the crt.sh certificate log (read only with --ct)."
+ "story": "Microsoft 365 receives the domain's mail and has a DKIM key in place to sign it. Twelve other services are set up to send as the domain: six transactional (Amazon SES, Mailgun, Mailjet, Postmark, SendGrid, SparkPost), two support and CRM (Freshdesk, Zendesk), one mailbox (Google Workspace), two marketing (Iterable, Mailchimp), one commerce and apps (Shopify); two more are likely from a DKIM key name alone (Customer.io, Mandrill). Not checked: the website (turned off), DKIM selectors past the first 27 on three subdomains, network owners for 12 of 36 ranges, six subdomains whose DNS failed to answer, the IP ranges two services publish in their own SPF (past three include levels), 34 names from certificate logs left out by a limit, and the crt.sh certificate log (read only with --ct)."
 }

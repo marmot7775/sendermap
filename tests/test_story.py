@@ -154,7 +154,8 @@ def test_the_last_sentence_is_one_clause_per_kind_counted_in_plain_words() -> No
     ) == (
         "Not checked: the website (turned off), DKIM selectors past the first 27 on five "
         "subdomains and one that could not be read, network owners for 12 of 36 ranges, six "
-        "subdomains whose lookups failed, and the crt.sh certificate log (read only with --ct)."
+        "subdomains whose DNS failed to answer, and the crt.sh certificate log (read only with "
+        "--ct)."
     )
 
 

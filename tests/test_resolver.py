@@ -14,7 +14,7 @@ from test_determinism import busy
 
 import sendermap
 from sendermap import cli, map_domain
-from sendermap.dns import DohResolver, SystemResolver
+from sendermap.dns import DohResolver, SystemResolver, parse_doh
 from sendermap.render import markdown, text
 from sendermap.testing import Case, RecordingResolver, replay
 
@@ -119,3 +119,8 @@ def test_the_cli_names_the_resolver_it_built(
     monkeypatch.setattr(cli, "SystemResolver", lambda: system)
     assert cli.main(["example.test", "--json", "--no-web", "--no-subdomains"]) == 0
     assert json.loads(capsys.readouterr().out)["run"]["resolver"] == "system"
+
+
+def test_a_doh_server_failure_is_marked_as_the_domains() -> None:
+    assert parse_doh("lame.example.com", "TXT", {"Status": 2}).servfail
+    assert not parse_doh("odd.example.com", "TXT", {"Status": 5}).servfail
