@@ -394,7 +394,11 @@ def load() -> list[Item]:
     """Every proof in the vendor data Sendermap ships."""
     loaded = catalog.load()
     setups = tuple(rule for rules in loaded.setups.values() for rule in rules)
-    return items(loaded.rules, loaded.patterns, setups)
+    backed_only = [
+        Item(loaded.backed_only_selectors[name], "selectors", name, proof)
+        for name, proof in loaded.backed_only_proofs.items()
+    ]
+    return items(loaded.rules, loaded.patterns, setups) + backed_only
 
 
 async def main(argv: list[str] | None = None, http: httpx.AsyncClient | None = None) -> int:

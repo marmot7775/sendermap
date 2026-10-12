@@ -48,10 +48,11 @@ BACKING_KINDS = frozenset(
 def backed_selectors(claims: Iterable[Claim], catalog: Catalog) -> dict[str, Claim]:
     """{selector: the SPF, MX or NS delegation claim of a service the domain already shows}, so
     a generic selector name on that service's list counts as theirs, backed by that claim's
-    record. The first service to claim a name keeps it."""
+    record. The first service to claim a name keeps it. A backed only name is backed by its
+    own vendor's claim alone (`Catalog.backs`)."""
     backed: dict[str, Claim] = {}
     for claim in claims:
         if claim.kind in BACKING_KINDS:
-            for selector in sorted(catalog.selectors_of(claim.service)):
+            for selector in sorted(catalog.backs(claim.service)):
                 backed.setdefault(selector, claim)
     return backed

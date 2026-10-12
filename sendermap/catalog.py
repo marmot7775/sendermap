@@ -143,6 +143,9 @@ class Catalog:
     names: dict[str, str] = field(default_factory=dict)
     # The one address each service with a sending_ip sends from, in file order.
     sending_ips: dict[str, str] = field(default_factory=dict)
+    # Selector names that credit their vendor only where something else already shows it.
+    backed_only_selectors: dict[str, str] = field(default_factory=dict)
+    backed_only_proofs: dict[str, Proof] = field(default_factory=dict)
 
     # ------------------------------------------------------------ lookups by record
 
@@ -182,15 +185,20 @@ class Catalog:
         1. A CNAME into the service's zone, always: the service hosts the key.
         2. selector1 and selector2 name nobody without that CNAME (Microsoft 365 publishes them
            only as aliases into its own zone).
-        3. backed: a service the domain's SPF or MX already shows, whose selector list has this
+        3. A backed only name credits its vendor only when backed names that same vendor, and
+           names nobody otherwise. s1 and s2 are plain names many hosts use, so Klaviyo earns
+           them only where SPF, MX or an NS delegation already shows Klaviyo.
+        4. backed: a service the domain's SPF or MX already shows, whose selector list has this
            name. k1 on a Mailgun domain is Mailgun, not Mailchimp.
-        4. The name table, unless the name is generic.
+        5. The name table, unless the name is generic.
         """
         if by_cname := self.dkim_cname(chain):
             return by_cname
         name = selector.lower()
         if name in self.cname_only_selectors:
             return None
+        if owner := self.backed_only_selectors.get(name):
+            return owner if backed == owner else None
         if backed:
             return backed
         if self.is_generic(name):
@@ -235,6 +243,13 @@ class Catalog:
 
     def selectors_of(self, service: str) -> frozenset[str]:
         return frozenset(n for r in self.rules if r.vendor == service for n in r.shape.expand())
+
+    def backs(self, service: str) -> frozenset[str]:
+        """The selector names a claim for `service` backs: its own list, less any backed only
+        name another vendor owns, plus the backed only names it owns."""
+        own = {n for n, v in self.backed_only_selectors.items() if v == service}
+        listed = {n for n in self.selectors_of(service) if n not in self.backed_only_selectors}
+        return frozenset(listed | own)
 
     @property
     def probe_selectors(self) -> tuple[str, ...]:
@@ -289,6 +304,7 @@ def build(raw: dict[str, Any]) -> Catalog:
     selector_rules = parse_rules(raw["vendors"])
     services = {name: _values(block) for name, block in raw["vendors"].items()}
     rules: dict[str, Any] = raw["rules"]
+    backed_only = _backed_only(rules.get("backed_only_selectors", {}), raw["vendors"], rules)
     tables = {f: HostTable({}) for f in _HOST_FIELDS}
     selectors = {n: claims[0].vendor for n, claims in build_dictionary(selector_rules).items()}
     tokens: list[tuple[re.Pattern[str], str]] = []
@@ -337,6 +353,8 @@ def build(raw: dict[str, Any]) -> Catalog:
         },
         names=_names(raw["vendors"]),
         sending_ips=_sending_ips(services),
+        backed_only_selectors={n: v for n, (v, _) in backed_only.items()},
+        backed_only_proofs={n: proof for n, (_, proof) in backed_only.items()},
     )
 
 
@@ -373,6 +391,29 @@ def _names(vendors: dict[str, Any]) -> dict[str, str]:
                 raise ValueError(f"{vendor} alias {text!r}: already names {names[key]}")
             names[key] = vendor
     return names
+
+
+def _backed_only(
+    raw: dict[str, Any], vendors: dict[str, Any], rules: dict[str, Any]
+) -> dict[str, tuple[str, Proof]]:
+    """{selector: (vendor, proof)} for the backed only names. ValueError for a vendor not in
+    the file, a name also cname only, or a proof that is not a key at that name."""
+    found: dict[str, tuple[str, Proof]] = {}
+    for name, entry in raw.items():
+        where = f"backed only selector {name}"
+        vendor = entry.get("vendor")
+        if vendor not in vendors:
+            raise ValueError(f"{where}: vendor {vendor!r} is not in the file")
+        if name.lower() != name or name in rules["cname_only_selectors"]:
+            raise ValueError(f"{where}: not a lowercase name outside cname_only_selectors")
+        if not entry.get("proof"):
+            raise ValueError(f"{where}: no proof")
+        proof = proofs.parse(entry["proof"])
+        proofs.check(where, proof)
+        if proofs.normalise(proof.record) != f"{name}._domainkey.{proofs.normalise(proof.domain)}":
+            raise ValueError(f"{where}: proof record {proof.record!r} is not {name}._domainkey")
+        found[name] = (vendor, proof)
+    return found
 
 
 def _sending_ips(services: dict[str, dict[str, Any]]) -> dict[str, str]:
