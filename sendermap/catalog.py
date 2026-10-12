@@ -249,6 +249,15 @@ class Catalog:
         both are normalised. Nothing fuzzier."""
         return self.names.get(normalise(text))
 
+    def sending_ip_host(self, service: str) -> str:
+        """The record that proves the service's sending address: its SPF record host or the
+        host whose address it is. SPF evaluation gives it as the HELO name."""
+        return next(
+            norm(p.proof.record)
+            for p in self.patterns
+            if p.vendor == service and p.field == "sending_ip"
+        )
+
     def category(self, service: str) -> str:
         return str(self.services.get(service, {}).get("category", "Other"))
 

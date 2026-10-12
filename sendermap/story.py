@@ -14,6 +14,7 @@ from collections.abc import Callable, Sequence
 from .model import Denial, Gap, GapKind, Kind, SenderMap, Service, Severity, State, Tier
 from .sources.ct import CRT_SH
 from .sources.mx import NULL_MX
+from .sources.spf_checks import EVALUATION
 
 _NUMBERS = (
     *("no", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten"),
@@ -229,7 +230,8 @@ def _dkim(gaps: Sequence[Gap]) -> str:
 
 
 def _spf(gaps: Sequence[Gap]) -> str:
-    caps, failed, _ = _parts(gaps)
+    evaluated = [g for g in gaps if g.asked.startswith(EVALUATION)]
+    caps, failed, _ = _parts([g for g in gaps if g not in evaluated])
     parts = (
         [f"{number(failed)} SPF record{_s(failed)} whose lookup{_s(failed)} failed"]
         if failed
@@ -238,7 +240,19 @@ def _spf(gaps: Sequence[Gap]) -> str:
     for cap, group in _by_cap(caps):
         deep = sum(g.count for g in group)
         parts.append(f"{number(deep)} SPF include{_s(deep)} more than {number(cap)} levels deep")
-    return " and ".join(parts)
+    return " and ".join(parts + _evaluation(evaluated))
+
+
+def _evaluation(gaps: Sequence[Gap]) -> list[str]:
+    """The vendors whose SPF evaluation ended in an error, and those past the budget."""
+    caps, errors, _ = _parts(gaps)
+    parts = [f"SPF evaluation for {number(errors)} vendor{_s(errors)} (an error)"] if errors else []
+    if left := sum(g.count for g in caps):
+        budget = _amount(caps[0].cap)
+        parts.append(
+            f"SPF evaluation for {number(left)} vendor{_s(left)} past its {budget} lookups"
+        )
+    return parts
 
 
 def _mx(gaps: Sequence[Gap]) -> str:

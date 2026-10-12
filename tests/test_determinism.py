@@ -17,6 +17,8 @@ from sendermap.render import markdown, text
 
 KEY = "v=DKIM1; k=rsa; p=" + "A" * 392
 RUNS = 20
+VALIMAIL = "%{i}._ip.%{h}._ehlo.%{d}._spf.vali.email"
+EHLO = "._ehlo.news.mixed.test._spf.vali.email"
 
 
 def busy() -> Zone:
@@ -58,6 +60,10 @@ def busy() -> Zone:
         .add("email.mixed.test", "MX", "10 mxa.mailgun.org")
         .add("mail.mixed.test", "TXT", "v=spf1 include:sendgrid.net -all")
         .add("*._domainkey.mail.mixed.test", "TXT", KEY)
+        # A macro include evaluated for every vendor: one passes, one fails, the rest error.
+        .add("news.mixed.test", "TXT", f"v=spf1 include:{VALIMAIL} -all")
+        .add(f"205.201.128.1._ip.servers.mcsv.net{EHLO}", "TXT", "v=spf1 ip4:205.201.128.1 -all")
+        .add(f"103.151.192.1._ip.mail.zendesk.com{EHLO}", "TXT", "v=spf1 -all")
     )
     for ip, asn, name in (
         ("198.51.100.1", "AS64500", "EXAMPLE-NET - Example, US"),

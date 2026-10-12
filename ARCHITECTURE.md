@@ -108,6 +108,9 @@ Phase 2, the domain itself
   dkim.collect  ||  networks.collect (SPF IP ranges: published vendor ranges, then ASN)
 Phase 3, each sending subdomain (first 30)
   spf + mx + its delegation -> backed -> dkim (27 names + backed)  ||  networks
+Phase 4, SPF evaluation, only at names the walk could not read in full
+  spf_checks.collect: check_host for each vendor's sending address the walk did not credit
+     there, eight at a time, until 150 lookups are spent
 Assembly
   all Observed summed -> infer.services: group by service,
      tier = strongest Kind, report-only services -> role "reporting"
@@ -180,6 +183,7 @@ for the check and a private one a moment later (DNS rebinding) is not caught.
 | `setup.py` | Setups: each item's state from what the map already asked, `complete`, the findings a setup raises, and the setup line every view shows |
 | `engine.py` | `map_domain`: input cleaning, the phase order, subdomain scans, limits, the gateway note |
 | `sources/spf.py` | Walking the SPF tree: credited includes, IP ranges, the lookup count, SPF findings |
+| `sources/spf_checks.py` | SPF by evaluation: where it runs, one check per vendor's sending address, the budget, and the claims, reads and gaps it leaves |
 | `sources/spf_eval.py` | `check_host()` from RFC 7208: the result one address gets from a domain's record, and what decided it |
 | `sources/mx.py`, `sources/mta_sts.py` | Where the domain receives mail |
 | `sources/web.py` | The homepage and subprocessor page, and the guard every page fetch goes through |
@@ -239,7 +243,39 @@ macros of section 7; `exp` is checked for syntax and never looked up. It reads D
 the map's lookups, and a failed lookup is temperror with the question named in `reason`. A
 target name no query can be made of (an empty or overlong label) matches nothing, one of the two
 results the test suite allows. The walk above reads who a domain names; the evaluator answers
-whether a given address passes. Nothing in the map uses it yet: G2 wires it in.
+whether a given address passes.
+
+`sources/spf_checks.py` puts it in the map. Evaluation runs at a name only when the walk could
+not name everything its record authorizes: a hosted SPF service whose record the walk did not
+read, a macro include, an include past the depth cap (`SpfTree.unnamed`), or a flattened record
+the walk read whose ranges the networks source left unknown at that name. It runs after every
+other phase, at the domain first and then each sending subdomain, and asks about each vendor
+with a `sending_ip`, in the vendor data's order, that an SPF include or SPF network claim does
+not already credit at that name: `check_host` with that address, the sender `postmaster@<name>`
+and the address's proof record as the HELO name.
+
+- A pass is a claim of kind `SPF_EVALUATED`, "authorized by SPF for one of its addresses", tier
+  Configured. Its evidence is the term that matched in the record it sits in, and its supporting
+  records are the include and redirect links walked to that record.
+- A fail, softfail, neutral or none makes no claim. It is kept as a `Read` (`spf_eval`, the
+  vendor's name) for the vendor's setup, whose SPF item, not checked under a hosted record
+  before, reads missing with the deciding term as evidence and the address, result and term in
+  words.
+- A permerror or temperror is a gap of kind `spf` naming the vendor and the reason; vendors at
+  one name whose checks ended in the same reason share one gap.
+
+Evaluation has a budget of 150 lookups per map, counted as the map's lookups count them: each
+question asked once, answers from the cache free. Checks run eight at a time and the count is
+read between waves, so the last wave can pass it; once it is spent, one gap per name (kind
+`spf`, cap 150) names the vendors left unevaluated there. Evaluation starts after every other
+source has finished, and each check's questions follow from the answers alone, so the waves
+and the gaps are the same for the same answers.
+
+The honest limit: a pass says the record authorizes that one address and nothing more. It does
+not show that the vendor sends, which of its other addresses pass, or that the domain chose the
+vendor rather than a service that sends from the vendor's network: each address was picked
+outside every other listed vendor's ranges, but an unlisted service can share it. A fail says
+that one address fails; the vendor may send from another.
 
 ## The _domainkey triage
 
@@ -368,7 +404,7 @@ return path of the setup above it, so its MX counts as that setup's bounce item 
 is never judged. The states:
 
 - **present**: a claim shows it, and its evidence is the item's. For SPF, an SPF include or a
-  range in SPF the service owns (and any later SPF evaluation claim); for DKIM, a key through
+  range in SPF the service owns, or an SPF evaluation pass; for DKIM, a key through
   the service's CNAME or by a selector name credited to it; for MX, its MX at the name; for a
   bounce or tracking item, its CNAME, or for the bounce item a bounce domain's MX. A key at a
   selector the block lists that the setup does not name reads present with an older setup
@@ -376,13 +412,15 @@ is never judged. The states:
 - **broken**: the only key is revoked or dangling (its claim) or malformed at a selector the
   setup names (the record), or the name publishes more than one SPF record.
 - **missing**: the names were asked and nothing answered: the SPF record read with no claim for
-  the service, or no SPF record at all; every selector the setup names asked and each a negative
+  the service, or no SPF record at all, or SPF evaluation of the vendor's address under a hosted,
+  macro, deep or flattened record that did not pass (its verdict the evidence); every selector the setup names asked and each a negative
   answer, worded by the zone's denial class (`no such name` in a classic zone; `no record of
   this type` where the zone gives that answer for every name, said so), with the absence's own
   evidence when there is one; where `_domainkey` itself does not exist, that no selector does;
   no CNAME into the vendor at any of the labels asked, with each label's answer.
 - **not checked**: the lookup failed, a cap left the names unasked, a wildcard answers every
-  name, the SPF record is hosted or a macro (the reason is named), no label was asked at a
+  name, the SPF record is hosted or a macro and evaluation did not reach the vendor (the reason
+  is named), no label was asked at a
   subdomain (labels are asked at the domain only), or the setup names no selector to ask
   (Klaviyo's current selectors are not yet in its block). The gap or reason is the detail.
 - **not needed**: the vendor's docs need no such record.
@@ -632,7 +670,11 @@ through a CNAME credits nobody, and the delegation proof's check. `test_verify_p
 address with two origins, in both orders. `test_spf_eval.py` loads the RFC 7208 test suite (`tests/vectors/`, from pyspf, with its
 licence) into fake zones and runs every case, with the cases it does not pass listed at the
 top with a reason (none today), and holds hosted SPF shapes: a macro include, an exists record
-and a flattened record. `test_ct.py` runs the CT source on a recorded crt.sh answer
+and a flattened record. `test_spf_checks.py` holds where evaluation runs and that it asks
+nothing elsewhere, a pass as a claim with its evidence and path, a fail as a missing setup item
+with the verdict, an error as a gap naming the vendors, the vendors it skips, the budget gap,
+the story's wording and the claim in the views; `test_determinism.py` maps a macro include
+evaluated for every vendor. `test_ct.py` runs the CT source on a recorded crt.sh answer
 (`tests/fixtures/crtsh_allbirds.json`) beside Cert Spotter answers, and holds that the logs are
 read once per map, crt.sh only with `--ct`, one gap per provider that failed or was off, and the
 cache per provider.
