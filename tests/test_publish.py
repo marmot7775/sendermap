@@ -1,6 +1,7 @@
 """The publish workflow and the release notes it takes from CHANGELOG.md."""
 
 import importlib.util
+import json
 import sys
 from pathlib import Path
 from types import ModuleType
@@ -80,3 +81,17 @@ def test_the_workflow_says_what_holds_publishing_and_where_it_is_set() -> None:
     assert (
         "`PYPI_READY`" in readme and "Settings, Secrets and variables, Actions, Variables" in readme
     )
+
+
+def test_the_changelog_holds_the_released_version_under_an_empty_unreleased() -> None:
+    """The real CHANGELOG.md: the version server.json names has its notes, and Unreleased sits
+    above it, open and empty."""
+    tool = load_tool()
+    changelog = (ROOT / "CHANGELOG.md").read_text(encoding="utf-8")
+    version = json.loads((ROOT / "server.json").read_text())["version"]
+    notes = tool.section(changelog, f"v{version}")
+    assert notes and notes.startswith("- ")
+    headings = [line for line in changelog.splitlines() if line.startswith("## ")]
+    assert headings[0] == "## Unreleased"
+    assert headings[1].startswith(f"## {version} (")
+    assert tool.section(changelog, "Unreleased") is None  # open and empty
