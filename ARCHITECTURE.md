@@ -731,6 +731,14 @@ so a test that opens a network socket fails, while the loopback web test keeps r
   an artifact kept 30 days. Drift fails nothing; only a live map that could not be built fails
   the job. The job commits nothing.
 
+- `.github/workflows/publish.yml` runs on a tag `v*`: a build job (`python -m build` from a full
+  clone, so hatch-vcs reads the tag; the files checked to carry the tag's version; the tag's
+  section of `CHANGELOG.md` taken by `tools/release_notes.py`, which fails a tag with none before
+  anything is published), a publish job in the `pypi` environment by trusted publishing
+  (`id-token: write`, `pypa/gh-action-pypi-publish@release/v1`, attestations on), then the
+  GitHub release for the tag with those notes and the built files. `tests/test_publish.py` holds
+  the notes and the workflow's shape. No tag is pushed by anything in the repository.
+
 The proofs and recheck jobs install the runtime alone, `uv sync --locked --no-dev`, from the
 same lock.
 

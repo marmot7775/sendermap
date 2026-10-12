@@ -1,0 +1,90 @@
+# Publish a release to PyPI when a tag v* is pushed, then make the GitHub release.
+#
+# build: the sdist and wheel with python -m build, from a full clone so hatch-vcs reads the tag,
+#   checked to carry the tag's version; the tag's section of CHANGELOG.md becomes the release
+#   notes, and a tag without one fails here, before anything is published.
+# publish: uploads to PyPI by trusted publishing (no token: the pypi environment and the
+#   id-token permission), with attestations.
+# release: the GitHub release for the tag, with the notes and the built files.
+
+name: Publish
+
+on:
+  push:
+    tags: ["v*"]
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0  # hatch-vcs takes the version from the tag
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+      - name: Build
+        run: |
+          python -m pip install build
+          python -m build
+      - name: Check the version is the tag's
+        run: |
+          version="${GITHUB_REF_NAME#v}"
+          ls dist
+          test -f "dist/sendermap-${version}.tar.gz"
+          test -f "dist/sendermap-${version}-py3-none-any.whl"
+      - name: Release notes from CHANGELOG.md
+        run: python tools/release_notes.py "$GITHUB_REF_NAME" > release-notes.md
+      - uses: actions/upload-artifact@v4
+        with:
+          name: dist
+          path: dist/
+      - uses: actions/upload-artifact@v4
+        with:
+          name: release-notes
+          path: release-notes.md
+
+  publish:
+    needs: build
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    environment:
+      name: pypi
+      url: https://pypi.org/p/sendermap
+    permissions:
+      id-token: write  # trusted publishing
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: dist
+          path: dist/
+      - uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          attestations: true
+
+  release:
+    needs: publish
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: write  # create the release
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: dist
+          path: dist/
+      - uses: actions/download-artifact@v4
+        with:
+          name: release-notes
+      - name: Create the GitHub release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: >
+          gh release create "$GITHUB_REF_NAME" dist/*
+          --repo "$GITHUB_REPOSITORY"
+          --title "Sendermap ${GITHUB_REF_NAME#v}"
+          --notes-file release-notes.md
