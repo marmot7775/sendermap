@@ -10,7 +10,7 @@ PyPI and makes the GitHub release; a tag with no section fails before anything i
 
 ## Unreleased
 
-What 0.1.0 holds:
+## 0.1.0 (2026-10-12)
 
 - A map of the services that send or receive a domain's mail, each with a tier (In use, Configured, Likely, Account only) and the record behind every claim.
 - SPF walked as a tree, crediting only authorizing links, with the lookup count receivers spend and loops found.
@@ -28,6 +28,7 @@ What 0.1.0 holds:
 - A command line (text, Markdown, JSON, --output to a file) with exit codes for scripts and agents (0 mapped, 2 bad input, 3 the domain's own records unreadable), and a website that streams the map and keeps no record of the domains looked up.
 - The JSON Schema of a map, `sendermap/1`, served by the site and returned by `sendermap.schema()`.
 - Backed only selectors: `s1` and `s2` credit Klaviyo only where SPF, MX or an NS delegation already shows Klaviyo, and nobody otherwise, so the keys under a Klaviyo delegated subdomain are read.
+- Each map names the resolver that answered it (`system`, `doh cloudflare` or `doh google`), in its JSON and every view, since two resolvers can disagree.
 - Eight delegating email platforms: Emarsys, Mapp, Cordial, Dotdigital, Inxmail, UniSender, Sendsay and Optimizely Campaign, each pattern with a live proof.
 - The server instructions and the skill say a map gives no advice about which service to use or whether a setup is good enough; a finding names a fault in a published record and the record change that clears it.
 - An MCP server, `sendermap mcp` with the `mcp` extra: a map tool whose structured content is the `sendermap/1` JSON, in summary or full, and a vendor tool, with the schema and the vendor list as resources. The website mounts the same server at `/mcp` over streamable HTTP, under the API's limits per visitor and per target domain.
