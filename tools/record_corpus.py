@@ -16,14 +16,17 @@ tool fails if the replay differs from the live map, so a case that is saved repl
 --doh asks Cloudflare's DNS over HTTPS instead of the machine's resolver, for a machine whose
 resolver cannot be trusted, and --doh google asks Google's; its requests are not pages the map
 read, so they are not recorded. Resolvers can disagree: Cloudflare's answers no such name for
-cf2024-1._domainkey.glossier.com, a zone Cloudflare hosts, where Google's returns the key.
+cf2024-1._domainkey.glossier.com, a zone Cloudflare hosts, where Google's returns the key. So
+case.json and expected.json name the resolver that answered (run.resolver), and the replay
+names it too.
 
 --update rebuilds expected.json from the recorded answers without the network, for one case or
 every case: for when a code change rightly changes the map. The diff it causes is the review.
 
 --recheck maps a recorded case live again, with its own options and a fresh checked_at, records
 into DIR/<domain>/ and prints, as markdown, how that map differs from expected.json, leaving out
-checked_at and the order of lists. It writes nothing under tests/corpus and exits 0 on drift:
+checked_at, the resolver and the order of lists; when the resolvers differ, the report says
+which answered each. It writes nothing under tests/corpus and exits 0 on drift:
 the world changing is not a bug. A drifted case is re-recorded by hand with the first form,
 after reading the diff.
 """
@@ -61,12 +64,16 @@ def _write_json(path: Path, data: dict[str, Any]) -> None:
     path.write_text(json.dumps(data, indent=1, ensure_ascii=False) + "\n", encoding="utf-8")
 
 
-async def _map_live(case: Case, directory: Path, *, doh: str | None = None) -> dict[str, Any]:
-    """Map the case's domain live through the recorders and save what they kept in directory."""
+async def _map_live(
+    domain: str, use_web: bool, use_subdomains: bool, directory: Path, *, doh: str | None = None
+) -> tuple[Case, dict[str, Any]]:
+    """Map domain live through the recorders, dated now, and save what they kept and the case,
+    named by the resolver that answered, in directory."""
     transport = RecordingTransport()
     async with httpx.AsyncClient(transport=transport) as http, doh_client() as dns_http:
         inner: Resolver = DohResolver(dns_http, DOH[doh]) if doh else SystemResolver()
         resolver = RecordingResolver(inner)
+        case = Case(domain, _now(), use_web, use_subdomains, resolver.name)
         live = await map_domain(
             case.domain,
             checked_at=case.checked_at,
@@ -84,7 +91,7 @@ async def _map_live(case: Case, directory: Path, *, doh: str | None = None) -> d
     else:
         pages.unlink(missing_ok=True)
     _write_json(directory / "case.json", case.to_dict())
-    return comparable(live)
+    return case, comparable(live)
 
 
 def _now() -> datetime:
@@ -92,20 +99,21 @@ def _now() -> datetime:
 
 
 async def record(domain: str, *, use_web: bool, doh: str | None = None) -> Path:
-    case = Case(clean_domain(domain), _now(), use_web, use_subdomains=True)
-    directory = CORPUS / case.domain
-    live = await _map_live(case, directory, doh=doh)
+    domain = clean_domain(domain)
+    directory = CORPUS / domain
+    _, live = await _map_live(domain, use_web, True, directory, doh=doh)
     replayed = await update(directory)
     if replayed != live:
-        raise SystemExit(f"{case.domain}: the replay differs from the live map; not deterministic")
+        raise SystemExit(f"{domain}: the replay differs from the live map; not deterministic")
     return directory
 
 
 def _canonical(data: Any) -> Any:
-    """data without checked_at at any depth and with every list sorted: a resolver may hand back
-    an RRset in any order, and the map keeps the order it was given, so order is not drift."""
+    """data without checked_at or the resolver at any depth and with every list sorted: a
+    resolver may hand back an RRset in any order, and the map keeps the order it was given, so
+    order is not drift; which resolver answered is said above the diff, not in it."""
     if isinstance(data, dict):
-        return {k: _canonical(v) for k, v in data.items() if k != "checked_at"}
+        return {k: _canonical(v) for k, v in data.items() if k not in ("checked_at", "resolver")}
     if isinstance(data, list | tuple):
         return sorted((_canonical(v) for v in data), key=lambda v: json.dumps(v, sort_keys=True))
     return data
@@ -124,14 +132,20 @@ def drift(expected: dict[str, Any], live: dict[str, Any]) -> list[str]:
 async def recheck(domain: str, out: Path, *, doh: str | None = None) -> str:
     """Map a recorded case live into out/<domain>/; return the drift report as markdown."""
     recorded = Case.load(CORPUS / clean_domain(domain))
-    case = Case(recorded.domain, _now(), recorded.use_web, recorded.use_subdomains)
-    live = await _map_live(case, out / case.domain, doh=doh)
+    case, live = await _map_live(
+        recorded.domain, recorded.use_web, recorded.use_subdomains, out / recorded.domain, doh=doh
+    )
     expected = json.loads((CORPUS / case.domain / "expected.json").read_text(encoding="utf-8"))
     diff = drift(expected, live)
+    over = (
+        f"Recorded over {recorded.resolver}, checked again over {case.resolver}.\n\n"
+        if recorded.resolver != case.resolver
+        else ""
+    )
     if not diff:
-        return f"### {case.domain}\n\nNo drift: the live map is the recorded one.\n"
+        return f"### {case.domain}\n\n{over}No drift: the live map is the recorded one.\n"
     body = "\n".join(diff)
-    return f"### {case.domain}\n\nDrifted ({len(diff)} diff lines):\n\n```diff\n{body}\n```\n"
+    return f"### {case.domain}\n\n{over}Drifted ({len(diff)} diff lines):\n\n```diff\n{body}\n```\n"
 
 
 async def update(directory: Path) -> dict[str, Any]:

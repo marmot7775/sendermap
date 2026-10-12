@@ -729,6 +729,10 @@
           "description": "DNS questions asked. Always present in a map; a recorded test case leaves it out.",
           "type": "integer",
           "minimum": 0
+        },
+        "resolver": {
+          "description": "Which resolver answered: system (the machine's own), doh cloudflare or doh google. Two resolvers can disagree, so a map says which one answered. Consumers must tolerate values not listed here.",
+          "type": "string"
         }
       },
       "required": [

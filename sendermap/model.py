@@ -461,6 +461,8 @@ class Run:
     checked_at: datetime
     elapsed: float
     lookups: int
+    # Which resolver answered (Resolver.name): two resolvers can disagree.
+    resolver: str
 
 
 @dataclass(frozen=True, slots=True)

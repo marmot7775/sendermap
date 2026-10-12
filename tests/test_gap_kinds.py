@@ -37,6 +37,7 @@ class Failing:
 
     def __init__(self, zone: Zone, *, everything: bool = False) -> None:
         self.zone, self.everything = zone, everything
+        self.name = zone.name
 
     async def query(self, name: str, rtype: str) -> Answer:
         answer = await self.zone.query(name, rtype)
@@ -135,6 +136,8 @@ def test_every_gap_in_the_package_is_given_a_kind() -> None:
 def test_the_kind_is_additive_in_json() -> None:
     gap = Gap("the website", "not read", GapKind.OFF)
     assert Gap("a", "b").kind is GapKind.OTHER
-    assert sendermap.SenderMap("a.test", (), Run(CHECKED, 0.0, 0), gaps=(gap,)).to_dict()[
-        "gaps"
-    ] == ({"asked": "the website", "happened": "not read", "kind": "off", "count": 0, "cap": 0},)
+    assert sendermap.SenderMap(
+        "a.test", (), Run(CHECKED, 0.0, 0, "fake zone"), gaps=(gap,)
+    ).to_dict()["gaps"] == (
+        {"asked": "the website", "happened": "not read", "kind": "off", "count": 0, "cap": 0},
+    )

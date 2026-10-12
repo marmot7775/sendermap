@@ -403,7 +403,9 @@ function groupHeading(group) {
 function renderFootnote(map) {
   const subs = map.subdomains_checked.length;
   const checked = map.run.checked_at.slice(0, 16).replace("T", " ");
-  let text = `${map.run.lookups} DNS lookups in ${map.run.elapsed.toFixed(1)} s. Checked ${map.domain}`;
+  let text = `${map.run.lookups} DNS lookups in ${map.run.elapsed.toFixed(1)} s`;
+  text += map.run.resolver ? ` over ${map.run.resolver}` : "";
+  text += `. Checked ${map.domain}`;
   text += subs ? ` and ${subs} sending subdomain${subs === 1 ? "" : "s"}` : "";
   text += ` on ${checked} UTC.`;
   $("footnote").textContent = text;

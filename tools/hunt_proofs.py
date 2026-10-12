@@ -204,6 +204,10 @@ class CachedResolver:
         self.inflight: dict[tuple[str, str], asyncio.Task[Answer]] = {}
         self.asked = self.failed = 0
 
+    @property
+    def name(self) -> str:
+        return self.inner.name
+
     async def query(self, name: str, rtype: str) -> Answer:
         key = (norm(name), rtype.upper())
         if (kept := self.cache.answer(*key)) is not None:

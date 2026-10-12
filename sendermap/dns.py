@@ -10,7 +10,7 @@ import asyncio
 import json
 from dataclasses import dataclass
 from enum import StrEnum
-from typing import Protocol
+from typing import ClassVar, Protocol
 
 import dns.asyncresolver
 import dns.exception
@@ -80,6 +80,12 @@ def _mx_order(record: str) -> tuple[int, str]:
 
 
 class Resolver(Protocol):
+    @property
+    def name(self) -> str:
+        """Which resolver answers, in words: `system`, `doh cloudflare` or `doh google`. Two
+        resolvers can disagree, so a map says which one answered it."""
+        ...
+
     async def query(self, name: str, rtype: str) -> Answer: ...
 
 
@@ -92,6 +98,8 @@ def norm(name: str) -> str:
 
 class SystemResolver:
     """The machine's own resolver, through dnspython."""
+
+    name = "system"
 
     def __init__(self, timeout: float = 4.0, nameservers: list[str] | None = None) -> None:
         self._resolver = dns.asyncresolver.Resolver()
@@ -154,10 +162,12 @@ class DohResolver:
 
     CLOUDFLARE = "https://cloudflare-dns.com/dns-query"
     GOOGLE = "https://dns.google/resolve"
+    NAMES: ClassVar[dict[str, str]] = {CLOUDFLARE: "doh cloudflare", GOOGLE: "doh google"}
 
     def __init__(self, client: httpx.AsyncClient, endpoint: str = CLOUDFLARE) -> None:
         self._client = client
         self._endpoint = endpoint
+        self.name = self.NAMES.get(endpoint) or f"doh {httpx.URL(endpoint).host}"
 
     async def query(self, name: str, rtype: str) -> Answer:
         name = norm(name)
@@ -222,6 +232,7 @@ class Lookups:
 
     def __init__(self, resolver: Resolver, concurrency: int = 32) -> None:
         self._resolver = resolver
+        self.name = resolver.name
         self._limit = asyncio.Semaphore(concurrency)
         self._pending: dict[tuple[str, str], asyncio.Task[Answer]] = {}
         self.count = 0

@@ -22,6 +22,8 @@ class Zone:
     exist (compact denial, RFC 9824); `nxdomain` names answer no such name even when names
     below them exist, as a server that breaks RFC 8020 does."""
 
+    name = "fake zone"
+
     def __init__(
         self,
         records: dict[tuple[str, str], list[str]] | None = None,

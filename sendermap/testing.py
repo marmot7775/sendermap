@@ -69,6 +69,10 @@ class RecordingResolver:
         self._resolver = resolver
         self.answers: dict[Question, Answer] = {}
 
+    @property
+    def name(self) -> str:
+        return self._resolver.name
+
     async def query(self, name: str, rtype: str) -> Answer:
         answer = await self._resolver.query(name, rtype)
         self.answers[(norm(name), rtype.upper())] = answer
@@ -80,9 +84,10 @@ class RecordingResolver:
 
 class ReplayResolver:
     """Answers from a file `RecordingResolver.save` wrote; raises UnrecordedError for any other
-    question."""
+    question. `name` is the resolver that answered when the file was recorded."""
 
-    def __init__(self, path: Path) -> None:
+    def __init__(self, path: Path, name: str) -> None:
+        self.name = name
         self.answers: dict[Question, Answer] = {}
         for row in _load(path):
             answer = Answer(
@@ -196,7 +201,8 @@ class ReplayTransport(httpx.MockTransport):
 
 @dataclass(frozen=True, slots=True)
 class Case:
-    """How a map was made: the domain, the moment it is dated by, and the checks that ran.
+    """How a map was made: the domain, the moment it is dated by, the checks that ran and the
+    resolver that answered.
     Kept in a case directory as case.json beside dns.json and, when a page was requested,
     http.json."""
 
@@ -204,6 +210,8 @@ class Case:
     checked_at: datetime
     use_web: bool
     use_subdomains: bool
+    # The resolver that answered the recording (Resolver.name), which its replay names too.
+    resolver: str
 
     def to_dict(self) -> dict[str, Any]:
         return {
@@ -212,13 +220,16 @@ class Case:
             "use_web": self.use_web,
             "use_subdomains": self.use_subdomains,
             "use_ct": False,
+            "resolver": self.resolver,
         }
 
     @classmethod
     def load(cls, directory: Path) -> Case:
         row = json.loads((directory / "case.json").read_text(encoding="utf-8"))
         checked_at = datetime.fromisoformat(row["checked_at"])
-        return cls(row["domain"], checked_at, row["use_web"], row["use_subdomains"])
+        return cls(
+            row["domain"], checked_at, row["use_web"], row["use_subdomains"], row["resolver"]
+        )
 
 
 def comparable(sender_map: SenderMap) -> dict[str, Any]:
@@ -247,7 +258,7 @@ class Replayed:
 async def replay(directory: Path) -> Replayed:
     """Map a recorded case again from its files, without the network."""
     case = Case.load(directory)
-    resolver = ReplayResolver(directory / "dns.json")
+    resolver = ReplayResolver(directory / "dns.json", case.resolver)
     pages = directory / "http.json"
     transport = ReplayTransport(pages) if pages.exists() else ReplayTransport.empty()
     async with httpx.AsyncClient(transport=transport) as http:

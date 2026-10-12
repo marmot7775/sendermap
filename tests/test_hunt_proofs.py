@@ -183,6 +183,7 @@ class Watch:
 
     def __init__(self) -> None:
         self.zone = zone()
+        self.name = self.zone.name
         self.now: defaultdict[str, int] = defaultdict(int)
         self.most: defaultdict[str, int] = defaultdict(int)
         self.overall = self.peak = 0

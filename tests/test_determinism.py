@@ -81,6 +81,7 @@ class Jittery:
 
     def __init__(self, zone: Zone, seed: int) -> None:
         self.zone, self.random = zone, random.Random(seed)
+        self.name = zone.name
 
     async def query(self, name: str, rtype: str) -> Answer:
         await asyncio.sleep(self.random.random() / 500)
@@ -114,6 +115,7 @@ class Shuffled:
 
     def __init__(self, zone: Zone, seed: int) -> None:
         self.zone, self.random = zone, random.Random(seed)
+        self.name = zone.name
 
     async def query(self, name: str, rtype: str) -> Answer:
         answer = await self.zone.query(name, rtype)

@@ -82,7 +82,9 @@ Everything Sendermap reports is built from a few frozen dataclasses in `senderma
   client wrote them, so a client's words are never silently dropped. See "Claimed senders".
 - **Story**: one paragraph, a string, written by rules from the map for a reader who runs a
   company. See "The story".
-- **Run**: when and how one map was made: `checked_at`, `elapsed` seconds and DNS `lookups`.
+- **Run**: when and how one map was made: `checked_at`, `elapsed` seconds, DNS `lookups` and
+  the `resolver` that answered (`system`, `doh cloudflare` or `doh google`, from
+  `Resolver.name`). Two resolvers can disagree, and a map says which one answered.
 - **SenderMap**: the domain, its services, findings, unknowns, gaps, the sending subdomains
   checked, one Checked per name, the BIMI logo if any, the absences, the reconciliation (`null`
   when nothing was claimed), the story and the Run. `to_dict()` gives JSON with
@@ -741,7 +743,9 @@ the story's wording and the claim in the views; `test_determinism.py` maps a mac
 evaluated for every vendor. `test_ct.py` runs the CT source on a recorded crt.sh answer
 (`tests/fixtures/crtsh_allbirds.json`) beside Cert Spotter answers, and holds that the logs are
 read once per map, crt.sh only with `--ct`, one gap per provider that failed or was off, and the
-cache per provider.
+cache per provider. `test_resolver.py` holds each resolver's name, the run and every view
+naming it, that maps from two resolvers stay equal, and that each corpus case names the resolver
+it was recorded over.
 
 ### Record and replay
 
@@ -749,6 +753,7 @@ cache per provider.
 `RecordingResolver` wraps any Resolver and keeps every question and Answer; `save` writes them
 as JSON sorted by name and type, one object per question. `ReplayResolver` answers from that
 file, and a recorded failed lookup replays as failed, which is how could not check is modelled.
+A case's `case.json` names the resolver that answered the recording, and its replay names it too.
 `RecordingTransport` and `ReplayTransport` do the same for pages: method, URL, status, content
 type, redirect target and body text, or the transport error the request ended in. A question or
 request the recording does not hold raises `UnrecordedError` naming it. The engine's guards turn
@@ -773,8 +778,9 @@ so a test that opens a network socket fails, while the loopback web test keeps r
 - `.github/workflows/recheck-corpus.yml` maps every corpus case live again on Mondays at 10:00
   UTC, an hour after the proofs job, and by hand, with `tools/record_corpus.py DOMAIN --recheck
   DIR` (held by `tests/test_recheck_corpus.py`): the case's own options and a fresh
-  `checked_at`, compared with `expected.json` without `checked_at`, the two run fields or the
-  order of lists. The diff for each domain goes to the job summary and the fresh recordings to
+  `checked_at`, compared with `expected.json` without `checked_at`, the run fields or the
+  order of lists; when the live resolver is not the recorded one, the report says so above the
+  diff. The diff for each domain goes to the job summary and the fresh recordings to
   an artifact kept 30 days. Drift fails nothing; only a live map that could not be built fails
   the job. The job commits nothing.
 
