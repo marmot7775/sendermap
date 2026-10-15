@@ -406,7 +406,8 @@ that is not needed with any, a record listed twice, and a proof that is not an h
 domain. `tools/verify_proofs.py` fetches each page and the proof holds when it contains every
 value; a page that cannot be fetched is could not check. Every Mailbox and Security gateway
 vendor carries one, except Mimecast, Proofpoint and Outlook.com (consumer), whose own docs name
-the values to no plain HTTP client; so do the most seen senders across `data/hunt_domains.txt`
+the values to no plain HTTP client, and SiteGround, whose docs say its SPF and DKIM records are
+made for each site and name no value (its MX and SPF hosts are proven on live records only); so do the most seen senders across `data/hunt_domains.txt`
 whose docs can be read that way. A mailbox's MX is optional, as a security gateway in front of
 it takes its place in MX. A gateway's SPF item is left out where its docs ask for the include
 only for mail sent out through it (Barracuda), since a receiver with SPF missing is a risk.
