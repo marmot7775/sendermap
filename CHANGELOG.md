@@ -14,6 +14,7 @@ PyPI and makes the GitHub release; a tag with no section fails before anything i
 - HubSpot's and Mimecast's published ranges are read from the SPF records their customers include, not from the companies' own office mail records. Those records list other senders' ranges and run deeper than Sendermap reads, so every map with IP ranges in SPF carried two gaps about them, and some ranges were held as shared when only one service publishes them. A vendor block may name these hosts as `published_spf`.
 - The story names a receiver's risks in one clause ("receives the domain's mail, is not in its SPF and does not sign it") and no longer repeats the missing DKIM key in the sentence after.
 - A missing DKIM key reads "no key at google._domainkey, a name that does not exist", not "google no such name".
+- Two services added, each pattern with a live proof: SiteGround (its automatic SPF under dnssmarthost.net, `_spf.mailspamprotection.com`, its antispam MX and outbound address) and ClickFunnels (`mailer.myclickfunnels.com`, its outbound address and its domain verification token).
 - The resolver is named as a reader says it: "the system resolver", "Google DNS over HTTPS".
 
 ## 0.1.0 (2026-10-12)

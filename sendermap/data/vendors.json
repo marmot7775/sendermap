@@ -5568,6 +5568,90 @@
           }
         }
       ]
+    },
+    "SiteGround": {
+      "spf_includes": [
+        {
+          "value": "dnssmarthost.net",
+          "proof": {
+            "domain": "immobiliare.it",
+            "record": "immobiliare.it",
+            "date": "2026-10-15"
+          }
+        },
+        {
+          "value": "mailspamprotection.com",
+          "proof": {
+            "domain": "siteground.com",
+            "record": "siteground.com",
+            "date": "2026-10-15"
+          }
+        }
+      ],
+      "published_spf": [
+        {
+          "value": "_spf.mailspamprotection.com",
+          "proof": {
+            "domain": "siteground.com",
+            "record": "siteground.com",
+            "date": "2026-10-15"
+          }
+        }
+      ],
+      "sending_ip": [
+        {
+          "value": "185.56.87.13",
+          "proof": {
+            "domain": "mailspamprotection.com",
+            "record": "delivery.antispam.mailspamprotection.com",
+            "date": "2026-10-15"
+          }
+        }
+      ],
+      "mx": [
+        {
+          "value": "mailspamprotection.com",
+          "proof": {
+            "domain": "siteground.com",
+            "record": "siteground.com",
+            "date": "2026-10-15"
+          }
+        }
+      ],
+      "category": "Mailbox"
+    },
+    "ClickFunnels": {
+      "spf_includes": [
+        {
+          "value": "mailer.myclickfunnels.com",
+          "proof": {
+            "domain": "clickfunnels.com",
+            "record": "clickfunnels.com",
+            "date": "2026-10-15"
+          }
+        }
+      ],
+      "sending_ip": [
+        {
+          "value": "141.193.71.1",
+          "proof": {
+            "domain": "myclickfunnels.com",
+            "record": "cf01.mailer.myclickfunnels.com",
+            "date": "2026-10-15"
+          }
+        }
+      ],
+      "category": "Marketing",
+      "verification_txt": [
+        {
+          "value": "^clickfunnels-domain-verification=",
+          "proof": {
+            "domain": "clickfunnels.com",
+            "record": "clickfunnels.com",
+            "date": "2026-10-15"
+          }
+        }
+      ]
     }
   }
 }
