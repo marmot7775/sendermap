@@ -422,6 +422,7 @@ WITH_SETUP = {
     "Mailjet",
     "Customer.io",
     "Sailthru",
+    "Trend Micro Email Security",
 }
 # Receivers with no setup, because no page on their own docs site names the values to a plain
 # HTTP client: Mimecast's and Proofpoint's refuse it or need a login, and no Microsoft page names
