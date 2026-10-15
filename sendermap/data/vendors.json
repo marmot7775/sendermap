@@ -323,6 +323,14 @@
             "record": "newsdev.nytimes.com",
             "date": "2026-10-15"
           }
+        },
+        {
+          "value": "amazonses.com",
+          "proof": {
+            "domain": "shopify.com",
+            "record": "send.shopify.com",
+            "date": "2026-10-15"
+          }
         }
       ]
     },
@@ -5839,6 +5847,16 @@
           "proof": {
             "domain": "mailchimp.com",
             "record": "mailchimp.com",
+            "date": "2026-10-15"
+          }
+        }
+      ],
+      "networks": [
+        {
+          "value": "AS16417",
+          "proof": {
+            "domain": "iphmx.com",
+            "record": "mx1.intuit.iphmx.com",
             "date": "2026-10-15"
           }
         }
