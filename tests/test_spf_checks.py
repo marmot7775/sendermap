@@ -99,6 +99,23 @@ async def test_one_gap_names_every_vendor_an_error_ended_alike() -> None:
     assert all(vendor in gap.asked for vendor in CATALOG.sending_ips)
 
 
+async def test_too_many_lookups_that_find_nothing_is_a_note_and_a_read_not_a_gap() -> None:
+    # Three exists terms that find nothing for any address, as Salesforce's does for one it
+    # does not send from; the third passes the limit of two.
+    terms = " ".join(f"exists:%{{i}}.{n}.example.test" for n in ("_a", "_b", "_c"))
+    record = f"v=spf1 {terms} include:{VALIMAIL} -all"
+    result = await mapped(hosted(record))
+    assert not [g for g in result.gaps if g.asked.startswith(spf_checks.EVALUATION)]
+    (note,) = [f for f in result.findings if "permerror" in f.title]
+    assert note.severity.value == "note"
+    assert note.title == "SPF at example.test ends in permerror for some senders before its default"
+    assert f"each of {len(CATALOG.sending_ips)} services" in note.detail
+    assert note.evidence == (Evidence("example.test", "TXT", record, CHECKED),)
+    state, _, detail = spf_item(result)
+    assert state is State.MISSING
+    assert detail.startswith(f"{M365_IP}, one of Microsoft 365's addresses, gets permerror: more")
+
+
 async def test_evaluation_asks_nothing_where_the_walk_named_everything(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:

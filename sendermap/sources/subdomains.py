@@ -8,6 +8,10 @@ publishes SPF or MX, or is delegated by NS to a service's nameservers, as Klaviy
 send.example.com: the service then publishes the subdomain's records itself, and the
 delegation is its claim there. A delegation to nameservers no service is known by says nothing
 about mail and is not asked about further.
+
+A zone with a wildcard answers every name: shopify.com and gov.uk give the same SPF at any
+label. So a name no one would publish is asked first, and a candidate whose SPF or MX is the
+same as that name's is the wildcard answering, not a subdomain of its own.
 """
 
 from __future__ import annotations
@@ -22,6 +26,8 @@ from . import Context
 from .spf import spf_records
 
 MAX_FROM_CT = 60
+# The label asked to see whether the zone answers every name, as the DKIM source asks one.
+WILDCARD_CHECK = "sendermap-wildcard-check"
 # Names deeper than this many labels below the domain are not asked.
 MAX_CT_DEPTH = 2
 
@@ -42,7 +48,10 @@ async def discover(ctx: Context, logged: Iterable[str]) -> Found:
     labels = {f"{label}.{ctx.domain}" for label in ctx.catalog.sending_labels}
     from_ct, ct_gaps = _from_certificates(ctx, logged)
     candidates = sorted(labels | from_ct)
-    answers = await asyncio.gather(*(_sends(ctx, name) for name in candidates))
+    wildcard, *found = await asyncio.gather(
+        _asked(ctx, f"{WILDCARD_CHECK}.{ctx.domain}"), *(_asked(ctx, n) for n in candidates)
+    )
+    answers = [_sends(ctx, each, wildcard) for each in found]
     sending = tuple(
         name for name, (sends, _) in zip(candidates, answers, strict=True) if sends is True
     )
@@ -67,15 +76,29 @@ _FAILED = (
 )
 
 
-async def _sends(ctx: Context, name: str) -> tuple[bool | str, tuple[Claim, ...]]:
-    """Whether `name` publishes SPF or MX or is delegated to a service, and the delegation
-    claims; SERVFAIL or NO_ANSWER when a lookup failed and none of them was found."""
+Asked = tuple[Answer, Answer, Answer]  # TXT, MX and NS at one name
+
+
+async def _asked(ctx: Context, name: str) -> Asked:
     txt, mx, ns = await asyncio.gather(
         ctx.dns.txt(name), ctx.dns.query(name, "MX"), ctx.dns.query(name, "NS")
     )
+    return txt, mx, ns
+
+
+def _sends(ctx: Context, answers: Asked, wildcard: Asked) -> tuple[bool | str, tuple[Claim, ...]]:
+    """Whether a name publishes SPF or MX of its own, not the wildcard's, or is delegated to a
+    service, and the delegation claims; SERVFAIL or NO_ANSWER when a lookup failed and none of
+    them was found."""
+    txt, mx, ns = answers
+    spf = spf_records(txt)
+    own_spf = bool(spf) and spf != spf_records(wildcard[0])
+    own_mx = mx.ok and not (wildcard[1].ok and wildcard[1].records == mx.records)
     delegations = delegated(ctx, ns)
-    if spf_records(txt) or mx.ok or delegations:
+    if own_spf or own_mx or delegations:
         return True, delegations
+    if spf or mx.ok:  # the wildcard's answer, so nothing of its own
+        return False, ()
     failed = [a for a in (txt, mx, ns) if not a.answered]
     if not failed:
         return False, ()

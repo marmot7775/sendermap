@@ -25,6 +25,8 @@ from . import Context
 
 LOOKUP_LIMIT = 10  # section 4.6.4: terms that cause DNS queries
 VOID_LIMIT = 2  # section 4.6.4: lookups that answer no such name or no records
+# How a permerror for passing VOID_LIMIT starts; the name that found nothing follows.
+TOO_MANY_VOIDS = f"more than {VOID_LIMIT} lookups found nothing"
 MX_LIMIT = 10  # section 4.6.4: MX records one mx mechanism may look at
 PTR_LIMIT = 10  # section 4.6.4: PTR names one ptr mechanism, or the p macro, may look at
 
@@ -356,7 +358,7 @@ class _Check:
         if answer.status in (Status.NXDOMAIN, Status.NOANSWER) or not answer.records:
             self.voids += 1
             if self.voids > VOID_LIMIT:
-                raise _perm(f"more than {VOID_LIMIT} lookups found nothing ({answer.name})")
+                raise _perm(f"{TOO_MANY_VOIDS} ({answer.name})")
 
     def count(self, term: str) -> None:
         self.lookups += 1

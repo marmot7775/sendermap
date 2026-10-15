@@ -15,6 +15,9 @@ PyPI and makes the GitHub release; a tag with no section fails before anything i
 - The story names a receiver's risks in one clause ("receives the domain's mail, is not in its SPF and does not sign it") and no longer repeats the missing DKIM key in the sentence after.
 - A missing DKIM key reads "no key at google._domainkey, a name that does not exist", not "google no such name".
 - Two services added, each pattern with a live proof: SiteGround (its automatic SPF under dnssmarthost.net, `_spf.mailspamprotection.com`, its antispam MX and outbound address) and ClickFunnels (`mailer.myclickfunnels.com`, its outbound address and its domain verification token).
+- A zone with a wildcard no longer turns every label into a sending subdomain. shopify.com and gov.uk answer TXT at any name, so 30 subdomains each showed as sending, with a DKIM gap at each; a name no one would publish is now asked first, and a label that gives its answer is the wildcard.
+- An SPF record that passes the limit of two lookups that find nothing (RFC 7208 section 4.6.4) for a vendor's address is a note about the record, not "SPF evaluation (an error)" under Not checked: the permerror is the record's own answer.
+- Intercom's, Dotdigital's, Brevo's and UniSender's published ranges are read from the records their customers include. Their company domains include other services (Campaign Monitor, Statuspage, mail.ru), whose ranges read as theirs. Campaign Monitor gains cmail1.com and its own network, AS55819, so its ranges in a flattened record are named.
 - The resolver is named as a reader says it: "the system resolver", "Google DNS over HTTPS".
 
 ## 0.1.0 (2026-10-12)
