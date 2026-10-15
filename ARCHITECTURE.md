@@ -339,8 +339,8 @@ Checked's class as `denial`.
   network as that service's. Anything left is listed as unknown with every network named: the
   cloud's name for a shared cloud, otherwise the owner's, networks under one name together
   ("AS14618 and AS16509, Amazon Web Services") and different names after a semicolon, so nothing
-  is asserted that only one answer shows; then the services that publish the range. A cloud is never credited: 74.125.0.0/16, published by Google
-  Workspace and HubSpot and announced by Google's network, stays unknown. The data keeps one
+  is asserted that only one answer shows; then the services that publish the range. A cloud is never credited: a range two services publish and
+  Google's network announces stays unknown. The data keeps one
   Unknown per range. The views group them: the ranges and addresses at one name that share a
   set of networks, an owner name and a list of publishers are one line, "2 ranges and 1 address
   in AS16509 (Amazon Web Services)", with the publishers once after it, then the ranges, the first
@@ -567,6 +567,13 @@ address at `_dmarc.` or `_smtp._tls.` of the domain, a token at the domain itsel
 under its `_domainkey`, a delegation at a name under the domain (the domain's own nameservers are
 its DNS host, not a sending setup), a website host or subprocessor name on an https page of the
 domain, anything else at or under the domain. `proofs.py` holds those checks.
+
+A vendor block may carry `published_spf`: the SPF hosts its published ranges are read from,
+in place of its include values, each with a proof like an include's (a live domain whose SPF
+includes the host or a name under it). It is for a vendor whose include value is its company
+domain, since that domain's own record is its office mail and may list other senders' ranges:
+HubSpot's ranges are read from hubspotemail.net (each customer's include under it holds the
+same list), Mimecast's from `_netblocks.mimecast.com`.
 
 A vendor block may carry `sending_ip`: one address the vendor sends from, for SPF evaluation
 to ask a domain's record about. Its proof's record is either the vendor's own SPF record host,

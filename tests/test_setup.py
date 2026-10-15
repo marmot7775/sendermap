@@ -66,7 +66,8 @@ async def test_a_mailbox_in_mx_that_does_not_sign_is_a_risk_with_the_negative_an
     (found,) = service(result, "Microsoft 365").setups
     assert found.complete is False
     assert setup.line(found) == (
-        "Setup at example.test: SPF present, DKIM missing (selector1 and selector2 no such name), "
+        "Setup at example.test: SPF present, DKIM missing (no key at selector1._domainkey or "
+        "selector2._domainkey, names that do not exist), "
         "MX present, bounce CNAME not needed."
     )
     dkim = item(result, "Microsoft 365", "dkim")
@@ -122,8 +123,8 @@ async def test_missing_keys_are_worded_by_the_zones_denial_class(
     dkim = item(await mapped(compact, offline), "Microsoft 365", "dkim")
     assert dkim.state is State.MISSING
     assert dkim.detail == (
-        "selector1 and selector2 no record of this type (this zone gives that answer for every "
-        "name that does not exist)"
+        "no key at selector1._domainkey or selector2._domainkey, names with no TXT record; this "
+        "zone gives that answer for every name that does not exist"
     )
 
 
@@ -326,7 +327,7 @@ async def test_json_carries_setups_under_each_service(offline: httpx.AsyncClient
         ],
         "asked": "TXT at selector1._domainkey.example.test and TXT at "
         "selector2._domainkey.example.test",
-        "detail": "selector1 and selector2 no such name",
+        "detail": "no key at selector1._domainkey or selector2._domainkey, names that do not exist",
     }
     assert by_name["Amazon SES"]["setups"] == []  # no setup data for it yet
 

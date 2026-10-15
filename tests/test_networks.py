@@ -40,11 +40,11 @@ async def test_only_a_services_own_ranges_count() -> None:
 
 
 async def test_a_shared_range_on_a_cloud_network_is_unknown_and_lists_its_publishers() -> None:
-    # 74.125.0.0/16 is listed by Google Workspace and HubSpot, announced by Google.
+    # A range listed by Google Workspace and HubSpot, announced by Google.
     zone = (
         Zone()
         .add("_spf.google.com", "TXT", "v=spf1 ip4:74.125.0.0/16 ~all")
-        .add("hubspot.com", "TXT", "v=spf1 ip4:74.125.0.0/16 -all")
+        .add("hubspotemail.net", "TXT", "v=spf1 ip4:74.125.0.0/16 -all")
     )
     for ip in ("74.125.0.1", "74.125.128.1", "74.125.192.1"):
         owner(zone, ip, "AS15169", "GOOGLE - Google LLC, US")
@@ -66,7 +66,7 @@ async def test_a_range_inside_sendgrids_network_is_sendgrid_by_team_cymrus_answe
     zone = (
         Zone()
         .add("sendgrid.net", "TXT", "v=spf1 ip4:223.165.113.0/24 -all")
-        .add("hubspot.com", "TXT", "v=spf1 ip4:223.165.113.0/24 -all")
+        .add("hubspotemail.net", "TXT", "v=spf1 ip4:223.165.113.0/24 -all")
     )
     owner(zone, "223.165.113.1", "AS11377", "SENDGRID - SendGrid, Inc., US")
     observed = await networks.collect(context(zone), "example.com", [("223.165.113.0/24", EV)])

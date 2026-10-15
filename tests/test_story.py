@@ -126,6 +126,35 @@ def test_a_receiver_with_no_setup_says_only_that_it_receives() -> None:
     assert story.write(mapped) == "Fastmail receives the domain's mail."
 
 
+def receiver_at_risk(state: State, *titles: str) -> SenderMap:
+    return SenderMap(
+        DOMAIN,
+        (service("Google Workspace", Kind.MX, DOMAIN, dkim("Google Workspace", state)),),
+        Run(CHECKED, 0.0, 0, "fake zone"),
+        findings=tuple(Finding(Severity.RISK, f"Google Workspace{t}", "") for t in titles),
+    )
+
+
+def test_a_receivers_risks_fold_into_one_clause_and_are_not_said_again() -> None:
+    mapped = receiver_at_risk(
+        State.MISSING,
+        " receives the domain's mail and is not in its SPF",
+        " receives the domain's mail and does not sign it",
+    )
+    assert story.write(mapped) == (
+        "The map shows two risks: Google Workspace receives the domain's mail, is not in its SPF "
+        "and does not sign it."
+    )
+
+
+def test_a_receiver_at_risk_whose_key_is_in_place_still_says_so() -> None:
+    mapped = receiver_at_risk(State.PRESENT, " receives the domain's mail and is not in its SPF")
+    assert story.write(mapped) == (
+        "The map shows one risk: Google Workspace receives the domain's mail and is not in its "
+        "SPF. Google Workspace receives the domain's mail and has a DKIM key in place to sign it."
+    )
+
+
 def test_likely_alone_and_one_of_each() -> None:
     mapped = SenderMap(
         DOMAIN, (service("Customer.io", Kind.DKIM_NAME),), Run(CHECKED, 0.0, 0, "fake zone")

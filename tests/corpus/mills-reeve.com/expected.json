@@ -168,7 +168,7 @@
         }
        ],
        "asked": "TXT at selector1._domainkey.mills-reeve.com and TXT at selector2._domainkey.mills-reeve.com",
-       "detail": "selector1 and selector2 no record of this type (this zone gives that answer for every name that does not exist)"
+       "detail": "no key at selector1._domainkey or selector2._domainkey, names with no TXT record; this zone gives that answer for every name that does not exist"
       },
       {
        "record": "mx",
@@ -611,7 +611,7 @@
   {
    "severity": "warning",
    "title": "Microsoft 365 at mills-reeve.com has no DKIM",
-   "detail": "Its documented setup needs it and the map shows it missing: selector1 and selector2 no record of this type (this zone gives that answer for every name that does not exist).",
+   "detail": "Its documented setup needs it and the map shows it missing: no key at selector1._domainkey or selector2._domainkey, names with no TXT record; this zone gives that answer for every name that does not exist.",
    "evidence": [
     {
      "name": "selector1._domainkey.mills-reeve.com",
@@ -1171,20 +1171,6 @@
    "cap": 0
   },
   {
-   "asked": "published ranges: SPF of HubSpot",
-   "happened": "includes more than 3 levels deep not read (cap)",
-   "kind": "published_ranges",
-   "count": 0,
-   "cap": 3
-  },
-  {
-   "asked": "published ranges: SPF of Mimecast",
-   "happened": "includes more than 3 levels deep not read (cap)",
-   "kind": "published_ranges",
-   "count": 0,
-   "cap": 3
-  },
-  {
    "asked": "network owners of the IP ranges in SPF at mills-reeve.com",
    "happened": "25 of 49 not looked up: only the first 24 were (cap)",
    "kind": "networks",
@@ -1446,5 +1432,5 @@
  "logo": null,
  "schema": "sendermap/1",
  "absences": [],
- "story": "Mimecast stands in front of the domain's mail as a security gateway, so the mailbox provider is not visible from MX. Three other services are set up to send as the domain: one support and CRM (Freshdesk), one mailbox (Microsoft 365), one transactional (SendGrid). DMARC reports go to Mimecast DMARC Analyzer. Not checked: the website (turned off), DKIM selectors past the first 27 on two subdomains, network owners for 25 of 49 ranges, the IP ranges two services publish in their own SPF (past three include levels), and the crt.sh certificate log (read only with --ct)."
+ "story": "Mimecast stands in front of the domain's mail as a security gateway, so the mailbox provider is not visible from MX. Three other services are set up to send as the domain: one support and CRM (Freshdesk), one mailbox (Microsoft 365), one transactional (SendGrid). DMARC reports go to Mimecast DMARC Analyzer. Not checked: the website (turned off), DKIM selectors past the first 27 on two subdomains, network owners for 25 of 49 ranges, and the crt.sh certificate log (read only with --ct)."
 }

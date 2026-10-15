@@ -72,3 +72,10 @@ def test_a_host_the_page_does_not_load_from_is_only_mentioned() -> None:
 def test_every_service_has_a_category() -> None:
     data = C.services
     assert all(block.get("category") for block in data.values())
+
+
+def test_published_ranges_are_read_from_published_spf_where_a_block_names_it() -> None:
+    sources = catalog.load().spf_sources()
+    assert sources["HubSpot"] == ["hubspotemail.net"]
+    assert sources["Mimecast"] == ["_netblocks.mimecast.com"]
+    assert "sendgrid.net" in sources["SendGrid"]

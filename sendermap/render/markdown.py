@@ -6,7 +6,15 @@ from datetime import UTC
 
 from ..model import SenderMap, Service, Unknown
 from ..setup import line
-from . import NetworkGroup, asked, asked_in_full, claimed_parts, ct_lines, grouped_unknowns
+from . import (
+    NetworkGroup,
+    asked,
+    asked_in_full,
+    claimed_parts,
+    ct_lines,
+    grouped_unknowns,
+    resolver_words,
+)
 
 
 def render(result: SenderMap, *, evidence: bool = False) -> str:
@@ -14,7 +22,7 @@ def render(result: SenderMap, *, evidence: bool = False) -> str:
     checked = result.run.checked_at.astimezone(UTC).strftime("%Y-%m-%d %H:%M UTC")
     lines.append(
         f"{len(result.senders)} sending services found from public records checked {checked} "
-        f"({result.run.lookups} lookups over {result.run.resolver})."
+        f"({result.run.lookups} lookups over {resolver_words(result.run.resolver)})."
     )
     lines += ["", "| Service | Category | How sure | Evidence |", "|---|---|---|---|"]
     lines += [_row(s, result.domain) for s in result.senders]

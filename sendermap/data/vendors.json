@@ -1947,6 +1947,16 @@
           }
         }
       ],
+      "published_spf": [
+        {
+          "value": "hubspotemail.net",
+          "proof": {
+            "domain": "spotify.com",
+            "record": "spotify.com",
+            "date": "2026-10-14"
+          }
+        }
+      ],
       "sending_ip": [
         {
           "value": "3.93.157.66",
@@ -3423,6 +3433,16 @@
             "domain": "hp.com",
             "record": "hp.com",
             "date": "2026-10-10"
+          }
+        }
+      ],
+      "published_spf": [
+        {
+          "value": "_netblocks.mimecast.com",
+          "proof": {
+            "domain": "steamcommunity.com",
+            "record": "steamcommunity.com",
+            "date": "2026-10-14"
           }
         }
       ],
