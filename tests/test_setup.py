@@ -404,6 +404,8 @@ WITH_SETUP = {
     "Barracuda",
     "DuoCircle",
     "Symantec MessageLabs",
+    "Cloudflare Email Security",
+    "Cisco Secure Email",
     "SendGrid",
     "Mailchimp",
     "Klaviyo",
