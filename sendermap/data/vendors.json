@@ -314,6 +314,16 @@
             "date": "2026-10-10"
           }
         }
+      ],
+      "mx": [
+        {
+          "value": "inbound-smtp.us-east-1.amazonaws.com",
+          "proof": {
+            "domain": "nytimes.com",
+            "record": "newsdev.nytimes.com",
+            "date": "2026-10-15"
+          }
+        }
       ]
     },
     "Atlassian": {
@@ -324,6 +334,14 @@
             "domain": "atlassian.net",
             "record": "atlassian.net",
             "date": "2026-10-09"
+          }
+        },
+        {
+          "value": "stspg-customer.com",
+          "proof": {
+            "domain": "cloudflare.com",
+            "record": "cloudflare.com",
+            "date": "2026-10-15"
           }
         }
       ],
@@ -2545,6 +2563,14 @@
             "record": "mail.mailchimp.com",
             "date": "2026-10-09"
           }
+        },
+        {
+          "value": "spf1.mcsv.net",
+          "proof": {
+            "domain": "cloudflare.com",
+            "record": "cloudflare.com",
+            "date": "2026-10-15"
+          }
         }
       ],
       "sending_ip": [
@@ -3275,6 +3301,16 @@
             "domain": "adobe.com",
             "record": "https://experienceleague.adobe.com/en/docs/marketo/using/getting-started/initial-setup/configure-protocols-for-marketo",
             "date": "2026-10-11"
+          }
+        }
+      ],
+      "mx": [
+        {
+          "value": "mktomail.com",
+          "proof": {
+            "domain": "notion.so",
+            "record": "hello.notion.so",
+            "date": "2026-10-15"
           }
         }
       ]
@@ -4491,6 +4527,26 @@
             "date": "2026-10-10"
           }
         }
+      ],
+      "spf_includes": [
+        {
+          "value": "cust-spf.exacttarget.com",
+          "proof": {
+            "domain": "airbnb.com",
+            "record": "mail.airbnb.com",
+            "date": "2026-10-15"
+          }
+        }
+      ],
+      "mx": [
+        {
+          "value": "exacttarget.com",
+          "proof": {
+            "domain": "airbnb.com",
+            "record": "mail.airbnb.com",
+            "date": "2026-10-15"
+          }
+        }
       ]
     },
     "SendGrid": {
@@ -4756,6 +4812,14 @@
             "record": "email.sparkpost.com",
             "date": "2026-10-09"
           }
+        },
+        {
+          "value": "e.sparkpost.com",
+          "proof": {
+            "domain": "nytimes.com",
+            "record": "bounce.nytimes.com",
+            "date": "2026-10-15"
+          }
         }
       ],
       "subprocessor_names": [
@@ -4775,6 +4839,14 @@
             "domain": "cloudflare.com",
             "record": "notify.cloudflare.com",
             "date": "2026-10-10"
+          }
+        },
+        {
+          "value": "e.sparkpost.com",
+          "proof": {
+            "domain": "nytimes.com",
+            "record": "nytimes.com",
+            "date": "2026-10-15"
           }
         }
       ],
@@ -5146,6 +5218,16 @@
             "date": "2026-10-11"
           },
           "note": "Zendesk signs with its own domain until the customer turns on DKIM for theirs."
+        }
+      ],
+      "mx": [
+        {
+          "value": "zendesk.com",
+          "proof": {
+            "domain": "airbnb.com",
+            "record": "support.airbnb.com",
+            "date": "2026-10-15"
+          }
         }
       ]
     },
@@ -5718,6 +5800,190 @@
           }
         }
       ]
+    },
+    "Cloudflare Email Security": {
+      "mx": [
+        {
+          "value": "inbound.cf-emailsecurity.net",
+          "proof": {
+            "domain": "cloudflare.com",
+            "record": "cloudflare.com",
+            "date": "2026-10-15"
+          }
+        }
+      ],
+      "category": "Security gateway",
+      "aliases": [
+        "Area 1",
+        "Cloudflare Area 1"
+      ],
+      "setup": [
+        {
+          "record": "mx",
+          "need": "required",
+          "values": [
+            "inbound.cf-emailsecurity.net"
+          ],
+          "proof": {
+            "domain": "cloudflare.com",
+            "record": "https://developers.cloudflare.com/cloudflare-one/email-security/setup/pre-delivery-deployment/prerequisites/gsuite-email-security-mx/",
+            "date": "2026-10-15"
+          }
+        }
+      ]
+    },
+    "Cisco Secure Email": {
+      "mx": [
+        {
+          "value": "iphmx.com",
+          "proof": {
+            "domain": "mailchimp.com",
+            "record": "mailchimp.com",
+            "date": "2026-10-15"
+          }
+        }
+      ],
+      "category": "Security gateway",
+      "aliases": [
+        "IronPort",
+        "Cisco IronPort",
+        "Cisco ESA",
+        "Cisco CES",
+        "Cisco Secure Email Cloud Gateway"
+      ],
+      "setup": [
+        {
+          "record": "mx",
+          "need": "required",
+          "values": [
+            "iphmx.com"
+          ],
+          "proof": {
+            "domain": "cisco.com",
+            "record": "https://docs.ces.cisco.com/docs/hostnames",
+            "date": "2026-10-15"
+          }
+        }
+      ]
+    },
+    "Oracle Email Delivery": {
+      "spf_includes": [
+        {
+          "value": "rp.oracleemaildelivery.com",
+          "proof": {
+            "domain": "dropbox.com",
+            "record": "dropbox.com",
+            "date": "2026-10-15"
+          }
+        }
+      ],
+      "category": "Transactional",
+      "aliases": [
+        "OCI Email Delivery",
+        "Oracle Cloud Infrastructure Email Delivery"
+      ]
+    },
+    "NetSuite": {
+      "spf_includes": [
+        {
+          "value": "mailsenders.netsuite.com",
+          "proof": {
+            "domain": "mailchimp.com",
+            "record": "mailchimp.com",
+            "date": "2026-10-15"
+          }
+        },
+        {
+          "value": "sent-via.netsuite.com",
+          "proof": {
+            "domain": "cloudflare.com",
+            "record": "billing.cloudflare.com",
+            "date": "2026-10-15"
+          }
+        }
+      ],
+      "category": "Commerce and apps",
+      "aliases": [
+        "Oracle NetSuite"
+      ]
+    },
+    "Qualtrics": {
+      "spf_includes": [
+        {
+          "value": "_spf.qualtrics.com",
+          "proof": {
+            "domain": "mailchimp.com",
+            "record": "mailchimp.com",
+            "date": "2026-10-15"
+          }
+        }
+      ],
+      "category": "Marketing"
+    },
+    "Recurly": {
+      "spf_includes": [
+        {
+          "value": "spf.recurly.com",
+          "proof": {
+            "domain": "zoom.us",
+            "record": "billing.zoom.us",
+            "date": "2026-10-15"
+          }
+        }
+      ],
+      "category": "Commerce and apps"
+    },
+    "Zuora": {
+      "spf_includes": [
+        {
+          "value": "zuora.com",
+          "proof": {
+            "domain": "zoom.us",
+            "record": "billing.zoom.us",
+            "date": "2026-10-15"
+          }
+        }
+      ],
+      "category": "Commerce and apps"
+    },
+    "DMARC Digests": {
+      "reporting": [
+        {
+          "value": "dmarcdigests.com",
+          "proof": {
+            "domain": "linear.app",
+            "record": "_dmarc.linear.app",
+            "date": "2026-10-15"
+          }
+        }
+      ],
+      "category": "DMARC reporting"
+    },
+    "MxToolbox": {
+      "reporting": [
+        {
+          "value": "dmarc-report.com",
+          "proof": {
+            "domain": "nhs.net",
+            "record": "_dmarc.nhs.net",
+            "date": "2026-10-15"
+          }
+        }
+      ],
+      "category": "DMARC reporting"
+    },
+    "NCSC Mail Check": {
+      "reporting": [
+        {
+          "value": "mailcheck.service.ncsc.gov.uk",
+          "proof": {
+            "domain": "nhs.net",
+            "record": "_smtp._tls.nhs.net",
+            "date": "2026-10-15"
+          }
+        }
+      ],
+      "category": "DMARC reporting"
     }
   }
 }

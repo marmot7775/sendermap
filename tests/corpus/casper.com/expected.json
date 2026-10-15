@@ -1512,58 +1512,23 @@
    "setups": []
   },
   {
-   "name": "Salesforce Account Engagement",
-   "category": "Marketing",
-   "tier": "Configured",
-   "role": "sender",
-   "claims": [
-    {
-     "service": "Salesforce Account Engagement",
-     "kind": "owns a network listed in SPF",
-     "where": "mail.casper.com",
-     "evidence": {
-      "name": "cust-spf.exacttarget.com",
-      "rtype": "TXT",
-      "value": "ip4:13.111.191.0/24",
-      "checked_at": "2026-10-12T01:25:01+00:00"
-     },
-     "supporting": [
-      {
-       "name": "et._spf.pardot.com",
-       "rtype": "TXT",
-       "value": "ip4:13.111.0.0/16",
-       "checked_at": "2026-10-12T01:25:01+00:00"
-      }
-     ]
-    },
-    {
-     "service": "Salesforce Account Engagement",
-     "kind": "owns a network listed in SPF",
-     "where": "mail.casper.com",
-     "evidence": {
-      "name": "cust-spf.exacttarget.com",
-      "rtype": "TXT",
-      "value": "ip4:13.111.0.0/16",
-      "checked_at": "2026-10-12T01:25:01+00:00"
-     },
-     "supporting": [
-      {
-       "name": "et._spf.pardot.com",
-       "rtype": "TXT",
-       "value": "ip4:13.111.0.0/16",
-       "checked_at": "2026-10-12T01:25:01+00:00"
-      }
-     ]
-    }
-   ],
-   "setups": []
-  },
-  {
    "name": "Salesforce Marketing Cloud Engagement",
    "category": "Marketing",
    "tier": "Configured",
    "role": "sender",
    "claims": [
+    {
+     "service": "Salesforce Marketing Cloud Engagement",
+     "kind": "included in SPF",
+     "where": "mail.casper.com",
+     "evidence": {
+      "name": "mail.casper.com",
+      "rtype": "TXT",
+      "value": "include:cust-spf.exacttarget.com",
+      "checked_at": "2026-10-12T01:25:01+00:00"
+     },
+     "supporting": []
+    },
     {
      "service": "Salesforce Marketing Cloud Engagement",
      "kind": "hosts a sending subdomain's DNS (NS)",
@@ -2666,281 +2631,6 @@
     "value": "20 incoming.bm23.com",
     "checked_at": "2026-10-12T01:25:01+00:00"
    }
-  },
-  {
-   "what": "SPF include",
-   "value": "cust-spf.exacttarget.com",
-   "where": "mail.casper.com",
-   "evidence": {
-    "name": "mail.casper.com",
-    "rtype": "TXT",
-    "value": "include:cust-spf.exacttarget.com",
-    "checked_at": "2026-10-12T01:25:01+00:00"
-   }
-  },
-  {
-   "what": "IP range in SPF",
-   "value": "64.132.92.0/24 (AS22606, EXACT-7 - Salesforce.com, Inc., US)",
-   "where": "mail.casper.com",
-   "evidence": {
-    "name": "cust-spf.exacttarget.com",
-    "rtype": "TXT",
-    "value": "ip4:64.132.92.0/24",
-    "checked_at": "2026-10-12T01:25:01+00:00"
-   }
-  },
-  {
-   "what": "IP range in SPF",
-   "value": "64.132.88.0/23 (AS22606, EXACT-7 - Salesforce.com, Inc., US)",
-   "where": "mail.casper.com",
-   "evidence": {
-    "name": "cust-spf.exacttarget.com",
-    "rtype": "TXT",
-    "value": "ip4:64.132.88.0/23",
-    "checked_at": "2026-10-12T01:25:01+00:00"
-   }
-  },
-  {
-   "what": "IP range in SPF",
-   "value": "66.231.80.0/20 (AS14340, SALESFORCE - Salesforce.com, Inc., US)",
-   "where": "mail.casper.com",
-   "evidence": {
-    "name": "cust-spf.exacttarget.com",
-    "rtype": "TXT",
-    "value": "ip4:66.231.80.0/20",
-    "checked_at": "2026-10-12T01:25:01+00:00"
-   }
-  },
-  {
-   "what": "IP range in SPF",
-   "value": "68.232.192.0/20 (AS14340, SALESFORCE - Salesforce.com, Inc., US)",
-   "where": "mail.casper.com",
-   "evidence": {
-    "name": "cust-spf.exacttarget.com",
-    "rtype": "TXT",
-    "value": "ip4:68.232.192.0/20",
-    "checked_at": "2026-10-12T01:25:01+00:00"
-   }
-  },
-  {
-   "what": "IP range in SPF",
-   "value": "199.122.120.0/21 (AS14340, SALESFORCE - Salesforce.com, Inc., US)",
-   "where": "mail.casper.com",
-   "evidence": {
-    "name": "cust-spf.exacttarget.com",
-    "rtype": "TXT",
-    "value": "ip4:199.122.120.0/21",
-    "checked_at": "2026-10-12T01:25:01+00:00"
-   }
-  },
-  {
-   "what": "IP range in SPF",
-   "value": "207.67.38.0/24 (AS3549, LVLT-3549 - Level 3 Parent, LLC, US; AS22606, EXACT-7 - Salesforce.com, Inc., US)",
-   "where": "mail.casper.com",
-   "evidence": {
-    "name": "cust-spf.exacttarget.com",
-    "rtype": "TXT",
-    "value": "ip4:207.67.38.0/24",
-    "checked_at": "2026-10-12T01:25:01+00:00"
-   }
-  },
-  {
-   "what": "IP range in SPF",
-   "value": "128.17.0.0/20 (AS14340, SALESFORCE - Salesforce.com, Inc., US)",
-   "where": "mail.casper.com",
-   "evidence": {
-    "name": "cust-spf.exacttarget.com",
-    "rtype": "TXT",
-    "value": "ip4:128.17.0.0/20",
-    "checked_at": "2026-10-12T01:25:01+00:00"
-   }
-  },
-  {
-   "what": "IP range in SPF",
-   "value": "128.17.64.0/20 (AS14340, SALESFORCE - Salesforce.com, Inc., US)",
-   "where": "mail.casper.com",
-   "evidence": {
-    "name": "cust-spf.exacttarget.com",
-    "rtype": "TXT",
-    "value": "ip4:128.17.64.0/20",
-    "checked_at": "2026-10-12T01:25:01+00:00"
-   }
-  },
-  {
-   "what": "IP range in SPF",
-   "value": "128.17.128.0/20 (AS14340, SALESFORCE - Salesforce.com, Inc., US)",
-   "where": "mail.casper.com",
-   "evidence": {
-    "name": "cust-spf.exacttarget.com",
-    "rtype": "TXT",
-    "value": "ip4:128.17.128.0/20",
-    "checked_at": "2026-10-12T01:25:01+00:00"
-   }
-  },
-  {
-   "what": "IP range in SPF",
-   "value": "128.17.192.0/20 (AS14340, SALESFORCE - Salesforce.com, Inc., US)",
-   "where": "mail.casper.com",
-   "evidence": {
-    "name": "cust-spf.exacttarget.com",
-    "rtype": "TXT",
-    "value": "ip4:128.17.192.0/20",
-    "checked_at": "2026-10-12T01:25:01+00:00"
-   }
-  },
-  {
-   "what": "IP range in SPF",
-   "value": "128.245.0.0/20 (AS14340, SALESFORCE - Salesforce.com, Inc., US)",
-   "where": "mail.casper.com",
-   "evidence": {
-    "name": "cust-spf.exacttarget.com",
-    "rtype": "TXT",
-    "value": "ip4:128.245.0.0/20",
-    "checked_at": "2026-10-12T01:25:01+00:00"
-   }
-  },
-  {
-   "what": "IP range in SPF",
-   "value": "128.245.64.0/20 (AS14340, SALESFORCE - Salesforce.com, Inc., US)",
-   "where": "mail.casper.com",
-   "evidence": {
-    "name": "cust-spf.exacttarget.com",
-    "rtype": "TXT",
-    "value": "ip4:128.245.64.0/20",
-    "checked_at": "2026-10-12T01:25:01+00:00"
-   }
-  },
-  {
-   "what": "IP range in SPF",
-   "value": "128.245.242.0/24 (AS14340, SALESFORCE - Salesforce.com, Inc., US)",
-   "where": "mail.casper.com",
-   "evidence": {
-    "name": "cust-spf.exacttarget.com",
-    "rtype": "TXT",
-    "value": "ip4:128.245.242.0/24",
-    "checked_at": "2026-10-12T01:25:01+00:00"
-   }
-  },
-  {
-   "what": "IP range in SPF",
-   "value": "128.245.243.0/24 (AS14340, SALESFORCE - Salesforce.com, Inc., US)",
-   "where": "mail.casper.com",
-   "evidence": {
-    "name": "cust-spf.exacttarget.com",
-    "rtype": "TXT",
-    "value": "ip4:128.245.243.0/24",
-    "checked_at": "2026-10-12T01:25:01+00:00"
-   }
-  },
-  {
-   "what": "IP range in SPF",
-   "value": "128.245.244.0/24 (AS14340, SALESFORCE - Salesforce.com, Inc., US)",
-   "where": "mail.casper.com",
-   "evidence": {
-    "name": "cust-spf.exacttarget.com",
-    "rtype": "TXT",
-    "value": "ip4:128.245.244.0/24",
-    "checked_at": "2026-10-12T01:25:01+00:00"
-   }
-  },
-  {
-   "what": "IP range in SPF",
-   "value": "128.245.245.0/24 (AS14340, SALESFORCE - Salesforce.com, Inc., US)",
-   "where": "mail.casper.com",
-   "evidence": {
-    "name": "cust-spf.exacttarget.com",
-    "rtype": "TXT",
-    "value": "ip4:128.245.245.0/24",
-    "checked_at": "2026-10-12T01:25:01+00:00"
-   }
-  },
-  {
-   "what": "IP range in SPF",
-   "value": "128.245.246.0/24 (AS14340, SALESFORCE - Salesforce.com, Inc., US)",
-   "where": "mail.casper.com",
-   "evidence": {
-    "name": "cust-spf.exacttarget.com",
-    "rtype": "TXT",
-    "value": "ip4:128.245.246.0/24",
-    "checked_at": "2026-10-12T01:25:01+00:00"
-   }
-  },
-  {
-   "what": "IP range in SPF",
-   "value": "128.245.247.0/24 (AS14340, SALESFORCE - Salesforce.com, Inc., US)",
-   "where": "mail.casper.com",
-   "evidence": {
-    "name": "cust-spf.exacttarget.com",
-    "rtype": "TXT",
-    "value": "ip4:128.245.247.0/24",
-    "checked_at": "2026-10-12T01:25:01+00:00"
-   }
-  },
-  {
-   "what": "IP range in SPF",
-   "value": "128.245.176.0/20 (AS14340, SALESFORCE - Salesforce.com, Inc., US)",
-   "where": "mail.casper.com",
-   "evidence": {
-    "name": "cust-spf.exacttarget.com",
-    "rtype": "TXT",
-    "value": "ip4:128.245.176.0/20",
-    "checked_at": "2026-10-12T01:25:01+00:00"
-   }
-  },
-  {
-   "what": "IP range in SPF",
-   "value": "136.147.224.0/20 (AS14340, SALESFORCE - Salesforce.com, Inc., US)",
-   "where": "mail.casper.com",
-   "evidence": {
-    "name": "cust-spf.exacttarget.com",
-    "rtype": "TXT",
-    "value": "ip4:136.147.224.0/20",
-    "checked_at": "2026-10-12T01:25:01+00:00"
-   }
-  },
-  {
-   "what": "IP range in SPF",
-   "value": "207.67.98.192/27 (AS3549, LVLT-3549 - Level 3 Parent, LLC, US)",
-   "where": "mail.casper.com",
-   "evidence": {
-    "name": "cust-spf.exacttarget.com",
-    "rtype": "TXT",
-    "value": "ip4:207.67.98.192/27",
-    "checked_at": "2026-10-12T01:25:01+00:00"
-   }
-  },
-  {
-   "what": "IP range in SPF",
-   "value": "207.250.68.0/24 (AS22606, EXACT-7 - Salesforce.com, Inc., US)",
-   "where": "mail.casper.com",
-   "evidence": {
-    "name": "cust-spf.exacttarget.com",
-    "rtype": "TXT",
-    "value": "ip4:207.250.68.0/24",
-    "checked_at": "2026-10-12T01:25:01+00:00"
-   }
-  },
-  {
-   "what": "IP range in SPF",
-   "value": "209.43.22.0/28 (AS13767, DATABANK-DFW - DataBank Holdings, Ltd., US)",
-   "where": "mail.casper.com",
-   "evidence": {
-    "name": "cust-spf.exacttarget.com",
-    "rtype": "TXT",
-    "value": "ip4:209.43.22.0/28",
-    "checked_at": "2026-10-12T01:25:01+00:00"
-   }
-  },
-  {
-   "what": "IP range in SPF",
-   "value": "198.245.80.0/20 (AS14340, SALESFORCE - Salesforce.com, Inc., US)",
-   "where": "mail.casper.com",
-   "evidence": {
-    "name": "cust-spf.exacttarget.com",
-    "rtype": "TXT",
-    "value": "ip4:198.245.80.0/20",
-    "checked_at": "2026-10-12T01:25:01+00:00"
-   }
   }
  ],
  "gaps": [
@@ -2978,13 +2668,6 @@
    "kind": "dkim",
    "count": 76,
    "cap": 27
-  },
-  {
-   "asked": "network owners of the IP ranges in SPF at mail.casper.com",
-   "happened": "24 of 48 not looked up: only the first 24 were (cap)",
-   "kind": "networks",
-   "count": 24,
-   "cap": 24
   },
   {
    "asked": "DKIM selectors at mail.casper.com",
@@ -3381,5 +3064,5 @@
    ]
   }
  ],
- "story": "Google Workspace receives the domain's mail and has a DKIM key in place to sign it. Ten other services are set up to send as the domain: five marketing (Campaign Monitor, Iterable, Mailchimp, Salesforce Account Engagement, Salesforce Marketing Cloud Engagement), four transactional (Mailgun, Mandrill, Postmark, SendGrid), one support and CRM (Salesforce); one more is likely from a DKIM key name alone (Customer.io). One service shows an account and nothing set up to send (Microsoft 365); DMARC reports go to DMARCian. Not checked: the website (turned off), DKIM selectors past the first 27 on five subdomains, network owners for 42 of 90 ranges at two names, and the crt.sh certificate log (read only with --ct)."
+ "story": "Google Workspace receives the domain's mail and has a DKIM key in place to sign it. Nine other services are set up to send as the domain: four marketing (Campaign Monitor, Iterable, Mailchimp, Salesforce Marketing Cloud Engagement), four transactional (Mailgun, Mandrill, Postmark, SendGrid), one support and CRM (Salesforce); one more is likely from a DKIM key name alone (Customer.io). One service shows an account and nothing set up to send (Microsoft 365); DMARC reports go to DMARCian. Not checked: the website (turned off), DKIM selectors past the first 27 on five subdomains, network owners for 18 of 42 ranges, and the crt.sh certificate log (read only with --ct)."
 }
