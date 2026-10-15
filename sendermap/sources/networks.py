@@ -3,7 +3,10 @@
 Many records name raw addresses instead of a service's include, often because a tool flattened
 the record. Each range, IPv4 or IPv6, is named in this order:
 
-1. Published ranges. Each service publishes its sending ranges in its own SPF record. A range
+1. Published ranges. Each service publishes its sending ranges in its own SPF record: the one
+   its customers include, named in vendors.json as `published_spf` where the include value is
+   the company's own domain, whose record is its office mail (hubspot.com lists other senders'
+   ranges; Mimecast's customers include _netblocks.mimecast.com, not mimecast.com). A range
    inside a range that exactly one service publishes is that service: this is how a flattened
    copy of Amazon SES's ranges is recognised. When several services publish the holding range,
    this check names none of them.
@@ -14,10 +17,10 @@ the record. Each range, IPv4 or IPv6, is named in this order:
    service's own (Mailchimp, SendGrid, Mailgun and a few others run their own).
 3. Anything else is listed as unknown, with the network, the cloud's name when vendors.json
    lists the network as a shared cloud, and the services that publish the range, if any. A
-   cloud is never credited to a service: 74.125.0.0/16 is published by both Google Workspace
-   and HubSpot and announced by Google's network, which vendors.json lists as a cloud, so it is
-   unknown, listed by both. When the networks are not all one service's, nothing is asserted
-   that only one answer shows: the range is unknown and names every network and its owner.
+   cloud is never credited to a service: a range two services publish and Google's network
+   announces, which vendors.json lists as a cloud, is unknown, listed by both. When the
+   networks are not all one service's, nothing is asserted that only one answer shows: the
+   range is unknown and names every network and its owner.
 """
 
 from __future__ import annotations

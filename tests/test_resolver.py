@@ -15,7 +15,7 @@ from test_determinism import busy
 import sendermap
 from sendermap import cli, map_domain
 from sendermap.dns import DohResolver, SystemResolver, parse_doh
-from sendermap.render import markdown, text
+from sendermap.render import markdown, resolver_words, text
 from sendermap.testing import Case, RecordingResolver, replay
 
 
@@ -62,12 +62,13 @@ async def test_the_run_names_the_resolver_and_the_map_ignores_it(
 async def test_the_views_name_the_resolver(offline: httpx.AsyncClient) -> None:
     result = await busy_map("doh cloudflare", offline)
     result = replace(result, run=replace(result.run, lookups=638, elapsed=11.2))
-    assert "(638 lookups over doh cloudflare)." in markdown.render(result)
+    assert "(638 lookups over Cloudflare DNS over HTTPS)." in markdown.render(result)
     console = Console(record=True, width=200)
     text.render(result, console)
-    assert "638 lookups in 11.2 s over doh cloudflare" in console.export_text()
+    assert "638 lookups in 11.2 s over Cloudflare DNS over HTTPS" in console.export_text()
     script = (Path(sendermap.__file__).parent / "web" / "static" / "app.js").read_text()
-    assert "over ${map.run.resolver}" in script
+    assert "over ${resolverWords(map.run.resolver)}" in script
+    assert '"doh google": "Google DNS over HTTPS"' in script
 
 
 def test_the_schema_gains_resolver_as_an_optional_string() -> None:
@@ -124,3 +125,16 @@ def test_the_cli_names_the_resolver_it_built(
 def test_a_doh_server_failure_is_marked_as_the_domains() -> None:
     assert parse_doh("lame.example.com", "TXT", {"Status": 2}).servfail
     assert not parse_doh("odd.example.com", "TXT", {"Status": 5}).servfail
+
+
+@pytest.mark.parametrize(
+    ("name", "words"),
+    [
+        ("system", "the system resolver"),
+        ("doh google", "Google DNS over HTTPS"),
+        ("doh dns.example", "DNS over HTTPS at dns.example"),
+        ("fake zone", "fake zone"),
+    ],
+)
+def test_a_resolver_is_named_as_a_reader_says_it(name: str, words: str) -> None:
+    assert resolver_words(name) == words

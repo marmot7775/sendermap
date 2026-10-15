@@ -48,6 +48,7 @@ PATTERN_FIELDS = (
     "verification_txt",
     "networks",
     "sending_ip",
+    "published_spf",
     "website",
     "subprocessor_names",
 )
@@ -280,12 +281,17 @@ class Catalog:
         return service in self.hosted_spf
 
     def spf_sources(self) -> dict[str, list[str]]:
-        """{service: its SPF include hosts} for services whose includes are real records,
-        not zones that only hold per-customer names."""
+        """{service: the SPF hosts its published ranges are read from}: its `published_spf`
+        hosts where the block names them, else its include hosts that are real records, not
+        zones that only hold per-customer names. A vendor whose include value is its company
+        domain names `published_spf`, since that domain's record is its own office mail."""
         return {
-            name: [h for h in block.get("spf_includes", ()) if "." in h]
+            name: hosts
             for name, block in self.services.items()
-            if block.get("spf_includes")
+            if (
+                hosts := list(block.get("published_spf", ()))
+                or [h for h in block.get("spf_includes", ()) if "." in h]
+            )
         }
 
     def __iter__(self) -> Iterator[str]:

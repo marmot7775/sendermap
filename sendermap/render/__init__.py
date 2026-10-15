@@ -23,6 +23,22 @@ from ..model import (
 NETWORK_VALUE = r"^(\S+) \((AS\d+(?: and AS\d+)*), ((?:(?!; AS\d).)+?)(?:; listed by (.+))?\)$"
 _NETWORK_VALUE = re.compile(NETWORK_VALUE)
 _IP_KINDS = {"IP range in SPF": 0, "IP address in SPF": 1}
+# The resolvers a run names, as a reader says them. app.js holds the same words.
+_RESOLVERS = {
+    "system": "the system resolver",
+    "doh cloudflare": "Cloudflare DNS over HTTPS",
+    "doh google": "Google DNS over HTTPS",
+}
+
+
+def resolver_words(name: str) -> str:
+    """'the system resolver', 'Google DNS over HTTPS', 'DNS over HTTPS at <host>', or the name
+    as the run gives it."""
+    if name in _RESOLVERS:
+        return _RESOLVERS[name]
+    if name.startswith("doh "):
+        return f"DNS over HTTPS at {name[4:]}"
+    return name
 
 
 @dataclass(frozen=True, slots=True)

@@ -22,6 +22,7 @@ _NUMBERS = (
     *("eighteen", "nineteen", "twenty"),
 )
 GATEWAY = "Security gateway"
+RECEIVES = " receives the domain's mail"
 WEBSITE = "the website"
 # How a Likely service is known, by the kind of the claim that decided it.
 LIKELY_FROM = {
@@ -52,18 +53,39 @@ def number(n: int) -> str:
 
 
 def risks(result: SenderMap) -> str:
-    """Every finding of severity risk, one clause each, in the map's order, by its own title."""
-    found = [f.title for f in result.findings if f.severity is Severity.RISK]
+    """Every finding of severity risk, one clause each, in the map's order, by its own title.
+    Titles about one receiver fold into one clause: "Google Workspace receives the domain's
+    mail, is not in its SPF and does not sign it", still counted as two risks."""
+    found = _risk_titles(result)
     if not found:
         return ""
     count = len(found)
-    clauses = "; ".join(_lower_the(title) for title in found)
+    folded: dict[str, list[str]] = {}
+    for title in found:
+        lead, sep, tail = title.partition(f"{RECEIVES} and ")
+        if sep:
+            folded.setdefault(f"{lead}{RECEIVES}", []).append(tail)
+        else:
+            folded[title] = []
+    clauses = "; ".join(
+        _lower_the(f"{lead}, {_and(tails)}" if len(tails) > 1 else f"{lead} and {tails[0]}")
+        if tails
+        else _lower_the(lead)
+        for lead, tails in folded.items()
+    )
     return f"The map shows {number(count)} risk{_s(count)}: {clauses}."
+
+
+def _risk_titles(result: SenderMap) -> list[str]:
+    return [f.title for f in result.findings if f.severity is Severity.RISK]
 
 
 def receivers(result: SenderMap) -> str:
     """Who is in the domain's MX, and for a mailbox provider whether its DKIM setup at the domain
-    shows a key; a security gateway stands in front and hides the mailbox provider from MX."""
+    shows a key; a security gateway stands in front and hides the mailbox provider from MX. A
+    receiver the risks sentence already names is left out unless its key is in place, which
+    that sentence does not say."""
+    named = _risk_titles(result)
     clauses: list[str] = []
     for service in _in_mx(result):
         if service.category == GATEWAY:
@@ -73,9 +95,10 @@ def receivers(result: SenderMap) -> str:
             )
             continue
         signing = _signing(service, result.domain)
-        clauses.append(
-            f"{service.name} receives the domain's mail" + (f" {signing}" if signing else "")
-        )
+        risky = any(t.startswith(f"{service.name}{RECEIVES}") for t in named)
+        if risky and signing in ("", SIGNING[State.MISSING]):
+            continue
+        clauses.append(f"{service.name}{RECEIVES}" + (f" {signing}" if signing else ""))
     return _sentence("; ".join(clauses))
 
 

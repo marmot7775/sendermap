@@ -12,6 +12,7 @@ from collections.abc import Iterable, Mapping
 from dataclasses import dataclass
 
 from .catalog import Catalog, SetupRule
+from .dns import Status
 from .model import (
     Absence,
     Checked,
@@ -313,10 +314,24 @@ def _missing_words(
     by_status: dict[str, list[str]] = {}
     for r in none:
         by_status.setdefault(r.evidence[0].value, []).append(r.name)
-    words = "; ".join(f"{_listed(names)} {status}" for status, names in by_status.items())
+    words = "; ".join(_no_key(names, status) for status, names in by_status.items())
     if record.denial is Denial.NONE_BY_RCODE:
-        words += " (this zone gives that answer for every name that does not exist)"
+        words += "; this zone gives that answer for every name that does not exist"
     return words
+
+
+# What a DKIM name's answer says, for one name and for several.
+_ANSWERS = {
+    Status.NXDOMAIN.value: ("a name that does not exist", "names that do not exist"),
+    Status.NOANSWER.value: ("a name with no TXT record", "names with no TXT record"),
+}
+
+
+def _no_key(names: list[str], status: str) -> str:
+    """'no key at google._domainkey, a name that does not exist'."""
+    at = " or ".join(f"{n}._domainkey" for n in names)
+    one, several = _ANSWERS.get(status, (status, status))
+    return f"no key at {at}, {one if len(names) == 1 else several}"
 
 
 def _selector(claim: Claim) -> str:

@@ -12,7 +12,15 @@ from rich.text import Text
 
 from ..model import Claim, SenderMap, Service, Severity, Tier, Unknown
 from ..setup import line
-from . import NetworkGroup, asked, asked_in_full, claimed_parts, ct_lines, grouped_unknowns
+from . import (
+    NetworkGroup,
+    asked,
+    asked_in_full,
+    claimed_parts,
+    ct_lines,
+    grouped_unknowns,
+    resolver_words,
+)
 
 _TIER_STYLE = {
     Tier.IN_USE: "bold green",
@@ -91,7 +99,7 @@ def _head(result: SenderMap, console: Console) -> None:
         f"   {count} sending service{'s' if count != 1 else ''}",
         (
             f"   {result.run.lookups} lookups in {result.run.elapsed:.1f} s "
-            f"over {result.run.resolver}",
+            f"over {resolver_words(result.run.resolver)}",
             "bright_black",
         ),
     )

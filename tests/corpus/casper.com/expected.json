@@ -415,7 +415,7 @@
         }
        ],
        "asked": "TXT at google._domainkey.e.casper.com",
-       "detail": "google no such name"
+       "detail": "no key at google._domainkey, a name that does not exist"
       },
       {
        "record": "mx",
@@ -499,7 +499,7 @@
         }
        ],
        "asked": "TXT at google._domainkey.mail.casper.com",
-       "detail": "google no such name"
+       "detail": "no key at google._domainkey, a name that does not exist"
       },
       {
        "record": "mx",
@@ -2056,7 +2056,7 @@
         }
        ],
        "asked": "TXT at selector1._domainkey.casper.com and TXT at selector2._domainkey.casper.com",
-       "detail": "selector1 and selector2 no record of this type (this zone gives that answer for every name that does not exist)"
+       "detail": "no key at selector1._domainkey or selector2._domainkey, names with no TXT record; this zone gives that answer for every name that does not exist"
       },
       {
        "record": "mx",
@@ -2257,7 +2257,7 @@
   {
    "severity": "warning",
    "title": "Google Workspace at e.casper.com has no DKIM",
-   "detail": "Its documented setup needs it and the map shows it missing: google no such name.",
+   "detail": "Its documented setup needs it and the map shows it missing: no key at google._domainkey, a name that does not exist.",
    "evidence": [
     {
      "name": "google._domainkey.e.casper.com",
@@ -2283,7 +2283,7 @@
   {
    "severity": "warning",
    "title": "Google Workspace at mail.casper.com has no DKIM",
-   "detail": "Its documented setup needs it and the map shows it missing: google no such name.",
+   "detail": "Its documented setup needs it and the map shows it missing: no key at google._domainkey, a name that does not exist.",
    "evidence": [
     {
      "name": "google._domainkey.mail.casper.com",
@@ -2959,20 +2959,6 @@
    "cap": 0
   },
   {
-   "asked": "published ranges: SPF of HubSpot",
-   "happened": "includes more than 3 levels deep not read (cap)",
-   "kind": "published_ranges",
-   "count": 0,
-   "cap": 3
-  },
-  {
-   "asked": "published ranges: SPF of Mimecast",
-   "happened": "includes more than 3 levels deep not read (cap)",
-   "kind": "published_ranges",
-   "count": 0,
-   "cap": 3
-  },
-  {
    "asked": "network owners of the IP ranges in SPF at casper.com",
    "happened": "18 of 42 not looked up: only the first 24 were (cap)",
    "kind": "networks",
@@ -3395,5 +3381,5 @@
    ]
   }
  ],
- "story": "Google Workspace receives the domain's mail and has a DKIM key in place to sign it. Ten other services are set up to send as the domain: five marketing (Campaign Monitor, Iterable, Mailchimp, Salesforce Account Engagement, Salesforce Marketing Cloud Engagement), four transactional (Mailgun, Mandrill, Postmark, SendGrid), one support and CRM (Salesforce); one more is likely from a DKIM key name alone (Customer.io). One service shows an account and nothing set up to send (Microsoft 365); DMARC reports go to DMARCian. Not checked: the website (turned off), DKIM selectors past the first 27 on five subdomains, network owners for 42 of 90 ranges at two names, the IP ranges two services publish in their own SPF (past three include levels), and the crt.sh certificate log (read only with --ct)."
+ "story": "Google Workspace receives the domain's mail and has a DKIM key in place to sign it. Ten other services are set up to send as the domain: five marketing (Campaign Monitor, Iterable, Mailchimp, Salesforce Account Engagement, Salesforce Marketing Cloud Engagement), four transactional (Mailgun, Mandrill, Postmark, SendGrid), one support and CRM (Salesforce); one more is likely from a DKIM key name alone (Customer.io). One service shows an account and nothing set up to send (Microsoft 365); DMARC reports go to DMARCian. Not checked: the website (turned off), DKIM selectors past the first 27 on five subdomains, network owners for 42 of 90 ranges at two names, and the crt.sh certificate log (read only with --ct)."
 }

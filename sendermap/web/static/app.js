@@ -400,11 +400,23 @@ function groupHeading(group) {
   return `${parts.join(" and ")} in ${group.asn} (${group.name})${listed}`;
 }
 
+// The resolvers a run names, as a reader says them; render/__init__.py holds the same words.
+const RESOLVERS = {
+  system: "the system resolver",
+  "doh cloudflare": "Cloudflare DNS over HTTPS",
+  "doh google": "Google DNS over HTTPS",
+};
+
+function resolverWords(name) {
+  if (name in RESOLVERS) return RESOLVERS[name];
+  return name.startsWith("doh ") ? `DNS over HTTPS at ${name.slice(4)}` : name;
+}
+
 function renderFootnote(map) {
   const subs = map.subdomains_checked.length;
   const checked = map.run.checked_at.slice(0, 16).replace("T", " ");
   let text = `${map.run.lookups} DNS lookups in ${map.run.elapsed.toFixed(1)} s`;
-  text += map.run.resolver ? ` over ${map.run.resolver}` : "";
+  text += map.run.resolver ? ` over ${resolverWords(map.run.resolver)}` : "";
   text += `. Checked ${map.domain}`;
   text += subs ? ` and ${subs} sending subdomain${subs === 1 ? "" : "s"}` : "";
   text += ` on ${checked} UTC.`;

@@ -79,6 +79,7 @@ CONCURRENCY = 4
 EXPECTED = {
     "selectors": "TXT record holding a DKIM key (p=)",
     "spf_includes": "SPF record with an include or redirect to {}",
+    "published_spf": "SPF record with an include or redirect to {}",
     "mx": "MX record with a host at or under {}",
     "delegation_ns": "NS record at the name with a host at or under {}",
     "dkim_cname": "CNAME chain through a name at or under {}",
@@ -292,6 +293,7 @@ async def _setup(checker: Checker, url: str, values: str) -> Seen:
 CHECKS: dict[str, Check] = {
     "selectors": _key,
     "spf_includes": _spf,
+    "published_spf": _spf,
     "mx": _mx,
     "delegation_ns": _ns,
     "dkim_cname": _cname,
