@@ -57,7 +57,7 @@ def test_the_workflow_publishes_a_tag_by_trusted_publishing() -> None:
     flow: dict[Any, Any] = yaml.safe_load((ROOT / ".github/workflows/publish.yml").read_text())
     assert flow[True] == {"push": {"tags": ["v*"]}}  # YAML reads the key "on" as True
     jobs = flow["jobs"]
-    assert list(jobs) == ["build", "publish", "release"]
+    assert list(jobs) == ["build", "publish", "release", "registry"]
     build = " ".join(str(s.get("run", "")) for s in jobs["build"]["steps"])
     assert "python -m build" in build and "tools/release_notes.py" in build
     assert jobs["build"]["steps"][0]["with"]["fetch-depth"] == 0
@@ -70,6 +70,12 @@ def test_the_workflow_publishes_a_tag_by_trusted_publishing() -> None:
     assert upload["with"]["attestations"] is True
     assert jobs["release"]["needs"] == "publish"
     assert "gh release create" in jobs["release"]["steps"][-1]["run"]
+    registry = jobs["registry"]
+    assert registry["needs"] == "publish"  # so it is held with publishing
+    assert registry["permissions"] == {"id-token": "write", "contents": "read"}
+    steps = " ".join(str(s.get("run", "")) for s in registry["steps"])
+    assert "mcp-publisher login github-oidc" in steps and "mcp-publisher publish" in steps
+    assert "releases/download/v" in steps  # a pinned mcp-publisher, not latest
 
 
 def test_the_workflow_says_what_holds_publishing_and_where_it_is_set() -> None:

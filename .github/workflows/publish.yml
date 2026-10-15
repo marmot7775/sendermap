@@ -11,6 +11,10 @@
 # publish: uploads to PyPI by trusted publishing (no token: the pypi environment and the
 #   id-token permission), with attestations.
 # release: the GitHub release for the tag, with the notes and the built files.
+# registry: lists the version in the MCP registry from server.json, signed in by this workflow's
+#   GitHub identity (OIDC, no secret), once PyPI serves the version: the registry checks the
+#   PyPI package's description for the README's mcp-name line. server.json must name the tag's
+#   version, so a tag whose server.json was not bumped fails here, after PyPI.
 
 name: Publish
 
@@ -94,3 +98,34 @@ jobs:
           --repo "$GITHUB_REPOSITORY"
           --title "Sendermap ${GITHUB_REF_NAME#v}"
           --notes-file release-notes.md
+
+  registry:
+    needs: publish
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      id-token: write  # signs in to the MCP registry as this repository
+      contents: read
+    steps:
+      - uses: actions/checkout@v5
+      - name: Check server.json names the tag's version
+        run: |
+          version="${GITHUB_REF_NAME#v}"
+          test "$(jq -r .version server.json)" = "$version"
+          test "$(jq -r '.packages[0].version' server.json)" = "$version"
+      - name: Wait for PyPI to serve the version
+        run: |
+          version="${GITHUB_REF_NAME#v}"
+          for _ in $(seq 30); do
+            curl -sf "https://pypi.org/pypi/sendermap/${version}/json" >/dev/null && exit 0
+            sleep 10
+          done
+          exit 1
+      - name: Install mcp-publisher
+        run: >
+          curl -sSfL "https://github.com/modelcontextprotocol/registry/releases/download/v1.8.1/mcp-publisher_linux_amd64.tar.gz"
+          | tar xz mcp-publisher
+      - name: Publish to the MCP registry
+        run: |
+          ./mcp-publisher login github-oidc
+          ./mcp-publisher publish

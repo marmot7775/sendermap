@@ -6,9 +6,12 @@ it grows by addition only.
 To release: rename Unreleased to the version (`## 0.1.0`), set the same version in `server.json`
 (three places), commit, and push the tag `v0.1.0`.
 The publish workflow builds from the tag, takes that section as the release notes, publishes to
-PyPI and makes the GitHub release; a tag with no section fails before anything is published.
+PyPI, makes the GitHub release and lists the version in the MCP registry; a tag with no section
+fails before anything is published.
 
 ## Unreleased
+
+## 0.1.1 (2026-10-15)
 
 - A sending subdomain the domain's own DNS servers fail to answer for (SERVFAIL, often a subdomain delegated to nameservers that no longer serve it) now says so, instead of reading as a lookup that failed here.
 - HubSpot's and Mimecast's published ranges are read from the SPF records their customers include, not from the companies' own office mail records. Those records list other senders' ranges and run deeper than Sendermap reads, so every map with IP ranges in SPF carried two gaps about them, and some ranges were held as shared when only one service publishes them. A vendor block may name these hosts as `published_spf`.
@@ -20,6 +23,7 @@ PyPI and makes the GitHub release; a tag with no section fails before anything i
 - Intercom's, Dotdigital's, Brevo's and UniSender's published ranges are read from the records their customers include. Their company domains include other services (Campaign Monitor, Statuspage, mail.ru), whose ranges read as theirs. Campaign Monitor gains cmail1.com and its own network, AS55819, so its ranges in a flattened record are named.
 - Ten services added and eleven patterns for known ones, each with a live proof, from a run over 20 large domains: Cloudflare Email Security and Cisco Secure Email (security gateways, with setups from their docs), Oracle Email Delivery, NetSuite, Qualtrics, Recurly, Zuora, and DMARC Digests, MxToolbox and NCSC Mail Check for reports; Salesforce Marketing Cloud's cust-spf.exacttarget.com and reply MX, SparkPost's e.sparkpost.com, Mailchimp's spf1.mcsv.net, Atlassian Statuspage's stspg-customer.com, Cisco's network AS16417, and the MX hosts of Zendesk, Marketo and Amazon SES (its us-east-1 inbound and its custom MAIL FROM). On casper.com, Marketing Cloud's include no longer reads as Salesforce Account Engagement, whose own record lists the same ranges.
 - The resolver is named as a reader says it: "the system resolver", "Google DNS over HTTPS".
+- Each release is listed in the MCP registry as io.github.marmot7775/sendermap, by the publish workflow.
 
 ## 0.1.0 (2026-10-12)
 

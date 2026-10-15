@@ -805,9 +805,13 @@ so a test that opens a network socket fails, while the loopback web test keeps r
   section of `CHANGELOG.md` taken by `tools/release_notes.py`, which fails a tag with none before
   anything is published), a publish job in the `pypi` environment by trusted publishing
   (`id-token: write`, `pypa/gh-action-pypi-publish@release/v1`, attestations on), then the
-  GitHub release for the tag with those notes and the built files. The publish job runs only
-  when the repository variable `PYPI_READY` is `true`; until then a tag builds and uploads the
-  files as the workflow artifact `dist`, and the publish and release jobs are skipped.
+  GitHub release for the tag with those notes and the built files, and a registry job that
+  lists the version in the MCP registry: it checks `server.json` names the tag's version, waits
+  until PyPI serves it (the registry reads the `mcp-name` line from the PyPI description), and
+  runs a pinned `mcp-publisher` signed in by the workflow's GitHub identity (`login
+  github-oidc`, no secret). The publish job runs only when the repository variable `PYPI_READY`
+  is `true`; until then a tag builds and uploads the files as the workflow artifact `dist`, and
+  the publish, release and registry jobs are skipped.
   `tests/test_publish.py` holds the notes and the workflow's shape. No tag is pushed by anything in the repository.
 
 The proofs and recheck jobs install the runtime alone, `uv sync --locked --no-dev`, from the

@@ -7,7 +7,7 @@
 
 Type a domain, see every service that sends email as it, and the public evidence for each one.
 
-**Status: early release (0.1.0).** The command-line tool works; the website is not hosted yet.
+**Status: early release (0.1.1).** The command-line tool works; the website is not hosted yet.
 Needs Python 3.12 or later.
 
 ## What it shows
