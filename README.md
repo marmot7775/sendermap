@@ -82,19 +82,17 @@ that supports it, so you can check it yourself.
   for a day, and a log that never answers is listed as not checked while the map finishes
   without it.
 
-Run it from the command line. From 0.1.0, it installs from PyPI:
+Run it from the command line. It installs from PyPI (Python 3.12 or later):
 
 ```
-pip install sendermap                 # available from 0.1.0
-uvx sendermap example.com             # run without installing, available from 0.1.0
+pip install sendermap
+uvx sendermap example.com             # run without installing
 ```
 
-A tag builds the release files on every push, but they go to PyPI only once the repository
-variable `PYPI_READY` is `true` (Settings, Secrets and variables, Actions, Variables). Until then,
-install it from GitHub:
+The latest code, ahead of a release, installs from GitHub with
+`pip install git+https://github.com/marmot7775/sendermap`.
 
 ```
-pip install git+https://github.com/marmot7775/sendermap
 sendermap example.com
 sendermap example.com --evidence     # every piece of evidence
 sendermap example.com --markdown     # a summary to paste
@@ -178,6 +176,10 @@ as any new block. `tools/hunt_proofs.py` looks for those proofs on the customer 
 Every proof is rechecked against live DNS and the web each week and on any pull request that
 touches `vendors.json`. A proof that no longer holds opens an issue, so a stale pattern is caught
 and fixed.
+
+A tag `v*` builds the release files and, while the repository variable `PYPI_READY` is `true`
+(Settings, Secrets and variables, Actions, Variables), publishes them to PyPI by trusted
+publishing and makes the GitHub release with the tag's notes from `CHANGELOG.md`.
 
 ## Related
 
