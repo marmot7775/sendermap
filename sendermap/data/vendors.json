@@ -552,6 +552,24 @@
           }
         }
       ],
+      "published_spf": [
+        {
+          "value": "spf.brevo.com",
+          "proof": {
+            "domain": "n-tv.de",
+            "record": "n-tv.de",
+            "date": "2026-10-15"
+          }
+        },
+        {
+          "value": "spf.sendinblue.com",
+          "proof": {
+            "domain": "doctolib.fr",
+            "record": "doctolib.fr",
+            "date": "2026-10-15"
+          }
+        }
+      ],
       "sending_ip": [
         {
           "value": "185.41.28.3",
@@ -675,6 +693,24 @@
             "domain": "createsend.com",
             "record": "createsend.com",
             "date": "2026-10-09"
+          }
+        },
+        {
+          "value": "cmail1.com",
+          "proof": {
+            "domain": "southwest.com",
+            "record": "southwest.com",
+            "date": "2026-10-15"
+          }
+        }
+      ],
+      "networks": [
+        {
+          "value": "AS55819",
+          "proof": {
+            "domain": "createsend.com",
+            "record": "mx1.a.outbound.createsend.com",
+            "date": "2026-10-15"
           }
         }
       ],
@@ -2119,6 +2155,16 @@
             "domain": "one.com",
             "record": "one.com",
             "date": "2026-10-10"
+          }
+        }
+      ],
+      "published_spf": [
+        {
+          "value": "spf.mail.intercom.io",
+          "proof": {
+            "domain": "one.com",
+            "record": "one.com",
+            "date": "2026-10-15"
           }
         }
       ],
@@ -5426,6 +5472,16 @@
           }
         }
       ],
+      "published_spf": [
+        {
+          "value": "spf.dotmailer.com",
+          "proof": {
+            "domain": "cam.ac.uk",
+            "record": "news.cam.ac.uk",
+            "date": "2026-10-15"
+          }
+        }
+      ],
       "mx": [
         {
           "value": "dotdigital.com",
@@ -5495,6 +5551,16 @@
             "domain": "drom.ru",
             "record": "drom.ru",
             "date": "2026-10-11"
+          }
+        }
+      ],
+      "published_spf": [
+        {
+          "value": "spf.unisender.com",
+          "proof": {
+            "domain": "avito.ru",
+            "record": "avito.ru",
+            "date": "2026-10-15"
           }
         }
       ]

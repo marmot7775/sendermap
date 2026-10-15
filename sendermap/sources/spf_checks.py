@@ -9,8 +9,10 @@ address, and keeps what each check decided.
 
 A pass is a claim that the record authorizes one of the vendor's addresses; it says nothing about
 the vendor's other addresses or whether the vendor sends. Any other result is kept for the
-vendor's setup to read, and an error is a gap. The checks share a budget of DNS lookups per map,
-counted through the map's lookups.
+vendor's setup to read, and an error is a gap, except a permerror for passing the limit of two
+lookups that find nothing: that is the record's own answer, which a receiver holding to the
+limit gives too, so it is a finding about the record, once per name. The checks share a budget
+of DNS lookups per map, counted through the map's lookups.
 """
 
 from __future__ import annotations
@@ -19,9 +21,10 @@ import asyncio
 from collections.abc import Iterable, Sequence
 from dataclasses import dataclass
 
-from ..model import Claim, Evidence, Gap, GapKind, Kind, Observed, Outcome, Read
+from ..model import Claim, Evidence, Finding, Gap, GapKind, Kind, Observed, Outcome, Read, Severity
 from . import Context
-from .spf_eval import Result, Verdict, check_host
+from .spf import spf_records
+from .spf_eval import TOO_MANY_VOIDS, VOID_LIMIT, Result, Verdict, check_host
 
 BUDGET = 150  # DNS lookups per map, counted through the map's lookups
 WAVE = 8  # checks run together; the budget is read between waves
@@ -30,6 +33,7 @@ EVALUATION = "SPF evaluation"
 # The kinds of claim that show the walk already credited a vendor at a name.
 WALKED = frozenset({Kind.SPF_INCLUDE, Kind.SPF_NETWORK})
 _ERRORS = frozenset({Result.PERMERROR, Result.TEMPERROR})
+VOID_WORDS = {1: "one", 2: "two", 3: "three"}.get(VOID_LIMIT, str(VOID_LIMIT))
 
 
 @dataclass(frozen=True, slots=True)
@@ -68,7 +72,8 @@ async def collect(ctx: Context, needs: Sequence[Partial], claims: Iterable[Claim
         )
         done += zip(wave, verdicts, strict=True)
     observed = sum((_observed(ctx, ask, verdict) for ask, verdict in done), Observed())
-    return observed + _errors(done) + _left(asks[len(done) :])
+    voids = await _too_many_voids(ctx, done)
+    return observed + voids + _errors(done) + _left(asks[len(done) :])
 
 
 def _observed(ctx: Context, ask: _Ask, verdict: Verdict) -> Observed:
@@ -91,11 +96,48 @@ def _observed(ctx: Context, ask: _Ask, verdict: Verdict) -> Observed:
     return Observed(reads=(read,))
 
 
+def _voided(verdict: Verdict) -> bool:
+    return verdict.result is Result.PERMERROR and verdict.reason.startswith(TOO_MANY_VOIDS)
+
+
+async def _too_many_voids(ctx: Context, done: Sequence[tuple[_Ask, Verdict]]) -> Observed:
+    """One finding per name whose record ended in permerror for passing the void lookup limit,
+    counting the services whose address it was asked about and quoting the first reason, and a
+    read for each of them, as a fail leaves."""
+    by_name: dict[str, list[tuple[_Ask, Verdict]]] = {}
+    for ask, verdict in done:
+        if _voided(verdict):
+            by_name.setdefault(ask.where, []).append((ask, verdict))
+    findings: list[Finding] = []
+    reads: list[Read] = []
+    for where, ended in by_name.items():
+        records = spf_records(await ctx.dns.txt(where))
+        evidence = tuple(Evidence(where, "TXT", r, ctx.checked_at) for r in records[:1])
+        for ask, verdict in ended:  # kept for the vendor's setup to read, as a fail is
+            reason = f"{ask.ip}, one of {ask.vendor}'s addresses, gets permerror: {verdict.reason}"
+            reads.append(Read("spf_eval", where, Outcome.NONE, evidence, ask.vendor, reason))
+        count = len(ended)
+        services = f"{count} service{'' if count == 1 else 's'}"
+        findings.append(
+            Finding(
+                Severity.NOTE,
+                f"SPF at {where} ends in permerror for some senders before its default",
+                f"Asked about one sending address each of {services}, the record ended in "
+                f"permerror: {ended[0][1].reason}. RFC 7208 (section 4.6.4) allows "
+                f"{VOID_WORDS} lookups that find nothing, and a receiver that holds to the limit "
+                "stops there, so for these addresses it never reaches the record's later terms "
+                "or its default, and SPF does not pass.",
+                evidence,
+            )
+        )
+    return Observed(findings=tuple(findings), reads=tuple(reads))
+
+
 def _errors(done: Sequence[tuple[_Ask, Verdict]]) -> Observed:
     """One gap per name and reason, naming every vendor whose check ended in it."""
     by_reason: dict[tuple[str, str], list[str]] = {}
     for ask, verdict in done:
-        if verdict.result in _ERRORS:
+        if verdict.result in _ERRORS and not _voided(verdict):
             happened = f"{verdict.result}: {verdict.reason}"
             by_reason.setdefault((ask.where, happened), []).append(ask.vendor)
     gaps = tuple(

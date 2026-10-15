@@ -114,7 +114,9 @@ Phase 1, concurrent
   bimi.logo             -> logo URL, not evidence
   ct.read_logs          -> logged names, once per map: Cert Spotter, + crt.sh with --ct
     subdomains.discover -> wordlist + those names, the ones that publish SPF or MX or are
-                           delegated by NS to a service (that delegation is a claim)
+                           delegated by NS to a service (that delegation is a claim); SPF
+                           or MX the same as at sendermap-wildcard-check.<domain> is a
+                           wildcard's answer, not the name's own
     ct.collect (--ct)   -> those names, each resolved for CNAME, A and MX and matched
 Phase 2, the domain itself
   backed = generic DKIM names that belong to services SPF or MX already shows
@@ -278,7 +280,12 @@ and the address's proof record as the HELO name.
   before, reads missing with the deciding term as evidence and the address, result and term in
   words.
 - A permerror or temperror is a gap of kind `spf` naming the vendor and the reason; vendors at
-  one name whose checks ended in the same reason share one gap.
+  one name whose checks ended in the same reason share one gap. A permerror for passing the
+  limit of two lookups that find nothing is the record's own answer, not a check left undone:
+  it is kept as a `Read` like a fail, and the name gets one note, "SPF at <name> ends in
+  permerror for some senders before its default", counting the services and quoting the first
+  reason. zoom.us gives it: Proofpoint's macro include and Salesforce's `exists` find nothing
+  for an address neither sends from.
 
 Evaluation has a budget of 150 lookups per map, counted as the map's lookups count them: each
 question asked once, answers from the cache free. Checks run eight at a time and the count is
@@ -574,7 +581,8 @@ in place of its include values, each with a proof like an include's (a live doma
 includes the host or a name under it). It is for a vendor whose include value is its company
 domain, since that domain's own record is its office mail and may list other senders' ranges:
 HubSpot's ranges are read from hubspotemail.net (each customer's include under it holds the
-same list), Mimecast's from `_netblocks.mimecast.com`.
+same list), Mimecast's from `_netblocks.mimecast.com`, and Intercom's, Dotdigital's, Brevo's,
+UniSender's and SiteGround's from the hosts their customers include.
 
 A vendor block may carry `sending_ip`: one address the vendor sends from, for SPF evaluation
 to ask a domain's record about. Its proof's record is either the vendor's own SPF record host,
