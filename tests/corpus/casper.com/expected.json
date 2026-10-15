@@ -701,6 +701,27 @@
    ]
   },
   {
+   "name": "Docebo",
+   "category": "Commerce and apps",
+   "tier": "Configured",
+   "role": "sender",
+   "claims": [
+    {
+     "service": "Docebo",
+     "kind": "included in SPF",
+     "where": "casper.com",
+     "evidence": {
+      "name": "casper.com",
+      "rtype": "TXT",
+      "value": "include:docebosaas.com",
+      "checked_at": "2026-10-12T01:25:01+00:00"
+     },
+     "supporting": []
+    }
+   ],
+   "setups": []
+  },
+  {
    "name": "Iterable",
    "category": "Marketing",
    "tier": "Configured",
@@ -1470,6 +1491,27 @@
      "complete": true
     }
    ]
+  },
+  {
+   "name": "Q4",
+   "category": "Commerce and apps",
+   "tier": "Configured",
+   "role": "sender",
+   "claims": [
+    {
+     "service": "Q4",
+     "kind": "included in SPF",
+     "where": "casper.com",
+     "evidence": {
+      "name": "casper.com",
+      "rtype": "TXT",
+      "value": "include:_spf.q4press.com",
+      "checked_at": "2026-10-12T01:25:01+00:00"
+     },
+     "supporting": []
+    }
+   ],
+   "setups": []
   },
   {
    "name": "Salesforce",
@@ -2325,28 +2367,6 @@
  ],
  "unknowns": [
   {
-   "what": "SPF include",
-   "value": "_spf.q4press.com",
-   "where": "casper.com",
-   "evidence": {
-    "name": "casper.com",
-    "rtype": "TXT",
-    "value": "include:_spf.q4press.com",
-    "checked_at": "2026-10-12T01:25:01+00:00"
-   }
-  },
-  {
-   "what": "SPF include",
-   "value": "docebosaas.com",
-   "where": "casper.com",
-   "evidence": {
-    "name": "casper.com",
-    "rtype": "TXT",
-    "value": "include:docebosaas.com",
-    "checked_at": "2026-10-12T01:25:01+00:00"
-   }
-  },
-  {
    "what": "DKIM key",
    "value": "mx",
    "where": "casper.com",
@@ -2365,259 +2385,6 @@
     "name": "casper.com",
     "rtype": "TXT",
     "value": "ip4:208.89.14.209",
-    "checked_at": "2026-10-12T01:25:01+00:00"
-   }
-  },
-  {
-   "what": "IP address in SPF",
-   "value": "107.20.91.250 (AS14618 and AS16509, Amazon Web Services)",
-   "where": "casper.com",
-   "evidence": {
-    "name": "docebosaas.com",
-    "rtype": "TXT",
-    "value": "ip4:107.20.91.250",
-    "checked_at": "2026-10-12T01:25:01+00:00"
-   }
-  },
-  {
-   "what": "IP address in SPF",
-   "value": "3.209.231.65 (AS14618 and AS16509, Amazon Web Services)",
-   "where": "casper.com",
-   "evidence": {
-    "name": "docebosaas.com",
-    "rtype": "TXT",
-    "value": "ip4:3.209.231.65",
-    "checked_at": "2026-10-12T01:25:01+00:00"
-   }
-  },
-  {
-   "what": "IP address in SPF",
-   "value": "3.96.249.213 (AS16509, Amazon Web Services)",
-   "where": "casper.com",
-   "evidence": {
-    "name": "docebosaas.com",
-    "rtype": "TXT",
-    "value": "ip4:3.96.249.213",
-    "checked_at": "2026-10-12T01:25:01+00:00"
-   }
-  },
-  {
-   "what": "IP address in SPF",
-   "value": "34.242.156.53 (AS16509, Amazon Web Services)",
-   "where": "casper.com",
-   "evidence": {
-    "name": "docebosaas.com",
-    "rtype": "TXT",
-    "value": "ip4:34.242.156.53",
-    "checked_at": "2026-10-12T01:25:01+00:00"
-   }
-  },
-  {
-   "what": "IP address in SPF",
-   "value": "34.251.63.7 (AS16509, Amazon Web Services)",
-   "where": "casper.com",
-   "evidence": {
-    "name": "docebosaas.com",
-    "rtype": "TXT",
-    "value": "ip4:34.251.63.7",
-    "checked_at": "2026-10-12T01:25:01+00:00"
-   }
-  },
-  {
-   "what": "IP address in SPF",
-   "value": "52.64.32.126 (AS16509, Amazon Web Services)",
-   "where": "casper.com",
-   "evidence": {
-    "name": "docebosaas.com",
-    "rtype": "TXT",
-    "value": "ip4:52.64.32.126",
-    "checked_at": "2026-10-12T01:25:01+00:00"
-   }
-  },
-  {
-   "what": "IP address in SPF",
-   "value": "52.4.156.8 (AS14618 and AS16509, Amazon Web Services)",
-   "where": "casper.com",
-   "evidence": {
-    "name": "docebosaas.com",
-    "rtype": "TXT",
-    "value": "ip4:52.4.156.8",
-    "checked_at": "2026-10-12T01:25:01+00:00"
-   }
-  },
-  {
-   "what": "IP address in SPF",
-   "value": "13.202.86.121 (AS16509, Amazon Web Services)",
-   "where": "casper.com",
-   "evidence": {
-    "name": "docebosaas.com",
-    "rtype": "TXT",
-    "value": "ip4:13.202.86.121",
-    "checked_at": "2026-10-12T01:25:01+00:00"
-   }
-  },
-  {
-   "what": "IP address in SPF",
-   "value": "13.210.149.194 (AS16509, Amazon Web Services)",
-   "where": "casper.com",
-   "evidence": {
-    "name": "docebosaas.com",
-    "rtype": "TXT",
-    "value": "ip4:13.210.149.194",
-    "checked_at": "2026-10-12T01:25:01+00:00"
-   }
-  },
-  {
-   "what": "IP address in SPF",
-   "value": "13.210.30.79 (AS16509, Amazon Web Services)",
-   "where": "casper.com",
-   "evidence": {
-    "name": "docebosaas.com",
-    "rtype": "TXT",
-    "value": "ip4:13.210.30.79",
-    "checked_at": "2026-10-12T01:25:01+00:00"
-   }
-  },
-  {
-   "what": "IP address in SPF",
-   "value": "15.156.36.228 (AS16509, Amazon Web Services)",
-   "where": "casper.com",
-   "evidence": {
-    "name": "docebosaas.com",
-    "rtype": "TXT",
-    "value": "ip4:15.156.36.228",
-    "checked_at": "2026-10-12T01:25:01+00:00"
-   }
-  },
-  {
-   "what": "IP address in SPF",
-   "value": "15.156.98.116 (AS16509, Amazon Web Services)",
-   "where": "casper.com",
-   "evidence": {
-    "name": "docebosaas.com",
-    "rtype": "TXT",
-    "value": "ip4:15.156.98.116",
-    "checked_at": "2026-10-12T01:25:01+00:00"
-   }
-  },
-  {
-   "what": "IP address in SPF",
-   "value": "15.157.101.221 (AS16509, Amazon Web Services)",
-   "where": "casper.com",
-   "evidence": {
-    "name": "docebosaas.com",
-    "rtype": "TXT",
-    "value": "ip4:15.157.101.221",
-    "checked_at": "2026-10-12T01:25:01+00:00"
-   }
-  },
-  {
-   "what": "IP address in SPF",
-   "value": "18.132.189.127 (AS16509, Amazon Web Services)",
-   "where": "casper.com",
-   "evidence": {
-    "name": "docebosaas.com",
-    "rtype": "TXT",
-    "value": "ip4:18.132.189.127",
-    "checked_at": "2026-10-12T01:25:01+00:00"
-   }
-  },
-  {
-   "what": "IP address in SPF",
-   "value": "18.197.43.76 (AS16509, Amazon Web Services)",
-   "where": "casper.com",
-   "evidence": {
-    "name": "docebosaas.com",
-    "rtype": "TXT",
-    "value": "ip4:18.197.43.76",
-    "checked_at": "2026-10-12T01:25:01+00:00"
-   }
-  },
-  {
-   "what": "IP address in SPF",
-   "value": "18.233.38.249 (AS14618, Amazon Web Services)",
-   "where": "casper.com",
-   "evidence": {
-    "name": "docebosaas.com",
-    "rtype": "TXT",
-    "value": "ip4:18.233.38.249",
-    "checked_at": "2026-10-12T01:25:01+00:00"
-   }
-  },
-  {
-   "what": "IP address in SPF",
-   "value": "3.105.157.127 (AS16509, Amazon Web Services)",
-   "where": "casper.com",
-   "evidence": {
-    "name": "docebosaas.com",
-    "rtype": "TXT",
-    "value": "ip4:3.105.157.127",
-    "checked_at": "2026-10-12T01:25:01+00:00"
-   }
-  },
-  {
-   "what": "IP address in SPF",
-   "value": "3.105.27.226 (AS16509, Amazon Web Services)",
-   "where": "casper.com",
-   "evidence": {
-    "name": "docebosaas.com",
-    "rtype": "TXT",
-    "value": "ip4:3.105.27.226",
-    "checked_at": "2026-10-12T01:25:01+00:00"
-   }
-  },
-  {
-   "what": "IP address in SPF",
-   "value": "3.107.216.134 (AS16509, Amazon Web Services)",
-   "where": "casper.com",
-   "evidence": {
-    "name": "docebosaas.com",
-    "rtype": "TXT",
-    "value": "ip4:3.107.216.134",
-    "checked_at": "2026-10-12T01:25:01+00:00"
-   }
-  },
-  {
-   "what": "IP address in SPF",
-   "value": "3.11.129.102 (AS16509, Amazon Web Services)",
-   "where": "casper.com",
-   "evidence": {
-    "name": "docebosaas.com",
-    "rtype": "TXT",
-    "value": "ip4:3.11.129.102",
-    "checked_at": "2026-10-12T01:25:01+00:00"
-   }
-  },
-  {
-   "what": "IP address in SPF",
-   "value": "3.248.148.18 (AS16509, Amazon Web Services)",
-   "where": "casper.com",
-   "evidence": {
-    "name": "docebosaas.com",
-    "rtype": "TXT",
-    "value": "ip4:3.248.148.18",
-    "checked_at": "2026-10-12T01:25:01+00:00"
-   }
-  },
-  {
-   "what": "IP address in SPF",
-   "value": "3.97.84.192 (AS16509, Amazon Web Services)",
-   "where": "casper.com",
-   "evidence": {
-    "name": "docebosaas.com",
-    "rtype": "TXT",
-    "value": "ip4:3.97.84.192",
-    "checked_at": "2026-10-12T01:25:01+00:00"
-   }
-  },
-  {
-   "what": "IP address in SPF",
-   "value": "3.98.111.232 (AS16509, Amazon Web Services)",
-   "where": "casper.com",
-   "evidence": {
-    "name": "docebosaas.com",
-    "rtype": "TXT",
-    "value": "ip4:3.98.111.232",
     "checked_at": "2026-10-12T01:25:01+00:00"
    }
   },
@@ -2647,13 +2414,6 @@
    "kind": "off",
    "count": 0,
    "cap": 0
-  },
-  {
-   "asked": "network owners of the IP ranges in SPF at casper.com",
-   "happened": "18 of 42 not looked up: only the first 24 were (cap)",
-   "kind": "networks",
-   "count": 18,
-   "cap": 24
   },
   {
    "asked": "DKIM selectors at e.casper.com",
@@ -3064,5 +2824,5 @@
    ]
   }
  ],
- "story": "Google Workspace receives the domain's mail and has a DKIM key in place to sign it. Nine other services are set up to send as the domain: four marketing (Campaign Monitor, Iterable, Mailchimp, Salesforce Marketing Cloud Engagement), four transactional (Mailgun, Mandrill, Postmark, SendGrid), one support and CRM (Salesforce); one more is likely from a DKIM key name alone (Customer.io). One service shows an account and nothing set up to send (Microsoft 365); DMARC reports go to DMARCian. Not checked: the website (turned off), DKIM selectors past the first 27 on five subdomains, network owners for 18 of 42 ranges, and the crt.sh certificate log (read only with --ct)."
+ "story": "Google Workspace receives the domain's mail and has a DKIM key in place to sign it. Eleven other services are set up to send as the domain: four marketing (Campaign Monitor, Iterable, Mailchimp, Salesforce Marketing Cloud Engagement), two commerce and apps (Docebo, Q4), four transactional (Mailgun, Mandrill, Postmark, SendGrid), one support and CRM (Salesforce); one more is likely from a DKIM key name alone (Customer.io). One service shows an account and nothing set up to send (Microsoft 365); DMARC reports go to DMARCian. Not checked: the website (turned off), DKIM selectors past the first 27 on five subdomains, and the crt.sh certificate log (read only with --ct)."
 }

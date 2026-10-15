@@ -59,6 +59,27 @@
    "setups": []
   },
   {
+   "name": "Docebo",
+   "category": "Commerce and apps",
+   "tier": "Configured",
+   "role": "sender",
+   "claims": [
+    {
+     "service": "Docebo",
+     "kind": "included in SPF",
+     "where": "mills-reeve.com",
+     "evidence": {
+      "name": "mills-reeve.com",
+      "rtype": "TXT",
+      "value": "include:docebosaas.com",
+      "checked_at": "2026-10-12T01:24:55+00:00"
+     },
+     "supporting": []
+    }
+   ],
+   "setups": []
+  },
+  {
    "name": "Freshdesk",
    "category": "Support and CRM",
    "tier": "Configured",
@@ -682,17 +703,6 @@
    }
   },
   {
-   "what": "SPF include",
-   "value": "docebosaas.com",
-   "where": "mills-reeve.com",
-   "evidence": {
-    "name": "mills-reeve.com",
-    "rtype": "TXT",
-    "value": "include:docebosaas.com",
-    "checked_at": "2026-10-12T01:24:55+00:00"
-   }
-  },
-  {
    "what": "IP address in SPF",
    "value": "51.145.78.124 (AS8075, Microsoft)",
    "where": "mills-reeve.com",
@@ -738,221 +748,45 @@
   },
   {
    "what": "IP address in SPF",
-   "value": "107.20.91.250 (AS14618 and AS16509, Amazon Web Services)",
+   "value": "193.120.143.138 (AS2110, AS-BTIRE - Enet Communications LIMITED, IE)",
    "where": "mills-reeve.com",
    "evidence": {
-    "name": "docebosaas.com",
+    "name": "mills-reeve.com",
     "rtype": "TXT",
-    "value": "ip4:107.20.91.250",
+    "value": "ip4:193.120.143.138",
     "checked_at": "2026-10-12T01:24:55+00:00"
    }
   },
   {
    "what": "IP address in SPF",
-   "value": "3.209.231.65 (AS14618 and AS16509, Amazon Web Services)",
+   "value": "193.120.143.134 (AS2110, AS-BTIRE - Enet Communications LIMITED, IE)",
    "where": "mills-reeve.com",
    "evidence": {
-    "name": "docebosaas.com",
+    "name": "mills-reeve.com",
     "rtype": "TXT",
-    "value": "ip4:3.209.231.65",
+    "value": "ip4:193.120.143.134",
     "checked_at": "2026-10-12T01:24:55+00:00"
    }
   },
   {
    "what": "IP address in SPF",
-   "value": "3.96.249.213 (AS16509, Amazon Web Services)",
+   "value": "193.120.143.70 (AS2110, AS-BTIRE - Enet Communications LIMITED, IE)",
    "where": "mills-reeve.com",
    "evidence": {
-    "name": "docebosaas.com",
+    "name": "mills-reeve.com",
     "rtype": "TXT",
-    "value": "ip4:3.96.249.213",
+    "value": "ip4:193.120.143.70",
     "checked_at": "2026-10-12T01:24:55+00:00"
    }
   },
   {
    "what": "IP address in SPF",
-   "value": "34.242.156.53 (AS16509, Amazon Web Services)",
+   "value": "193.120.142.176 (AS2110, AS-BTIRE - Enet Communications LIMITED, IE)",
    "where": "mills-reeve.com",
    "evidence": {
-    "name": "docebosaas.com",
+    "name": "mills-reeve.com",
     "rtype": "TXT",
-    "value": "ip4:34.242.156.53",
-    "checked_at": "2026-10-12T01:24:55+00:00"
-   }
-  },
-  {
-   "what": "IP address in SPF",
-   "value": "34.251.63.7 (AS16509, Amazon Web Services)",
-   "where": "mills-reeve.com",
-   "evidence": {
-    "name": "docebosaas.com",
-    "rtype": "TXT",
-    "value": "ip4:34.251.63.7",
-    "checked_at": "2026-10-12T01:24:55+00:00"
-   }
-  },
-  {
-   "what": "IP address in SPF",
-   "value": "52.64.32.126 (AS16509, Amazon Web Services)",
-   "where": "mills-reeve.com",
-   "evidence": {
-    "name": "docebosaas.com",
-    "rtype": "TXT",
-    "value": "ip4:52.64.32.126",
-    "checked_at": "2026-10-12T01:24:55+00:00"
-   }
-  },
-  {
-   "what": "IP address in SPF",
-   "value": "52.4.156.8 (AS14618 and AS16509, Amazon Web Services)",
-   "where": "mills-reeve.com",
-   "evidence": {
-    "name": "docebosaas.com",
-    "rtype": "TXT",
-    "value": "ip4:52.4.156.8",
-    "checked_at": "2026-10-12T01:24:55+00:00"
-   }
-  },
-  {
-   "what": "IP address in SPF",
-   "value": "13.202.86.121 (AS16509, Amazon Web Services)",
-   "where": "mills-reeve.com",
-   "evidence": {
-    "name": "docebosaas.com",
-    "rtype": "TXT",
-    "value": "ip4:13.202.86.121",
-    "checked_at": "2026-10-12T01:24:55+00:00"
-   }
-  },
-  {
-   "what": "IP address in SPF",
-   "value": "13.210.149.194 (AS16509, Amazon Web Services)",
-   "where": "mills-reeve.com",
-   "evidence": {
-    "name": "docebosaas.com",
-    "rtype": "TXT",
-    "value": "ip4:13.210.149.194",
-    "checked_at": "2026-10-12T01:24:55+00:00"
-   }
-  },
-  {
-   "what": "IP address in SPF",
-   "value": "13.210.30.79 (AS16509, Amazon Web Services)",
-   "where": "mills-reeve.com",
-   "evidence": {
-    "name": "docebosaas.com",
-    "rtype": "TXT",
-    "value": "ip4:13.210.30.79",
-    "checked_at": "2026-10-12T01:24:55+00:00"
-   }
-  },
-  {
-   "what": "IP address in SPF",
-   "value": "15.156.36.228 (AS16509, Amazon Web Services)",
-   "where": "mills-reeve.com",
-   "evidence": {
-    "name": "docebosaas.com",
-    "rtype": "TXT",
-    "value": "ip4:15.156.36.228",
-    "checked_at": "2026-10-12T01:24:55+00:00"
-   }
-  },
-  {
-   "what": "IP address in SPF",
-   "value": "15.156.98.116 (AS16509, Amazon Web Services)",
-   "where": "mills-reeve.com",
-   "evidence": {
-    "name": "docebosaas.com",
-    "rtype": "TXT",
-    "value": "ip4:15.156.98.116",
-    "checked_at": "2026-10-12T01:24:55+00:00"
-   }
-  },
-  {
-   "what": "IP address in SPF",
-   "value": "15.157.101.221 (AS16509, Amazon Web Services)",
-   "where": "mills-reeve.com",
-   "evidence": {
-    "name": "docebosaas.com",
-    "rtype": "TXT",
-    "value": "ip4:15.157.101.221",
-    "checked_at": "2026-10-12T01:24:55+00:00"
-   }
-  },
-  {
-   "what": "IP address in SPF",
-   "value": "18.132.189.127 (AS16509, Amazon Web Services)",
-   "where": "mills-reeve.com",
-   "evidence": {
-    "name": "docebosaas.com",
-    "rtype": "TXT",
-    "value": "ip4:18.132.189.127",
-    "checked_at": "2026-10-12T01:24:55+00:00"
-   }
-  },
-  {
-   "what": "IP address in SPF",
-   "value": "18.197.43.76 (AS16509, Amazon Web Services)",
-   "where": "mills-reeve.com",
-   "evidence": {
-    "name": "docebosaas.com",
-    "rtype": "TXT",
-    "value": "ip4:18.197.43.76",
-    "checked_at": "2026-10-12T01:24:55+00:00"
-   }
-  },
-  {
-   "what": "IP address in SPF",
-   "value": "18.233.38.249 (AS14618, Amazon Web Services)",
-   "where": "mills-reeve.com",
-   "evidence": {
-    "name": "docebosaas.com",
-    "rtype": "TXT",
-    "value": "ip4:18.233.38.249",
-    "checked_at": "2026-10-12T01:24:55+00:00"
-   }
-  },
-  {
-   "what": "IP address in SPF",
-   "value": "3.105.157.127 (AS16509, Amazon Web Services)",
-   "where": "mills-reeve.com",
-   "evidence": {
-    "name": "docebosaas.com",
-    "rtype": "TXT",
-    "value": "ip4:3.105.157.127",
-    "checked_at": "2026-10-12T01:24:55+00:00"
-   }
-  },
-  {
-   "what": "IP address in SPF",
-   "value": "3.105.27.226 (AS16509, Amazon Web Services)",
-   "where": "mills-reeve.com",
-   "evidence": {
-    "name": "docebosaas.com",
-    "rtype": "TXT",
-    "value": "ip4:3.105.27.226",
-    "checked_at": "2026-10-12T01:24:55+00:00"
-   }
-  },
-  {
-   "what": "IP address in SPF",
-   "value": "3.107.216.134 (AS16509, Amazon Web Services)",
-   "where": "mills-reeve.com",
-   "evidence": {
-    "name": "docebosaas.com",
-    "rtype": "TXT",
-    "value": "ip4:3.107.216.134",
-    "checked_at": "2026-10-12T01:24:55+00:00"
-   }
-  },
-  {
-   "what": "IP address in SPF",
-   "value": "3.11.129.102 (AS16509, Amazon Web Services)",
-   "where": "mills-reeve.com",
-   "evidence": {
-    "name": "docebosaas.com",
-    "rtype": "TXT",
-    "value": "ip4:3.11.129.102",
+    "value": "ip4:193.120.142.176",
     "checked_at": "2026-10-12T01:24:55+00:00"
    }
   },
@@ -1169,13 +1003,6 @@
    "kind": "off",
    "count": 0,
    "cap": 0
-  },
-  {
-   "asked": "network owners of the IP ranges in SPF at mills-reeve.com",
-   "happened": "25 of 49 not looked up: only the first 24 were (cap)",
-   "kind": "networks",
-   "count": 25,
-   "cap": 24
   },
   {
    "asked": "DKIM selectors at update.mills-reeve.com",
@@ -1432,5 +1259,5 @@
  "logo": null,
  "schema": "sendermap/1",
  "absences": [],
- "story": "Mimecast stands in front of the domain's mail as a security gateway, so the mailbox provider is not visible from MX. Three other services are set up to send as the domain: one support and CRM (Freshdesk), one mailbox (Microsoft 365), one transactional (SendGrid). DMARC reports go to Mimecast DMARC Analyzer. Not checked: the website (turned off), DKIM selectors past the first 27 on two subdomains, network owners for 25 of 49 ranges, and the crt.sh certificate log (read only with --ct)."
+ "story": "Mimecast stands in front of the domain's mail as a security gateway, so the mailbox provider is not visible from MX. Four other services are set up to send as the domain: one commerce and apps (Docebo), one support and CRM (Freshdesk), one mailbox (Microsoft 365), one transactional (SendGrid). DMARC reports go to Mimecast DMARC Analyzer. Not checked: the website (turned off), DKIM selectors past the first 27 on two subdomains, and the crt.sh certificate log (read only with --ct)."
 }

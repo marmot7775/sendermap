@@ -65,7 +65,8 @@
     "hosted_spf": [
       "EasyDMARC",
       "Red Sift OnDMARC",
-      "Valimail"
+      "Valimail",
+      "AutoSPF"
     ],
     "cname_labels": [
       "bounce",
@@ -172,7 +173,8 @@
       "sp"
     ],
     "flattening_spf": [
-      "EasyDMARC"
+      "EasyDMARC",
+      "AutoSPF"
     ]
   },
   "vendors": {
@@ -329,6 +331,22 @@
           "proof": {
             "domain": "shopify.com",
             "record": "send.shopify.com",
+            "date": "2026-10-15"
+          }
+        },
+        {
+          "value": "inbound-smtp.eu-west-1.amazonaws.com",
+          "proof": {
+            "domain": "economist.com",
+            "record": "ses.economist.com",
+            "date": "2026-10-15"
+          }
+        },
+        {
+          "value": "mail-manager-smtp.us-east-1.on.aws",
+          "proof": {
+            "domain": "asana.com",
+            "record": "go.asana.com",
             "date": "2026-10-15"
           }
         }
@@ -791,6 +809,16 @@
             "date": "2026-10-11"
           },
           "note": "The API docs give the sending domain's key at cm._domainkey; the help center needs a browser to read."
+        }
+      ],
+      "tracking": [
+        {
+          "value": "createsend.com",
+          "proof": {
+            "domain": "mozilla.org",
+            "record": "links.mozilla.org",
+            "date": "2026-10-15"
+          }
         }
       ]
     },
@@ -2133,6 +2161,24 @@
           },
           "note": "Two CNAMEs at selectors that carry the account number (hs1-123456), so the setup names the target only."
         }
+      ],
+      "mx": [
+        {
+          "value": "hubapi.com",
+          "proof": {
+            "domain": "hubspot.com",
+            "record": "support.hubspot.com",
+            "date": "2026-10-15"
+          }
+        },
+        {
+          "value": "smtp.hubspot.com",
+          "proof": {
+            "domain": "hubspot.com",
+            "record": "smtp.hubspot.com",
+            "date": "2026-10-15"
+          }
+        }
       ]
     },
     "Intercom": {
@@ -3200,6 +3246,16 @@
             "domain": "mailchimp.com",
             "record": "https://mailchimp.com/developer/transactional/docs/activity-reports/",
             "date": "2026-10-11"
+          }
+        }
+      ],
+      "mx": [
+        {
+          "value": "mandrillapp.com",
+          "proof": {
+            "domain": "figma.com",
+            "record": "mail2.figma.com",
+            "date": "2026-10-15"
           }
         }
       ]
@@ -4279,6 +4335,26 @@
             "date": "2026-10-11"
           }
         }
+      ],
+      "spf_includes": [
+        {
+          "value": "aspmx.sailthru.com",
+          "proof": {
+            "domain": "economist.com",
+            "record": "bounce.economist.com",
+            "date": "2026-10-15"
+          }
+        }
+      ],
+      "mx": [
+        {
+          "value": "sailthru.com",
+          "proof": {
+            "domain": "economist.com",
+            "record": "bounce.economist.com",
+            "date": "2026-10-15"
+          }
+        }
       ]
     },
     "Salesforce": {
@@ -4991,6 +5067,16 @@
             "domain": "squarespace-mail.com",
             "record": "out1-1.transactional.squarespace-mail.com",
             "date": "2026-10-11"
+          }
+        }
+      ],
+      "spf_includes": [
+        {
+          "value": "squarespace-mail.com",
+          "proof": {
+            "domain": "squarespace.com",
+            "record": "squarespace.com",
+            "date": "2026-10-15"
           }
         }
       ]
@@ -5893,6 +5979,14 @@
             "record": "dropbox.com",
             "date": "2026-10-15"
           }
+        },
+        {
+          "value": "spf_c.oraclecloud.com",
+          "proof": {
+            "domain": "theguardian.com",
+            "record": "theguardian.com",
+            "date": "2026-10-15"
+          }
         }
       ],
       "category": "Transactional",
@@ -5997,6 +6091,512 @@
           "proof": {
             "domain": "nhs.net",
             "record": "_smtp._tls.nhs.net",
+            "date": "2026-10-15"
+          }
+        }
+      ],
+      "category": "DMARC reporting"
+    },
+    "Oracle Eloqua": {
+      "spf_includes": [
+        {
+          "value": "eloqua.com",
+          "proof": {
+            "domain": "economist.com",
+            "record": "go.economist.com",
+            "date": "2026-10-15"
+          }
+        }
+      ],
+      "mx": [
+        {
+          "value": "en25.com",
+          "proof": {
+            "domain": "economist.com",
+            "record": "go.economist.com",
+            "date": "2026-10-15"
+          }
+        }
+      ],
+      "category": "Marketing",
+      "aliases": [
+        "Eloqua",
+        "Oracle Marketing Cloud"
+      ]
+    },
+    "Epsilon": {
+      "spf_includes": [
+        {
+          "value": "bigfootinteractive.com",
+          "proof": {
+            "domain": "target.com",
+            "record": "email.target.com",
+            "date": "2026-10-15"
+          }
+        },
+        {
+          "value": "bfi0.com",
+          "proof": {
+            "domain": "target.com",
+            "record": "email.target.com",
+            "date": "2026-10-15"
+          }
+        }
+      ],
+      "mx": [
+        {
+          "value": "bigfootinteractive.com",
+          "proof": {
+            "domain": "target.com",
+            "record": "email.target.com",
+            "date": "2026-10-15"
+          }
+        }
+      ],
+      "category": "Marketing",
+      "aliases": [
+        "Epsilon Email",
+        "Bigfoot Interactive"
+      ]
+    },
+    "Adobe Campaign": {
+      "mx": [
+        {
+          "value": "campaign.adobe.com",
+          "proof": {
+            "domain": "github.com",
+            "record": "communication.github.com",
+            "date": "2026-10-15"
+          }
+        }
+      ],
+      "category": "Marketing",
+      "aliases": [
+        "Adobe Campaign Classic",
+        "Adobe Campaign v8"
+      ]
+    },
+    "Microsoft Dynamics 365 Customer Insights": {
+      "spf_includes": [
+        {
+          "value": "marketing.dynamics.com",
+          "proof": {
+            "domain": "awaytravel.com",
+            "record": "awaytravel.com",
+            "date": "2026-10-15"
+          }
+        }
+      ],
+      "category": "Marketing",
+      "aliases": [
+        "Dynamics 365 Marketing",
+        "Dynamics 365 Customer Insights - Journeys"
+      ]
+    },
+    "Blackbaud Luminate Online": {
+      "spf_includes": [
+        {
+          "value": "convio.net",
+          "proof": {
+            "domain": "utoronto.ca",
+            "record": "updates.utoronto.ca",
+            "date": "2026-10-15"
+          }
+        }
+      ],
+      "category": "Marketing",
+      "aliases": [
+        "Convio",
+        "Luminate Online"
+      ]
+    },
+    "Salsa Labs": {
+      "spf_includes": [
+        {
+          "value": "salsalabs.org",
+          "proof": {
+            "domain": "eff.org",
+            "record": "eff.org",
+            "date": "2026-10-15"
+          }
+        }
+      ],
+      "category": "Marketing",
+      "aliases": [
+        "Salsa Engage",
+        "Bonterra Salsa"
+      ]
+    },
+    "Alida": {
+      "spf_includes": [
+        {
+          "value": "spf.alida.io",
+          "proof": {
+            "domain": "awaytravel.com",
+            "record": "zone1.awaytravel.com",
+            "date": "2026-10-15"
+          }
+        }
+      ],
+      "mx": [
+        {
+          "value": "alida.io",
+          "proof": {
+            "domain": "awaytravel.com",
+            "record": "zone1.awaytravel.com",
+            "date": "2026-10-15"
+          }
+        }
+      ],
+      "category": "Marketing",
+      "aliases": [
+        "Alida Touchpoint"
+      ]
+    },
+    "Netigate": {
+      "spf_includes": [
+        {
+          "value": "_spf.netigate.se",
+          "proof": {
+            "domain": "spotify.com",
+            "record": "spotify.com",
+            "date": "2026-10-15"
+          }
+        }
+      ],
+      "category": "Marketing"
+    },
+    "Hivebrite": {
+      "spf_includes": [
+        {
+          "value": "email.hivebrite.com",
+          "proof": {
+            "domain": "hubspot.com",
+            "record": "events.hubspot.com",
+            "date": "2026-10-15"
+          }
+        }
+      ],
+      "category": "Marketing"
+    },
+    "Trend Micro Email Security": {
+      "mx": [
+        {
+          "value": "tmes.trendmicro.eu",
+          "proof": {
+            "domain": "ox.ac.uk",
+            "record": "ox.ac.uk",
+            "date": "2026-10-15"
+          }
+        }
+      ],
+      "category": "Security gateway",
+      "aliases": [
+        "TMES",
+        "Trend Micro Hosted Email Security",
+        "Trend Vision One Email"
+      ],
+      "setup": [
+        {
+          "record": "mx",
+          "need": "required",
+          "values": [
+            "tmes.trendmicro.eu"
+          ],
+          "proof": {
+            "domain": "trendmicro.com",
+            "record": "https://docs.trendmicro.com/en-us/documentation/article/trend-micro-email-security-online-help-configuring-a-domain",
+            "date": "2026-10-15"
+          },
+          "note": "The page names one MX host per region (<company>.in.tmes.trendmicro.com, .eu and others); only the .eu host is proven on a live domain so far."
+        }
+      ]
+    },
+    "Khoros": {
+      "spf_includes": [
+        {
+          "value": "khoros-mail.com",
+          "proof": {
+            "domain": "atlassian.com",
+            "record": "em.atlassian.com",
+            "date": "2026-10-15"
+          }
+        }
+      ],
+      "category": "Support and CRM",
+      "aliases": [
+        "Lithium"
+      ]
+    },
+    "Everbridge": {
+      "spf_includes": [
+        {
+          "value": "everbridge.net",
+          "proof": {
+            "domain": "unicef.org",
+            "record": "alerts.unicef.org",
+            "date": "2026-10-15"
+          }
+        }
+      ],
+      "category": "Transactional"
+    },
+    "Greenhouse": {
+      "spf_includes": [
+        {
+          "value": "mg-spf.greenhouse.io",
+          "proof": {
+            "domain": "asana.com",
+            "record": "asana.com",
+            "date": "2026-10-15"
+          }
+        }
+      ],
+      "category": "Commerce and apps",
+      "aliases": [
+        "Greenhouse Recruiting"
+      ]
+    },
+    "Red Points": {
+      "spf_includes": [
+        {
+          "value": "spf.redpoints.com",
+          "proof": {
+            "domain": "etsy.com",
+            "record": "etsy.com",
+            "date": "2026-10-15"
+          }
+        }
+      ],
+      "category": "Commerce and apps"
+    },
+    "Trustpilot": {
+      "spf_includes": [
+        {
+          "value": "trustpilotservice.com",
+          "proof": {
+            "domain": "bombas.com",
+            "record": "email.bombas.com",
+            "date": "2026-10-15"
+          }
+        }
+      ],
+      "category": "Commerce and apps"
+    },
+    "Cvent": {
+      "spf_includes": [
+        {
+          "value": "cvent-planner.com",
+          "proof": {
+            "domain": "etsy.com",
+            "record": "etsy.com",
+            "date": "2026-10-15"
+          }
+        }
+      ],
+      "category": "Commerce and apps"
+    },
+    "Kibo Commerce": {
+      "spf_includes": [
+        {
+          "value": "spf.kibocommerce.com",
+          "proof": {
+            "domain": "lego.com",
+            "record": "orders.lego.com",
+            "date": "2026-10-15"
+          }
+        }
+      ],
+      "category": "Commerce and apps",
+      "aliases": [
+        "Kibo"
+      ]
+    },
+    "Docebo": {
+      "spf_includes": [
+        {
+          "value": "docebosaas.com",
+          "proof": {
+            "domain": "casper.com",
+            "record": "casper.com",
+            "date": "2026-10-15"
+          }
+        }
+      ],
+      "category": "Commerce and apps"
+    },
+    "ADP": {
+      "spf_includes": [
+        {
+          "value": "_spf.adp.com",
+          "proof": {
+            "domain": "everlane.com",
+            "record": "everlane.com",
+            "date": "2026-10-15"
+          }
+        }
+      ],
+      "category": "Commerce and apps",
+      "aliases": [
+        "ADP Workforce Now"
+      ]
+    },
+    "SAP SuccessFactors": {
+      "spf_includes": [
+        {
+          "value": "sapsf.eu",
+          "proof": {
+            "domain": "sephora.com",
+            "record": "spf5.sephora.com",
+            "date": "2026-10-15"
+          }
+        }
+      ],
+      "category": "Commerce and apps",
+      "aliases": [
+        "SuccessFactors"
+      ]
+    },
+    "Fundraise Up": {
+      "spf_includes": [
+        {
+          "value": "spf.fundraiseup.com",
+          "proof": {
+            "domain": "mozilla.org",
+            "record": "mozilla.org",
+            "date": "2026-10-15"
+          }
+        }
+      ],
+      "category": "Commerce and apps"
+    },
+    "Q4": {
+      "spf_includes": [
+        {
+          "value": "_spf.q4press.com",
+          "proof": {
+            "domain": "casper.com",
+            "record": "casper.com",
+            "date": "2026-10-15"
+          }
+        }
+      ],
+      "category": "Commerce and apps"
+    },
+    "Madgex": {
+      "spf_includes": [
+        {
+          "value": "madgexjb.com",
+          "proof": {
+            "domain": "washingtonpost.com",
+            "record": "washingtonpost.com",
+            "date": "2026-10-15"
+          }
+        }
+      ],
+      "category": "Commerce and apps"
+    },
+    "Clinch": {
+      "spf_includes": [
+        {
+          "value": "mail.clinchtalent.com",
+          "proof": {
+            "domain": "etsy.com",
+            "record": "etsy.com",
+            "date": "2026-10-15"
+          }
+        }
+      ],
+      "category": "Commerce and apps"
+    },
+    "AutoSPF": {
+      "spf_includes": [
+        {
+          "value": "autospf.email",
+          "proof": {
+            "domain": "mit.edu",
+            "record": "mit.edu",
+            "date": "2026-10-15"
+          }
+        }
+      ],
+      "category": "DMARC reporting"
+    },
+    "DMARCLY": {
+      "reporting": [
+        {
+          "value": "dmarcly.com",
+          "proof": {
+            "domain": "stanford.edu",
+            "record": "_dmarc.stanford.edu",
+            "date": "2026-10-15"
+          }
+        }
+      ],
+      "category": "DMARC reporting"
+    },
+    "Report URI": {
+      "reporting": [
+        {
+          "value": "report-uri.com",
+          "proof": {
+            "domain": "everlane.com",
+            "record": "_dmarc.everlane.com",
+            "date": "2026-10-15"
+          }
+        }
+      ],
+      "category": "DMARC reporting"
+    },
+    "Netcraft": {
+      "reporting": [
+        {
+          "value": "netcraft.com",
+          "proof": {
+            "domain": "revolut.com",
+            "record": "_dmarc.revolut.com",
+            "date": "2026-10-15"
+          }
+        }
+      ],
+      "category": "DMARC reporting"
+    },
+    "Inbox Monster": {
+      "reporting": [
+        {
+          "value": "inboxmonster.com",
+          "proof": {
+            "domain": "chewy.com",
+            "record": "_dmarc.chewy.com",
+            "date": "2026-10-15"
+          }
+        }
+      ],
+      "category": "DMARC reporting"
+    },
+    "Validity Everest": {
+      "reporting": [
+        {
+          "value": "everest.email",
+          "proof": {
+            "domain": "asana.com",
+            "record": "_dmarc.asana.com",
+            "date": "2026-10-15"
+          }
+        }
+      ],
+      "category": "DMARC reporting",
+      "aliases": [
+        "Everest"
+      ]
+    },
+    "SendForensics": {
+      "reporting": [
+        {
+          "value": "sendforensics.com",
+          "proof": {
+            "domain": "economist.com",
+            "record": "_dmarc.economist.com",
             "date": "2026-10-15"
           }
         }

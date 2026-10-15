@@ -11,6 +11,12 @@ The rule: every bug found on a live domain becomes a case here. Record it with
 `python tools/record_corpus.py <domain>` (add `--web` to read the homepage), fix the code, run
 `python tools/record_corpus.py --update`, and review the diff to `expected.json`.
 
+A new vendor pattern makes every map ask a few more questions (a new SPF include adds the TXT
+lookup for its published ranges), and the replay fails on the first one it lacks.
+`python tools/fill_corpus.py` asks each missed question live through the case's own resolver,
+adds the answers to `dns.json` without changing any recorded answer, and repeats until nothing
+is missed; then `--update` as above.
+
 Recorded 2026-10-11 through Google's DNS over HTTPS (`--doh google`), with `--ct` off and the
 website off except for example.com:
 
