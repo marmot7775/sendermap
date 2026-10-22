@@ -1,6 +1,6 @@
 # Sendermap: allbirds.com
 
-15 sending services found from public records checked 2026-10-12 01:24 UTC (724 lookups in 0.0 s over Google DNS over HTTPS).
+15 sending services found from public records checked 2026-10-12 01:24 UTC (746 lookups in 0.0 s over Google DNS over HTTPS).
 
 Microsoft 365 receives the domain's mail and has a DKIM key in place to sign it. Twelve other services are set up to send as the domain: six transactional (Amazon SES, Mailgun, Mailjet, Postmark, SendGrid, SparkPost), two support and CRM (Freshdesk, Zendesk), one mailbox (Google Workspace), two marketing (Iterable, Mailchimp), one commerce and apps (Shopify); two more are likely from a DKIM key name alone (Customer.io, Mandrill). Not checked: the website (turned off), DKIM selectors past the first 27 on three subdomains, six subdomains whose DNS failed to answer, 34 names from certificate logs left out by a limit, and the crt.sh certificate log (read only with --ct).
 

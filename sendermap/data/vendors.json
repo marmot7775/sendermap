@@ -66,7 +66,8 @@
       "EasyDMARC",
       "Red Sift OnDMARC",
       "Valimail",
-      "AutoSPF"
+      "AutoSPF",
+      "DmarcDuty"
     ],
     "cname_labels": [
       "bounce",
@@ -348,6 +349,14 @@
             "domain": "asana.com",
             "record": "go.asana.com",
             "date": "2026-10-15"
+          }
+        },
+        {
+          "value": "inbound-smtp.us-west-2.amazonaws.com",
+          "proof": {
+            "domain": "datadoghq.com",
+            "record": "careers.datadoghq.com",
+            "date": "2026-10-22"
           }
         }
       ]
@@ -746,6 +755,14 @@
             "record": "southwest.com",
             "date": "2026-10-15"
           }
+        },
+        {
+          "value": "createsend.com",
+          "proof": {
+            "domain": "vox.com",
+            "record": "bounce.vox.com",
+            "date": "2026-10-22"
+          }
         }
       ],
       "networks": [
@@ -818,6 +835,16 @@
             "domain": "mozilla.org",
             "record": "links.mozilla.org",
             "date": "2026-10-15"
+          }
+        }
+      ],
+      "mx": [
+        {
+          "value": "inbound.createsend.com",
+          "proof": {
+            "domain": "vox.com",
+            "record": "bounce.vox.com",
+            "date": "2026-10-22"
           }
         }
       ]
@@ -1066,6 +1093,16 @@
             "domain": "customer.io",
             "record": "https://docs.customer.io/messaging/channels/email/deliverability/link-tracking-custom-domain/",
             "date": "2026-10-11"
+          }
+        }
+      ],
+      "spf_includes": [
+        {
+          "value": "customeriomail.com",
+          "proof": {
+            "domain": "chubbiesshorts.com",
+            "record": "chubbiesshorts.com",
+            "date": "2026-10-22"
           }
         }
       ]
@@ -1566,6 +1603,16 @@
             "date": "2026-10-11"
           }
         }
+      ],
+      "return_path": [
+        {
+          "value": "freshemail.io",
+          "proof": {
+            "domain": "berkeley.edu",
+            "record": "fwdkim1.berkeley.edu",
+            "date": "2026-10-22"
+          }
+        }
       ]
     },
     "GetResponse": {
@@ -1587,6 +1634,16 @@
             "domain": "gr-mail1.com",
             "record": "mta-1.gamma.gr-mail1.com",
             "date": "2026-10-11"
+          }
+        }
+      ],
+      "spf_includes": [
+        {
+          "value": "_spf.getresponse.com",
+          "proof": {
+            "domain": "monday.com",
+            "record": "monday.com",
+            "date": "2026-10-22"
           }
         }
       ]
@@ -2606,6 +2663,16 @@
             "date": "2026-10-11"
           }
         }
+      ],
+      "spf_includes": [
+        {
+          "value": "klaviyomail.com",
+          "proof": {
+            "domain": "chubbiesshorts.com",
+            "record": "chubbiesshorts.com",
+            "date": "2026-10-22"
+          }
+        }
       ]
     },
     "Mailchimp": {
@@ -2984,6 +3051,16 @@
             "date": "2026-10-11"
           },
           "note": "The page marks the CNAME required, and says it is for open, click and unsubscribe tracking, so it is optional here."
+        }
+      ],
+      "reporting": [
+        {
+          "value": "mailgun.org",
+          "proof": {
+            "domain": "airtable.com",
+            "record": "_dmarc.airtable.com",
+            "date": "2026-10-22"
+          }
         }
       ]
     },
@@ -3870,6 +3947,16 @@
             "date": "2026-10-11"
           },
           "note": "A custom return path (pm-bounces by default) is needed only for SPF to align under DMARC."
+        }
+      ],
+      "mx": [
+        {
+          "value": "mtasv.net",
+          "proof": {
+            "domain": "theatlantic.com",
+            "record": "mailer.theatlantic.com",
+            "date": "2026-10-22"
+          }
         }
       ]
     },
@@ -5092,6 +5179,16 @@
             "date": "2026-10-09"
           }
         }
+      ],
+      "return_path": [
+        {
+          "value": "custom-email-domain.stripe.com",
+          "proof": {
+            "domain": "loom.com",
+            "record": "bounce.loom.com",
+            "date": "2026-10-22"
+          }
+        }
       ]
     },
     "Symantec MessageLabs": {
@@ -6028,9 +6125,27 @@
             "record": "mailchimp.com",
             "date": "2026-10-15"
           }
+        },
+        {
+          "value": "_spf.qemailserver.com",
+          "proof": {
+            "domain": "clickup.com",
+            "record": "clickup.com",
+            "date": "2026-10-22"
+          }
         }
       ],
-      "category": "Marketing"
+      "category": "Marketing",
+      "mx": [
+        {
+          "value": "qemailserver.com",
+          "proof": {
+            "domain": "parachutehome.com",
+            "record": "help.parachutehome.com",
+            "date": "2026-10-22"
+          }
+        }
+      ]
     },
     "Recurly": {
       "spf_includes": [
@@ -6141,6 +6256,14 @@
             "record": "email.target.com",
             "date": "2026-10-15"
           }
+        },
+        {
+          "value": "epsl1.com",
+          "proof": {
+            "domain": "patagonia.com",
+            "record": "support.patagonia.com",
+            "date": "2026-10-22"
+          }
         }
       ],
       "mx": [
@@ -6150,6 +6273,14 @@
             "domain": "target.com",
             "record": "email.target.com",
             "date": "2026-10-15"
+          }
+        },
+        {
+          "value": "epsl1.com",
+          "proof": {
+            "domain": "patagonia.com",
+            "record": "support.patagonia.com",
+            "date": "2026-10-22"
           }
         }
       ],
@@ -6583,11 +6714,20 @@
             "record": "_dmarc.asana.com",
             "date": "2026-10-15"
           }
+        },
+        {
+          "value": "250ok.net",
+          "proof": {
+            "domain": "aclu.org",
+            "record": "_dmarc.aclu.org",
+            "date": "2026-10-22"
+          }
         }
       ],
       "category": "DMARC reporting",
       "aliases": [
-        "Everest"
+        "Everest",
+        "250ok"
       ]
     },
     "SendForensics": {
@@ -6598,6 +6738,237 @@
             "domain": "economist.com",
             "record": "_dmarc.economist.com",
             "date": "2026-10-15"
+          }
+        }
+      ],
+      "category": "DMARC reporting"
+    },
+    "SocketLabs": {
+      "spf_includes": [
+        {
+          "value": "email-od.com",
+          "proof": {
+            "domain": "socketlabs.com",
+            "record": "_spf.socketlabs.com",
+            "date": "2026-10-22"
+          }
+        }
+      ],
+      "mx": [
+        {
+          "value": "email-od.com",
+          "proof": {
+            "domain": "socketlabs.com",
+            "record": "tracking.socketlabs.com",
+            "date": "2026-10-22"
+          }
+        }
+      ],
+      "category": "Transactional"
+    },
+    "Conversica": {
+      "spf_includes": [
+        {
+          "value": "spf.conversica.com",
+          "proof": {
+            "domain": "airtable.com",
+            "record": "em.airtable.com",
+            "date": "2026-10-22"
+          }
+        }
+      ],
+      "mx": [
+        {
+          "value": "e.conversica.com",
+          "proof": {
+            "domain": "airtable.com",
+            "record": "em.airtable.com",
+            "date": "2026-10-22"
+          }
+        }
+      ],
+      "category": "Marketing"
+    },
+    "Maropost": {
+      "spf_includes": [
+        {
+          "value": "spf.maropost.com",
+          "proof": {
+            "domain": "warbyparker.com",
+            "record": "email.warbyparker.com",
+            "date": "2026-10-22"
+          }
+        }
+      ],
+      "category": "Marketing"
+    },
+    "Engaging Networks": {
+      "spf_includes": [
+        {
+          "value": "_spf.e-activist.com",
+          "proof": {
+            "domain": "worldwildlife.org",
+            "record": "worldwildlife.org",
+            "date": "2026-10-22"
+          }
+        }
+      ],
+      "category": "Marketing"
+    },
+    "ActionKit": {
+      "spf_includes": [
+        {
+          "value": "sp.actionkit.com",
+          "proof": {
+            "domain": "habitat.org",
+            "record": "habitat.org",
+            "date": "2026-10-22"
+          }
+        }
+      ],
+      "category": "Marketing"
+    },
+    "Extole": {
+      "spf_includes": [
+        {
+          "value": "spf.extole.io",
+          "proof": {
+            "domain": "thirdlove.com",
+            "record": "thirdlove.com",
+            "date": "2026-10-22"
+          }
+        }
+      ],
+      "category": "Marketing"
+    },
+    "Communicator": {
+      "spf_includes": [
+        {
+          "value": "spf.communicatoremail.com",
+          "proof": {
+            "domain": "theatlantic.com",
+            "record": "orders.theatlantic.com",
+            "date": "2026-10-22"
+          }
+        }
+      ],
+      "mx": [
+        {
+          "value": "communicatoremail.com",
+          "proof": {
+            "domain": "theatlantic.com",
+            "record": "orders.theatlantic.com",
+            "date": "2026-10-22"
+          }
+        }
+      ],
+      "category": "Marketing",
+      "aliases": [
+        "Communicator Corp"
+      ]
+    },
+    "ClickDimensions": {
+      "tracking": [
+        {
+          "value": "clickdimensions.com",
+          "proof": {
+            "domain": "doctorswithoutborders.org",
+            "record": "links.doctorswithoutborders.org",
+            "date": "2026-10-22"
+          }
+        }
+      ],
+      "category": "Marketing"
+    },
+    "SPIRAL": {
+      "spf_includes": [
+        {
+          "value": "smp.ne.jp",
+          "proof": {
+            "domain": "patagonia.com",
+            "record": "patagonia.com",
+            "date": "2026-10-22"
+          }
+        }
+      ],
+      "category": "Marketing"
+    },
+    "FreshMail": {
+      "spf_includes": [
+        {
+          "value": "_spf.freshmail.pl",
+          "proof": {
+            "domain": "eobuwie.pl",
+            "record": "eobuwie.pl",
+            "date": "2026-10-22"
+          }
+        }
+      ],
+      "category": "Marketing"
+    },
+    "Oracle Responsys": {
+      "mx": [
+        {
+          "value": "responsys.ocs.oraclecloud.com",
+          "proof": {
+            "domain": "rei.com",
+            "record": "notices.rei.com",
+            "date": "2026-10-22"
+          }
+        }
+      ],
+      "category": "Marketing",
+      "aliases": [
+        "Responsys"
+      ]
+    },
+    "Braintree": {
+      "spf_includes": [
+        {
+          "value": "spf.braintreegateway.com",
+          "proof": {
+            "domain": "hotjar.com",
+            "record": "hotjar.com",
+            "date": "2026-10-22"
+          }
+        }
+      ],
+      "category": "Commerce and apps"
+    },
+    "Tipalti": {
+      "spf_includes": [
+        {
+          "value": "spf.tipalti.com",
+          "proof": {
+            "domain": "hotjar.com",
+            "record": "hotjar.com",
+            "date": "2026-10-22"
+          }
+        }
+      ],
+      "category": "Commerce and apps"
+    },
+    "Impartner": {
+      "spf_includes": [
+        {
+          "value": "mta.impartner.com",
+          "proof": {
+            "domain": "gusto.com",
+            "record": "partners.gusto.com",
+            "date": "2026-10-22"
+          }
+        }
+      ],
+      "category": "Support and CRM"
+    },
+    "DmarcDuty": {
+      "spf_includes": [
+        {
+          "value": "dmarcdutydns.com",
+          "proof": {
+            "domain": "skims.com",
+            "record": "skims.com",
+            "date": "2026-10-22"
           }
         }
       ],

@@ -1,6 +1,6 @@
 ╭───────────────────────────────────────────────────────────────────────────────╮
 │ glossier.com   9 sending services                                             │
-│ 710 lookups in 0.0 s over Google DNS over HTTPS, checked 2026-10-12 01:25 UTC │
+│ 732 lookups in 0.0 s over Google DNS over HTTPS, checked 2026-10-12 01:25 UTC │
 ╰───────────────────────────────────────────────────────────────────────────────╯
 Google Workspace receives the domain's mail and has a DKIM key in place to sign it.
 Six other services are set up to send as the domain: three support and CRM (Help Scout, Salesforce, 
