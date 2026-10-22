@@ -43,7 +43,7 @@ from .. import SCHEMA_FILE, __version__, catalog, mcp_server
 from ..engine import Progress, clean_domain, map_domain
 from ..model import SenderMap
 from ..reconcile import split, with_claimed
-from ..render import markdown
+from ..render import html, markdown
 
 ACCESS_LOG = "uvicorn.access"
 CACHE_SECONDS = 600
@@ -135,11 +135,23 @@ async def get_markdown(
     return markdown.render(await _map(domain, _ignore, claimed))
 
 
+@app.get("/api/map.html", response_class=HTMLResponse)
+async def get_html(
+    request: Request, d: str = Query(..., max_length=253), claimed: str = CLAIMED
+) -> HTMLResponse:
+    """The map as the HTML fragment the page shows: the stream's fallback, and the rendered
+    view for anyone who wants it."""
+    domain = _domain(d)
+    _limit(request)
+    return HTMLResponse(html.html(await _map(domain, _ignore, claimed)))
+
+
 @app.get("/api/map/stream")
 async def stream(
     request: Request, d: str = Query(..., max_length=253), claimed: str = CLAIMED
 ) -> StreamingResponse:
-    """Server-sent events: `progress` lines while the map builds, then one `map` event."""
+    """Server-sent events: `progress` lines while the map builds, then one `map` event that
+    carries the map and the HTML fragment the page shows."""
     domain = _domain(d)
     _limit(request)
     queue: asyncio.Queue[tuple[str, str]] = asyncio.Queue()
@@ -150,7 +162,8 @@ async def stream(
     async def build() -> None:
         try:
             result = await _map(domain, progress, claimed)
-            await queue.put(("map", json.dumps(result.to_dict(), default=str)))
+            done = {"map": result.to_dict(), "html": html.html(result)}
+            await queue.put(("map", json.dumps(done, default=str)))
         except Exception:  # the page shows a plain error instead of hanging
             await queue.put(("failed", json.dumps({"error": "The map could not be built."})))
 

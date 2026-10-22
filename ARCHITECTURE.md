@@ -354,8 +354,8 @@ Checked's class as `denial`.
   set of networks, an owner name and a list of publishers are one line, "2 ranges and 1 address
   in AS16509 (Amazon Web Services)", with the publishers once after it, then the ranges, the first
   record and "+ N more" (every record with `--evidence`). `render.grouped_unknowns` does this
-  for the text and Markdown views by reading the value networks.py writes, and app.js does the
-  same with the same pattern, `render.NETWORK_VALUE`. A range with no network, one alone in its
+  for every view by reading the value networks.py writes, with the pattern
+  `render.NETWORK_VALUE`. A range with no network, one alone in its
   network, one whose networks have different names, and any unknown that is not an IP range stay
   single lines.
 - Every provider's answer becomes rows of (name, not before, not after) that go through one
@@ -461,8 +461,8 @@ DKIM or SPF and a note for a bounce or tracking CNAME. A service whose only clai
 only is one note asking whether the account is still used, and nothing about what its setup
 lacks. Broken raises nothing new: the key and SPF findings already exist. Every view shows one
 line per setup under its service, "Setup at <where>: SPF present, DKIM missing (selector1 and
-selector2 no such name), bounce CNAME not needed.", built by `setup.line` and, on the web page,
-by the same words in app.js. An optional item that is missing reads "not used (optional, <what
+selector2 no such name), bounce CNAME not needed.", built by `setup.line`; the web page shows
+the same words, rendered on the server. An optional item that is missing reads "not used (optional, <what
 was asked>)" in every view, so a reader does not take an optional record for a fault; its state
 in JSON stays `missing`, with its detail and evidence.
 
@@ -534,7 +534,7 @@ claimed in. Blank names are left out and a name written twice the same way count
 claimed is no reconciliation: `null` in JSON and no section in any view. Every view shows a
 CLAIMED SENDERS section with all four parts, "none" for an empty one, each found service with
 its tier and, when the client wrote another name, "claimed as" with their words. The text and
-Markdown views build it with `render.claimed_parts`, and app.js with the same words.
+Markdown and HTML views build it with `render.claimed_parts`.
 
 The web site caches maps by domain only; the claimed names a request carries are applied to the
 cached map for that response and kept nowhere. The page passes its own `?claimed=` on to the API,
@@ -692,7 +692,10 @@ recorder keeps the answers, not those requests.
   `tests/test_listing.py` validates `server.json` against the registry's 2025-12-11 schema, kept
   in `tests/fixtures/`, and holds the README line and `llms.txt`.
 - **Web site**: a FastAPI app. `GET /api/map?d=` returns the map as JSON, `GET /api/map.md?d=`
-  as Markdown, and `GET /api/map/stream?d=` streams progress then the map as server-sent events.
+  as Markdown, `GET /api/map.html?d=` as the HTML fragment the page shows, and
+  `GET /api/map/stream?d=` streams progress then one `map` event carrying the map and that
+  fragment. The page's HTML comes from `render/html.py`, the same View the command line shows;
+  app.js sets it as it came and draws the ring map, and holds no rendering logic of its own.
   Each takes `claimed`, a comma separated list, for the map's reconciliation.
   Uvicorn's access log is turned off when the app starts, so no query string is logged; a test
   runs a real server and checks that a request logs nothing. Visitor addresses are held in

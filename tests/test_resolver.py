@@ -15,7 +15,7 @@ from test_determinism import busy
 import sendermap
 from sendermap import cli, map_domain
 from sendermap.dns import DohResolver, SystemResolver, parse_doh
-from sendermap.render import markdown, resolver_words, text
+from sendermap.render import html, markdown, resolver_words, text
 from sendermap.testing import Case, RecordingResolver, replay
 
 
@@ -66,9 +66,7 @@ async def test_the_views_name_the_resolver(offline: httpx.AsyncClient) -> None:
     console = Console(record=True, width=200)
     text.render(result, console)
     assert "638 lookups in 11.2 s over Cloudflare DNS over HTTPS" in console.export_text()
-    script = (Path(sendermap.__file__).parent / "web" / "static" / "app.js").read_text()
-    assert "over ${resolverWords(map.run.resolver)}" in script
-    assert '"doh google": "Google DNS over HTTPS"' in script
+    assert "(638 lookups in 11.2 s over Cloudflare DNS over HTTPS)." in html.html(result)
 
 
 def test_the_schema_gains_resolver_as_an_optional_string() -> None:

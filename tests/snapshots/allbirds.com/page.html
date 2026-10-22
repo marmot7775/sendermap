@@ -1,0 +1,528 @@
+<header class="view-head">
+<h2>allbirds.com</h2>
+<p class="summary">15 sending services found from public records checked 2026-10-12 01:24 UTC (724 lookups in 0.0 s over Google DNS over HTTPS).</p>
+</header>
+<p class="story">Microsoft 365 receives the domain&#x27;s mail and has a DKIM key in place to sign it. Twelve other services are set up to send as the domain: six transactional (Amazon SES, Mailgun, Mailjet, Postmark, SendGrid, SparkPost), two support and CRM (Freshdesk, Zendesk), one mailbox (Google Workspace), two marketing (Iterable, Mailchimp), one commerce and apps (Shopify); two more are likely from a DKIM key name alone (Customer.io, Mandrill). Not checked: the website (turned off), DKIM selectors past the first 27 on three subdomains, six subdomains whose DNS failed to answer, 34 names from certificate logs left out by a limit, and the crt.sh certificate log (read only with --ct).</p>
+<section class="view-section attention">
+<h3 class="section-title">Needs attention</h3>
+<div class="finding warning">
+<h4>The k1 key at allbirds.com is 1024-bit</h4>
+<p>Some receivers already treat 1024-bit RSA keys as weak. Rotate to 2048-bit.</p>
+<details class="records"><summary>Records</summary>
+<ul class="records">
+<li class="ev mono">k1._domainkey.allbirds.com TXT k=rsa; p=MIGfMA0GCSqG..., 1024-bit, fp 53d7bb0466c8346d via dkim.mcsv.net</li>
+</ul>
+</details>
+</div>
+<div class="finding warning">
+<h4>The mandrill key at allbirds.com is 1024-bit</h4>
+<p>Some receivers already treat 1024-bit RSA keys as weak. Rotate to 2048-bit.</p>
+<details class="records"><summary>Records</summary>
+<ul class="records">
+<li class="ev mono">mandrill._domainkey.allbirds.com TXT v=DKIM1; k=rsa; p=MIGfMA0GCSqG..., 1024-bit, fp 9cee89b6f986543a</li>
+</ul>
+</details>
+</div>
+<div class="finding warning">
+<h4>Google Workspace at alerts.allbirds.com has no DKIM</h4>
+<p>Its documented setup needs it and the map shows it missing: no key at google._domainkey, a name that does not exist.</p>
+<details class="records"><summary>Records</summary>
+<ul class="records">
+<li class="ev mono">google._domainkey.alerts.allbirds.com TXT no such name</li>
+<li class="ev mono">_domainkey.alerts.allbirds.com TXT no record of this type</li>
+</ul>
+</details>
+</div>
+<div class="finding warning">
+<h4>Google Workspace at mail.allbirds.com has no DKIM</h4>
+<p>Its documented setup needs it and the map shows it missing: no key at google._domainkey, a name that does not exist.</p>
+<details class="records"><summary>Records</summary>
+<ul class="records">
+<li class="ev mono">google._domainkey.mail.allbirds.com TXT no such name</li>
+<li class="ev mono">_domainkey.mail.allbirds.com TXT no record of this type</li>
+</ul>
+</details>
+</div>
+<div class="finding warning">
+<h4>Mailjet at allbirds.com has no DKIM</h4>
+<p>Its documented setup needs it and the map shows it missing: no key at mailjet._domainkey, a name that does not exist.</p>
+<details class="records"><summary>Records</summary>
+<ul class="records">
+<li class="ev mono">mailjet._domainkey.allbirds.com TXT no such name</li>
+</ul>
+</details>
+</div>
+<div class="finding note">
+<h4>SPF at allbirds.com is managed through EasyDMARC</h4>
+<p>EasyDMARC copies the domain&#x27;s senders into its own record. The walk read that record, so the services and ranges it lists are reported here as the domain&#x27;s.</p>
+<details class="records"><summary>Records</summary>
+<ul class="records">
+<li class="ev mono">allbirds.com TXT v=spf1 include:allbirds_com._es.easydmarc.com include:spf.protection.outlook.com ~all</li>
+</ul>
+</details>
+</div>
+</section>
+<section class="view-section tier">
+<h3 class="section-title">In use</h3>
+<div class="cards">
+<article class="card" id="service-microsoft-365">
+<div class="card-head"><h4>Microsoft 365</h4><span class="badge b-in-use">In use</span></div>
+<p class="meta">Mailbox</p>
+<ul class="claims">
+<li class="decider"><span class="kind">MX</span>: allbirds-com.mail.protection.outlook.com</li>
+<li><span class="kind">SPF</span>: include:spf.protection.outlook.com</li>
+<li><span class="kind">DKIM keys</span>: selector1, selector2 (both 2048 bit, by CNAME)</li>
+<li><span class="kind">Verification tokens</span>: MS=A01B077C9CEAFC03E22F0B625C7E7600E37CC59A, MS=ms40651830, MS=ms79507765</li>
+<li><span class="kind">Autodiscover CNAME</span>: autodiscover.allbirds.com</li>
+</ul>
+<p class="meta setup">setup complete</p>
+<details class="records"><summary>All records</summary>
+<p class="kind">MX</p>
+<ul class="records">
+<li class="ev mono">allbirds.com MX 0 allbirds-com.mail.protection.outlook.com</li>
+</ul>
+<p class="kind">SPF</p>
+<ul class="records">
+<li class="ev mono">allbirds.com TXT include:spf.protection.outlook.com</li>
+</ul>
+<p class="kind">DKIM keys</p>
+<ul class="records">
+<li class="ev mono">selector1._domainkey.allbirds.com TXT v=DKIM1; k=rsa; p=MIIBIjANBgkq..., 2048-bit, fp d16c91a9c741c096 via selector1-allbirds-com._domainkey.axnygroup.e-v1.dkim.mail.microsoft</li>
+<li class="ev mono">selector2._domainkey.allbirds.com TXT v=DKIM1; k=rsa; p=MIIBIjANBgkq..., 2048-bit, fp 6cc817c15f61a3e2 via selector2-allbirds-com._domainkey.axnygroup.e-v1.dkim.mail.microsoft</li>
+</ul>
+<p class="kind">Verification tokens</p>
+<ul class="records">
+<li class="ev mono">allbirds.com TXT MS=A01B077C9CEAFC03E22F0B625C7E7600E37CC59A</li>
+<li class="ev mono">allbirds.com TXT MS=ms40651830</li>
+<li class="ev mono">allbirds.com TXT MS=ms79507765</li>
+</ul>
+<p class="kind">Autodiscover CNAME</p>
+<ul class="records">
+<li class="ev mono">autodiscover.allbirds.com CNAME autodiscover.outlook.com</li>
+</ul>
+<p class="meta setup">setup complete: SPF present, DKIM present, MX present, bounce CNAME not needed</p>
+</details>
+</article>
+</div>
+</section>
+<section class="view-section tier">
+<h3 class="section-title">Configured</h3>
+<div class="cards">
+<article class="card" id="service-amazon-ses">
+<div class="card-head"><h4>Amazon SES</h4><span class="badge b-configured">Configured</span></div>
+<p class="meta">Transactional</p>
+<ul class="claims">
+<li class="decider"><span class="kind">SPF ranges</span>: ip4:199.255.192.0/22, ip4:199.127.232.0/22 and 11 more</li>
+<li><span class="kind">SPF</span>: include:amazonses.com at alerts.allbirds.com and mail.allbirds.com</li>
+</ul>
+<details class="records"><summary>All records</summary>
+<p class="kind">SPF ranges</p>
+<ul class="records">
+<li class="ev mono">_spf.allbirds_com._d.easydmarc.pro TXT ip4:199.255.192.0/22 via amazonses.com TXT ip4:199.255.192.0/22</li>
+<li class="ev mono">_spf.allbirds_com._d.easydmarc.pro TXT ip4:199.127.232.0/22 via amazonses.com TXT ip4:199.127.232.0/22</li>
+<li class="ev mono">_spf.allbirds_com._d.easydmarc.pro TXT ip4:54.240.0.0/18 via amazonses.com TXT ip4:54.240.0.0/18</li>
+<li class="ev mono">_spf.allbirds_com._d.easydmarc.pro TXT ip4:69.169.224.0/20 via amazonses.com TXT ip4:69.169.224.0/20</li>
+<li class="ev mono">_spf.allbirds_com._d.easydmarc.pro TXT ip4:23.249.208.0/20 via amazonses.com TXT ip4:23.249.208.0/20</li>
+<li class="ev mono">_spf.allbirds_com._d.easydmarc.pro TXT ip4:23.251.224.0/19 via amazonses.com TXT ip4:23.251.224.0/19</li>
+<li class="ev mono">_spf.allbirds_com._d.easydmarc.pro TXT ip4:76.223.176.0/20 via amazonses.com TXT ip4:76.223.176.0/20</li>
+<li class="ev mono">_spf.allbirds_com._d.easydmarc.pro TXT ip4:54.240.64.0/18 via amazonses.com TXT ip4:54.240.64.0/18</li>
+<li class="ev mono">_spf.allbirds_com._d.easydmarc.pro TXT ip4:76.223.128.0/19 via amazonses.com TXT ip4:76.223.128.0/19</li>
+<li class="ev mono">_spf.allbirds_com._d.easydmarc.pro TXT ip4:216.221.160.0/19 via amazonses.com TXT ip4:216.221.160.0/19</li>
+<li class="ev mono">_spf.allbirds_com._d.easydmarc.pro TXT ip4:206.55.144.0/20 via amazonses.com TXT ip4:206.55.144.0/20</li>
+<li class="ev mono">_spf.allbirds_com._d.easydmarc.pro TXT ip4:24.110.64.0/18 via amazonses.com TXT ip4:24.110.64.0/18</li>
+<li class="ev mono">_spf.allbirds_com._d.easydmarc.pro TXT ip4:98.77.0.0/16 via amazonses.com TXT ip4:98.77.0.0/16</li>
+</ul>
+<p class="kind">SPF</p>
+<ul class="records">
+<li class="ev mono">alerts.allbirds.com TXT include:amazonses.com</li>
+<li class="ev mono">mail.allbirds.com TXT include:amazonses.com</li>
+</ul>
+</details>
+</article>
+<article class="card" id="service-freshdesk">
+<div class="card-head"><h4>Freshdesk</h4><span class="badge b-configured">Configured</span></div>
+<p class="meta">Support and CRM</p>
+<ul class="claims">
+<li class="decider"><span class="kind">SPF ranges</span>: ip4:3.7.25.40/29, ip4:13.127.153.86 and 6 more</li>
+</ul>
+<details class="records"><summary>All records</summary>
+<p class="kind">SPF ranges</p>
+<ul class="records">
+<li class="ev mono">_spf1.allbirds_com._d.easydmarc.pro TXT ip4:3.7.25.40/29 via fdspfind.freshemail.io TXT ip4:3.7.25.40/29</li>
+<li class="ev mono">_spf1.allbirds_com._d.easydmarc.pro TXT ip4:13.127.153.86 via fdspfind.freshemail.io TXT ip4:13.127.153.86</li>
+<li class="ev mono">_spf1.allbirds_com._d.easydmarc.pro TXT ip4:52.66.154.99 via fdspfind.freshemail.io TXT ip4:52.66.154.99</li>
+<li class="ev mono">_spf1.allbirds_com._d.easydmarc.pro TXT ip4:13.127.210.61 via fdspfind.freshemail.io TXT ip4:13.127.210.61</li>
+<li class="ev mono">_spf1.allbirds_com._d.easydmarc.pro TXT ip4:3.120.181.200/29 via fdspfeuc.freshemail.io TXT ip4:3.120.181.192/28</li>
+<li class="ev mono">_spf1.allbirds_com._d.easydmarc.pro TXT ip4:3.222.0.24/29 via fdspfus.freshemail.io TXT ip4:3.222.0.24/29</li>
+<li class="ev mono">_spf1.allbirds_com._d.easydmarc.pro TXT ip4:44.192.35.0/24 via fdspfus.freshemail.io TXT ip4:44.192.35.0/24</li>
+<li class="ev mono">_spf1.allbirds_com._d.easydmarc.pro TXT ip4:3.25.47.0/29 via fdspfaus.freshemail.io TXT ip4:3.25.47.0/29</li>
+</ul>
+</details>
+</article>
+<article class="card" id="service-google-workspace">
+<div class="card-head"><h4>Google Workspace</h4><span class="badge b-configured">Configured</span></div>
+<p class="meta">Mailbox</p>
+<ul class="claims">
+<li class="decider"><span class="kind">SPF ranges</span>: ip4:74.125.0.0/16, ip4:209.85.128.0/17 and 6 more</li>
+<li><span class="kind">MX for a subdomain&#x27;s mail</span>: aspmx.l.google.com, alt1.aspmx.l.google.com, alt2.aspmx.l.google.com at mail.allbirds.com</li>
+<li><span class="kind">SPF</span>: include:_spf.google.com at alerts.allbirds.com and mail.allbirds.com</li>
+<li><span class="kind">DKIM key</span>: google (2048 bit, named for it)</li>
+</ul>
+<p class="meta setup">setup incomplete: DKIM missing at alerts.allbirds.com and mail.allbirds.com</p>
+<details class="records"><summary>All records</summary>
+<p class="kind">SPF ranges</p>
+<ul class="records">
+<li class="ev mono">_spf.allbirds_com._d.easydmarc.pro TXT ip4:74.125.0.0/16 via _spf.google.com TXT ip4:74.125.0.0/16</li>
+<li class="ev mono">_spf.allbirds_com._d.easydmarc.pro TXT ip4:209.85.128.0/17 via _spf.google.com TXT ip4:209.85.128.0/17</li>
+<li class="ev mono">_spf.allbirds_com._d.easydmarc.pro TXT ip6:2001:4860:4864::/56 via _spf.google.com TXT ip6:2001:4860:4864::/56</li>
+<li class="ev mono">_spf.allbirds_com._d.easydmarc.pro TXT ip6:2404:6800:4864::/56 via _spf.google.com TXT ip6:2404:6800:4864::/56</li>
+<li class="ev mono">_spf.allbirds_com._d.easydmarc.pro TXT ip6:2607:f8b0:4864::/56 via _spf.google.com TXT ip6:2607:f8b0:4864::/56</li>
+<li class="ev mono">_spf.allbirds_com._d.easydmarc.pro TXT ip6:2800:3f0:4864::/56 via _spf.google.com TXT ip6:2800:3f0:4864::/56</li>
+<li class="ev mono">_spf.allbirds_com._d.easydmarc.pro TXT ip6:2a00:1450:4864::/56 via _spf.google.com TXT ip6:2a00:1450:4864::/56</li>
+<li class="ev mono">_spf.allbirds_com._d.easydmarc.pro TXT ip6:2c0f:fb50:4864::/56 via _spf.google.com TXT ip6:2c0f:fb50:4864::/56</li>
+</ul>
+<p class="kind">MX for a subdomain&#x27;s mail</p>
+<ul class="records">
+<li class="ev mono">mail.allbirds.com MX 1 aspmx.l.google.com</li>
+<li class="ev mono">mail.allbirds.com MX 5 alt1.aspmx.l.google.com</li>
+<li class="ev mono">mail.allbirds.com MX 10 alt2.aspmx.l.google.com</li>
+</ul>
+<p class="kind">SPF</p>
+<ul class="records">
+<li class="ev mono">alerts.allbirds.com TXT include:_spf.google.com</li>
+<li class="ev mono">mail.allbirds.com TXT include:_spf.google.com</li>
+</ul>
+<p class="kind">DKIM key</p>
+<ul class="records">
+<li class="ev mono">google._domainkey.allbirds.com TXT v=DKIM1; k=rsa; p=MIIBIjANBgkq..., 2048-bit, fp d8f8fdab59ca9b21</li>
+</ul>
+<p class="meta setup">setup incomplete: SPF present at allbirds.com, alerts.allbirds.com and mail.allbirds.com, DKIM present at allbirds.com, MX not used (optional, MX at allbirds.com) at allbirds.com, bounce CNAME not needed at allbirds.com, alerts.allbirds.com and mail.allbirds.com, DKIM missing at alerts.allbirds.com and mail.allbirds.com, MX not used (optional, MX at alerts.allbirds.com) at alerts.allbirds.com, MX present at mail.allbirds.com</p>
+</details>
+</article>
+<article class="card" id="service-iterable">
+<div class="card-head"><h4>Iterable</h4><span class="badge b-configured">Configured</span></div>
+<p class="meta">Marketing</p>
+<ul class="claims">
+<li class="decider"><span class="kind">Tracking CNAME</span>: links.allbirds.com</li>
+</ul>
+<details class="records"><summary>All records</summary>
+<p class="kind">Tracking CNAME</p>
+<ul class="records">
+<li class="ev mono">links.allbirds.com CNAME links.iterable.com</li>
+</ul>
+</details>
+</article>
+<article class="card" id="service-mailchimp">
+<div class="card-head"><h4>Mailchimp</h4><span class="badge b-configured">Configured</span></div>
+<p class="meta">Marketing</p>
+<ul class="claims">
+<li class="decider"><span class="kind">DKIM key</span>: k1 (1024 bit, by CNAME)</li>
+</ul>
+<p class="meta setup">setup complete</p>
+<details class="records"><summary>All records</summary>
+<p class="kind">DKIM key</p>
+<ul class="records">
+<li class="ev mono">k1._domainkey.allbirds.com TXT k=rsa; p=MIGfMA0GCSqG..., 1024-bit, fp 53d7bb0466c8346d via dkim.mcsv.net</li>
+</ul>
+<p class="meta setup">setup complete: DKIM present (older setup: a key at k1; the current setup names k2), SPF not needed, bounce CNAME not needed</p>
+</details>
+</article>
+<article class="card" id="service-mailgun">
+<div class="card-head"><h4>Mailgun</h4><span class="badge b-configured">Configured</span></div>
+<p class="meta">Transactional</p>
+<ul class="claims">
+<li class="decider"><span class="kind">SPF ranges</span>: ip4:141.193.32.0/23, ip4:159.135.140.80/29 and 16 more</li>
+<li><span class="kind">Tracking CNAME</span>: email.allbirds.com</li>
+<li><span class="kind">MX for bounces</span>: mxa.mailgun.org, mxb.mailgun.org at email.allbirds.com</li>
+<li><span class="kind">SPF</span>: include:mailgun.org, include:_spf.mailgun.org, include:_spf.eu.mailgun.org at alerts.allbirds.com, email.allbirds.com and mail.allbirds.com</li>
+</ul>
+<p class="meta setup">setup complete</p>
+<details class="records"><summary>All records</summary>
+<p class="kind">SPF ranges</p>
+<ul class="records">
+<li class="ev mono">_spf1.allbirds_com._d.easydmarc.pro TXT ip4:141.193.32.0/23 via _spf.eu.mailgun.org TXT ip4:141.193.32.0/23</li>
+<li class="ev mono">_spf1.allbirds_com._d.easydmarc.pro TXT ip4:159.135.140.80/29 via _spf.eu.mailgun.org TXT ip4:159.135.140.80/29</li>
+<li class="ev mono">_spf1.allbirds_com._d.easydmarc.pro TXT ip4:159.135.132.128/25 via _spf.eu.mailgun.org TXT ip4:159.135.132.128/25</li>
+<li class="ev mono">_spf1.allbirds_com._d.easydmarc.pro TXT ip4:161.38.204.0/22 via _spf.eu.mailgun.org TXT ip4:161.38.204.0/22</li>
+<li class="ev mono">_spf1.allbirds_com._d.easydmarc.pro TXT ip4:143.55.236.0/22 via _spf.eu.mailgun.org TXT ip4:143.55.236.0/22</li>
+<li class="ev mono">_spf1.allbirds_com._d.easydmarc.pro TXT ip4:198.244.60.0/22 via _spf.eu.mailgun.org TXT ip4:198.244.60.0/22</li>
+<li class="ev mono">_spf1.allbirds_com._d.easydmarc.pro TXT ip4:204.220.160.0/20 via _spf.eu.mailgun.org TXT ip4:204.220.160.0/20</li>
+<li class="ev mono">_spf1.allbirds_com._d.easydmarc.pro TXT ip4:159.135.224.0/20 via _spf1.mailgun.org TXT ip4:159.135.224.0/20</li>
+<li class="ev mono">_spf1.allbirds_com._d.easydmarc.pro TXT ip4:69.72.32.0/20 via _spf1.mailgun.org TXT ip4:69.72.32.0/20</li>
+<li class="ev mono">_spf1.allbirds_com._d.easydmarc.pro TXT ip4:204.220.90.0/23 via _spf1.mailgun.org TXT ip4:204.220.90.0/23</li>
+<li class="ev mono">_spf1.allbirds_com._d.easydmarc.pro TXT ip4:204.220.92.0/22 via _spf1.mailgun.org TXT ip4:204.220.92.0/22</li>
+<li class="ev mono">_spf1.allbirds_com._d.easydmarc.pro TXT ip4:161.38.192.0/20 via _spf2.mailgun.org TXT ip4:161.38.192.0/20</li>
+<li class="ev mono">_spf1.allbirds_com._d.easydmarc.pro TXT ip4:143.55.224.0/21 via _spf2.mailgun.org TXT ip4:143.55.224.0/21</li>
+<li class="ev mono">_spf1.allbirds_com._d.easydmarc.pro TXT ip4:143.55.232.0/22 via _spf2.mailgun.org TXT ip4:143.55.232.0/22</li>
+<li class="ev mono">_spf1.allbirds_com._d.easydmarc.pro TXT ip4:159.112.240.0/20 via _spf2.mailgun.org TXT ip4:159.112.240.0/20</li>
+<li class="ev mono">_spf1.allbirds_com._d.easydmarc.pro TXT ip4:198.244.48.0/20 via _spf2.mailgun.org TXT ip4:198.244.48.0/20</li>
+<li class="ev mono">_spf1.allbirds_com._d.easydmarc.pro TXT ip4:204.220.168.0/21 via _spf2.mailgun.org TXT ip4:204.220.168.0/21</li>
+<li class="ev mono">_spf1.allbirds_com._d.easydmarc.pro TXT ip4:204.220.176.0/20 via _spf2.mailgun.org TXT ip4:204.220.176.0/20</li>
+</ul>
+<p class="kind">Tracking CNAME</p>
+<ul class="records">
+<li class="ev mono">email.allbirds.com CNAME mailgun.org</li>
+</ul>
+<p class="kind">MX for bounces</p>
+<ul class="records">
+<li class="ev mono">email.allbirds.com MX 10 mxa.mailgun.org</li>
+<li class="ev mono">email.allbirds.com MX 10 mxb.mailgun.org</li>
+</ul>
+<p class="kind">SPF</p>
+<ul class="records">
+<li class="ev mono">alerts.allbirds.com TXT include:mailgun.org</li>
+<li class="ev mono">email.allbirds.com TXT include:_spf.mailgun.org</li>
+<li class="ev mono">email.allbirds.com TXT include:_spf.eu.mailgun.org</li>
+<li class="ev mono">mail.allbirds.com TXT include:mailgun.org</li>
+</ul>
+<p class="meta setup">setup complete: SPF present at allbirds.com, alerts.allbirds.com and mail.allbirds.com, MX not used (optional, MX at allbirds.com) at allbirds.com, tracking CNAME present at allbirds.com, MX not used (optional, MX at alerts.allbirds.com) at alerts.allbirds.com, tracking CNAME not checked (no label was asked at alerts.allbirds.com) at alerts.allbirds.com, MX not used (optional, MX at mail.allbirds.com) at mail.allbirds.com, tracking CNAME not checked (no label was asked at mail.allbirds.com) at mail.allbirds.com</p>
+</details>
+</article>
+<article class="card" id="service-mailjet">
+<div class="card-head"><h4>Mailjet</h4><span class="badge b-configured">Configured</span></div>
+<p class="meta">Transactional</p>
+<ul class="claims">
+<li class="decider"><span class="kind">SPF ranges</span>: ip4:87.253.232.0/21, ip4:185.189.236.0/22 and 2 more</li>
+</ul>
+<p class="meta setup">setup incomplete: DKIM missing</p>
+<details class="records"><summary>All records</summary>
+<p class="kind">SPF ranges</p>
+<ul class="records">
+<li class="ev mono">_spf1.allbirds_com._d.easydmarc.pro TXT ip4:87.253.232.0/21 via 1.236.253.87.origin.asn.cymru.com TXT 200069 | 87.253.236.0/24 | FR | ripencc | 2012-09-10 via as200069.asn.cymru.com TXT 200069 | FR | ripencc | 2013-10-16 | MAILJET, FR via 1.238.253.87.origin.asn.cymru.com TXT 200069 | 87.253.238.0/24 | FR | ripencc | 2012-09-10</li>
+<li class="ev mono">_spf1.allbirds_com._d.easydmarc.pro TXT ip4:185.189.236.0/22 via 1.236.189.185.origin.asn.cymru.com TXT 200069 | 185.189.236.0/24 | FR | ripencc | 2017-02-13 via as200069.asn.cymru.com TXT 200069 | FR | ripencc | 2013-10-16 | MAILJET, FR via 1.238.189.185.origin.asn.cymru.com TXT 200069 | 185.189.238.0/24 | FR | ripencc | 2017-02-13 via 1.239.189.185.origin.asn.cymru.com TXT 200069 | 185.189.239.0/24 | FR | ripencc | 2017-02-13</li>
+<li class="ev mono">_spf1.allbirds_com._d.easydmarc.pro TXT ip4:185.211.120.0/22 via 1.120.211.185.origin.asn.cymru.com TXT 200069 | 185.211.120.0/24 | US | ripencc | 2017-07-04 via as200069.asn.cymru.com TXT 200069 | FR | ripencc | 2013-10-16 | MAILJET, FR via 1.122.211.185.origin.asn.cymru.com TXT 200069 | 185.211.122.0/24 | US | ripencc | 2017-07-04 via 1.123.211.185.origin.asn.cymru.com TXT 200069 | 185.211.123.0/24 | US | ripencc | 2017-07-04</li>
+<li class="ev mono">_spf1.allbirds_com._d.easydmarc.pro TXT ip4:185.250.236.0/22 via 1.236.250.185.origin.asn.cymru.com TXT 200069 | 185.250.236.0/24 | GB | ripencc | 2018-03-21 via as200069.asn.cymru.com TXT 200069 | FR | ripencc | 2013-10-16 | MAILJET, FR via 1.238.250.185.origin.asn.cymru.com TXT 200069 | 185.250.238.0/24 | GB | ripencc | 2018-03-21 via 1.239.250.185.origin.asn.cymru.com TXT 200069 | 185.250.239.0/24 | GB | ripencc | 2018-03-21</li>
+</ul>
+<p class="meta setup">setup incomplete: SPF present, DKIM missing</p>
+</details>
+</article>
+<article class="card" id="service-postmark">
+<div class="card-head"><h4>Postmark</h4><span class="badge b-configured">Configured</span></div>
+<p class="meta">Transactional</p>
+<ul class="claims">
+<li class="decider"><span class="kind">Bounce CNAME</span>: pm-bounces.allbirds.com</li>
+</ul>
+<p class="meta setup">setup complete</p>
+<details class="records"><summary>All records</summary>
+<p class="kind">Bounce CNAME</p>
+<ul class="records">
+<li class="ev mono">pm-bounces.allbirds.com CNAME pm.mtasv.net</li>
+</ul>
+<p class="meta setup">setup complete: SPF not needed, bounce CNAME present</p>
+</details>
+</article>
+<article class="card" id="service-sendgrid">
+<div class="card-head"><h4>SendGrid</h4><span class="badge b-configured">Configured</span></div>
+<p class="meta">Transactional</p>
+<ul class="claims">
+<li class="decider"><span class="kind">SPF ranges</span>: ip4:208.117.48.0/20, ip4:50.31.32.0/19 and 16 more</li>
+<li><span class="kind">DKIM keys</span>: s1, s2 (both 2048 bit, by CNAME)</li>
+</ul>
+<p class="meta setup">setup complete</p>
+<details class="records"><summary>All records</summary>
+<p class="kind">SPF ranges</p>
+<ul class="records">
+<li class="ev mono">_spf.allbirds_com._d.easydmarc.pro TXT ip4:208.117.48.0/20 via sendgrid.net TXT ip4:208.117.48.0/20</li>
+<li class="ev mono">_spf.allbirds_com._d.easydmarc.pro TXT ip4:50.31.32.0/19 via sendgrid.net TXT ip4:50.31.32.0/19</li>
+<li class="ev mono">_spf.allbirds_com._d.easydmarc.pro TXT ip4:198.37.144.0/20 via sendgrid.net TXT ip4:198.37.144.0/20</li>
+<li class="ev mono">_spf.allbirds_com._d.easydmarc.pro TXT ip4:198.21.0.0/21 via sendgrid.net TXT ip4:198.21.0.0/21</li>
+<li class="ev mono">_spf.allbirds_com._d.easydmarc.pro TXT ip4:192.254.112.0/20 via sendgrid.net TXT ip4:192.254.112.0/20</li>
+<li class="ev mono">_spf.allbirds_com._d.easydmarc.pro TXT ip4:149.72.0.0/16 via sendgrid.net TXT ip4:149.72.0.0/16</li>
+<li class="ev mono">_spf.allbirds_com._d.easydmarc.pro TXT ip4:159.183.0.0/16 via sendgrid.net TXT ip4:159.183.0.0/16</li>
+<li class="ev mono">_spf.allbirds_com._d.easydmarc.pro TXT ip4:134.128.64.0/18 via sendgrid.net TXT ip4:134.128.64.0/18</li>
+<li class="ev mono">_spf.allbirds_com._d.easydmarc.pro TXT ip4:159.26.176.0/20 via sendgrid.net TXT ip4:159.26.176.0/20</li>
+<li class="ev mono">_spf.allbirds_com._d.easydmarc.pro TXT ip4:223.165.113.0/24 via ab.sendgrid.net TXT ip4:223.165.113.0/24</li>
+<li class="ev mono">_spf.allbirds_com._d.easydmarc.pro TXT ip4:223.165.115.0/24 via ab.sendgrid.net TXT ip4:223.165.115.0/24</li>
+<li class="ev mono">_spf.allbirds_com._d.easydmarc.pro TXT ip4:223.165.118.0/23 via ab.sendgrid.net TXT ip4:223.165.118.0/23</li>
+<li class="ev mono">_spf1.allbirds_com._d.easydmarc.pro TXT ip4:223.165.120.0/23 via ab.sendgrid.net TXT ip4:223.165.120.0/23</li>
+<li class="ev mono">_spf1.allbirds_com._d.easydmarc.pro TXT ip4:198.21.4.52 via sendgrid.net TXT ip4:198.21.0.0/21</li>
+<li class="ev mono">_spf.allbirds_com._d.easydmarc.pro TXT ip4:167.89.0.0/17 via 1.0.89.167.origin.asn.cymru.com TXT 11377 | 167.89.0.0/18 | US | arin | 2013-10-31 via as11377.asn.cymru.com TXT 11377 | US | arin | 2012-06-28 | SENDGRID - SendGrid, Inc., US via 1.64.89.167.origin.asn.cymru.com TXT 11377 | 167.89.64.0/19 | US | arin | 2013-10-31 via 1.96.89.167.origin.asn.cymru.com TXT 11377 | 167.89.96.0/20 | US | arin | 2013-10-31</li>
+<li class="ev mono">_spf.allbirds_com._d.easydmarc.pro TXT ip4:168.245.0.0/17 via 1.0.245.168.origin.asn.cymru.com TXT 11377 | 168.245.0.0/18 | US | arin | 2016-11-10 via as11377.asn.cymru.com TXT 11377 | US | arin | 2012-06-28 | SENDGRID - SendGrid, Inc., US via 1.64.245.168.origin.asn.cymru.com TXT 11377 | 168.245.64.0/20 | US | arin | 2016-11-10 via 1.96.245.168.origin.asn.cymru.com TXT 11377 | 168.245.96.0/19 | US | arin | 2016-11-10</li>
+<li class="ev mono">_spf1.allbirds_com._d.easydmarc.pro TXT ip4:167.89.31.27 via 27.31.89.167.origin.asn.cymru.com TXT 11377 | 167.89.0.0/18 | US | arin | 2013-10-31 via as11377.asn.cymru.com TXT 11377 | US | arin | 2012-06-28 | SENDGRID - SendGrid, Inc., US</li>
+<li class="ev mono">_spf1.allbirds_com._d.easydmarc.pro TXT ip4:167.89.127.244 via 244.127.89.167.origin.asn.cymru.com TXT 11377 | 167.89.126.0/23 | US | arin | 2013-10-31 via as11377.asn.cymru.com TXT 11377 | US | arin | 2012-06-28 | SENDGRID - SendGrid, Inc., US</li>
+</ul>
+<p class="kind">DKIM keys</p>
+<ul class="records">
+<li class="ev mono">s1._domainkey.allbirds.com TXT k=rsa; t=s (strict); p=MIIBIjANBgkq..., 2048-bit, fp 1613a2732ba0bb85 via s1.domainkey.u246613.wl114.sendgrid.net</li>
+<li class="ev mono">s2._domainkey.allbirds.com TXT k=rsa; t=s (strict); p=MIIBIjANBgkq..., 2048-bit, fp 74e0ef530aa45e05 via s2.domainkey.u246613.wl114.sendgrid.net</li>
+</ul>
+<p class="meta setup">setup complete: DKIM present, bounce CNAME not used (optional, CNAME at 23 labels under allbirds.com), SPF not needed, tracking CNAME not used (optional, CNAME at 23 labels under allbirds.com)</p>
+</details>
+</article>
+<article class="card" id="service-shopify">
+<div class="card-head"><h4>Shopify</h4><span class="badge b-configured">Configured</span></div>
+<p class="meta">Commerce and apps</p>
+<ul class="claims">
+<li class="decider"><span class="kind">SPF</span>: include:shops.shopify.com at alerts.allbirds.com and mail.allbirds.com</li>
+</ul>
+<details class="records"><summary>All records</summary>
+<p class="kind">SPF</p>
+<ul class="records">
+<li class="ev mono">alerts.allbirds.com TXT include:shops.shopify.com</li>
+<li class="ev mono">mail.allbirds.com TXT include:shops.shopify.com</li>
+</ul>
+</details>
+</article>
+<article class="card" id="service-sparkpost">
+<div class="card-head"><h4>SparkPost</h4><span class="badge b-configured">Configured</span></div>
+<p class="meta">Transactional</p>
+<ul class="claims">
+<li class="decider"><span class="kind">Bounce CNAME</span>: bounce.allbirds.com</li>
+<li><span class="kind">MX for bounces</span>: smtp.sparkpostmail.com at bounce.allbirds.com and info.allbirds.com</li>
+</ul>
+<p class="meta setup">setup complete</p>
+<details class="records"><summary>All records</summary>
+<p class="kind">Bounce CNAME</p>
+<ul class="records">
+<li class="ev mono">bounce.allbirds.com CNAME sparkpostmail.com</li>
+</ul>
+<p class="kind">MX for bounces</p>
+<ul class="records">
+<li class="ev mono">bounce.allbirds.com MX 5 smtp.sparkpostmail.com</li>
+<li class="ev mono">info.allbirds.com MX 5 smtp.sparkpostmail.com</li>
+</ul>
+<p class="meta setup">setup complete: tracking CNAME not used (optional, CNAME at 23 labels under allbirds.com), MX not used (optional, MX at allbirds.com)</p>
+</details>
+</article>
+<article class="card" id="service-zendesk">
+<div class="card-head"><h4>Zendesk</h4><span class="badge b-configured">Configured</span></div>
+<p class="meta">Support and CRM</p>
+<ul class="claims">
+<li class="decider"><span class="kind">SPF ranges</span>: ip4:103.151.192.0/23, ip4:185.12.80.0/22 and 3 more</li>
+</ul>
+<p class="meta setup">setup complete</p>
+<details class="records"><summary>All records</summary>
+<p class="kind">SPF ranges</p>
+<ul class="records">
+<li class="ev mono">_spf.allbirds_com._d.easydmarc.pro TXT ip4:103.151.192.0/23 via mail.zendesk.com TXT ip4:103.151.192.0/23</li>
+<li class="ev mono">_spf.allbirds_com._d.easydmarc.pro TXT ip4:185.12.80.0/22 via mail.zendesk.com TXT ip4:185.12.80.0/22</li>
+<li class="ev mono">_spf.allbirds_com._d.easydmarc.pro TXT ip4:188.172.128.0/20 via mail.zendesk.com TXT ip4:188.172.128.0/20</li>
+<li class="ev mono">_spf.allbirds_com._d.easydmarc.pro TXT ip4:192.161.144.0/20 via mail.zendesk.com TXT ip4:192.161.144.0/20</li>
+<li class="ev mono">_spf.allbirds_com._d.easydmarc.pro TXT ip4:216.198.0.0/18 via mail.zendesk.com TXT ip4:216.198.0.0/18</li>
+</ul>
+<p class="meta setup">setup complete: SPF present, DKIM not used (optional, TXT at zendesk1._domainkey.allbirds.com and TXT at zendesk2._domainkey.allbirds.com)</p>
+</details>
+</article>
+</div>
+</section>
+<section class="view-section tier">
+<h3 class="section-title">Likely</h3>
+<div class="cards">
+<article class="card" id="service-customer-io">
+<div class="card-head"><h4>Customer.io</h4><span class="badge b-likely">Likely</span></div>
+<p class="meta">Marketing</p>
+<ul class="claims">
+<li class="decider"><span class="kind">DKIM key</span>: krs (2048 bit, named for it)</li>
+</ul>
+<p class="meta setup">setup complete</p>
+<details class="records"><summary>All records</summary>
+<p class="kind">DKIM key</p>
+<ul class="records">
+<li class="ev mono">krs._domainkey.allbirds.com TXT k=rsa; p=MIIBIjANBgkq..., 2048-bit, fp f65b843679924ff6</li>
+</ul>
+<p class="meta setup">setup complete: tracking CNAME not used (optional, CNAME at 23 labels under allbirds.com)</p>
+</details>
+</article>
+<article class="card" id="service-mandrill">
+<div class="card-head"><h4>Mandrill</h4><span class="badge b-likely">Likely</span></div>
+<p class="meta">Transactional</p>
+<ul class="claims">
+<li class="decider"><span class="kind">DKIM key</span>: mandrill (1024 bit, named for it)</li>
+</ul>
+<p class="meta setup">setup complete</p>
+<details class="records"><summary>All records</summary>
+<p class="kind">DKIM key</p>
+<ul class="records">
+<li class="ev mono">mandrill._domainkey.allbirds.com TXT v=DKIM1; k=rsa; p=MIGfMA0GCSqG..., 1024-bit, fp 9cee89b6f986543a</li>
+</ul>
+<p class="meta setup">setup complete: DKIM present (older setup: a key at mandrill; the current setup names mte1 and mte2), bounce CNAME not used (optional, CNAME at 23 labels under allbirds.com), tracking CNAME not used (optional, CNAME at 23 labels under allbirds.com)</p>
+</details>
+</article>
+</div>
+</section>
+<section class="view-section unknowns">
+<h3 class="section-title">Not recognised</h3>
+<ul class="unknowns">
+<li>2 ranges in AS16509 (Amazon Web Services): <span class="mono">35.159.219.224/28, 18.199.180.160/27</span>
+<span class="ev mono">_spf1.allbirds_com._d.easydmarc.pro TXT ip4:35.159.219.224/28</span>
+<details class="records"><summary>1 more record</summary>
+<ul class="records">
+<li class="ev mono">_spf1.allbirds_com._d.easydmarc.pro TXT ip4:18.199.180.160/27</li>
+</ul>
+</details>
+</li>
+<li>IP address in SPF: <span class="mono">157.131.136.130 (AS46375, AS-SONICTELECOM - Sonic Telecom LLC, US)</span> at mail.allbirds.com
+<span class="ev mono">mail.allbirds.com TXT ip4:157.131.136.130</span>
+</li>
+<li>IP address in SPF: <span class="mono">116.66.213.98 (AS3491, PCCWG-APAC-HK PCCW Global HK Ltd., HK)</span> at mail.allbirds.com
+<span class="ev mono">mail.allbirds.com TXT ip4:116.66.213.98</span>
+</li>
+<li>IP address in SPF: <span class="mono">96.71.160.117 (AS7922, COMCAST-7922 - Comcast Cable Communications, LLC, US)</span> at mail.allbirds.com
+<span class="ev mono">mail.allbirds.com TXT ip4:96.71.160.117</span>
+</li>
+<li>IP address in SPF: <span class="mono">216.40.27.182 (AS53828, NITEL - NETWORK INNOVATIONS, LLC, US)</span> at mail.allbirds.com
+<span class="ev mono">mail.allbirds.com TXT ip4:216.40.27.182</span>
+</li>
+</ul>
+</section>
+<section class="view-section absences">
+<h3 class="section-title">Checked and not there</h3>
+<ul class="gaps absences">
+<li><span class="mono">DKIM keys at alerts.allbirds.com</span>: selectors exist but none of the 32 names asked is one<span class="ev mono">_domainkey.alerts.allbirds.com TXT no record of this type</span></li>
+<li><span class="mono">DKIM keys at bounce.allbirds.com</span>: no selectors exist: _domainkey.bounce.allbirds.com does not exist and the zone returns no such name for names that do not exist. The sweep of 27 names was not run for that reason; only the 8 names the domain&#x27;s MX, SPF and delegations back or hint at were asked, as a check on servers that answer no such name for a name with names below it (RFC 8020 section 5)<span class="ev mono">_domainkey.bounce.allbirds.com TXT no such name</span><span class="ev mono">sendermap-wildcard-check._domainkey.bounce.allbirds.com TXT no such name</span></li>
+<li><span class="mono">DKIM keys at email.allbirds.com</span>: no selectors exist: _domainkey.email.allbirds.com does not exist and the zone returns no such name for names that do not exist. The sweep of 32 names was not run for that reason; only the 13 names the domain&#x27;s MX, SPF and delegations back or hint at were asked, as a check on servers that answer no such name for a name with names below it (RFC 8020 section 5)<span class="ev mono">_domainkey.email.allbirds.com TXT no such name</span><span class="ev mono">sendermap-wildcard-check._domainkey.email.allbirds.com TXT no such name</span></li>
+<li><span class="mono">DKIM keys at info.allbirds.com</span>: selectors exist but none of the 27 names asked is one<span class="ev mono">_domainkey.info.allbirds.com TXT no record of this type</span></li>
+<li><span class="mono">DKIM keys at mail.allbirds.com</span>: selectors exist but none of the 32 names asked is one<span class="ev mono">_domainkey.mail.allbirds.com TXT no record of this type</span></li>
+</ul>
+</section>
+<section class="view-section not-checked">
+<h3 class="section-title">Not checked</h3>
+<ul class="gaps">
+<li><span class="mono">the website</span>: not read: web checks were turned off (--no-web)</li>
+<li><span class="mono">certificate transparency, crt.sh: GET https://crt.sh/?q=%25.allbirds.com&amp;output=json</span>: not asked: read only with --ct (it also holds expired certificates)</li>
+<li><span class="mono">certificate log names more than 2 labels deep</span>: 34 not asked (cap of 2 labels below the domain)</li>
+<li><span class="mono">sending subdomains: TXT, MX and NS at apisdk.allbirds.com, community.allbirds.com, dataplane.allbirds.com, jssdk.allbirds.com, rerun.allbirds.com, www.jssdk.allbirds.com</span>: the domain&#x27;s DNS servers failed to answer (SERVFAIL), so whether they send is not known</li>
+<li><span class="mono">DKIM selectors at alerts.allbirds.com</span>: 74 of 106 not asked: only the first 27 and the names its own SPF, MX or delegation backs were (cap)</li>
+<li><span class="mono">DKIM selectors at info.allbirds.com</span>: 79 of 106 not asked: only the first 27 and the names its own SPF, MX or delegation backs were (cap)</li>
+<li><span class="mono">DKIM selectors at mail.allbirds.com</span>: 74 of 106 not asked: only the first 27 and the names its own SPF, MX or delegation backs were (cap)</li>
+</ul>
+</section>
+<section class="view-section asked">
+<h3 class="section-title">What was asked</h3>
+<ul class="gaps">
+<li><span class="mono">allbirds.com</span>: 106 DKIM selectors, 23 CNAME labels, 1 page</li>
+<li><span class="mono">alerts.allbirds.com</span>: 32 DKIM selectors</li>
+<li><span class="mono">bounce.allbirds.com</span>: 8 DKIM selectors</li>
+<li><span class="mono">email.allbirds.com</span>: 13 DKIM selectors</li>
+<li><span class="mono">info.allbirds.com</span>: 27 DKIM selectors</li>
+<li><span class="mono">mail.allbirds.com</span>: 32 DKIM selectors</li>
+</ul>
+<details class="asked"><summary>Names asked</summary>
+<h4 class="mono">allbirds.com</h4>
+<ul>
+<li>Pages (1): <span class="mono">https://api.certspotter.com/v1/issuances?domain=allbirds.com&amp;include_subdomains=true&amp;expand=dns_names</span></li>
+<li>CNAME labels (23): <span class="mono">bounce, bounces, em, email, mail, send, mta, rp, pm-bounces, links, link, click, track, tracking, url, go, autodiscover, cf-bounce, eversrv, fwdkim1, bnc3, bounces.cloud.em, bounces.cloud2.em</span></li>
+<li>DKIM selectors (106): <span class="mono">selector1, selector2, acdkim1, acdkim2, ses, aweber_key_a, aweber_key_b, aweber_key_c, brevo, brevo1, brevo2, cm, cf2024-1, ctct1, ctct2, krs, e2ma-k1, e2ma-k2, e2ma-k3, everlytickey1, everlytickey2, fm2, fm1, fm3, mesmtp, secureserver1, secureserver2, google, gapps, gor, strong1, strong2, hs1, hs2, intercom, s1-ionos, s42582890, cka, kl, kl1, kl2, k2, k1, k3, litesrv, mg, mailgun, mg1, pdk1, pdk2, mailjet, mailpoet2, mailpoet1, mandrill, mte1, mte2, marketo, mkto, mkto1, mimecast, mimecast20190719, pepipost, pp1, protonmail, protonmail2, protonmail3, resend, sailthru, salesforce, salesforce2, salesforce1, sf, sf1, sf2, sfdc, 200608, pardot, sfmc, s1, s2, smtpapi, scph0819, sparkpost, squarespace, zendesk1, zendesk2, zoho, api, default, dk, dkim, dkim1, dkim2, email, k, key, key1, key2, mail, mta, mx, pm, s, selector, smtp, sp</span></li>
+</ul>
+<h4 class="mono">alerts.allbirds.com</h4>
+<ul>
+<li>DKIM selectors (32): <span class="mono">google, gapps, acdkim1, acdkim2, ses, aweber_key_a, aweber_key_b, aweber_key_c, brevo, brevo1, brevo2, cm, cf2024-1, ctct1, ctct2, krs, e2ma-k1, e2ma-k2, e2ma-k3, everlytickey1, everlytickey2, fm2, fm1, fm3, mesmtp, secureserver1, secureserver2, mailgun, mg, mg1, pdk1, pdk2</span></li>
+</ul>
+<h4 class="mono">bounce.allbirds.com</h4>
+<ul>
+<li>DKIM selectors (8): <span class="mono">acdkim1, acdkim2, ses, aweber_key_a, aweber_key_b, aweber_key_c, brevo, brevo1</span></li>
+</ul>
+<h4 class="mono">email.allbirds.com</h4>
+<ul>
+<li>DKIM selectors (13): <span class="mono">acdkim1, acdkim2, ses, aweber_key_a, aweber_key_b, aweber_key_c, brevo, brevo1, mailgun, mg, mg1, pdk1, pdk2</span></li>
+</ul>
+<h4 class="mono">info.allbirds.com</h4>
+<ul>
+<li>DKIM selectors (27): <span class="mono">acdkim1, acdkim2, ses, aweber_key_a, aweber_key_b, aweber_key_c, brevo, brevo1, brevo2, cm, cf2024-1, ctct1, ctct2, krs, e2ma-k1, e2ma-k2, e2ma-k3, everlytickey1, everlytickey2, fm2, fm1, fm3, mesmtp, secureserver1, secureserver2, google, gapps</span></li>
+</ul>
+<h4 class="mono">mail.allbirds.com</h4>
+<ul>
+<li>DKIM selectors (32): <span class="mono">google, gapps, acdkim1, acdkim2, ses, aweber_key_a, aweber_key_b, aweber_key_c, brevo, brevo1, brevo2, cm, cf2024-1, ctct1, ctct2, krs, e2ma-k1, e2ma-k2, e2ma-k3, everlytickey1, everlytickey2, fm2, fm1, fm3, mesmtp, secureserver1, secureserver2, mailgun, mg, mg1, pdk1, pdk2</span></li>
+</ul>
+</details>
+</section>

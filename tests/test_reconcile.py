@@ -26,7 +26,7 @@ from sendermap.model import (
     Tier,
 )
 from sendermap.reconcile import reconcile, split, with_claimed
-from sendermap.render import CLAIMED_PARTS, markdown, text
+from sendermap.render import CLAIMED_PARTS, html, markdown, text
 
 DOMAIN = "acme.test"
 
@@ -348,12 +348,12 @@ def test_no_view_shows_the_section_when_nothing_was_claimed() -> None:
     assert "Claimed senders" not in markdown.render(fake_map())
 
 
-def test_app_js_uses_the_same_words_and_passes_claimed_on() -> None:
+def test_the_web_page_uses_the_same_words_and_passes_claimed_on() -> None:
+    page = html.html(with_claimed(fake_map(), CLAIMED, catalog.load()))
+    for _, heading in CLAIMED_PARTS:
+        assert f"<h4>{heading}</h4>" in page
     js = (Path(text.__file__).parent.parent / "web" / "static" / "app.js").read_text()
-    for key, heading in CLAIMED_PARTS:
-        assert f'["{key}", "{heading}"]' in js
     assert "&claimed=" in js
-    assert "receives reports only" in js
 
 
 # ------------------------------------------------------------------ the HTTP API

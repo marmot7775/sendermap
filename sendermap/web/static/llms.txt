@@ -8,7 +8,8 @@ Each sending service has a tier: In use (its MX at the domain), Configured (a re
 
 - [Map as JSON](/api/map?d=example.com): `GET /api/map?d=DOMAIN`, optionally `&claimed=Name, Name` to hold the services an owner says they use against the map.
 - [Map as Markdown](/api/map.md?d=example.com): `GET /api/map.md?d=DOMAIN`.
-- [Map as a stream](/api/map/stream?d=example.com): server-sent events, `progress` while the map builds, then one `map` event.
+- [Map as HTML](/api/map.html?d=example.com): `GET /api/map.html?d=DOMAIN`, the fragment the web page shows.
+- [Map as a stream](/api/map/stream?d=example.com): server-sent events, `progress` while the map builds, then one `map` event carrying `map` (the JSON) and `html` (the fragment).
 
 ## Schema
 

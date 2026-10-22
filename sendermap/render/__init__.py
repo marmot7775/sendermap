@@ -1,8 +1,8 @@
-"""Ways to show a SenderMap: a terminal view, Markdown to paste, JSON to process.
+"""Ways to show a SenderMap: a terminal view, Markdown to paste, HTML for the web page, JSON to
+process.
 
-The terminal and Markdown views render one View (view.py). The names below stay importable from
-here: app.js matches NETWORK_VALUE and the resolver words, and the MCP server says the claimed
-parts as the views do.
+The terminal, Markdown and HTML views render one View (view.py). The names below stay importable
+from here: the MCP server says the claimed parts as the views do.
 """
 
 from .view import (

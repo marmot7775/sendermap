@@ -63,18 +63,17 @@ __all__ = [
 # How sources/networks.py writes a range whose networks share one name: "<range> (<ASN>, <name>)"
 # or "<range> (<ASN> and <ASN>, <name>)", with "; listed by <services>" before the closing
 # bracket when services publish the range. A range whose networks have different names
-# ("; <ASN>, <name>" again) does not match, so it stays a line of its own. app.js reads the same
-# shape with the same pattern.
+# ("; <ASN>, <name>" again) does not match, so it stays a line of its own.
 NETWORK_VALUE = r"^(\S+) \((AS\d+(?: and AS\d+)*), ((?:(?!; AS\d).)+?)(?:; listed by (.+))?\)$"
 _NETWORK_VALUE = re.compile(NETWORK_VALUE)
 _IP_KINDS = {"IP range in SPF": 0, "IP address in SPF": 1}
-# The resolvers a run names, as a reader says them. app.js holds the same words.
+# The resolvers a run names, as a reader says them.
 RESOLVERS = {
     "system": "the system resolver",
     "doh cloudflare": "Cloudflare DNS over HTTPS",
     "doh google": "Google DNS over HTTPS",
 }
-# The four parts of a reconciliation, in the words every view uses; app.js has the same.
+# The four parts of a reconciliation, in the words every view uses.
 CLAIMED_PARTS = (
     ("confirmed", "Claimed and found"),
     ("unclaimed", "Found, not claimed"),
@@ -97,6 +96,15 @@ class Head:
     resolver: str
     checked_at: str
     story: str
+
+    def summary(self) -> str:
+        """How the map was made in one sentence, such as "15 sending services found from public
+        records checked <when> (724 lookups in 3.2 s over <resolver>)." for allbirds.com."""
+        count = f"{self.senders} sending service{'s' if self.senders != 1 else ''}"
+        return (
+            f"{count} found from public records checked {self.checked_at} ({self.lookups} "
+            f"lookups in {self.elapsed:.1f} s over {self.resolver})."
+        )
 
 
 @dataclass(frozen=True, slots=True)
@@ -125,7 +133,8 @@ class KindLine:
 @dataclass(frozen=True, slots=True)
 class ServiceView:
     """One service: `where` is its one name when that is not the domain, `setup` its setup in
-    one clause, empty when the vendor data describes none."""
+    one clause, empty when the vendor data describes none. `brief` is that clause as it reads
+    without evidence, so a view that shows the records apart can still lead with it."""
 
     name: str
     category: str
@@ -133,6 +142,7 @@ class ServiceView:
     where: str
     kinds: tuple[KindLine, ...]
     setup: str
+    brief: str = ""
 
 
 @dataclass(frozen=True, slots=True)
@@ -273,6 +283,7 @@ def _service(
         where,
         tuple(_kind_lines(service, base, evidence)),
         _setup_clause(service, base, covered, evidence),
+        _setup_clause(service, base, covered, evidence=False),
     )
 
 

@@ -404,9 +404,8 @@ def _lacking(name: str, where: str, item: SetupItem) -> Finding:
 
 
 def line(setup: Setup) -> str:
-    """One setup as a line: "Setup at <where>: SPF present, DKIM missing (selector1 and
-    selector2 no such name), bounce CNAME not needed." The web page builds the same line in
-    app.js."""
+    """One setup as a line, such as "Setup at <where>: SPF present, DKIM missing (selector1 and
+    selector2 no such name), bounce CNAME not needed." for one name."""
     return f"Setup at {setup.where}: {', '.join(map(words, setup.items))}."
 
 
