@@ -62,7 +62,7 @@ async def test_the_run_names_the_resolver_and_the_map_ignores_it(
 async def test_the_views_name_the_resolver(offline: httpx.AsyncClient) -> None:
     result = await busy_map("doh cloudflare", offline)
     result = replace(result, run=replace(result.run, lookups=638, elapsed=11.2))
-    assert "(638 lookups over Cloudflare DNS over HTTPS)." in markdown.render(result)
+    assert "(638 lookups in 11.2 s over Cloudflare DNS over HTTPS)." in markdown.render(result)
     console = Console(record=True, width=200)
     text.render(result, console)
     assert "638 lookups in 11.2 s over Cloudflare DNS over HTTPS" in console.export_text()

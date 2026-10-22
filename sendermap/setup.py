@@ -407,10 +407,10 @@ def line(setup: Setup) -> str:
     """One setup as a line: "Setup at <where>: SPF present, DKIM missing (selector1 and
     selector2 no such name), bounce CNAME not needed." The web page builds the same line in
     app.js."""
-    return f"Setup at {setup.where}: {', '.join(map(_words, setup.items))}."
+    return f"Setup at {setup.where}: {', '.join(map(words, setup.items))}."
 
 
-def _words(item: SetupItem) -> str:
+def words(item: SetupItem) -> str:
     """One item in words. An optional item that is missing reads "not used (optional, <what was
     asked>)", so a reader does not take an optional record for a fault."""
     if item.need is Need.OPTIONAL and item.state is State.MISSING:
