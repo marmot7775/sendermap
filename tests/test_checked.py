@@ -68,15 +68,19 @@ async def test_markdown_shows_the_gaps_and_what_was_asked() -> None:
     assert "## Not checked" in page
     assert "- DMARC: TXT at _dmarc.acme.test: lookup failed" in page
     assert "## What was asked" in page
-    assert "- **email.acme.test**:" in page and "`google`" in page
+    assert "- **email.acme.test**: " in page and "`google`" not in page
+    full = markdown.render(await acme_map(), evidence=True)
+    assert full.rstrip().split("\n## ")[-1].startswith("Appendix: names asked")
+    assert "`google`" in full.split("## Appendix: names asked")[1]
 
 
 async def test_the_terminal_shows_the_gaps_and_what_was_asked() -> None:
     console = Console(record=True, width=200)
     text.render(await acme_map(), console)
     shown = console.export_text()
-    assert "Not checked: DMARC: TXT at _dmarc.acme.test (lookup failed)" in shown
-    assert "Asked at acme.test:" in shown and "Asked at email.acme.test:" in shown
+    assert "NOT CHECKED\n  DMARC: TXT at _dmarc.acme.test: lookup failed" in shown
+    assert "\n  acme.test: 106 DKIM selectors" in shown.split("WHAT WAS ASKED")[1]
+    assert "DKIM selectors: " not in shown
     console = Console(record=True, width=400)
     text.render(await acme_map(), console, evidence=True)
     assert "DKIM selectors: " in console.export_text()

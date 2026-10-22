@@ -87,6 +87,8 @@ async def test_every_unknown_carries_the_record_that_shows_it() -> None:
 async def test_markdown_shows_supporting_records_without_breaking_the_table() -> None:
     text = markdown.render(await mapped_map())
     (row,) = [line for line in text.splitlines() if line.startswith("| Mailchimp ")]
-    assert "via `1.100.51.198.origin.asn.cymru.com TXT 14782 \\| 198.51.100.0/24" in row
-    assert row.count("|") - row.count("\\|") == 5  # four cells, nothing split
+    assert "cymru" not in row  # the row summarises; records print only with evidence
+    assert row.count("|") - row.count("\\|") == 6  # five cells, nothing split
+    full = markdown.render(await mapped_map(), evidence=True)
+    assert "via 1.100.51.198.origin.asn.cymru.com TXT 14782 | 198.51.100.0/24" in full
     assert "- DKIM key: `default`, from `default._domainkey.mapped.test TXT v=DKIM1;" in text

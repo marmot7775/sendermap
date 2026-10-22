@@ -137,7 +137,8 @@ Assembly
   -> SenderMap + Run
   story.write: the paragraph from the map; no query
   reconcile.with_claimed: the claimed names against the services; no query
-  -> render.text | render.markdown | to_dict JSON | web stream
+  -> render.view: one View, findings first, each thing said once; no query
+  -> render.text | render.markdown (both from the View) | to_dict JSON | web stream
 ```
 
 Each source returns an `Observed`: claims, unknowns, findings, gaps and what it checked. Sources never raise
@@ -208,7 +209,8 @@ for the check and a private one a moment later (DNS rebinding) is not caught.
 | `sources/networks.py` | Naming SPF IP ranges by the ranges services publish, then by network owner |
 | `sources/ct.py` | Certificate transparency: the only reader of certificate logs. Reads them once per map through a provider list (Cert Spotter always, crt.sh with `--ct`), each with its own tries, timeout and one-day disk cache, into one set of names; with `--ct`, each logged name resolved and matched by the same catalog matchers as the DNS sources |
 | `sources/subdomains.py` | Finding sending subdomains from a wordlist and the names `ct.py` read |
-| `render/text.py`, `render/markdown.py` | The terminal and Markdown views; both show the gaps and what was asked at each name, as the web page does, and group unrecognised IP ranges by network |
+| `render/view.py` | The View every view renders: findings first, then services by tier with one evidence line per kind and the setup in one clause, then what was not recognised, checked and asked, counted unless evidence is set; and the helpers only views use (unknowns grouped by network, the claimed parts, the CT lines, the resolver words) |
+| `render/text.py`, `render/markdown.py` | The terminal and Markdown views of the View; they hold no logic about the map. `tests/snapshots` holds both, for every corpus case, with evidence off and on |
 | `cli.py` | The `sendermap` command, and `sendermap mcp`, which starts the MCP server |
 | `mcp_server.py` | The MCP server: its two tools, two resources and instructions, and the summary of a map |
 | `testing.py` | Recording and replaying DNS answers and pages, and replaying a recorded case |

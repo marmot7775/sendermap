@@ -332,13 +332,20 @@ async def test_json_carries_setups_under_each_service(offline: httpx.AsyncClient
     assert by_name["Amazon SES"]["setups"] == []  # no setup data for it yet
 
 
-async def test_every_view_shows_one_setup_line_per_name(offline: httpx.AsyncClient) -> None:
+async def test_every_view_shows_the_setup_in_one_clause(offline: httpx.AsyncClient) -> None:
     result = await mapped(m365(), offline)
-    expected = setup.line(service(result, "Microsoft 365").setups[0])
+    # The missing key is the finding's; the clause says its state only.
+    clause = "setup incomplete: DKIM missing"
     console = Console(record=True, width=400)
     text.render(result, console)
-    assert expected in console.export_text()
-    assert f"  - {expected}" in markdown.render(result)
+    shown = console.export_text()
+    assert clause in shown and f"{clause} (" not in shown
+    (row,) = [r for r in markdown.render(result).splitlines() if r.startswith("| Microsoft 365")]
+    assert row.endswith(f"| {clause} |")
+    # With evidence, every item, in the words setup.line uses.
+    line = setup.line(service(result, "Microsoft 365").setups[0])
+    full = markdown.render(result, evidence=True)
+    assert "SPF present" in line and "SPF present" in full
 
 
 def test_app_js_words_each_record_as_setup_py_does() -> None:

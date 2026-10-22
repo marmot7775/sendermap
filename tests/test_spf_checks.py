@@ -194,5 +194,5 @@ async def test_the_claim_shows_under_its_service_like_any_other() -> None:
     console = Console(file=io.StringIO(), width=200, color_system=None)
     text.render(result, console, evidence=True)
     out = console.file.getvalue()  # type: ignore[attr-defined]
-    assert "authorized by SPF for one of its addresses" in out
+    assert "SPF passes its address: ip4:" in out
     assert f"{asked_name(M365)} TXT ip4:{M365_IP}" in out

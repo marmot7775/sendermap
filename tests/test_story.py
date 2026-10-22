@@ -376,9 +376,9 @@ def test_every_view_carries_the_story() -> None:
     console = Console(record=True, width=2000)
     text.render(mapped, console)
     shown = console.export_text().splitlines()
-    assert shown[3] == mapped.story  # under the headline's panel
+    assert shown[4] == mapped.story  # under the headline's panel
     md = markdown.render(mapped).split("\n")
-    assert md[:3] == [f"# Sendermap: {DOMAIN}", "", mapped.story]
+    assert md[0] == f"# Sendermap: {DOMAIN}" and md[4] == mapped.story  # under the counts
     assert mapped.to_dict()["story"] == mapped.story
     js = (Path(text.__file__).parent.parent / "web" / "static" / "app.js").read_text()
     assert '$("story").textContent = map.story' in js
