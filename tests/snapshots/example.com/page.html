@@ -1,0 +1,45 @@
+<header class="view-head">
+<h2>example.com</h2>
+<p class="summary">0 sending services found from public records checked 2026-10-12 01:25 UTC (208 lookups in 0.0 s over Google DNS over HTTPS).</p>
+</header>
+<p class="story">No sending service shows in DNS for example.com: a null MX that says it accepts no mail, no sender in SPF, and a wildcard that answers every DKIM name. Not checked: the crt.sh certificate log (read only with --ct).</p>
+<section class="view-section attention">
+<h3 class="section-title">Needs attention</h3>
+<div class="finding note">
+<h4>The domain accepts no mail</h4>
+<p>It publishes a null MX record, which tells senders it receives no email.</p>
+<details class="records"><summary>Records</summary>
+<ul class="records">
+<li class="ev mono">example.com MX 0 </li>
+</ul>
+</details>
+</div>
+<div class="finding note">
+<h4>Every name under _domainkey.example.com answers with a key</h4>
+<p>A wildcard record makes every selector look published, so keys there say nothing about which services sign for the domain.</p>
+<details class="records"><summary>Records</summary>
+<ul class="records">
+<li class="ev mono">*._domainkey.example.com TXT v=DKIM1; p=</li>
+</ul>
+</details>
+</div>
+</section>
+<section class="view-section not-checked">
+<h3 class="section-title">Not checked</h3>
+<ul class="gaps">
+<li><span class="mono">certificate transparency, crt.sh: GET https://crt.sh/?q=%25.example.com&amp;output=json</span>: not asked: read only with --ct (it also holds expired certificates)</li>
+</ul>
+</section>
+<section class="view-section asked">
+<h3 class="section-title">What was asked</h3>
+<ul class="gaps">
+<li><span class="mono">example.com</span>: 23 CNAME labels, 2 pages</li>
+</ul>
+<details class="asked"><summary>Names asked</summary>
+<h4 class="mono">example.com</h4>
+<ul>
+<li>Pages (2): <span class="mono">https://example.com/, https://api.certspotter.com/v1/issuances?domain=example.com&amp;include_subdomains=true&amp;expand=dns_names</span></li>
+<li>CNAME labels (23): <span class="mono">bounce, bounces, em, email, mail, send, mta, rp, pm-bounces, links, link, click, track, tracking, url, go, autodiscover, cf-bounce, eversrv, fwdkim1, bnc3, bounces.cloud.em, bounces.cloud2.em</span></li>
+</ul>
+</details>
+</section>

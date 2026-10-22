@@ -3,7 +3,6 @@ its evidence, the findings a setup raises, the bounce domain folded into the set
 complete, the views, the loading rules, and that a setup asks DNS nothing more."""
 
 import json
-import re
 from dataclasses import replace
 from pathlib import Path
 from typing import Any
@@ -15,7 +14,7 @@ from rich.console import Console
 
 from sendermap import catalog, map_domain, setup
 from sendermap.model import Need, SenderMap, Service, Severity, State
-from sendermap.render import markdown, text
+from sendermap.render import html, markdown, text
 
 KEY = "v=DKIM1; k=rsa; p=" + "A" * 392
 MX = "0 example-test.mail.protection.outlook.com"
@@ -346,15 +345,12 @@ async def test_every_view_shows_the_setup_in_one_clause(offline: httpx.AsyncClie
     line = setup.line(service(result, "Microsoft 365").setups[0])
     full = markdown.render(result, evidence=True)
     assert "SPF present" in line and "SPF present" in full
-
-
-def test_app_js_words_each_record_as_setup_py_does() -> None:
-    js = (Path(__file__).parent.parent / "sendermap/web/static/app.js").read_text()
-    words = re.search(r"const SETUP_WORDS = (\{[^}]*\});", js)
-    assert words
-    pairs = dict(re.findall(r'(\w+): "([^"]+)"', words.group(1)))
-    assert pairs == setup.WORDS
-    assert '`Setup at ${setup.where}: ${parts.join(", ")}.`' in js
+    # The web page leads with the clause and keeps every item inside All records.
+    page = html.html(result)
+    card = page[page.index('id="service-microsoft-365"') :]
+    card = card[: card.index("</article>")]
+    assert card.index(f'<p class="meta setup">{clause}</p>') < card.index("All records")
+    assert card.index("SPF present") > card.index("All records")
 
 
 def _with_setup(vendor: str, *items: dict[str, Any]) -> dict[str, Any]:

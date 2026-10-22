@@ -1,6 +1,8 @@
 "use strict";
 
-// Every string that came from DNS or a web page goes into the page as text, never as markup.
+// Strings from DNS or a web page reach the page as HTML the server escaped (render/html.py),
+// set as it came. The page adds nothing from the map as markup of its own: the ring map's
+// labels go in as textContent.
 
 const TIERS = [
   { name: "In use", key: "in-use", radius: 118 },
@@ -16,11 +18,14 @@ const $ = (id) => document.getElementById(id);
 
 let current = null;
 let source = null;
+// The ring map's figure, kept here because each new result replaces the fragment it sits in.
+let figure = null;
 // The services the domain's owner says they use, from the page's own ?claimed=, comma
 // separated. The API reconciles them with the map; the page only passes them on.
 let claimed = "";
 
 document.addEventListener("DOMContentLoaded", () => {
+  figure = $("map-wrap");
   $("lookup").addEventListener("submit", (e) => {
     e.preventDefault();
     start($("domain").value);
@@ -52,14 +57,25 @@ function start(text, push = true, names = "") {
   $("step").textContent = "Starting";
   source = new EventSource(`/api/map/stream?${query(domain)}`);
   source.addEventListener("progress", (e) => { $("step").textContent = JSON.parse(e.data).step; });
-  source.addEventListener("map", (e) => { source.close(); render(JSON.parse(e.data)); });
+  source.addEventListener("map", (e) => {
+    source.close();
+    const done = JSON.parse(e.data);
+    render(done.map, done.html);
+  });
   source.addEventListener("failed", (e) => { source.close(); fail(JSON.parse(e.data).error); });
   source.onerror = async () => {
     source.close();
     const reply = await fetch(`/api/map?${query(domain)}`);
-    if (reply.ok) render(await reply.json());
-    else fail((await reply.json().catch(() => ({}))).detail || "The map could not be built.");
+    if (!reply.ok) return fail(await reason(reply));
+    const map = await reply.json();
+    const page = await fetch(`/api/map.html?${query(domain)}`);
+    if (page.ok) render(map, await page.text());
+    else fail(await reason(page));
   };
+}
+
+async function reason(reply) {
+  return (await reply.json().catch(() => ({}))).detail || "The map could not be built.";
 }
 
 function query(domain) {
@@ -74,44 +90,22 @@ function fail(message) {
 
 // ------------------------------------------------------------------ the result
 
-function render(map) {
+// The fragment is the View the command line shows. Its head moves into the result head beside
+// the actions, and the ring map goes between the story and Needs attention.
+function render(map, fragment) {
   current = map;
   hide("progress");
   document.title = `${map.domain}: Sendermap`;
-  $("result-domain").textContent = map.domain;
-  const senders = map.services.filter((s) => s.role === "sender");
-  const reporting = map.services.filter((s) => s.role === "reporting");
-  $("summary").textContent = summary(map.domain, senders, reporting);
-  $("story").textContent = map.story || "";
-  $("story").hidden = !map.story;
   const logo = $("logo");
   if (map.logo) { logo.src = map.logo; logo.hidden = false; } else { logo.hidden = true; }
-
-  drawMap(map.domain, senders);
-  renderServices(senders, map.domain);
-  renderReporting(reporting, map.domain);
-  renderClaimed(map.reconciliation);
-  renderAttention(map.findings);
-  renderUnknowns(map.unknowns, map.domain);
-  renderChecked(map.gaps, map.checked, map.absences || []);
-  renderFootnote(map);
+  const view = $("view");
+  view.innerHTML = fragment;
+  $("head").replaceChildren(...view.querySelectorAll(".view-head"));
+  const story = view.querySelector(".story");
+  if (story) story.after(figure); else view.prepend(figure);
+  drawMap(map.domain, map.services.filter((s) => s.role === "sender"));
   show("result");
   $("result").scrollIntoView({ behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" });
-}
-
-function summary(domain, senders, reporting) {
-  if (!senders.length) return `No sending services found in ${domain}'s public records.`;
-  const n = senders.length;
-  let text = `${domain} sends through ${n} service${n === 1 ? "" : "s"}`;
-  const inUse = senders.filter((s) => s.tier === "In use").map((s) => s.name);
-  if (inUse.length) text += `, with mail delivered to ${list(inUse)}`;
-  text += ".";
-  if (reporting.length) text += ` Reports go to ${list(reporting.map((s) => s.name))}.`;
-  return text;
-}
-
-function list(items) {
-  return items.length < 3 ? items.join(" and ") : `${items.slice(0, -1).join(", ")} and ${items.at(-1)}`;
 }
 
 // ------------------------------------------------------------------ the map
@@ -212,245 +206,14 @@ function shorten(text, max) {
   return text.length > max ? `${text.slice(0, max - 1)}…` : text;
 }
 
+// A card's id is service- and the name lowercased, anything outside a to z and 0 to 9 a hyphen,
+// as render/html.py writes it.
 function focusCard(name) {
-  const card = document.querySelector(`[data-service="${CSS.escape(name)}"]`);
-  if (!card) return;
-  card.scrollIntoView({ behavior: "smooth", block: "center" });
-  card.classList.add("flash");
-  setTimeout(() => card.classList.remove("flash"), 1600);
-}
-
-// ------------------------------------------------------------------ the evidence
-
-function renderServices(senders, domain) {
-  const box = $("services");
-  box.replaceChildren();
-  for (const tier of TIERS) {
-    const group = senders.filter((s) => s.tier === tier.name);
-    if (!group.length) continue;
-    box.append(h("h3", { class: "section-title" }, tier.name));
-    const cards = h("div", { class: "cards" });
-    group.forEach((s) => cards.append(card(s, domain, `b-${tier.key}`, tier.name)));
-    box.append(cards);
-  }
-}
-
-function renderReporting(reporting, domain) {
-  const box = $("reporting");
-  box.replaceChildren();
-  if (!reporting.length) return;
-  box.append(h("h3", { class: "section-title" }, "Reports go to"));
-  const cards = h("div", { class: "cards" });
-  reporting.forEach((s) => cards.append(card(s, domain, "b-reporting", "Reporting")));
-  box.append(cards);
-}
-
-// The four parts of a reconciliation, in the words of sendermap/render/__init__.py CLAIMED_PARTS.
-const CLAIMED_PARTS = [
-  ["confirmed", "Claimed and found"],
-  ["unclaimed", "Found, not claimed"],
-  ["unfound", "Claimed, not found at any name checked"],
-  ["unknown", "Claimed, no service Sendermap knows by that name"],
-];
-
-function renderClaimed(reconciliation) {
-  const box = $("claimed");
-  box.replaceChildren();
-  if (!reconciliation) return;
-  box.append(h("h3", { class: "section-title" }, "Claimed senders"));
-  for (const [key, heading] of CLAIMED_PARTS) {
-    const items = reconciliation[key].map((item) => (typeof item === "string" ? item : reconciled(item, key)));
-    const ul = h("ul", { class: "gaps" });
-    (items.length ? items : ["none"]).forEach((line) => ul.append(h("li", {}, line)));
-    box.append(h("h4", {}, heading), ul);
-  }
-}
-
-function reconciled(item, part) {
-  let line = item.service;
-  if (part !== "unfound") line += item.tier ? `, ${item.tier}` : ", receives reports only";
-  const wrote = item.claimed_as;
-  if (wrote.length && !(wrote.length === 1 && wrote[0] === item.service)) {
-    line += ` (claimed as ${wrote.map((t) => `"${t}"`).join(", ")})`;
-  }
-  return line;
-}
-
-function card(service, domain, badgeClass, badgeText) {
-  const c = h("article", { class: "card", "data-service": service.name });
-  const head = h("div", { class: "card-head" }, h("h3", {}, service.name), h("span", { class: `badge ${badgeClass}` }, badgeText));
-  c.append(head, h("p", { class: "meta" }, service.category));
-  const where = [...new Set(service.claims.map((cl) => cl.where))].filter((w) => w !== domain);
-  if (where.length) {
-    const chips = h("p", { class: "meta" }, "Also at ");
-    where.forEach((w) => chips.append(h("span", { class: "chip mono" }, w)));
-    c.append(chips);
-  }
-  const ul = h("ul", { class: "claims" });
-  service.claims.forEach((claim, i) => {
-    const at = claim.where === domain ? "" : ` at ${claim.where}`;
-    const li = h("li", { class: i === 0 ? "decider" : "" },
-      h("span", { class: "kind" }, claim.kind + at),
-      h("span", { class: "ev mono" }, evidence(claim.evidence)),
-      ...claim.supporting.map((e) => h("span", { class: "ev mono" }, `via ${evidence(e)}`)));
-    if (i >= 3) li.hidden = true;
-    ul.append(li);
-  });
-  c.append(ul);
-  if (service.claims.length > 3) {
-    const more = h("button", { class: "more", type: "button" }, `Show all ${service.claims.length}`);
-    more.addEventListener("click", () => { ul.querySelectorAll("li").forEach((li) => { li.hidden = false; }); more.remove(); });
-    c.append(more);
-  }
-  (service.setups || []).forEach((s) => c.append(h("p", { class: "meta setup" }, setupLine(s))));
-  return c;
-}
-
-// The words of each setup record; setup.py's WORDS and line() build the same line.
-const SETUP_WORDS = { spf: "SPF", dkim: "DKIM", return_path: "bounce CNAME", tracking: "tracking CNAME", mx: "MX" };
-
-function setupLine(setup) {
-  const parts = setup.items.map((i) => (i.need === "optional" && i.state === "missing"
-    ? `${SETUP_WORDS[i.record]} not used (optional, ${i.asked})`
-    : `${SETUP_WORDS[i.record]} ${i.state}${i.detail ? ` (${i.detail})` : ""}`));
-  return `Setup at ${setup.where}: ${parts.join(", ")}.`;
-}
-
-function evidence(e) {
-  return `${e.name} ${e.rtype} ${e.value}`;
-}
-
-function renderAttention(findings) {
-  const box = $("attention");
-  box.replaceChildren();
-  if (!findings.length) return;
-  box.append(h("h3", { class: "section-title" }, "Needs attention"));
-  for (const f of findings) {
-    const body = h("div", {}, h("h3", {}, f.title), h("p", {}, f.detail));
-    f.evidence.slice(0, 2).forEach((e) => body.append(h("span", { class: "ev mono" }, evidence(e))));
-    box.append(h("div", { class: `finding ${f.severity}` }, body));
-  }
-}
-
-function renderUnknowns(unknowns, domain) {
-  const box = $("unknowns");
-  box.replaceChildren();
-  if (!unknowns.length) return;
-  box.append(h("h3", { class: "section-title" }, "Not recognised"));
-  const d = h("details", { class: "unknowns" }, h("summary", {}, `${unknowns.length} record${unknowns.length === 1 ? "" : "s"} that point at a sender nobody can name yet`));
-  const ul = h("ul");
-  for (const item of groupUnknowns(unknowns)) {
-    const at = item.where === domain ? "" : ` at ${item.where}`;
-    if (!item.members) {
-      ul.append(h("li", {}, `${item.what}: `, h("span", { class: "mono" }, item.value), at,
-        h("span", { class: "ev mono" }, evidence(item.evidence))));
-      continue;
-    }
-    const lines = item.members.map((m, i) => {
-      const line = h("span", { class: "ev mono" }, evidence(m.unknown.evidence));
-      line.hidden = i > 0;
-      return line;
-    });
-    const li = h("li", {}, groupHeading(item), at,
-      h("span", { class: "ev mono" }, item.members.map((m) => m.cidr).join(", ")), ...lines);
-    const more = h("button", { class: "more", type: "button" }, `+ ${lines.length - 1} more`);
-    more.addEventListener("click", () => { lines.forEach((l) => { l.hidden = false; }); more.remove(); });
-    li.append(more);
-    ul.append(li);
-  }
-  d.append(ul);
-  box.append(d);
-}
-
-// The same grouping as sendermap/render/__init__.py: the IP ranges and addresses at one name
-// that one set of networks announces, under one owner name and one list of publishers, gathered where
-// the first of them stood. A range with no network, one alone in its network, and anything that
-// is not an IP range stay single. The pattern is NETWORK_VALUE there, the shape networks.py writes.
-const NETWORK_VALUE = /^(\S+) \((AS\d+(?: and AS\d+)*), ((?:(?!; AS\d).)+?)(?:; listed by (.+))?\)$/;
-const IP_KINDS = ["IP range in SPF", "IP address in SPF"];
-
-function groupUnknowns(unknowns) {
-  const groups = new Map();
-  const order = [];
-  for (const u of unknowns) {
-    const match = IP_KINDS.includes(u.what) ? NETWORK_VALUE.exec(u.value) : null;
-    if (!match) { order.push(u); continue; }
-    const [, cidr, asn, name, listed = ""] = match;
-    const key = JSON.stringify([asn, name, listed, u.where]);
-    if (!groups.has(key)) {
-      groups.set(key, { asn, name, listed, where: u.where, members: [] });
-      order.push(key);
-    }
-    groups.get(key).members.push({ cidr, unknown: u });
-  }
-  return order.map((item) => {
-    if (typeof item !== "string") return item;
-    const group = groups.get(item);
-    return group.members.length === 1 ? group.members[0].unknown : group;
-  });
-}
-
-function groupHeading(group) {
-  const ranges = group.members.filter((m) => m.unknown.what === IP_KINDS[0]).length;
-  const addresses = group.members.length - ranges;
-  const parts = [];
-  if (ranges) parts.push(`${ranges} range${ranges === 1 ? "" : "s"}`);
-  if (addresses) parts.push(`${addresses} address${addresses === 1 ? "" : "es"}`);
-  const listed = group.listed ? `; listed by ${group.listed}` : "";
-  return `${parts.join(" and ")} in ${group.asn} (${group.name})${listed}`;
-}
-
-// The resolvers a run names, as a reader says them; render/__init__.py holds the same words.
-const RESOLVERS = {
-  system: "the system resolver",
-  "doh cloudflare": "Cloudflare DNS over HTTPS",
-  "doh google": "Google DNS over HTTPS",
-};
-
-function resolverWords(name) {
-  if (name in RESOLVERS) return RESOLVERS[name];
-  return name.startsWith("doh ") ? `DNS over HTTPS at ${name.slice(4)}` : name;
-}
-
-function renderFootnote(map) {
-  const subs = map.subdomains_checked.length;
-  const checked = map.run.checked_at.slice(0, 16).replace("T", " ");
-  let text = `${map.run.lookups} DNS lookups in ${map.run.elapsed.toFixed(1)} s`;
-  text += map.run.resolver ? ` over ${resolverWords(map.run.resolver)}` : "";
-  text += `. Checked ${map.domain}`;
-  text += subs ? ` and ${subs} sending subdomain${subs === 1 ? "" : "s"}` : "";
-  text += ` on ${checked} UTC.`;
-  $("footnote").textContent = text;
-}
-
-function renderChecked(gaps, checked, absences = []) {
-  const box = $("checked");
-  box.replaceChildren();
-  if (absences.length) {
-    box.append(h("h3", { class: "section-title" }, "Checked and not there"));
-    const ul = h("ul", { class: "gaps absences" });
-    absences.forEach((a) => ul.append(h("li", {}, h("span", { class: "mono" }, a.asked), `: ${a.happened}`,
-      ...a.evidence.map((e) => h("span", { class: "ev mono" }, evidence(e))))));
-    box.append(ul);
-  }
-  if (gaps.length) {
-    box.append(h("h3", { class: "section-title" }, "Not checked"));
-    const ul = h("ul", { class: "gaps" });
-    gaps.forEach((g) => ul.append(h("li", {}, h("span", { class: "mono" }, g.asked), `: ${g.happened}`)));
-    box.append(ul);
-  }
-  if (!checked.length) return;
-  const d = h("details", { class: "asked" }, h("summary", {}, "What was asked at each name"));
-  for (const c of checked) {
-    d.append(h("h4", { class: "mono" }, c.where));
-    const ul = h("ul");
-    for (const [heading, names] of [["Pages", c.pages], ["CNAME labels", c.labels], ["DKIM selectors", c.dkim_selectors]]) {
-      if (names.length) ul.append(h("li", {}, `${heading} (${names.length}): `, h("span", { class: "mono" }, names.join(", "))));
-    }
-    if (!ul.children.length) ul.append(h("li", {}, "Nothing beyond the records every map reads"));
-    d.append(ul);
-  }
-  box.append(d);
+  const target = document.getElementById(`service-${name.toLowerCase().replace(/[^a-z0-9]/g, "-")}`);
+  if (!target) return;
+  target.scrollIntoView({ behavior: "smooth", block: "center" });
+  target.classList.add("flash");
+  setTimeout(() => target.classList.remove("flash"), 1600);
 }
 
 // ------------------------------------------------------------------ sharing
@@ -468,7 +231,9 @@ async function copyMarkdown() {
 function download() {
   if (!current) return;
   const blob = new Blob([JSON.stringify(current, null, 2)], { type: "application/json" });
-  const a = h("a", { href: URL.createObjectURL(blob), download: `sendermap-${current.domain}.json` });
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = `sendermap-${current.domain}.json`;
   a.click();
   URL.revokeObjectURL(a.href);
 }
@@ -486,13 +251,6 @@ function el(tag, attrs = {}, text) {
   const node = document.createElementNS(SVG, tag);
   for (const [k, v] of Object.entries(attrs)) node.setAttribute(k, v);
   if (text !== undefined) node.textContent = text;
-  return node;
-}
-
-function h(tag, attrs = {}, ...children) {
-  const node = document.createElement(tag);
-  for (const [k, v] of Object.entries(attrs)) if (v !== "") node.setAttribute(k, v);
-  for (const child of children) node.append(child);
   return node;
 }
 

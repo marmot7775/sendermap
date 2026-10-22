@@ -1,0 +1,245 @@
+<header class="view-head">
+<h2>mills-reeve.com</h2>
+<p class="summary">5 sending services found from public records checked 2026-10-12 01:24 UTC (600 lookups in 0.0 s over Google DNS over HTTPS).</p>
+</header>
+<p class="story">Mimecast stands in front of the domain&#x27;s mail as a security gateway, so the mailbox provider is not visible from MX. Four other services are set up to send as the domain: one commerce and apps (Docebo), one support and CRM (Freshdesk), one mailbox (Microsoft 365), one transactional (SendGrid). DMARC reports go to Mimecast DMARC Analyzer. Not checked: the website (turned off), DKIM selectors past the first 27 on two subdomains, and the crt.sh certificate log (read only with --ct).</p>
+<section class="view-section attention">
+<h3 class="section-title">Needs attention</h3>
+<div class="finding warning">
+<h4>The s2 key at mills-reeve.com is 1024-bit</h4>
+<p>Some receivers already treat 1024-bit RSA keys as weak. Rotate to 2048-bit.</p>
+<details class="records"><summary>Records</summary>
+<ul class="records">
+<li class="ev mono">s2._domainkey.mills-reeve.com TXT k=rsa; t=s (strict); p=MIGfMA0GCSqG..., 1024-bit, fp 1d0c1f3114d84753 via s2.domainkey.u10198980.wl231.sendgrid.net</li>
+</ul>
+</details>
+</div>
+<div class="finding warning">
+<h4>Microsoft 365 at mills-reeve.com has no DKIM</h4>
+<p>Its documented setup needs it and the map shows it missing: no key at selector1._domainkey or selector2._domainkey, names with no TXT record; this zone gives that answer for every name that does not exist.</p>
+<details class="records"><summary>Records</summary>
+<ul class="records">
+<li class="ev mono">selector1._domainkey.mills-reeve.com TXT no record of this type</li>
+<li class="ev mono">selector2._domainkey.mills-reeve.com TXT no record of this type</li>
+</ul>
+</details>
+</div>
+<div class="finding note">
+<h4>MX at mills-reeve.com points at Mimecast, a security gateway</h4>
+<p>Inferred from the MX records: a security gateway filters incoming mail and hands it on to the server that holds the mailboxes, and MX records do not say which server that is.</p>
+<details class="records"><summary>Records</summary>
+<ul class="records">
+<li class="ev mono">mills-reeve.com MX 10 eu-smtp-inbound-1.mimecast.com</li>
+<li class="ev mono">mills-reeve.com MX 10 eu-smtp-inbound-2.mimecast.com</li>
+</ul>
+</details>
+</div>
+</section>
+<section class="view-section tier">
+<h3 class="section-title">In use</h3>
+<div class="cards">
+<article class="card" id="service-mimecast">
+<div class="card-head"><h4>Mimecast</h4><span class="badge b-in-use">In use</span></div>
+<p class="meta">Security gateway</p>
+<ul class="claims">
+<li class="decider"><span class="kind">MX</span>: eu-smtp-inbound-1.mimecast.com, eu-smtp-inbound-2.mimecast.com</li>
+<li><span class="kind">SPF</span>: include:eu._netblocks.mimecast.com, include:_netblocks.mimecast.com at mills-reeve.com and update.mills-reeve.com</li>
+</ul>
+<details class="records"><summary>All records</summary>
+<p class="kind">MX</p>
+<ul class="records">
+<li class="ev mono">mills-reeve.com MX 10 eu-smtp-inbound-1.mimecast.com</li>
+<li class="ev mono">mills-reeve.com MX 10 eu-smtp-inbound-2.mimecast.com</li>
+</ul>
+<p class="kind">SPF</p>
+<ul class="records">
+<li class="ev mono">mills-reeve.com TXT include:eu._netblocks.mimecast.com</li>
+<li class="ev mono">update.mills-reeve.com TXT include:_netblocks.mimecast.com</li>
+</ul>
+</details>
+</article>
+</div>
+</section>
+<section class="view-section tier">
+<h3 class="section-title">Configured</h3>
+<div class="cards">
+<article class="card" id="service-docebo">
+<div class="card-head"><h4>Docebo</h4><span class="badge b-configured">Configured</span></div>
+<p class="meta">Commerce and apps</p>
+<ul class="claims">
+<li class="decider"><span class="kind">SPF</span>: include:docebosaas.com</li>
+</ul>
+<details class="records"><summary>All records</summary>
+<p class="kind">SPF</p>
+<ul class="records">
+<li class="ev mono">mills-reeve.com TXT include:docebosaas.com</li>
+</ul>
+</details>
+</article>
+<article class="card" id="service-freshdesk">
+<div class="card-head"><h4>Freshdesk</h4><span class="badge b-configured">Configured</span></div>
+<p class="meta">Support and CRM</p>
+<ul class="claims">
+<li class="decider"><span class="kind">SPF range</span>: ip4:3.120.181.200/29</li>
+</ul>
+<details class="records"><summary>All records</summary>
+<p class="kind">SPF range</p>
+<ul class="records">
+<li class="ev mono">fsspfeuc.freshemail.io TXT ip4:3.120.181.200/29 via fdspfeuc.freshemail.io TXT ip4:3.120.181.192/28</li>
+</ul>
+</details>
+</article>
+<article class="card" id="service-microsoft-365">
+<div class="card-head"><h4>Microsoft 365</h4><span class="badge b-configured">Configured</span></div>
+<p class="meta">Mailbox</p>
+<ul class="claims">
+<li class="decider"><span class="kind">SPF</span>: include:spf.protection.outlook.com</li>
+<li><span class="kind">Verification token</span>: MS=ms75548982</li>
+<li><span class="kind">Autodiscover CNAME</span>: autodiscover.mills-reeve.com</li>
+</ul>
+<p class="meta setup">setup incomplete: DKIM missing</p>
+<details class="records"><summary>All records</summary>
+<p class="kind">SPF</p>
+<ul class="records">
+<li class="ev mono">mills-reeve.com TXT include:spf.protection.outlook.com</li>
+</ul>
+<p class="kind">Verification token</p>
+<ul class="records">
+<li class="ev mono">mills-reeve.com TXT MS=ms75548982</li>
+</ul>
+<p class="kind">Autodiscover CNAME</p>
+<ul class="records">
+<li class="ev mono">autodiscover.mills-reeve.com CNAME autodiscover.outlook.com</li>
+</ul>
+<p class="meta setup">setup incomplete: SPF present, DKIM missing, MX not used (optional, MX at mills-reeve.com), bounce CNAME not needed</p>
+</details>
+</article>
+<article class="card" id="service-sendgrid">
+<div class="card-head"><h4>SendGrid</h4><span class="badge b-configured">Configured</span></div>
+<p class="meta">Transactional</p>
+<ul class="claims">
+<li class="decider"><span class="kind">DKIM keys</span>: s1, s2 (1024 and 2048 bit, by CNAME)</li>
+</ul>
+<p class="meta setup">setup complete</p>
+<details class="records"><summary>All records</summary>
+<p class="kind">DKIM keys</p>
+<ul class="records">
+<li class="ev mono">s1._domainkey.mills-reeve.com TXT k=rsa; t=s (strict); p=MIIBIjANBgkq..., 2048-bit, fp ae8406c18072b4fc via s1.domainkey.u10198980.wl231.sendgrid.net</li>
+<li class="ev mono">s2._domainkey.mills-reeve.com TXT k=rsa; t=s (strict); p=MIGfMA0GCSqG..., 1024-bit, fp 1d0c1f3114d84753 via s2.domainkey.u10198980.wl231.sendgrid.net</li>
+</ul>
+<p class="meta setup">setup complete: DKIM present, bounce CNAME not used (optional, CNAME at 23 labels under mills-reeve.com), SPF not needed, tracking CNAME not used (optional, CNAME at 23 labels under mills-reeve.com)</p>
+</details>
+</article>
+</div>
+</section>
+<section class="view-section reporting">
+<h3 class="section-title">Reports go to</h3>
+<p>Mimecast DMARC Analyzer</p>
+</section>
+<section class="view-section unknowns">
+<h3 class="section-title">Not recognised</h3>
+<ul class="unknowns">
+<li>SPF include: <span class="mono">emaileuc.freshservice.com</span>
+<span class="ev mono">mills-reeve.com TXT include:emaileuc.freshservice.com</span>
+</li>
+<li>SPF include: <span class="mono">fsspfeuc.freshemail.io</span>
+<span class="ev mono">emaileuc.freshservice.com TXT include:fsspfeuc.freshemail.io</span>
+</li>
+<li>SPF include: <span class="mono">spf-uk.vx-email.com</span>
+<span class="ev mono">mills-reeve.com TXT include:spf-uk.vx-email.com</span>
+</li>
+<li>IP address in SPF: <span class="mono">51.145.78.124 (AS8075, Microsoft)</span>
+<span class="ev mono">mills-reeve.com TXT ip4:51.145.78.124</span>
+</li>
+<li>2 ranges in AS16509 (Amazon Web Services): <span class="mono">35.159.219.224/28, 18.199.180.160/27</span>
+<span class="ev mono">fsspfeuc.freshemail.io TXT ip4:35.159.219.224/28</span>
+<details class="records"><summary>1 more record</summary>
+<ul class="records">
+<li class="ev mono">fsspfeuc.freshemail.io TXT ip4:18.199.180.160/27</li>
+</ul>
+</details>
+</li>
+<li>IP range in SPF: <span class="mono">193.5.144.0/24 (AS14618, Amazon Web Services)</span>
+<span class="ev mono">spf-uk.vx-email.com TXT ip4:193.5.144.0/24</span>
+</li>
+<li>4 addresses in AS2110 (AS-BTIRE - Enet Communications LIMITED, IE): <span class="mono">193.120.143.138, 193.120.143.134, 193.120.143.70, 193.120.142.176</span>
+<span class="ev mono">mills-reeve.com TXT ip4:193.120.143.138</span>
+<details class="records"><summary>3 more records</summary>
+<ul class="records">
+<li class="ev mono">mills-reeve.com TXT ip4:193.120.143.134</li>
+<li class="ev mono">mills-reeve.com TXT ip4:193.120.143.70</li>
+<li class="ev mono">mills-reeve.com TXT ip4:193.120.142.176</li>
+</ul>
+</details>
+</li>
+<li>SPF include: <span class="mono">spf-uk.vx-email.com</span> at update.mills-reeve.com
+<span class="ev mono">update.mills-reeve.com TXT include:spf-uk.vx-email.com</span>
+</li>
+<li>mail server: <span class="mono">mx01.mail.vx-email.com</span> at update.mills-reeve.com
+<span class="ev mono">update.mills-reeve.com MX 10 mx01.mail.vx-email.com</span>
+</li>
+<li>mail server: <span class="mono">mx02.mail.vx-email.com</span> at update.mills-reeve.com
+<span class="ev mono">update.mills-reeve.com MX 20 mx02.mail.vx-email.com</span>
+</li>
+<li>IP range in SPF: <span class="mono">193.5.144.0/24 (AS14618, Amazon Web Services)</span> at update.mills-reeve.com
+<span class="ev mono">spf-uk.vx-email.com TXT ip4:193.5.144.0/24</span>
+</li>
+<li>SPF include: <span class="mono">cecollect.com</span> at updates.mills-reeve.com
+<span class="ev mono">updates.mills-reeve.com TXT include:cecollect.com</span>
+</li>
+<li>mail server: <span class="mono">mail.cecollect.com</span> at updates.mills-reeve.com
+<span class="ev mono">updates.mills-reeve.com MX 10 mail.cecollect.com</span>
+</li>
+<li>1 range and 11 addresses in AS2914 (NTT-DATA-2914 - NTT America, Inc., US) at updates.mills-reeve.com: <span class="mono">62.73.189.146, 83.231.138.176/28, 62.73.162.65, 62.73.162.66, 62.73.162.67, 62.73.162.68, 62.73.162.69, 62.73.162.70, 62.73.162.71, 62.73.162.72, 62.73.162.73, 62.73.162.74</span>
+<span class="ev mono">cecollect.com TXT ip4:62.73.189.146</span>
+<details class="records"><summary>11 more records</summary>
+<ul class="records">
+<li class="ev mono">cecollect.com TXT ip4:83.231.138.176/28</li>
+<li class="ev mono">cecollect.com TXT ip4:62.73.162.65</li>
+<li class="ev mono">cecollect.com TXT ip4:62.73.162.66</li>
+<li class="ev mono">cecollect.com TXT ip4:62.73.162.67</li>
+<li class="ev mono">cecollect.com TXT ip4:62.73.162.68</li>
+<li class="ev mono">cecollect.com TXT ip4:62.73.162.69</li>
+<li class="ev mono">cecollect.com TXT ip4:62.73.162.70</li>
+<li class="ev mono">cecollect.com TXT ip4:62.73.162.71</li>
+<li class="ev mono">cecollect.com TXT ip4:62.73.162.72</li>
+<li class="ev mono">cecollect.com TXT ip4:62.73.162.73</li>
+<li class="ev mono">cecollect.com TXT ip4:62.73.162.74</li>
+</ul>
+</details>
+</li>
+</ul>
+</section>
+<section class="view-section not-checked">
+<h3 class="section-title">Not checked</h3>
+<ul class="gaps">
+<li><span class="mono">the website</span>: not read: web checks were turned off (--no-web)</li>
+<li><span class="mono">certificate transparency, crt.sh: GET https://crt.sh/?q=%25.mills-reeve.com&amp;output=json</span>: not asked: read only with --ct (it also holds expired certificates)</li>
+<li><span class="mono">DKIM selectors at update.mills-reeve.com</span>: 77 of 106 not asked: only the first 27 and the names its own SPF, MX or delegation backs were (cap)</li>
+<li><span class="mono">DKIM selectors at updates.mills-reeve.com</span>: 79 of 106 not asked: only the first 27 and the names its own SPF, MX or delegation backs were (cap)</li>
+</ul>
+</section>
+<section class="view-section asked">
+<h3 class="section-title">What was asked</h3>
+<ul class="gaps">
+<li><span class="mono">mills-reeve.com</span>: 106 DKIM selectors, 23 CNAME labels, 1 page</li>
+<li><span class="mono">update.mills-reeve.com</span>: 29 DKIM selectors</li>
+<li><span class="mono">updates.mills-reeve.com</span>: 27 DKIM selectors</li>
+</ul>
+<details class="asked"><summary>Names asked</summary>
+<h4 class="mono">mills-reeve.com</h4>
+<ul>
+<li>Pages (1): <span class="mono">https://api.certspotter.com/v1/issuances?domain=mills-reeve.com&amp;include_subdomains=true&amp;expand=dns_names</span></li>
+<li>CNAME labels (23): <span class="mono">bounce, bounces, em, email, mail, send, mta, rp, pm-bounces, links, link, click, track, tracking, url, go, autodiscover, cf-bounce, eversrv, fwdkim1, bnc3, bounces.cloud.em, bounces.cloud2.em</span></li>
+<li>DKIM selectors (106): <span class="mono">selector1, selector2, acdkim1, acdkim2, ses, aweber_key_a, aweber_key_b, aweber_key_c, brevo, brevo1, brevo2, cm, cf2024-1, ctct1, ctct2, krs, e2ma-k1, e2ma-k2, e2ma-k3, everlytickey1, everlytickey2, fm2, fm1, fm3, mesmtp, secureserver1, secureserver2, google, gapps, gor, strong1, strong2, hs1, hs2, intercom, s1-ionos, s42582890, cka, kl, kl1, kl2, k2, k1, k3, litesrv, mg, mailgun, mg1, pdk1, pdk2, mailjet, mailpoet2, mailpoet1, mandrill, mte1, mte2, marketo, mkto, mkto1, mimecast, mimecast20190719, pepipost, pp1, protonmail, protonmail2, protonmail3, resend, sailthru, salesforce, salesforce2, salesforce1, sf, sf1, sf2, sfdc, 200608, pardot, sfmc, s1, s2, smtpapi, scph0819, sparkpost, squarespace, zendesk1, zendesk2, zoho, api, default, dk, dkim, dkim1, dkim2, email, k, key, key1, key2, mail, mta, mx, pm, s, selector, smtp, sp</span></li>
+</ul>
+<h4 class="mono">update.mills-reeve.com</h4>
+<ul>
+<li>DKIM selectors (29): <span class="mono">acdkim1, acdkim2, ses, aweber_key_a, aweber_key_b, aweber_key_c, brevo, brevo1, brevo2, cm, cf2024-1, ctct1, ctct2, krs, e2ma-k1, e2ma-k2, e2ma-k3, everlytickey1, everlytickey2, fm2, fm1, fm3, mesmtp, secureserver1, secureserver2, google, gapps, mimecast, mimecast20190719</span></li>
+</ul>
+<h4 class="mono">updates.mills-reeve.com</h4>
+<ul>
+<li>DKIM selectors (27): <span class="mono">acdkim1, acdkim2, ses, aweber_key_a, aweber_key_b, aweber_key_c, brevo, brevo1, brevo2, cm, cf2024-1, ctct1, ctct2, krs, e2ma-k1, e2ma-k2, e2ma-k3, everlytickey1, everlytickey2, fm2, fm1, fm3, mesmtp, secureserver1, secureserver2, google, gapps</span></li>
+</ul>
+</details>
+</section>

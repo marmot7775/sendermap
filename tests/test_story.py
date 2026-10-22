@@ -3,6 +3,7 @@ every name a service of the map and every number the map's own count."""
 
 import re
 from dataclasses import replace
+from html import escape
 from pathlib import Path
 
 import pytest
@@ -31,7 +32,7 @@ from sendermap.model import (
     Tier,
     Unknown,
 )
-from sendermap.render import markdown, text
+from sendermap.render import html, markdown, text
 from sendermap.setup import line
 from sendermap.testing import replay
 
@@ -380,10 +381,12 @@ def test_every_view_carries_the_story() -> None:
     md = markdown.render(mapped).split("\n")
     assert md[0] == f"# Sendermap: {DOMAIN}" and md[4] == mapped.story  # under the counts
     assert mapped.to_dict()["story"] == mapped.story
+    page = html.html(mapped)
+    assert f'<p class="story">{escape(mapped.story)}</p>' in page
+    assert page.index('class="story"') < page.index("Needs attention")
+    # The page puts the ring map right after the story.
     js = (Path(text.__file__).parent.parent / "web" / "static" / "app.js").read_text()
-    assert '$("story").textContent = map.story' in js
-    html = (Path(text.__file__).parent.parent / "web" / "static" / "index.html").read_text()
-    assert html.index('id="story"') < html.index('id="map"')
+    assert "story.after(figure)" in js
 
 
 # ------------------------------------------------------------------ optional wording
@@ -404,5 +407,3 @@ def test_an_optional_record_that_is_missing_reads_not_used() -> None:
         "Setup at acme.test: SPF missing (no SPF), "
         "bounce CNAME not used (optional, CNAME at 23 labels under acme.test)."
     )
-    js = (Path(text.__file__).parent.parent / "web" / "static" / "app.js").read_text()
-    assert "not used (optional, ${i.asked})" in js

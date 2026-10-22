@@ -1,14 +1,12 @@
 """Rule 4: each label says what its evidence shows and no more."""
 
-from pathlib import Path
-
 import httpx
 from conftest import CHECKED, Zone, context
 from rich.console import Console
 
-from sendermap import map_domain, render
+from sendermap import map_domain
 from sendermap.model import Evidence, KeyPrint, Kind, Observed, Role, Severity, Tier, Unknown
-from sendermap.render import NetworkGroup, grouped_unknowns, markdown, text
+from sendermap.render import NetworkGroup, grouped_unknowns, html, markdown, text
 from sendermap.sources import Context, dkim, mta_sts, mx, spf
 
 KEY = "v=DKIM1; k=rsa; p=" + "A" * 392
@@ -200,6 +198,15 @@ async def test_unrecognised_ranges_are_grouped_by_network_in_the_views(
     full = markdown.render(result, evidence=True)
     assert "  - `acme.test TXT ip4:35.80.141.6`" in full
 
+    # The web page shows the same group, the first record and the rest inside details.
+    page = html.html(result)
+    assert (
+        '<li>2 ranges and 1 address in AS16509 (Amazon Web Services): <span class="mono">'
+        "35.159.219.224/28, 18.199.180.160/27, 35.80.141.6</span>\n"
+        '<span class="ev mono">acme.test TXT ip4:35.159.219.224/28</span>\n'
+        '<details class="records"><summary>2 more records</summary>'
+    ) in page
+
 
 def test_a_network_group_says_what_it_holds_and_lists_publishers_once() -> None:
     def unknown(what: str, value: str) -> Unknown:
@@ -229,8 +236,3 @@ def test_a_network_group_says_what_it_holds_and_lists_publishers_once() -> None:
         "2 addresses in AS64500 (SENDGRID - SendGrid, Inc., US)",
         "192.0.2.0/24 (AS64500, SENDGRID - SendGrid, Inc., US; listed by HubSpot)",
     ]
-
-
-def test_the_web_page_groups_unknowns_by_the_same_pattern() -> None:
-    script = Path(render.__file__).parent.parent / "web" / "static" / "app.js"
-    assert f"const NETWORK_VALUE = /{render.NETWORK_VALUE}/;" in script.read_text()

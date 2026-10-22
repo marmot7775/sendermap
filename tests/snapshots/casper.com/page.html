@@ -1,0 +1,526 @@
+<header class="view-head">
+<h2>casper.com</h2>
+<p class="summary">14 sending services found from public records checked 2026-10-12 01:25 UTC (699 lookups in 0.0 s over Google DNS over HTTPS).</p>
+</header>
+<p class="story">Google Workspace receives the domain&#x27;s mail and has a DKIM key in place to sign it. Eleven other services are set up to send as the domain: four marketing (Campaign Monitor, Iterable, Mailchimp, Salesforce Marketing Cloud Engagement), two commerce and apps (Docebo, Q4), four transactional (Mailgun, Mandrill, Postmark, SendGrid), one support and CRM (Salesforce); one more is likely from a DKIM key name alone (Customer.io). One service shows an account and nothing set up to send (Microsoft 365); DMARC reports go to DMARCian. Not checked: the website (turned off), DKIM selectors past the first 27 on five subdomains, and the crt.sh certificate log (read only with --ct).</p>
+<section class="view-section attention">
+<h3 class="section-title">Needs attention</h3>
+<div class="finding warning">
+<h4>The google key at casper.com is 1024-bit</h4>
+<p>Some receivers already treat 1024-bit RSA keys as weak. Rotate to 2048-bit.</p>
+<details class="records"><summary>Records</summary>
+<ul class="records">
+<li class="ev mono">google._domainkey.casper.com TXT v=DKIM1; k=rsa; p=MIGfMA0GCSqG..., 1024-bit, fp e6d74f2ed99fdbb5</li>
+</ul>
+</details>
+</div>
+<div class="finding warning">
+<h4>The cm key at casper.com is 1024-bit</h4>
+<p>Some receivers already treat 1024-bit RSA keys as weak. Rotate to 2048-bit.</p>
+<details class="records"><summary>Records</summary>
+<ul class="records">
+<li class="ev mono">cm._domainkey.casper.com TXT k=rsa; p=MIGfMA0GCSqG..., 1024-bit, fp 9347c624a5a8cd6f</li>
+</ul>
+</details>
+</div>
+<div class="finding warning">
+<h4>The k1 key at casper.com is 1024-bit</h4>
+<p>Some receivers already treat 1024-bit RSA keys as weak. Rotate to 2048-bit.</p>
+<details class="records"><summary>Records</summary>
+<ul class="records">
+<li class="ev mono">k1._domainkey.casper.com TXT k=rsa; p=MIGfMA0GCSqG..., 1024-bit, fp 53d7bb0466c8346d via dkim.mcsv.net</li>
+</ul>
+</details>
+</div>
+<div class="finding warning">
+<h4>The mandrill key at casper.com is 1024-bit</h4>
+<p>Some receivers already treat 1024-bit RSA keys as weak. Rotate to 2048-bit.</p>
+<details class="records"><summary>Records</summary>
+<ul class="records">
+<li class="ev mono">mandrill._domainkey.casper.com TXT v=DKIM1; k=rsa; p=MIGfMA0GCSqG..., 1024-bit, fp 9cee89b6f986543a</li>
+</ul>
+</details>
+</div>
+<div class="finding warning">
+<h4>The salesforce key at casper.com is 1024-bit</h4>
+<p>Some receivers already treat 1024-bit RSA keys as weak. Rotate to 2048-bit.</p>
+<details class="records"><summary>Records</summary>
+<ul class="records">
+<li class="ev mono">salesforce._domainkey.casper.com TXT v=DKIM1; k=rsa; p=MIGfMA0GCSqG..., 1024-bit, fp 2b895d381a879705</li>
+</ul>
+</details>
+</div>
+<div class="finding warning">
+<h4>The s2 key at casper.com is 1024-bit</h4>
+<p>Some receivers already treat 1024-bit RSA keys as weak. Rotate to 2048-bit.</p>
+<details class="records"><summary>Records</summary>
+<ul class="records">
+<li class="ev mono">s2._domainkey.casper.com TXT k=rsa; t=s (strict); p=MIGfMA0GCSqG..., 1024-bit, fp ea13ef38e66c6769 via s2.domainkey.u895984.wl235.sendgrid.net</li>
+</ul>
+</details>
+</div>
+<div class="finding warning">
+<h4>The smtpapi key at casper.com is 1024-bit</h4>
+<p>Some receivers already treat 1024-bit RSA keys as weak. Rotate to 2048-bit.</p>
+<details class="records"><summary>Records</summary>
+<ul class="records">
+<li class="ev mono">smtpapi._domainkey.casper.com TXT k=rsa; t=s (strict); p=MIGfMA0GCSqG..., 1024-bit, fp 303963420cfee1c6</li>
+</ul>
+</details>
+</div>
+<div class="finding warning">
+<h4>The mx key at casper.com is 1024-bit</h4>
+<p>Some receivers already treat 1024-bit RSA keys as weak. Rotate to 2048-bit.</p>
+<details class="records"><summary>Records</summary>
+<ul class="records">
+<li class="ev mono">mx._domainkey.casper.com TXT v=DKIM1; k=rsa; p=MIGfMA0GCSqG..., 1024-bit, fp 273e0630e2eb6478</li>
+</ul>
+</details>
+</div>
+<div class="finding warning">
+<h4>Google Workspace at e.casper.com has no SPF</h4>
+<p>Its documented setup needs it and the map shows it missing: the record does not authorize _spf.google.com.</p>
+<details class="records"><summary>Records</summary>
+<ul class="records">
+<li class="ev mono">e.casper.com TXT v=spf1 include:mailgun.org ~all</li>
+</ul>
+</details>
+</div>
+<div class="finding warning">
+<h4>Google Workspace at e.casper.com has no DKIM</h4>
+<p>Its documented setup needs it and the map shows it missing: no key at google._domainkey, a name that does not exist.</p>
+<details class="records"><summary>Records</summary>
+<ul class="records">
+<li class="ev mono">google._domainkey.e.casper.com TXT no such name</li>
+</ul>
+</details>
+</div>
+<div class="finding warning">
+<h4>Google Workspace at mail.casper.com has no SPF</h4>
+<p>Its documented setup needs it and the map shows it missing: the record does not authorize _spf.google.com.</p>
+<details class="records"><summary>Records</summary>
+<ul class="records">
+<li class="ev mono">mail.casper.com TXT v=spf1 include:cust-spf.exacttarget.com -all</li>
+</ul>
+</details>
+</div>
+<div class="finding warning">
+<h4>Google Workspace at mail.casper.com has no DKIM</h4>
+<p>Its documented setup needs it and the map shows it missing: no key at google._domainkey, a name that does not exist.</p>
+<details class="records"><summary>Records</summary>
+<ul class="records">
+<li class="ev mono">google._domainkey.mail.casper.com TXT no such name</li>
+</ul>
+</details>
+</div>
+<div class="finding warning">
+<h4>Google Workspace at orders.casper.com has no SPF</h4>
+<p>Its documented setup needs it and the map shows it missing: no SPF record.</p>
+<details class="records"><summary>Records</summary>
+<ul class="records">
+<li class="ev mono">orders.casper.com TXT no record of this type</li>
+</ul>
+</details>
+</div>
+<div class="finding note">
+<h4>The mte1 key at casper.com and the mte1 key at email.casper.com are the same key</h4>
+<p>They publish one public key, fp 402b5aebde0f1c9f, so one private key signs for all of them, and replacing the key at one selector leaves it live at the others.</p>
+<details class="records"><summary>Records</summary>
+<ul class="records">
+<li class="ev mono">mte1._domainkey.casper.com TXT v=DKIM1; k=rsa; p=MIIBIjANBgkq..., 2048-bit, fp 402b5aebde0f1c9f via dkim1.mandrillapp.com</li>
+<li class="ev mono">mte1._domainkey.email.casper.com TXT v=DKIM1; k=rsa; p=MIIBIjANBgkq..., 2048-bit, fp 402b5aebde0f1c9f via dkim1.mandrillapp.com</li>
+</ul>
+</details>
+</div>
+<div class="finding note">
+<h4>The mte2 key at casper.com and the mte2 key at email.casper.com are the same key</h4>
+<p>They publish one public key, fp bd970c8868f21f9b, so one private key signs for all of them, and replacing the key at one selector leaves it live at the others.</p>
+<details class="records"><summary>Records</summary>
+<ul class="records">
+<li class="ev mono">mte2._domainkey.casper.com TXT v=DKIM1; k=rsa; p=MIIBIjANBgkq..., 2048-bit, fp bd970c8868f21f9b via dkim2.mandrillapp.com</li>
+<li class="ev mono">mte2._domainkey.email.casper.com TXT v=DKIM1; k=rsa; p=MIIBIjANBgkq..., 2048-bit, fp bd970c8868f21f9b via dkim2.mandrillapp.com</li>
+</ul>
+</details>
+</div>
+<div class="finding note">
+<h4>Microsoft 365 shows only an account at casper.com</h4>
+<p>The records name an account (a verification token, an autodiscover CNAME, or a revoked or dangling key) and nothing that sends or receives mail. Is the account still used? If not, remove its records.</p>
+<details class="records"><summary>Records</summary>
+<ul class="records">
+<li class="ev mono">casper.com TXT MS=ms55520198</li>
+</ul>
+</details>
+</div>
+</section>
+<section class="view-section tier">
+<h3 class="section-title">In use</h3>
+<div class="cards">
+<article class="card" id="service-google-workspace">
+<div class="card-head"><h4>Google Workspace</h4><span class="badge b-in-use">In use</span></div>
+<p class="meta">Mailbox</p>
+<ul class="claims">
+<li class="decider"><span class="kind">MX</span>: aspmx.l.google.com, alt1.aspmx.l.google.com and 3 more</li>
+<li><span class="kind">SPF</span>: include:_spf.google.com</li>
+<li><span class="kind">MX for a subdomain&#x27;s mail</span>: aspmx.l.google.com, alt1.aspmx.l.google.com and 5 more at e.casper.com, mail.casper.com and orders.casper.com</li>
+<li><span class="kind">DKIM keys</span>: google (1024 and 2048 bit, named for it) at casper.com and orders.casper.com</li>
+</ul>
+<p class="meta setup">setup incomplete: SPF missing at e.casper.com, mail.casper.com and orders.casper.com, DKIM missing at e.casper.com and mail.casper.com</p>
+<details class="records"><summary>All records</summary>
+<p class="kind">MX</p>
+<ul class="records">
+<li class="ev mono">casper.com MX 1 aspmx.l.google.com</li>
+<li class="ev mono">casper.com MX 5 alt1.aspmx.l.google.com</li>
+<li class="ev mono">casper.com MX 5 alt2.aspmx.l.google.com</li>
+<li class="ev mono">casper.com MX 10 aspmx2.googlemail.com</li>
+<li class="ev mono">casper.com MX 10 aspmx3.googlemail.com</li>
+</ul>
+<p class="kind">SPF</p>
+<ul class="records">
+<li class="ev mono">casper.com TXT include:_spf.google.com</li>
+</ul>
+<p class="kind">MX for a subdomain&#x27;s mail</p>
+<ul class="records">
+<li class="ev mono">e.casper.com MX 1 aspmx.l.google.com</li>
+<li class="ev mono">e.casper.com MX 5 alt1.aspmx.l.google.com</li>
+<li class="ev mono">e.casper.com MX 5 alt2.aspmx.l.google.com</li>
+<li class="ev mono">e.casper.com MX 10 alt3.aspmx.l.google.com</li>
+<li class="ev mono">e.casper.com MX 10 alt4.aspmx.l.google.com</li>
+<li class="ev mono">mail.casper.com MX 1 aspmx.l.google.com</li>
+<li class="ev mono">mail.casper.com MX 5 alt1.aspmx.l.google.com</li>
+<li class="ev mono">mail.casper.com MX 5 alt2.aspmx.l.google.com</li>
+<li class="ev mono">mail.casper.com MX 10 alt3.aspmx.l.google.com</li>
+<li class="ev mono">mail.casper.com MX 10 alt4.aspmx.l.google.com</li>
+<li class="ev mono">orders.casper.com MX 25 aspmx.l.google.com</li>
+<li class="ev mono">orders.casper.com MX 30 alt1.aspmx.l.google.com</li>
+<li class="ev mono">orders.casper.com MX 30 alt2.aspmx.l.google.com</li>
+<li class="ev mono">orders.casper.com MX 35 aspmx2.googlemail.com</li>
+<li class="ev mono">orders.casper.com MX 35 aspmx3.googlemail.com</li>
+</ul>
+<p class="kind">DKIM keys</p>
+<ul class="records">
+<li class="ev mono">google._domainkey.casper.com TXT v=DKIM1; k=rsa; p=MIGfMA0GCSqG..., 1024-bit, fp e6d74f2ed99fdbb5 via casper.com TXT include:_spf.google.com</li>
+<li class="ev mono">google._domainkey.orders.casper.com TXT v=DKIM1; k=rsa; p=MIIBIjANBgkq..., 2048-bit, fp 66efacf170b65970 via orders.casper.com MX 25 aspmx.l.google.com</li>
+</ul>
+<p class="meta setup">setup incomplete: SPF present at casper.com, DKIM present at casper.com and orders.casper.com, MX present at casper.com, e.casper.com, mail.casper.com and orders.casper.com, bounce CNAME not needed at casper.com, e.casper.com, mail.casper.com and orders.casper.com, SPF missing at e.casper.com, mail.casper.com and orders.casper.com, DKIM missing at e.casper.com and mail.casper.com</p>
+</details>
+</article>
+</div>
+</section>
+<section class="view-section tier">
+<h3 class="section-title">Configured</h3>
+<div class="cards">
+<article class="card" id="service-campaign-monitor">
+<div class="card-head"><h4>Campaign Monitor</h4><span class="badge b-configured">Configured</span></div>
+<p class="meta">Marketing</p>
+<ul class="claims">
+<li class="decider"><span class="kind">SPF</span>: include:_spf.createsend.com</li>
+<li><span class="kind">DKIM key</span>: cm (1024 bit, named for it)</li>
+</ul>
+<p class="meta setup">setup complete</p>
+<details class="records"><summary>All records</summary>
+<p class="kind">SPF</p>
+<ul class="records">
+<li class="ev mono">casper.com TXT include:_spf.createsend.com</li>
+</ul>
+<p class="kind">DKIM key</p>
+<ul class="records">
+<li class="ev mono">cm._domainkey.casper.com TXT k=rsa; p=MIGfMA0GCSqG..., 1024-bit, fp 9347c624a5a8cd6f via casper.com TXT include:_spf.createsend.com</li>
+</ul>
+<p class="meta setup">setup complete: DKIM present</p>
+</details>
+</article>
+<article class="card" id="service-docebo">
+<div class="card-head"><h4>Docebo</h4><span class="badge b-configured">Configured</span></div>
+<p class="meta">Commerce and apps</p>
+<ul class="claims">
+<li class="decider"><span class="kind">SPF</span>: include:docebosaas.com</li>
+</ul>
+<details class="records"><summary>All records</summary>
+<p class="kind">SPF</p>
+<ul class="records">
+<li class="ev mono">casper.com TXT include:docebosaas.com</li>
+</ul>
+</details>
+</article>
+<article class="card" id="service-iterable">
+<div class="card-head"><h4>Iterable</h4><span class="badge b-configured">Configured</span></div>
+<p class="meta">Marketing</p>
+<ul class="claims">
+<li class="decider"><span class="kind">Tracking CNAME</span>: links.casper.com</li>
+</ul>
+<details class="records"><summary>All records</summary>
+<p class="kind">Tracking CNAME</p>
+<ul class="records">
+<li class="ev mono">links.casper.com CNAME links.iterable.com</li>
+</ul>
+</details>
+</article>
+<article class="card" id="service-mailchimp">
+<div class="card-head"><h4>Mailchimp</h4><span class="badge b-configured">Configured</span></div>
+<p class="meta">Marketing</p>
+<ul class="claims">
+<li class="decider"><span class="kind">DKIM key</span>: k1 (1024 bit, by CNAME)</li>
+</ul>
+<p class="meta setup">setup complete</p>
+<details class="records"><summary>All records</summary>
+<p class="kind">DKIM key</p>
+<ul class="records">
+<li class="ev mono">k1._domainkey.casper.com TXT k=rsa; p=MIGfMA0GCSqG..., 1024-bit, fp 53d7bb0466c8346d via dkim.mcsv.net</li>
+</ul>
+<p class="meta setup">setup complete: DKIM present (older setup: a key at k1; the current setup names k2), SPF not needed, bounce CNAME not needed</p>
+</details>
+</article>
+<article class="card" id="service-mailgun">
+<div class="card-head"><h4>Mailgun</h4><span class="badge b-configured">Configured</span></div>
+<p class="meta">Transactional</p>
+<ul class="claims">
+<li class="decider"><span class="kind">MX for bounces</span>: mxa.mailgun.org, mxb.mailgun.org at e.casper.com and t.casper.com</li>
+<li><span class="kind">SPF</span>: include:mailgun.org at e.casper.com and t.casper.com</li>
+</ul>
+<p class="meta setup">setup complete</p>
+<details class="records"><summary>All records</summary>
+<p class="kind">MX for bounces</p>
+<ul class="records">
+<li class="ev mono">e.casper.com MX 10 mxa.mailgun.org</li>
+<li class="ev mono">e.casper.com MX 10 mxb.mailgun.org</li>
+<li class="ev mono">t.casper.com MX 10 mxa.mailgun.org</li>
+<li class="ev mono">t.casper.com MX 10 mxb.mailgun.org</li>
+</ul>
+<p class="kind">SPF</p>
+<ul class="records">
+<li class="ev mono">e.casper.com TXT include:mailgun.org</li>
+<li class="ev mono">t.casper.com TXT include:mailgun.org</li>
+</ul>
+<p class="meta setup">setup complete: SPF present at e.casper.com and t.casper.com, MX present at e.casper.com and t.casper.com, tracking CNAME not checked (no label was asked at e.casper.com) at e.casper.com, tracking CNAME not checked (no label was asked at t.casper.com) at t.casper.com</p>
+</details>
+</article>
+<article class="card" id="service-mandrill">
+<div class="card-head"><h4>Mandrill</h4><span class="badge b-configured">Configured</span></div>
+<p class="meta">Transactional</p>
+<ul class="claims">
+<li class="decider"><span class="kind">DKIM keys</span>: mte1, mte2 (all 2048 bit, by CNAME) at casper.com and email.casper.com</li>
+<li><span class="kind">SPF</span>: include:spf.mandrillapp.com at email.casper.com</li>
+<li><span class="kind">DKIM key</span>: mandrill (1024 bit, named for it)</li>
+</ul>
+<p class="meta setup">setup complete</p>
+<details class="records"><summary>All records</summary>
+<p class="kind">DKIM keys</p>
+<ul class="records">
+<li class="ev mono">mte1._domainkey.casper.com TXT v=DKIM1; k=rsa; p=MIIBIjANBgkq..., 2048-bit, fp 402b5aebde0f1c9f via dkim1.mandrillapp.com</li>
+<li class="ev mono">mte2._domainkey.casper.com TXT v=DKIM1; k=rsa; p=MIIBIjANBgkq..., 2048-bit, fp bd970c8868f21f9b via dkim2.mandrillapp.com</li>
+<li class="ev mono">mte1._domainkey.email.casper.com TXT v=DKIM1; k=rsa; p=MIIBIjANBgkq..., 2048-bit, fp 402b5aebde0f1c9f via dkim1.mandrillapp.com</li>
+<li class="ev mono">mte2._domainkey.email.casper.com TXT v=DKIM1; k=rsa; p=MIIBIjANBgkq..., 2048-bit, fp bd970c8868f21f9b via dkim2.mandrillapp.com</li>
+</ul>
+<p class="kind">SPF</p>
+<ul class="records">
+<li class="ev mono">email.casper.com TXT include:spf.mandrillapp.com</li>
+</ul>
+<p class="kind">DKIM key</p>
+<ul class="records">
+<li class="ev mono">mandrill._domainkey.casper.com TXT v=DKIM1; k=rsa; p=MIGfMA0GCSqG..., 1024-bit, fp 9cee89b6f986543a</li>
+</ul>
+<p class="meta setup">setup complete: DKIM present at casper.com and email.casper.com, bounce CNAME not used (optional, CNAME at 23 labels under casper.com) at casper.com, tracking CNAME not used (optional, CNAME at 23 labels under casper.com) at casper.com, bounce CNAME not checked (no label was asked at email.casper.com) at email.casper.com, tracking CNAME not checked (no label was asked at email.casper.com) at email.casper.com</p>
+</details>
+</article>
+<article class="card" id="service-postmark">
+<div class="card-head"><h4>Postmark</h4><span class="badge b-configured">Configured</span></div>
+<p class="meta">Transactional</p>
+<ul class="claims">
+<li class="decider"><span class="kind">Bounce CNAME</span>: pm-bounces.casper.com</li>
+</ul>
+<p class="meta setup">setup complete</p>
+<details class="records"><summary>All records</summary>
+<p class="kind">Bounce CNAME</p>
+<ul class="records">
+<li class="ev mono">pm-bounces.casper.com CNAME pm.mtasv.net</li>
+</ul>
+<p class="meta setup">setup complete: SPF not needed, bounce CNAME present</p>
+</details>
+</article>
+<article class="card" id="service-q4">
+<div class="card-head"><h4>Q4</h4><span class="badge b-configured">Configured</span></div>
+<p class="meta">Commerce and apps</p>
+<ul class="claims">
+<li class="decider"><span class="kind">SPF</span>: include:_spf.q4press.com</li>
+</ul>
+<details class="records"><summary>All records</summary>
+<p class="kind">SPF</p>
+<ul class="records">
+<li class="ev mono">casper.com TXT include:_spf.q4press.com</li>
+</ul>
+</details>
+</article>
+<article class="card" id="service-salesforce">
+<div class="card-head"><h4>Salesforce</h4><span class="badge b-configured">Configured</span></div>
+<p class="meta">Support and CRM</p>
+<ul class="claims">
+<li class="decider"><span class="kind">SPF</span>: include:_spf.salesforce.com</li>
+<li><span class="kind">DKIM key</span>: salesforce (1024 bit, named for it)</li>
+</ul>
+<details class="records"><summary>All records</summary>
+<p class="kind">SPF</p>
+<ul class="records">
+<li class="ev mono">casper.com TXT include:_spf.salesforce.com</li>
+</ul>
+<p class="kind">DKIM key</p>
+<ul class="records">
+<li class="ev mono">salesforce._domainkey.casper.com TXT v=DKIM1; k=rsa; p=MIGfMA0GCSqG..., 1024-bit, fp 2b895d381a879705 via casper.com TXT include:_spf.salesforce.com</li>
+</ul>
+</details>
+</article>
+<article class="card" id="service-salesforce-marketing-cloud-engagement">
+<div class="card-head"><h4>Salesforce Marketing Cloud Engagement</h4><span class="badge b-configured">Configured</span></div>
+<p class="meta">Marketing, at mail.casper.com</p>
+<ul class="claims">
+<li class="decider"><span class="kind">SPF</span>: include:cust-spf.exacttarget.com</li>
+<li><span class="kind">Delegated by NS</span>: mail.casper.com</li>
+</ul>
+<details class="records"><summary>All records</summary>
+<p class="kind">SPF</p>
+<ul class="records">
+<li class="ev mono">mail.casper.com TXT include:cust-spf.exacttarget.com</li>
+</ul>
+<p class="kind">Delegated by NS</p>
+<ul class="records">
+<li class="ev mono">mail.casper.com NS ns1.exacttarget.com</li>
+</ul>
+</details>
+</article>
+<article class="card" id="service-sendgrid">
+<div class="card-head"><h4>SendGrid</h4><span class="badge b-configured">Configured</span></div>
+<p class="meta">Transactional</p>
+<ul class="claims">
+<li class="decider"><span class="kind">DKIM keys</span>: s1, s2 (1024 and 2048 bit, by CNAME)</li>
+<li><span class="kind">DKIM key</span>: smtpapi (1024 bit, named for it)</li>
+</ul>
+<p class="meta setup">setup complete</p>
+<details class="records"><summary>All records</summary>
+<p class="kind">DKIM keys</p>
+<ul class="records">
+<li class="ev mono">s1._domainkey.casper.com TXT k=rsa; t=s (strict); p=MIIBIjANBgkq..., 2048-bit, fp fdc0f9d77c779856 via s1.domainkey.u895984.wl235.sendgrid.net</li>
+<li class="ev mono">s2._domainkey.casper.com TXT k=rsa; t=s (strict); p=MIGfMA0GCSqG..., 1024-bit, fp ea13ef38e66c6769 via s2.domainkey.u895984.wl235.sendgrid.net</li>
+</ul>
+<p class="kind">DKIM key</p>
+<ul class="records">
+<li class="ev mono">smtpapi._domainkey.casper.com TXT k=rsa; t=s (strict); p=MIGfMA0GCSqG..., 1024-bit, fp 303963420cfee1c6</li>
+</ul>
+<p class="meta setup">setup complete: DKIM present, bounce CNAME not used (optional, CNAME at 23 labels under casper.com), SPF not needed, tracking CNAME not used (optional, CNAME at 23 labels under casper.com)</p>
+</details>
+</article>
+</div>
+</section>
+<section class="view-section tier">
+<h3 class="section-title">Likely</h3>
+<div class="cards">
+<article class="card" id="service-customer-io">
+<div class="card-head"><h4>Customer.io</h4><span class="badge b-likely">Likely</span></div>
+<p class="meta">Marketing, at e.casper.com</p>
+<ul class="claims">
+<li class="decider"><span class="kind">DKIM key</span>: krs (2048 bit, named for it)</li>
+</ul>
+<p class="meta setup">setup complete</p>
+<details class="records"><summary>All records</summary>
+<p class="kind">DKIM key</p>
+<ul class="records">
+<li class="ev mono">krs._domainkey.e.casper.com TXT k=rsa; p=MIIBIjANBgkq..., 2048-bit, fp 1eb1e97f362ad520</li>
+</ul>
+<p class="meta setup">setup complete: tracking CNAME not checked (no label was asked at e.casper.com)</p>
+</details>
+</article>
+</div>
+</section>
+<section class="view-section tier">
+<h3 class="section-title">Account only</h3>
+<div class="cards">
+<article class="card" id="service-microsoft-365">
+<div class="card-head"><h4>Microsoft 365</h4><span class="badge b-account-only">Account only</span></div>
+<p class="meta">Mailbox</p>
+<ul class="claims">
+<li class="decider"><span class="kind">Verification token</span>: MS=ms55520198</li>
+</ul>
+<p class="meta setup">setup incomplete: SPF missing (the record does not authorize spf.protection.outlook.com), DKIM missing (no key at selector1._domainkey or selector2._domainkey, names with no TXT record; this zone gives that answer for every name that does not exist)</p>
+<details class="records"><summary>All records</summary>
+<p class="kind">Verification token</p>
+<ul class="records">
+<li class="ev mono">casper.com TXT MS=ms55520198</li>
+</ul>
+<p class="meta setup">setup incomplete: SPF missing (the record does not authorize spf.protection.outlook.com), DKIM missing (no key at selector1._domainkey or selector2._domainkey, names with no TXT record; this zone gives that answer for every name that does not exist), MX not used (optional, MX at casper.com), bounce CNAME not needed</p>
+</details>
+</article>
+</div>
+</section>
+<section class="view-section reporting">
+<h3 class="section-title">Reports go to</h3>
+<p>DMARCian</p>
+</section>
+<section class="view-section unknowns">
+<h3 class="section-title">Not recognised</h3>
+<ul class="unknowns">
+<li>DKIM key: <span class="mono">mx</span>
+<span class="ev mono">mx._domainkey.casper.com TXT v=DKIM1; k=rsa; p=MIGfMA0GCSqG..., 1024-bit, fp 273e0630e2eb6478</span>
+</li>
+<li>IP address in SPF: <span class="mono">208.89.14.209 (AS11054, LIVEPERSON - LivePerson, Inc., US)</span>
+<span class="ev mono">casper.com TXT ip4:208.89.14.209</span>
+</li>
+<li>mail server: <span class="mono">incoming.bm23.com</span> at email.casper.com
+<span class="ev mono">email.casper.com MX 20 incoming.bm23.com</span>
+</li>
+</ul>
+</section>
+<section class="view-section absences">
+<h3 class="section-title">Checked and not there</h3>
+<ul class="gaps absences">
+<li><span class="mono">DKIM keys at t.casper.com</span>: selectors exist but none of the 32 names asked is one<span class="ev mono">_domainkey.t.casper.com TXT no record of this type</span></li>
+</ul>
+</section>
+<section class="view-section not-checked">
+<h3 class="section-title">Not checked</h3>
+<ul class="gaps">
+<li><span class="mono">the website</span>: not read: web checks were turned off (--no-web)</li>
+<li><span class="mono">certificate transparency, crt.sh: GET https://crt.sh/?q=%25.casper.com&amp;output=json</span>: not asked: read only with --ct (it also holds expired certificates)</li>
+<li><span class="mono">DKIM selectors at e.casper.com</span>: 74 of 106 not asked: only the first 27 and the names its own SPF, MX or delegation backs were (cap)</li>
+<li><span class="mono">DKIM selectors at email.casper.com</span>: 76 of 106 not asked: only the first 27 and the names its own SPF, MX or delegation backs were (cap)</li>
+<li><span class="mono">DKIM selectors at mail.casper.com</span>: 78 of 106 not asked: only the first 27 and the names its own SPF, MX or delegation backs were (cap)</li>
+<li><span class="mono">DKIM selectors at orders.casper.com</span>: 79 of 106 not asked: only the first 27 and the names its own SPF, MX or delegation backs were (cap)</li>
+<li><span class="mono">DKIM selectors at t.casper.com</span>: 74 of 106 not asked: only the first 27 and the names its own SPF, MX or delegation backs were (cap)</li>
+</ul>
+</section>
+<section class="view-section asked">
+<h3 class="section-title">What was asked</h3>
+<ul class="gaps">
+<li><span class="mono">casper.com</span>: 106 DKIM selectors, 23 CNAME labels, 1 page</li>
+<li><span class="mono">e.casper.com</span>: 32 DKIM selectors</li>
+<li><span class="mono">email.casper.com</span>: 30 DKIM selectors</li>
+<li><span class="mono">mail.casper.com</span>: 28 DKIM selectors</li>
+<li><span class="mono">orders.casper.com</span>: 27 DKIM selectors</li>
+<li><span class="mono">t.casper.com</span>: 32 DKIM selectors</li>
+</ul>
+<details class="asked"><summary>Names asked</summary>
+<h4 class="mono">casper.com</h4>
+<ul>
+<li>Pages (1): <span class="mono">https://api.certspotter.com/v1/issuances?domain=casper.com&amp;include_subdomains=true&amp;expand=dns_names</span></li>
+<li>CNAME labels (23): <span class="mono">bounce, bounces, em, email, mail, send, mta, rp, pm-bounces, links, link, click, track, tracking, url, go, autodiscover, cf-bounce, eversrv, fwdkim1, bnc3, bounces.cloud.em, bounces.cloud2.em</span></li>
+<li>DKIM selectors (106): <span class="mono">google, gapps, acdkim1, acdkim2, ses, aweber_key_a, aweber_key_b, aweber_key_c, brevo, brevo1, brevo2, cm, cf2024-1, ctct1, ctct2, krs, e2ma-k1, e2ma-k2, e2ma-k3, everlytickey1, everlytickey2, fm2, fm1, fm3, mesmtp, secureserver1, secureserver2, gor, strong1, strong2, hs1, hs2, intercom, s1-ionos, s42582890, cka, kl, kl1, kl2, k2, k1, k3, litesrv, mg, mailgun, mg1, pdk1, pdk2, mailjet, mailpoet2, mailpoet1, mandrill, mte1, mte2, marketo, mkto, mkto1, selector1, selector2, mimecast, mimecast20190719, pepipost, pp1, protonmail, protonmail2, protonmail3, resend, sailthru, salesforce, salesforce2, salesforce1, sf, sf1, sf2, sfdc, 200608, pardot, sfmc, s1, s2, smtpapi, scph0819, sparkpost, squarespace, zendesk1, zendesk2, zoho, api, default, dk, dkim, dkim1, dkim2, email, k, key, key1, key2, mail, mta, mx, pm, s, selector, smtp, sp</span></li>
+</ul>
+<h4 class="mono">e.casper.com</h4>
+<ul>
+<li>DKIM selectors (32): <span class="mono">acdkim1, acdkim2, ses, aweber_key_a, aweber_key_b, aweber_key_c, brevo, brevo1, brevo2, cm, cf2024-1, ctct1, ctct2, krs, e2ma-k1, e2ma-k2, e2ma-k3, everlytickey1, everlytickey2, fm2, fm1, fm3, mesmtp, secureserver1, secureserver2, google, gapps, mailgun, mg, mg1, pdk1, pdk2</span></li>
+</ul>
+<h4 class="mono">email.casper.com</h4>
+<ul>
+<li>DKIM selectors (30): <span class="mono">acdkim1, acdkim2, ses, aweber_key_a, aweber_key_b, aweber_key_c, brevo, brevo1, brevo2, cm, cf2024-1, ctct1, ctct2, krs, e2ma-k1, e2ma-k2, e2ma-k3, everlytickey1, everlytickey2, fm2, fm1, fm3, mesmtp, secureserver1, secureserver2, google, gapps, mandrill, mte1, mte2</span></li>
+</ul>
+<h4 class="mono">mail.casper.com</h4>
+<ul>
+<li>DKIM selectors (28): <span class="mono">acdkim1, acdkim2, ses, aweber_key_a, aweber_key_b, aweber_key_c, brevo, brevo1, brevo2, cm, cf2024-1, ctct1, ctct2, krs, e2ma-k1, e2ma-k2, e2ma-k3, everlytickey1, everlytickey2, fm2, fm1, fm3, mesmtp, secureserver1, secureserver2, google, gapps, sfmc</span></li>
+</ul>
+<h4 class="mono">orders.casper.com</h4>
+<ul>
+<li>DKIM selectors (27): <span class="mono">acdkim1, acdkim2, ses, aweber_key_a, aweber_key_b, aweber_key_c, brevo, brevo1, brevo2, cm, cf2024-1, ctct1, ctct2, krs, e2ma-k1, e2ma-k2, e2ma-k3, everlytickey1, everlytickey2, fm2, fm1, fm3, mesmtp, secureserver1, secureserver2, google, gapps</span></li>
+</ul>
+<h4 class="mono">t.casper.com</h4>
+<ul>
+<li>DKIM selectors (32): <span class="mono">acdkim1, acdkim2, ses, aweber_key_a, aweber_key_b, aweber_key_c, brevo, brevo1, brevo2, cm, cf2024-1, ctct1, ctct2, krs, e2ma-k1, e2ma-k2, e2ma-k3, everlytickey1, everlytickey2, fm2, fm1, fm3, mesmtp, secureserver1, secureserver2, google, gapps, mailgun, mg, mg1, pdk1, pdk2</span></li>
+</ul>
+</details>
+</section>

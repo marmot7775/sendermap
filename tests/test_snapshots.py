@@ -1,5 +1,5 @@
-"""Each corpus case's text and Markdown views, with evidence off and on, compared byte for byte
-with tests/snapshots/<domain>/. The run's elapsed time is set to zero first.
+"""Each corpus case's text and Markdown views, with evidence off and on, and the web page's HTML,
+compared byte for byte with tests/snapshots/<domain>/. The run's elapsed time is set to zero first.
 
 When a view changes on purpose, run `SENDERMAP_UPDATE_SNAPSHOTS=1 pytest tests/test_snapshots.py`
 and review the diff to tests/snapshots.
@@ -16,13 +16,15 @@ from rich.console import Console
 from test_view import CASES, mapped
 
 from sendermap.model import SenderMap
-from sendermap.render import markdown, text
+from sendermap.render import html, markdown, text
 
 SNAPSHOTS = Path(__file__).parent / "snapshots"
-VIEWS = ("text.txt", "text-evidence.txt", "markdown.md", "markdown-evidence.md")
+VIEWS = ("text.txt", "text-evidence.txt", "markdown.md", "markdown-evidence.md", "page.html")
 
 
 def rendered(result: SenderMap, name: str) -> str:
+    if name == "page.html":
+        return html.html(result)
     evidence = "evidence" in name
     if name.startswith("markdown"):
         return markdown.render(result, evidence=evidence)

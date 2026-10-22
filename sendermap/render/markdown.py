@@ -65,13 +65,7 @@ def _section(title: str) -> list[str]:
 
 def _head(shown: View) -> list[str]:
     head = shown.head
-    count = f"{head.senders} sending service{'s' if head.senders != 1 else ''}"
-    lines = [
-        f"# Sendermap: {head.domain}",
-        "",
-        f"{count} found from public records checked {head.checked_at} ({head.lookups} lookups "
-        f"in {head.elapsed:.1f} s over {head.resolver}).",
-    ]
+    lines = [f"# Sendermap: {head.domain}", "", head.summary()]
     return lines + (["", head.story] if head.story else [])
 
 
