@@ -236,8 +236,8 @@ async def test_any_other_vendor_missing_a_required_record_is_a_warning(
     # Only the required DKIM item raises anything; the optional CNAMEs are only shown.
     assert setup_findings(result) == [(Severity.WARNING, "SendGrid at example.test has no DKIM")]
     bounce = item(result, "SendGrid", "return_path")
-    assert bounce.detail == "no CNAME into sendgrid.net at the 23 labels asked"
-    assert len(bounce.evidence) == 23
+    assert bounce.detail == "no CNAME into sendgrid.net at the 25 labels asked"
+    assert len(bounce.evidence) == 25
 
 
 async def test_a_mailbox_in_mx_on_a_subdomain_only_is_a_warning_not_a_risk(

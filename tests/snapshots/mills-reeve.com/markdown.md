@@ -1,6 +1,6 @@
 # Sendermap: mills-reeve.com
 
-5 sending services found from public records checked 2026-10-12 01:24 UTC (622 lookups in 0.0 s over Google DNS over HTTPS).
+5 sending services found from public records checked 2026-10-12 01:24 UTC (627 lookups in 0.0 s over Google DNS over HTTPS).
 
 Mimecast stands in front of the domain's mail as a security gateway, so the mailbox provider is not visible from MX. Four other services are set up to send as the domain: one commerce and apps (Docebo), one support and CRM (Freshdesk), one mailbox (Microsoft 365), one transactional (SendGrid). DMARC reports go to Mimecast DMARC Analyzer. Not checked: the website (turned off), DKIM selectors past the first 27 on two subdomains, and the crt.sh certificate log (read only with --ct).
 
@@ -43,12 +43,12 @@ Mimecast DMARC Analyzer
 
 ## Not checked
 
-- DKIM selectors at update.mills-reeve.com: 77 of 106 not asked: only the first 27 and the names its own SPF, MX or delegation backs were (cap)
-- DKIM selectors at updates.mills-reeve.com: 79 of 106 not asked: only the first 27 and the names its own SPF, MX or delegation backs were (cap)
+- DKIM selectors at update.mills-reeve.com: 80 of 109 not asked: only the first 27 and the names its own SPF, MX or delegation backs were (cap)
+- DKIM selectors at updates.mills-reeve.com: 82 of 109 not asked: only the first 27 and the names its own SPF, MX or delegation backs were (cap)
 
 ## What was asked
 
-- **mills-reeve.com**: 106 DKIM selectors, 23 CNAME labels, 1 page
+- **mills-reeve.com**: 109 DKIM selectors, 25 CNAME labels, 1 page
 - **update.mills-reeve.com**: 29 DKIM selectors
 - **updates.mills-reeve.com**: 27 DKIM selectors
 

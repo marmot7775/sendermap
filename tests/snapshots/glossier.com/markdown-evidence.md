@@ -1,6 +1,6 @@
 # Sendermap: glossier.com
 
-9 sending services found from public records checked 2026-10-12 01:25 UTC (732 lookups in 0.0 s over Google DNS over HTTPS).
+9 sending services found from public records checked 2026-10-12 01:25 UTC (737 lookups in 0.0 s over Google DNS over HTTPS).
 
 Google Workspace receives the domain's mail and has a DKIM key in place to sign it. Six other services are set up to send as the domain: three support and CRM (Help Scout, Salesforce, Zendesk), one marketing (Klaviyo), two transactional (Postmark, SendGrid); one more is likely from a DKIM key name alone (Mandrill). One service shows an account and nothing set up to send (Amazon SES); DMARC reports go to Valimail. Not checked: the website (turned off), DKIM selectors past the first 27 on three subdomains, and the crt.sh certificate log (read only with --ct).
 
@@ -29,7 +29,7 @@ Google Workspace receives the domain's mail and has a DKIM key in place to sign 
 | Salesforce | Support and CRM | Configured | DKIM keys: salesforce2, salesforce1 (both 2048 bit, by CNAME) |  |
 | SendGrid | Transactional | Configured | DKIM keys: s1, s2 (1024 and 2048 bit, by CNAME); Tracking CNAME: link.glossier.com; MX for bounces: mx.sendgrid.net, mx2.sendgrid.net at marketing.glossier.com and send.glossier.com; SPF: include:ab.sendgrid.net, include:sendgrid.net at marketing.glossier.com and send.glossier.com; SPF ranges: ip4:208.117.48.0/20, ip4:50.31.32.0/19 and 9 more at marketing.glossier.com | setup complete: DKIM present, bounce CNAME present, SPF not needed, tracking CNAME present |
 | Zendesk | Support and CRM | Configured | SPF passes its address: ip4:103.151.192.0/23; DKIM keys: zendesk1, zendesk2 (both 2048 bit, by CNAME) | setup complete: SPF present, DKIM present |
-| Mandrill | Transactional | Likely | DKIM key: mandrill (1024 bit, named for it) | setup complete: DKIM present (older setup: a key at mandrill; the current setup names mte1 and mte2), bounce CNAME not used (optional, CNAME at 23 labels under glossier.com), tracking CNAME not used (optional, CNAME at 23 labels under glossier.com) |
+| Mandrill | Transactional | Likely | DKIM key: mandrill (1024 bit, named for it) | setup complete: DKIM present (older setup: a key at mandrill; the current setup names mte1 and mte2), bounce CNAME not used (optional, CNAME at 25 labels under glossier.com), tracking CNAME not used (optional, CNAME at 25 labels under glossier.com) |
 | Amazon SES | Transactional | Account only | Verification token: amazonses:awBV5EM6W53p2/Xbg80uJ29zurZnGsMMJcLLLp6vUcY= |  |
 
 ## Records
@@ -121,13 +121,13 @@ Valimail
 
 ## Not checked
 
-- DKIM selectors at marketing.glossier.com: 79 of 106 not asked: only the first 27 and the names its own SPF, MX or delegation backs were (cap)
-- DKIM selectors at receipts.glossier.com: 79 of 106 not asked: only the first 27 and the names its own SPF, MX or delegation backs were (cap)
-- DKIM selectors at send.glossier.com: 79 of 106 not asked: only the first 27 and the names its own SPF, MX or delegation backs were (cap)
+- DKIM selectors at marketing.glossier.com: 82 of 109 not asked: only the first 27 and the names its own SPF, MX or delegation backs were (cap)
+- DKIM selectors at receipts.glossier.com: 82 of 109 not asked: only the first 27 and the names its own SPF, MX or delegation backs were (cap)
+- DKIM selectors at send.glossier.com: 82 of 109 not asked: only the first 27 and the names its own SPF, MX or delegation backs were (cap)
 
 ## What was asked
 
-- **glossier.com**: 106 DKIM selectors, 23 CNAME labels, 1 page
+- **glossier.com**: 109 DKIM selectors, 25 CNAME labels, 1 page
 - **marketing.glossier.com**: 27 DKIM selectors
 - **receipts.glossier.com**: 27 DKIM selectors
 - **send.glossier.com**: 27 DKIM selectors
@@ -141,8 +141,8 @@ Valimail
 
 - **glossier.com**
   - Pages: `https://api.certspotter.com/v1/issuances?domain=glossier.com&include_subdomains=true&expand=dns_names`
-  - CNAME labels: `bounce`, `bounces`, `em`, `email`, `mail`, `send`, `mta`, `rp`, `pm-bounces`, `links`, `link`, `click`, `track`, `tracking`, `url`, `go`, `autodiscover`, `cf-bounce`, `eversrv`, `fwdkim1`, `bnc3`, `bounces.cloud.em`, `bounces.cloud2.em`
-  - DKIM selectors: `acdkim1`, `acdkim2`, `ses`, `aweber_key_a`, `aweber_key_b`, `aweber_key_c`, `brevo`, `brevo1`, `brevo2`, `cm`, `cf2024-1`, `ctct1`, `ctct2`, `krs`, `e2ma-k1`, `e2ma-k2`, `e2ma-k3`, `everlytickey1`, `everlytickey2`, `fm2`, `fm1`, `fm3`, `mesmtp`, `secureserver1`, `secureserver2`, `google`, `gapps`, `gor`, `strong1`, `strong2`, `hs1`, `hs2`, `intercom`, `s1-ionos`, `s42582890`, `cka`, `kl`, `kl1`, `kl2`, `k2`, `k1`, `k3`, `litesrv`, `mg`, `mailgun`, `mg1`, `pdk1`, `pdk2`, `mailjet`, `mailpoet2`, `mailpoet1`, `mandrill`, `mte1`, `mte2`, `marketo`, `mkto`, `mkto1`, `selector1`, `selector2`, `mimecast`, `mimecast20190719`, `pepipost`, `pp1`, `protonmail`, `protonmail2`, `protonmail3`, `resend`, `sailthru`, `salesforce`, `salesforce2`, `salesforce1`, `sf`, `sf1`, `sf2`, `sfdc`, `200608`, `pardot`, `sfmc`, `s1`, `s2`, `smtpapi`, `scph0819`, `sparkpost`, `squarespace`, `zendesk1`, `zendesk2`, `zoho`, `api`, `default`, `dk`, `dkim`, `dkim1`, `dkim2`, `email`, `k`, `key`, `key1`, `key2`, `mail`, `mta`, `mx`, `pm`, `s`, `selector`, `smtp`, `sp`
+  - CNAME labels: `bounce`, `bounces`, `em`, `email`, `mail`, `send`, `mta`, `rp`, `pm-bounces`, `links`, `link`, `click`, `track`, `tracking`, `url`, `go`, `autodiscover`, `cf-bounce`, `eversrv`, `fwdkim1`, `bnc3`, `bounces.cloud.em`, `bounces.cloud2.em`, `outbound.intercom`, `atlassian-bounces`
+  - DKIM selectors: `acdkim1`, `acdkim2`, `ses`, `aweber_key_a`, `aweber_key_b`, `aweber_key_c`, `brevo`, `brevo1`, `brevo2`, `cm`, `cf2024-1`, `ctct1`, `ctct2`, `krs`, `e2ma-k1`, `e2ma-k2`, `e2ma-k3`, `everlytickey1`, `everlytickey2`, `fm2`, `fm1`, `fm3`, `mesmtp`, `secureserver1`, `secureserver2`, `google`, `gapps`, `gor`, `strong1`, `strong2`, `hs1`, `hs2`, `intercom`, `s1-ionos`, `s42582890`, `s2-ionos`, `cka`, `kl`, `kl1`, `kl2`, `km1`, `km2`, `k2`, `k1`, `k3`, `litesrv`, `mg`, `mailgun`, `mg1`, `pdk1`, `pdk2`, `mailjet`, `mailpoet2`, `mailpoet1`, `mandrill`, `mte1`, `mte2`, `marketo`, `mkto`, `mkto1`, `selector1`, `selector2`, `mimecast`, `mimecast20190719`, `pepipost`, `pp1`, `protonmail`, `protonmail2`, `protonmail3`, `resend`, `sailthru`, `salesforce`, `salesforce2`, `salesforce1`, `sf`, `sf1`, `sf2`, `sfdc`, `200608`, `pardot`, `sfmc`, `s1`, `s2`, `smtpapi`, `scph0819`, `sparkpost`, `squarespace`, `zendesk1`, `zendesk2`, `zoho`, `api`, `default`, `dk`, `dkim`, `dkim1`, `dkim2`, `email`, `k`, `key`, `key1`, `key2`, `mail`, `mta`, `mx`, `pm`, `s`, `selector`, `smtp`, `sp`
 - **marketing.glossier.com**
   - DKIM selectors: `s1`, `s2`, `smtpapi`, `acdkim1`, `acdkim2`, `ses`, `aweber_key_a`, `aweber_key_b`, `aweber_key_c`, `brevo`, `brevo1`, `brevo2`, `cm`, `cf2024-1`, `ctct1`, `ctct2`, `krs`, `e2ma-k1`, `e2ma-k2`, `e2ma-k3`, `everlytickey1`, `everlytickey2`, `fm2`, `fm1`, `fm3`, `mesmtp`, `secureserver1`
 - **receipts.glossier.com**

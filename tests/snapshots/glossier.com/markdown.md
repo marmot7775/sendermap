@@ -1,6 +1,6 @@
 # Sendermap: glossier.com
 
-9 sending services found from public records checked 2026-10-12 01:25 UTC (732 lookups in 0.0 s over Google DNS over HTTPS).
+9 sending services found from public records checked 2026-10-12 01:25 UTC (737 lookups in 0.0 s over Google DNS over HTTPS).
 
 Google Workspace receives the domain's mail and has a DKIM key in place to sign it. Six other services are set up to send as the domain: three support and CRM (Help Scout, Salesforce, Zendesk), one marketing (Klaviyo), two transactional (Postmark, SendGrid); one more is likely from a DKIM key name alone (Mandrill). One service shows an account and nothing set up to send (Amazon SES); DMARC reports go to Valimail. Not checked: the website (turned off), DKIM selectors past the first 27 on three subdomains, and the crt.sh certificate log (read only with --ct).
 
@@ -37,13 +37,13 @@ Valimail
 
 ## Not checked
 
-- DKIM selectors at marketing.glossier.com: 79 of 106 not asked: only the first 27 and the names its own SPF, MX or delegation backs were (cap)
-- DKIM selectors at receipts.glossier.com: 79 of 106 not asked: only the first 27 and the names its own SPF, MX or delegation backs were (cap)
-- DKIM selectors at send.glossier.com: 79 of 106 not asked: only the first 27 and the names its own SPF, MX or delegation backs were (cap)
+- DKIM selectors at marketing.glossier.com: 82 of 109 not asked: only the first 27 and the names its own SPF, MX or delegation backs were (cap)
+- DKIM selectors at receipts.glossier.com: 82 of 109 not asked: only the first 27 and the names its own SPF, MX or delegation backs were (cap)
+- DKIM selectors at send.glossier.com: 82 of 109 not asked: only the first 27 and the names its own SPF, MX or delegation backs were (cap)
 
 ## What was asked
 
-- **glossier.com**: 106 DKIM selectors, 23 CNAME labels, 1 page
+- **glossier.com**: 109 DKIM selectors, 25 CNAME labels, 1 page
 - **marketing.glossier.com**: 27 DKIM selectors
 - **receipts.glossier.com**: 27 DKIM selectors
 - **send.glossier.com**: 27 DKIM selectors

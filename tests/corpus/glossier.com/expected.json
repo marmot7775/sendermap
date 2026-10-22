@@ -1307,10 +1307,22 @@
          "rtype": "CNAME",
          "value": "no record of this type",
          "checked_at": "2026-10-12T01:25:09+00:00"
+        },
+        {
+         "name": "outbound.intercom.glossier.com",
+         "rtype": "CNAME",
+         "value": "no record of this type",
+         "checked_at": "2026-10-12T01:25:09+00:00"
+        },
+        {
+         "name": "atlassian-bounces.glossier.com",
+         "rtype": "CNAME",
+         "value": "no record of this type",
+         "checked_at": "2026-10-12T01:25:09+00:00"
         }
        ],
-       "asked": "CNAME at 23 labels under glossier.com",
-       "detail": "no CNAME into mandrillapp.com at the 23 labels asked"
+       "asked": "CNAME at 25 labels under glossier.com",
+       "detail": "no CNAME into mandrillapp.com at the 25 labels asked"
       },
       {
        "record": "tracking",
@@ -1454,10 +1466,22 @@
          "rtype": "CNAME",
          "value": "no record of this type",
          "checked_at": "2026-10-12T01:25:09+00:00"
+        },
+        {
+         "name": "outbound.intercom.glossier.com",
+         "rtype": "CNAME",
+         "value": "no record of this type",
+         "checked_at": "2026-10-12T01:25:09+00:00"
+        },
+        {
+         "name": "atlassian-bounces.glossier.com",
+         "rtype": "CNAME",
+         "value": "no record of this type",
+         "checked_at": "2026-10-12T01:25:09+00:00"
         }
        ],
-       "asked": "CNAME at 23 labels under glossier.com",
-       "detail": "no CNAME into mandrillapp.com at the 23 labels asked"
+       "asked": "CNAME at 25 labels under glossier.com",
+       "detail": "no CNAME into mandrillapp.com at the 25 labels asked"
       }
      ],
      "complete": true
@@ -1632,23 +1656,23 @@
   },
   {
    "asked": "DKIM selectors at marketing.glossier.com",
-   "happened": "79 of 106 not asked: only the first 27 and the names its own SPF, MX or delegation backs were (cap)",
+   "happened": "82 of 109 not asked: only the first 27 and the names its own SPF, MX or delegation backs were (cap)",
    "kind": "dkim",
-   "count": 79,
+   "count": 82,
    "cap": 27
   },
   {
    "asked": "DKIM selectors at receipts.glossier.com",
-   "happened": "79 of 106 not asked: only the first 27 and the names its own SPF, MX or delegation backs were (cap)",
+   "happened": "82 of 109 not asked: only the first 27 and the names its own SPF, MX or delegation backs were (cap)",
    "kind": "dkim",
-   "count": 79,
+   "count": 82,
    "cap": 27
   },
   {
    "asked": "DKIM selectors at send.glossier.com",
-   "happened": "79 of 106 not asked: only the first 27 and the names its own SPF, MX or delegation backs were (cap)",
+   "happened": "82 of 109 not asked: only the first 27 and the names its own SPF, MX or delegation backs were (cap)",
    "kind": "dkim",
-   "count": 79,
+   "count": 82,
    "cap": 27
   }
  ],
@@ -1696,10 +1720,13 @@
     "intercom",
     "s1-ionos",
     "s42582890",
+    "s2-ionos",
     "cka",
     "kl",
     "kl1",
     "kl2",
+    "km1",
+    "km2",
     "k2",
     "k1",
     "k3",
@@ -1791,7 +1818,9 @@
     "fwdkim1",
     "bnc3",
     "bounces.cloud.em",
-    "bounces.cloud2.em"
+    "bounces.cloud2.em",
+    "outbound.intercom",
+    "atlassian-bounces"
    ],
    "pages": [
     "https://api.certspotter.com/v1/issuances?domain=glossier.com&include_subdomains=true&expand=dns_names"

@@ -224,7 +224,7 @@ These live in `catalog.py` and the sources, and each has a test.
   longest pattern wins: `u161779.wl030.sendgrid.net` is Klaviyo, not SendGrid.
 - A DKIM key belongs to a service by CNAME first. `selector1` and `selector2` name nobody
   without the Microsoft CNAME. Next, a backed only selector (`rules.backed_only_selectors`, each
-  with a proof: `s1` and `s2` for Klaviyo) credits its one vendor only when SPF, MX or an NS
+  with a proof: `s1` and `s2` for Klaviyo, `mailing` for Optimizely Campaign) credits its one vendor only when SPF, MX or an NS
   delegation already shows that vendor, and nobody otherwise. Next, a selector on the list of a
   service that SPF, MX or an NS delegation already shows is that service's. Last, the name table, except for generic names (`default`, `mail`,
   any two-letter name not explicitly allowed).
@@ -235,7 +235,7 @@ These live in `catalog.py` and the sources, and each has a test.
   A redirect is ignored when the record has `all`. Inside a service's own record nothing more
   is credited, except inside a flattening service's record (EasyDMARC), which copies the
   domain's own senders.
-- A hosted SPF service (Valimail, OnDMARC, EasyDMARC) or a macro include is reported as a note,
+- A hosted SPF service (Valimail, OnDMARC, EasyDMARC, DmarcDuty) or a macro include is reported as a note,
   since it can authorize services without naming them.
 - A subdomain delegated by NS is the service's when its NS records name the service's
   nameservers (`delegation_ns`), as Klaviyo's recommended setup delegates `send.example.com` to

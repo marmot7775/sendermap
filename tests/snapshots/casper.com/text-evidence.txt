@@ -1,6 +1,6 @@
 ╭───────────────────────────────────────────────────────────────────────────────╮
 │ casper.com   14 sending services                                              │
-│ 721 lookups in 0.0 s over Google DNS over HTTPS, checked 2026-10-12 01:25 UTC │
+│ 726 lookups in 0.0 s over Google DNS over HTTPS, checked 2026-10-12 01:25 UTC │
 ╰───────────────────────────────────────────────────────────────────────────────╯
 Google Workspace receives the domain's mail and has a DKIM key in place to sign it.
 Eleven other services are set up to send as the domain: four marketing (Campaign Monitor, Iterable, 
@@ -160,8 +160,8 @@ CONFIGURED
                      mandrill._domainkey.casper.com TXT v=DKIM1; k=rsa; p=MIGfMA0GCSqG..., 1024-bit,
                      fp 9cee89b6f986543a                                                            
     Setup            complete: DKIM present at casper.com and email.casper.com, bounce CNAME not    
-                     used (optional, CNAME at 23 labels under casper.com) at casper.com, tracking   
-                     CNAME not used (optional, CNAME at 23 labels under casper.com) at casper.com,  
+                     used (optional, CNAME at 25 labels under casper.com) at casper.com, tracking   
+                     CNAME not used (optional, CNAME at 25 labels under casper.com) at casper.com,  
                      bounce CNAME not checked (no label was asked at email.casper.com) at           
                      email.casper.com, tracking CNAME not checked (no label was asked at            
                      email.casper.com) at email.casper.com                                          
@@ -192,9 +192,9 @@ CONFIGURED
     DKIM key         smtpapi (1024 bit, named for it)                                               
                      smtpapi._domainkey.casper.com TXT k=rsa; t=s (strict); p=MIGfMA0GCSqG...,      
                      1024-bit, fp 303963420cfee1c6                                                  
-    Setup            complete: DKIM present, bounce CNAME not used (optional, CNAME at 23 labels    
+    Setup            complete: DKIM present, bounce CNAME not used (optional, CNAME at 25 labels    
                      under casper.com), SPF not needed, tracking CNAME not used (optional, CNAME at 
-                     23 labels under casper.com)                                                    
+                     25 labels under casper.com)                                                    
 
 LIKELY
   Customer.io  Marketing  at e.casper.com
@@ -229,35 +229,35 @@ CHECKED AND NOT THERE
     _domainkey.t.casper.com TXT no record of this type
 
 NOT CHECKED
-  DKIM selectors at e.casper.com: 74 of 106 not asked: only the first 27 and the names its own SPF, 
+  DKIM selectors at e.casper.com: 77 of 109 not asked: only the first 27 and the names its own SPF, 
   MX or delegation backs were (cap)                                                                 
-  DKIM selectors at email.casper.com: 76 of 106 not asked: only the first 27 and the names its own  
+  DKIM selectors at email.casper.com: 79 of 109 not asked: only the first 27 and the names its own  
   SPF, MX or delegation backs were (cap)                                                            
-  DKIM selectors at mail.casper.com: 78 of 106 not asked: only the first 27 and the names its own   
+  DKIM selectors at mail.casper.com: 81 of 109 not asked: only the first 27 and the names its own   
   SPF, MX or delegation backs were (cap)                                                            
-  DKIM selectors at orders.casper.com: 79 of 106 not asked: only the first 27 and the names its own 
+  DKIM selectors at orders.casper.com: 82 of 109 not asked: only the first 27 and the names its own 
   SPF, MX or delegation backs were (cap)                                                            
-  DKIM selectors at t.casper.com: 74 of 106 not asked: only the first 27 and the names its own SPF, 
+  DKIM selectors at t.casper.com: 77 of 109 not asked: only the first 27 and the names its own SPF, 
   MX or delegation backs were (cap)                                                                 
 
 WHAT WAS ASKED
-  casper.com: 106 DKIM selectors, 23 CNAME labels, 1 page
+  casper.com: 109 DKIM selectors, 25 CNAME labels, 1 page
     Pages:                                                                                          
     https://api.certspotter.com/v1/issuances?domain=casper.com&include_subdomains=true&expand=dns_na
     mes                                                                                             
     CNAME labels: bounce, bounces, em, email, mail, send, mta, rp, pm-bounces, links, link, click,  
     track, tracking, url, go, autodiscover, cf-bounce, eversrv, fwdkim1, bnc3, bounces.cloud.em,    
-    bounces.cloud2.em                                                                               
+    bounces.cloud2.em, outbound.intercom, atlassian-bounces                                         
     DKIM selectors: google, gapps, acdkim1, acdkim2, ses, aweber_key_a, aweber_key_b, aweber_key_c, 
     brevo, brevo1, brevo2, cm, cf2024-1, ctct1, ctct2, krs, e2ma-k1, e2ma-k2, e2ma-k3,              
     everlytickey1, everlytickey2, fm2, fm1, fm3, mesmtp, secureserver1, secureserver2, gor, strong1,
-    strong2, hs1, hs2, intercom, s1-ionos, s42582890, cka, kl, kl1, kl2, k2, k1, k3, litesrv, mg,   
-    mailgun, mg1, pdk1, pdk2, mailjet, mailpoet2, mailpoet1, mandrill, mte1, mte2, marketo, mkto,   
-    mkto1, selector1, selector2, mimecast, mimecast20190719, pepipost, pp1, protonmail, protonmail2,
-    protonmail3, resend, sailthru, salesforce, salesforce2, salesforce1, sf, sf1, sf2, sfdc, 200608,
-    pardot, sfmc, s1, s2, smtpapi, scph0819, sparkpost, squarespace, zendesk1, zendesk2, zoho, api, 
-    default, dk, dkim, dkim1, dkim2, email, k, key, key1, key2, mail, mta, mx, pm, s, selector,     
-    smtp, sp                                                                                        
+    strong2, hs1, hs2, intercom, s1-ionos, s42582890, s2-ionos, cka, kl, kl1, kl2, km1, km2, k2, k1,
+    k3, litesrv, mg, mailgun, mg1, pdk1, pdk2, mailjet, mailpoet2, mailpoet1, mandrill, mte1, mte2, 
+    marketo, mkto, mkto1, selector1, selector2, mimecast, mimecast20190719, pepipost, pp1,          
+    protonmail, protonmail2, protonmail3, resend, sailthru, salesforce, salesforce2, salesforce1,   
+    sf, sf1, sf2, sfdc, 200608, pardot, sfmc, s1, s2, smtpapi, scph0819, sparkpost, squarespace,    
+    zendesk1, zendesk2, zoho, api, default, dk, dkim, dkim1, dkim2, email, k, key, key1, key2, mail,
+    mta, mx, pm, s, selector, smtp, sp                                                              
   e.casper.com: 32 DKIM selectors
     DKIM selectors: acdkim1, acdkim2, ses, aweber_key_a, aweber_key_b, aweber_key_c, brevo, brevo1, 
     brevo2, cm, cf2024-1, ctct1, ctct2, krs, e2ma-k1, e2ma-k2, e2ma-k3, everlytickey1,              
