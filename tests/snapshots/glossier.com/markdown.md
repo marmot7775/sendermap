@@ -1,6 +1,6 @@
 # Sendermap: glossier.com
 
-9 sending services found from public records checked 2026-10-12 01:25 UTC (710 lookups in 0.0 s over Google DNS over HTTPS).
+9 sending services found from public records checked 2026-10-12 01:25 UTC (732 lookups in 0.0 s over Google DNS over HTTPS).
 
 Google Workspace receives the domain's mail and has a DKIM key in place to sign it. Six other services are set up to send as the domain: three support and CRM (Help Scout, Salesforce, Zendesk), one marketing (Klaviyo), two transactional (Postmark, SendGrid); one more is likely from a DKIM key name alone (Mandrill). One service shows an account and nothing set up to send (Amazon SES); DMARC reports go to Valimail. Not checked: the website (turned off), DKIM selectors past the first 27 on three subdomains, and the crt.sh certificate log (read only with --ct).
 

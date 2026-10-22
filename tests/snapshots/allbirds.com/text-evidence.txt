@@ -1,6 +1,6 @@
 ╭───────────────────────────────────────────────────────────────────────────────╮
 │ allbirds.com   15 sending services                                            │
-│ 724 lookups in 0.0 s over Google DNS over HTTPS, checked 2026-10-12 01:24 UTC │
+│ 746 lookups in 0.0 s over Google DNS over HTTPS, checked 2026-10-12 01:24 UTC │
 ╰───────────────────────────────────────────────────────────────────────────────╯
 Microsoft 365 receives the domain's mail and has a DKIM key in place to sign it.
 Twelve other services are set up to send as the domain: six transactional (Amazon SES, Mailgun, 
