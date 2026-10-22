@@ -1,6 +1,6 @@
 # Sendermap: allbirds.com
 
-15 sending services found from public records checked 2026-10-12 01:24 UTC (746 lookups in 0.0 s over Google DNS over HTTPS).
+15 sending services found from public records checked 2026-10-12 01:24 UTC (751 lookups in 0.0 s over Google DNS over HTTPS).
 
 Microsoft 365 receives the domain's mail and has a DKIM key in place to sign it. Twelve other services are set up to send as the domain: six transactional (Amazon SES, Mailgun, Mailjet, Postmark, SendGrid, SparkPost), two support and CRM (Freshdesk, Zendesk), one mailbox (Google Workspace), two marketing (Iterable, Mailchimp), one commerce and apps (Shopify); two more are likely from a DKIM key name alone (Customer.io, Mandrill). Not checked: the website (turned off), DKIM selectors past the first 27 on three subdomains, six subdomains whose DNS failed to answer, 34 names from certificate logs left out by a limit, and the crt.sh certificate log (read only with --ct).
 
@@ -33,12 +33,12 @@ Microsoft 365 receives the domain's mail and has a DKIM key in place to sign it.
 | Mailgun | Transactional | Configured | SPF ranges: ip4:141.193.32.0/23, ip4:159.135.140.80/29 and 16 more; Tracking CNAME: email.allbirds.com; MX for bounces: mxa.mailgun.org, mxb.mailgun.org at email.allbirds.com; SPF: include:mailgun.org, include:_spf.mailgun.org, include:_spf.eu.mailgun.org at alerts.allbirds.com, email.allbirds.com and mail.allbirds.com | setup complete: SPF present at allbirds.com, alerts.allbirds.com and mail.allbirds.com, MX not used (optional, MX at allbirds.com) at allbirds.com, tracking CNAME present at allbirds.com, MX not used (optional, MX at alerts.allbirds.com) at alerts.allbirds.com, tracking CNAME not checked (no label was asked at alerts.allbirds.com) at alerts.allbirds.com, MX not used (optional, MX at mail.allbirds.com) at mail.allbirds.com, tracking CNAME not checked (no label was asked at mail.allbirds.com) at mail.allbirds.com |
 | Mailjet | Transactional | Configured | SPF ranges: ip4:87.253.232.0/21, ip4:185.189.236.0/22 and 2 more | setup incomplete: SPF present, DKIM missing |
 | Postmark | Transactional | Configured | Bounce CNAME: pm-bounces.allbirds.com | setup complete: SPF not needed, bounce CNAME present |
-| SendGrid | Transactional | Configured | SPF ranges: ip4:208.117.48.0/20, ip4:50.31.32.0/19 and 16 more; DKIM keys: s1, s2 (both 2048 bit, by CNAME) | setup complete: DKIM present, bounce CNAME not used (optional, CNAME at 23 labels under allbirds.com), SPF not needed, tracking CNAME not used (optional, CNAME at 23 labels under allbirds.com) |
+| SendGrid | Transactional | Configured | SPF ranges: ip4:208.117.48.0/20, ip4:50.31.32.0/19 and 16 more; DKIM keys: s1, s2 (both 2048 bit, by CNAME) | setup complete: DKIM present, bounce CNAME not used (optional, CNAME at 25 labels under allbirds.com), SPF not needed, tracking CNAME not used (optional, CNAME at 25 labels under allbirds.com) |
 | Shopify | Commerce and apps | Configured | SPF: include:shops.shopify.com at alerts.allbirds.com and mail.allbirds.com |  |
-| SparkPost | Transactional | Configured | Bounce CNAME: bounce.allbirds.com; MX for bounces: smtp.sparkpostmail.com at bounce.allbirds.com and info.allbirds.com | setup complete: tracking CNAME not used (optional, CNAME at 23 labels under allbirds.com), MX not used (optional, MX at allbirds.com) |
+| SparkPost | Transactional | Configured | Bounce CNAME: bounce.allbirds.com; MX for bounces: smtp.sparkpostmail.com at bounce.allbirds.com and info.allbirds.com | setup complete: tracking CNAME not used (optional, CNAME at 25 labels under allbirds.com), MX not used (optional, MX at allbirds.com) |
 | Zendesk | Support and CRM | Configured | SPF ranges: ip4:103.151.192.0/23, ip4:185.12.80.0/22 and 3 more | setup complete: SPF present, DKIM not used (optional, TXT at zendesk1._domainkey.allbirds.com and TXT at zendesk2._domainkey.allbirds.com) |
-| Customer.io | Marketing | Likely | DKIM key: krs (2048 bit, named for it) | setup complete: tracking CNAME not used (optional, CNAME at 23 labels under allbirds.com) |
-| Mandrill | Transactional | Likely | DKIM key: mandrill (1024 bit, named for it) | setup complete: DKIM present (older setup: a key at mandrill; the current setup names mte1 and mte2), bounce CNAME not used (optional, CNAME at 23 labels under allbirds.com), tracking CNAME not used (optional, CNAME at 23 labels under allbirds.com) |
+| Customer.io | Marketing | Likely | DKIM key: krs (2048 bit, named for it) | setup complete: tracking CNAME not used (optional, CNAME at 25 labels under allbirds.com) |
+| Mandrill | Transactional | Likely | DKIM key: mandrill (1024 bit, named for it) | setup complete: DKIM present (older setup: a key at mandrill; the current setup names mte1 and mte2), bounce CNAME not used (optional, CNAME at 25 labels under allbirds.com), tracking CNAME not used (optional, CNAME at 25 labels under allbirds.com) |
 
 ## Records
 
@@ -224,13 +224,13 @@ Microsoft 365 receives the domain's mail and has a DKIM key in place to sign it.
 
 - certificate log names more than 2 labels deep: 34 not asked (cap of 2 labels below the domain)
 - sending subdomains: TXT, MX and NS at apisdk.allbirds.com, community.allbirds.com, dataplane.allbirds.com, jssdk.allbirds.com, rerun.allbirds.com, www.jssdk.allbirds.com: the domain's DNS servers failed to answer (SERVFAIL), so whether they send is not known
-- DKIM selectors at alerts.allbirds.com: 74 of 106 not asked: only the first 27 and the names its own SPF, MX or delegation backs were (cap)
-- DKIM selectors at info.allbirds.com: 79 of 106 not asked: only the first 27 and the names its own SPF, MX or delegation backs were (cap)
-- DKIM selectors at mail.allbirds.com: 74 of 106 not asked: only the first 27 and the names its own SPF, MX or delegation backs were (cap)
+- DKIM selectors at alerts.allbirds.com: 77 of 109 not asked: only the first 27 and the names its own SPF, MX or delegation backs were (cap)
+- DKIM selectors at info.allbirds.com: 82 of 109 not asked: only the first 27 and the names its own SPF, MX or delegation backs were (cap)
+- DKIM selectors at mail.allbirds.com: 77 of 109 not asked: only the first 27 and the names its own SPF, MX or delegation backs were (cap)
 
 ## What was asked
 
-- **allbirds.com**: 106 DKIM selectors, 23 CNAME labels, 1 page
+- **allbirds.com**: 109 DKIM selectors, 25 CNAME labels, 1 page
 - **alerts.allbirds.com**: 32 DKIM selectors
 - **bounce.allbirds.com**: 8 DKIM selectors
 - **email.allbirds.com**: 13 DKIM selectors
@@ -246,8 +246,8 @@ Microsoft 365 receives the domain's mail and has a DKIM key in place to sign it.
 
 - **allbirds.com**
   - Pages: `https://api.certspotter.com/v1/issuances?domain=allbirds.com&include_subdomains=true&expand=dns_names`
-  - CNAME labels: `bounce`, `bounces`, `em`, `email`, `mail`, `send`, `mta`, `rp`, `pm-bounces`, `links`, `link`, `click`, `track`, `tracking`, `url`, `go`, `autodiscover`, `cf-bounce`, `eversrv`, `fwdkim1`, `bnc3`, `bounces.cloud.em`, `bounces.cloud2.em`
-  - DKIM selectors: `selector1`, `selector2`, `acdkim1`, `acdkim2`, `ses`, `aweber_key_a`, `aweber_key_b`, `aweber_key_c`, `brevo`, `brevo1`, `brevo2`, `cm`, `cf2024-1`, `ctct1`, `ctct2`, `krs`, `e2ma-k1`, `e2ma-k2`, `e2ma-k3`, `everlytickey1`, `everlytickey2`, `fm2`, `fm1`, `fm3`, `mesmtp`, `secureserver1`, `secureserver2`, `google`, `gapps`, `gor`, `strong1`, `strong2`, `hs1`, `hs2`, `intercom`, `s1-ionos`, `s42582890`, `cka`, `kl`, `kl1`, `kl2`, `k2`, `k1`, `k3`, `litesrv`, `mg`, `mailgun`, `mg1`, `pdk1`, `pdk2`, `mailjet`, `mailpoet2`, `mailpoet1`, `mandrill`, `mte1`, `mte2`, `marketo`, `mkto`, `mkto1`, `mimecast`, `mimecast20190719`, `pepipost`, `pp1`, `protonmail`, `protonmail2`, `protonmail3`, `resend`, `sailthru`, `salesforce`, `salesforce2`, `salesforce1`, `sf`, `sf1`, `sf2`, `sfdc`, `200608`, `pardot`, `sfmc`, `s1`, `s2`, `smtpapi`, `scph0819`, `sparkpost`, `squarespace`, `zendesk1`, `zendesk2`, `zoho`, `api`, `default`, `dk`, `dkim`, `dkim1`, `dkim2`, `email`, `k`, `key`, `key1`, `key2`, `mail`, `mta`, `mx`, `pm`, `s`, `selector`, `smtp`, `sp`
+  - CNAME labels: `bounce`, `bounces`, `em`, `email`, `mail`, `send`, `mta`, `rp`, `pm-bounces`, `links`, `link`, `click`, `track`, `tracking`, `url`, `go`, `autodiscover`, `cf-bounce`, `eversrv`, `fwdkim1`, `bnc3`, `bounces.cloud.em`, `bounces.cloud2.em`, `outbound.intercom`, `atlassian-bounces`
+  - DKIM selectors: `selector1`, `selector2`, `acdkim1`, `acdkim2`, `ses`, `aweber_key_a`, `aweber_key_b`, `aweber_key_c`, `brevo`, `brevo1`, `brevo2`, `cm`, `cf2024-1`, `ctct1`, `ctct2`, `krs`, `e2ma-k1`, `e2ma-k2`, `e2ma-k3`, `everlytickey1`, `everlytickey2`, `fm2`, `fm1`, `fm3`, `mesmtp`, `secureserver1`, `secureserver2`, `google`, `gapps`, `gor`, `strong1`, `strong2`, `hs1`, `hs2`, `intercom`, `s1-ionos`, `s42582890`, `s2-ionos`, `cka`, `kl`, `kl1`, `kl2`, `km1`, `km2`, `k2`, `k1`, `k3`, `litesrv`, `mg`, `mailgun`, `mg1`, `pdk1`, `pdk2`, `mailjet`, `mailpoet2`, `mailpoet1`, `mandrill`, `mte1`, `mte2`, `marketo`, `mkto`, `mkto1`, `mimecast`, `mimecast20190719`, `pepipost`, `pp1`, `protonmail`, `protonmail2`, `protonmail3`, `resend`, `sailthru`, `salesforce`, `salesforce2`, `salesforce1`, `sf`, `sf1`, `sf2`, `sfdc`, `200608`, `pardot`, `sfmc`, `s1`, `s2`, `smtpapi`, `scph0819`, `sparkpost`, `squarespace`, `zendesk1`, `zendesk2`, `zoho`, `api`, `default`, `dk`, `dkim`, `dkim1`, `dkim2`, `email`, `k`, `key`, `key1`, `key2`, `mail`, `mta`, `mx`, `pm`, `s`, `selector`, `smtp`, `sp`
 - **alerts.allbirds.com**
   - DKIM selectors: `google`, `gapps`, `acdkim1`, `acdkim2`, `ses`, `aweber_key_a`, `aweber_key_b`, `aweber_key_c`, `brevo`, `brevo1`, `brevo2`, `cm`, `cf2024-1`, `ctct1`, `ctct2`, `krs`, `e2ma-k1`, `e2ma-k2`, `e2ma-k3`, `everlytickey1`, `everlytickey2`, `fm2`, `fm1`, `fm3`, `mesmtp`, `secureserver1`, `secureserver2`, `mailgun`, `mg`, `mg1`, `pdk1`, `pdk2`
 - **bounce.allbirds.com**

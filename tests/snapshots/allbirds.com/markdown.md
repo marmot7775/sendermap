@@ -1,6 +1,6 @@
 # Sendermap: allbirds.com
 
-15 sending services found from public records checked 2026-10-12 01:24 UTC (746 lookups in 0.0 s over Google DNS over HTTPS).
+15 sending services found from public records checked 2026-10-12 01:24 UTC (751 lookups in 0.0 s over Google DNS over HTTPS).
 
 Microsoft 365 receives the domain's mail and has a DKIM key in place to sign it. Twelve other services are set up to send as the domain: six transactional (Amazon SES, Mailgun, Mailjet, Postmark, SendGrid, SparkPost), two support and CRM (Freshdesk, Zendesk), one mailbox (Google Workspace), two marketing (Iterable, Mailchimp), one commerce and apps (Shopify); two more are likely from a DKIM key name alone (Customer.io, Mandrill). Not checked: the website (turned off), DKIM selectors past the first 27 on three subdomains, six subdomains whose DNS failed to answer, 34 names from certificate logs left out by a limit, and the crt.sh certificate log (read only with --ct).
 
@@ -59,13 +59,13 @@ Microsoft 365 receives the domain's mail and has a DKIM key in place to sign it.
 
 - certificate log names more than 2 labels deep: 34 not asked (cap of 2 labels below the domain)
 - sending subdomains: TXT, MX and NS at apisdk.allbirds.com, community.allbirds.com, dataplane.allbirds.com, jssdk.allbirds.com, rerun.allbirds.com, www.jssdk.allbirds.com: the domain's DNS servers failed to answer (SERVFAIL), so whether they send is not known
-- DKIM selectors at alerts.allbirds.com: 74 of 106 not asked: only the first 27 and the names its own SPF, MX or delegation backs were (cap)
-- DKIM selectors at info.allbirds.com: 79 of 106 not asked: only the first 27 and the names its own SPF, MX or delegation backs were (cap)
-- DKIM selectors at mail.allbirds.com: 74 of 106 not asked: only the first 27 and the names its own SPF, MX or delegation backs were (cap)
+- DKIM selectors at alerts.allbirds.com: 77 of 109 not asked: only the first 27 and the names its own SPF, MX or delegation backs were (cap)
+- DKIM selectors at info.allbirds.com: 82 of 109 not asked: only the first 27 and the names its own SPF, MX or delegation backs were (cap)
+- DKIM selectors at mail.allbirds.com: 77 of 109 not asked: only the first 27 and the names its own SPF, MX or delegation backs were (cap)
 
 ## What was asked
 
-- **allbirds.com**: 106 DKIM selectors, 23 CNAME labels, 1 page
+- **allbirds.com**: 109 DKIM selectors, 25 CNAME labels, 1 page
 - **alerts.allbirds.com**: 32 DKIM selectors
 - **bounce.allbirds.com**: 8 DKIM selectors
 - **email.allbirds.com**: 13 DKIM selectors

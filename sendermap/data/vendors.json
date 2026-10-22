@@ -60,6 +60,14 @@
           "record": "s2._domainkey.klaviyo.com",
           "date": "2026-10-11"
         }
+      },
+      "mailing": {
+        "vendor": "Optimizely Campaign",
+        "proof": {
+          "domain": "galeria.de",
+          "record": "mailing._domainkey.galeria.de",
+          "date": "2026-10-22"
+        }
       }
     },
     "hosted_spf": [
@@ -92,7 +100,9 @@
       "fwdkim1",
       "bnc3",
       "bounces.cloud.em",
-      "bounces.cloud2.em"
+      "bounces.cloud2.em",
+      "outbound.intercom",
+      "atlassian-bounces"
     ],
     "tracking_labels": [
       "click",
@@ -418,6 +428,16 @@
             "date": "2026-10-11"
           },
           "note": "For a custom email domain in Atlassian Cloud, whose verification checks the include."
+        }
+      ],
+      "return_path": [
+        {
+          "value": "mail-us.atlassian.net",
+          "proof": {
+            "domain": "linkedin.com",
+            "record": "atlassian-bounces.linkedin.com",
+            "date": "2026-10-22"
+          }
         }
       ]
     },
@@ -2306,7 +2326,7 @@
             "record": "https://www.intercom.com/help/en/articles/11183745-troubleshooting-email-authentication-issues-dkim-dmarc-and-dns-setup",
             "date": "2026-10-11"
           },
-          "note": "Intercom handles SPF through its return path CNAME, which this block has no pattern for yet."
+          "note": "Intercom handles SPF through its return path CNAME, outbound.intercom into intercom-mail.com."
         },
         {
           "record": "dkim",
@@ -2318,6 +2338,16 @@
             "domain": "intercom.com",
             "record": "https://www.intercom.com/help/en/articles/11183745-troubleshooting-email-authentication-issues-dkim-dmarc-and-dns-setup",
             "date": "2026-10-11"
+          }
+        }
+      ],
+      "return_path": [
+        {
+          "value": "intercom-mail.com",
+          "proof": {
+            "domain": "x.com",
+            "record": "outbound.intercom.x.com",
+            "date": "2026-10-22"
           }
         }
       ]
@@ -2401,6 +2431,21 @@
               "date": "2026-10-09"
             }
           ]
+        },
+        {
+          "shape": {
+            "kind": "fixed",
+            "names": [
+              "s2-ionos"
+            ]
+          },
+          "source": "pattern",
+          "reference": null,
+          "proof": {
+            "domain": "goodsitesforkids.org",
+            "record": "s2-ionos._domainkey.goodsitesforkids.org",
+            "date": "2026-10-22"
+          }
         }
       ],
       "subprocessor_names": [
@@ -2452,7 +2497,7 @@
             "record": "https://www.ionos.com/help/domains/configuring-mail-servers-and-other-related-records/email-authentication-with-dkim/",
             "date": "2026-10-11"
           },
-          "note": "The page names s1-ionos and s2-ionos and an account numbered selector; s2-ionos is not in this block yet."
+          "note": "The page names s1-ionos and s2-ionos and an account numbered selector. Both named selectors are in this block; the setup names s1-ionos, the one every account has."
         }
       ]
     },
@@ -2625,6 +2670,36 @@
             "record": "kl2._domainkey.netflix.com",
             "date": "2026-10-10"
           }
+        },
+        {
+          "shape": {
+            "kind": "fixed",
+            "names": [
+              "km1"
+            ]
+          },
+          "source": "pattern",
+          "reference": null,
+          "proof": {
+            "domain": "target.com",
+            "record": "km1._domainkey.target.com",
+            "date": "2026-10-22"
+          }
+        },
+        {
+          "shape": {
+            "kind": "fixed",
+            "names": [
+              "km2"
+            ]
+          },
+          "source": "pattern",
+          "reference": null,
+          "proof": {
+            "domain": "target.com",
+            "record": "km2._domainkey.target.com",
+            "date": "2026-10-22"
+          }
         }
       ],
       "setup": [
@@ -2639,7 +2714,7 @@
             "record": "https://help.klaviyo.com/hc/en-us/articles/115000357752",
             "date": "2026-10-11"
           },
-          "note": "The current selectors (km1 and km2 for marketing, kt1 and kt2, ks1 and ks2) are not yet in this block's selectors, so the setup names the CNAME target only and a missing key reads not checked."
+          "note": "km1 and km2 are in this block's selectors; kt1, kt2, ks1 and ks2 are not yet, so the setup names the CNAME target only and a missing key reads not checked."
         },
         {
           "record": "return_path",
@@ -6973,6 +7048,19 @@
         }
       ],
       "category": "DMARC reporting"
+    },
+    "Wix": {
+      "website": [
+        {
+          "value": "static.wixstatic.com",
+          "proof": {
+            "domain": "wixstudio.com",
+            "record": "https://wixstudio.com/",
+            "date": "2026-10-22"
+          }
+        }
+      ],
+      "category": "Commerce and apps"
     }
   }
 }

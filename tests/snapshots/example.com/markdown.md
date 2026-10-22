@@ -1,6 +1,6 @@
 # Sendermap: example.com
 
-0 sending services found from public records checked 2026-10-12 01:25 UTC (208 lookups in 0.0 s over Google DNS over HTTPS).
+0 sending services found from public records checked 2026-10-12 01:25 UTC (210 lookups in 0.0 s over Google DNS over HTTPS).
 
 No sending service shows in DNS for example.com: a null MX that says it accepts no mail, no sender in SPF, and a wildcard that answers every DKIM name. Not checked: the crt.sh certificate log (read only with --ct).
 
@@ -11,7 +11,7 @@ No sending service shows in DNS for example.com: a null MX that says it accepts 
 
 ## What was asked
 
-- **example.com**: 23 CNAME labels, 2 pages
+- **example.com**: 25 CNAME labels, 2 pages
 
 ## Not run
 

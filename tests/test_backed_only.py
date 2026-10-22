@@ -23,11 +23,21 @@ C = catalog.load()
 
 
 def test_s1_and_s2_are_klaviyos_backed_only_names_with_a_proof() -> None:
-    assert C.backed_only_selectors == {"s1": "Klaviyo", "s2": "Klaviyo"}
+    assert C.backed_only_selectors == {
+        "s1": "Klaviyo",
+        "s2": "Klaviyo",
+        "mailing": "Optimizely Campaign",
+    }
     assert C.backed_only_proofs["s2"].record == "s2._domainkey.klaviyo.com"
     assert C.backs("Klaviyo") >= {"s1", "s2", "kl", "kl1", "kl2"}
     assert not C.backs("SendGrid") & {"s1", "s2"}  # still on SendGrid's list, backed by nobody
     assert {"s1", "s2"} <= C.selectors_of("SendGrid")
+
+
+def test_mailing_is_optimizely_campaigns_backed_only_name() -> None:
+    assert C.backed_only_proofs["mailing"].record == "mailing._domainkey.galeria.de"
+    assert "mailing" in C.backs("Optimizely Campaign")
+    assert "mailing" not in C.probe_selectors  # asked only where Optimizely is shown
 
 
 def test_the_proofs_tool_rechecks_each_backed_only_proof() -> None:
