@@ -1,6 +1,6 @@
 ╭───────────────────────────────────────────────────────────────────────────────╮
 │ example.com   0 sending services                                              │
-│ 208 lookups in 0.0 s over Google DNS over HTTPS, checked 2026-10-12 01:25 UTC │
+│ 210 lookups in 0.0 s over Google DNS over HTTPS, checked 2026-10-12 01:25 UTC │
 ╰───────────────────────────────────────────────────────────────────────────────╯
 No sending service shows in DNS for example.com: a null MX that says it accepts no mail, no sender 
 in SPF, and a wildcard that answers every DKIM name.
@@ -16,13 +16,13 @@ NEEDS ATTENTION
       *._domainkey.example.com TXT v=DKIM1; p=
 
 WHAT WAS ASKED
-  example.com: 23 CNAME labels, 2 pages
+  example.com: 25 CNAME labels, 2 pages
     Pages: https://example.com/,                                                                    
     https://api.certspotter.com/v1/issuances?domain=example.com&include_subdomains=true&expand=dns_n
     ames                                                                                            
     CNAME labels: bounce, bounces, em, email, mail, send, mta, rp, pm-bounces, links, link, click,  
     track, tracking, url, go, autodiscover, cf-bounce, eversrv, fwdkim1, bnc3, bounces.cloud.em,    
-    bounces.cloud2.em                                                                               
+    bounces.cloud2.em, outbound.intercom, atlassian-bounces                                         
 
 NOT RUN
   certificate transparency, crt.sh: read only with --ct (it also holds expired certificates)

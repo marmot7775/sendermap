@@ -1239,10 +1239,22 @@
          "rtype": "CNAME",
          "value": "no record of this type",
          "checked_at": "2026-10-12T01:25:01+00:00"
+        },
+        {
+         "name": "outbound.intercom.casper.com",
+         "rtype": "CNAME",
+         "value": "no record of this type",
+         "checked_at": "2026-10-12T01:25:01+00:00"
+        },
+        {
+         "name": "atlassian-bounces.casper.com",
+         "rtype": "CNAME",
+         "value": "no record of this type",
+         "checked_at": "2026-10-12T01:25:01+00:00"
         }
        ],
-       "asked": "CNAME at 23 labels under casper.com",
-       "detail": "no CNAME into mandrillapp.com at the 23 labels asked"
+       "asked": "CNAME at 25 labels under casper.com",
+       "detail": "no CNAME into mandrillapp.com at the 25 labels asked"
       },
       {
        "record": "tracking",
@@ -1386,10 +1398,22 @@
          "rtype": "CNAME",
          "value": "no record of this type",
          "checked_at": "2026-10-12T01:25:01+00:00"
+        },
+        {
+         "name": "outbound.intercom.casper.com",
+         "rtype": "CNAME",
+         "value": "no record of this type",
+         "checked_at": "2026-10-12T01:25:01+00:00"
+        },
+        {
+         "name": "atlassian-bounces.casper.com",
+         "rtype": "CNAME",
+         "value": "no record of this type",
+         "checked_at": "2026-10-12T01:25:01+00:00"
         }
        ],
-       "asked": "CNAME at 23 labels under casper.com",
-       "detail": "no CNAME into mandrillapp.com at the 23 labels asked"
+       "asked": "CNAME at 25 labels under casper.com",
+       "detail": "no CNAME into mandrillapp.com at the 25 labels asked"
       }
      ],
      "complete": true
@@ -1803,10 +1827,22 @@
          "rtype": "CNAME",
          "value": "no record of this type",
          "checked_at": "2026-10-12T01:25:01+00:00"
+        },
+        {
+         "name": "outbound.intercom.casper.com",
+         "rtype": "CNAME",
+         "value": "no record of this type",
+         "checked_at": "2026-10-12T01:25:01+00:00"
+        },
+        {
+         "name": "atlassian-bounces.casper.com",
+         "rtype": "CNAME",
+         "value": "no record of this type",
+         "checked_at": "2026-10-12T01:25:01+00:00"
         }
        ],
-       "asked": "CNAME at 23 labels under casper.com",
-       "detail": "no CNAME into sendgrid.net at the 23 labels asked"
+       "asked": "CNAME at 25 labels under casper.com",
+       "detail": "no CNAME into sendgrid.net at the 25 labels asked"
       },
       {
        "record": "spf",
@@ -1958,10 +1994,22 @@
          "rtype": "CNAME",
          "value": "no record of this type",
          "checked_at": "2026-10-12T01:25:01+00:00"
+        },
+        {
+         "name": "outbound.intercom.casper.com",
+         "rtype": "CNAME",
+         "value": "no record of this type",
+         "checked_at": "2026-10-12T01:25:01+00:00"
+        },
+        {
+         "name": "atlassian-bounces.casper.com",
+         "rtype": "CNAME",
+         "value": "no record of this type",
+         "checked_at": "2026-10-12T01:25:01+00:00"
         }
        ],
-       "asked": "CNAME at 23 labels under casper.com",
-       "detail": "no CNAME into sendgrid.net at the 23 labels asked"
+       "asked": "CNAME at 25 labels under casper.com",
+       "detail": "no CNAME into sendgrid.net at the 25 labels asked"
       }
      ],
      "complete": true
@@ -2417,37 +2465,37 @@
   },
   {
    "asked": "DKIM selectors at e.casper.com",
-   "happened": "74 of 106 not asked: only the first 27 and the names its own SPF, MX or delegation backs were (cap)",
+   "happened": "77 of 109 not asked: only the first 27 and the names its own SPF, MX or delegation backs were (cap)",
    "kind": "dkim",
-   "count": 74,
+   "count": 77,
    "cap": 27
   },
   {
    "asked": "DKIM selectors at email.casper.com",
-   "happened": "76 of 106 not asked: only the first 27 and the names its own SPF, MX or delegation backs were (cap)",
-   "kind": "dkim",
-   "count": 76,
-   "cap": 27
-  },
-  {
-   "asked": "DKIM selectors at mail.casper.com",
-   "happened": "78 of 106 not asked: only the first 27 and the names its own SPF, MX or delegation backs were (cap)",
-   "kind": "dkim",
-   "count": 78,
-   "cap": 27
-  },
-  {
-   "asked": "DKIM selectors at orders.casper.com",
-   "happened": "79 of 106 not asked: only the first 27 and the names its own SPF, MX or delegation backs were (cap)",
+   "happened": "79 of 109 not asked: only the first 27 and the names its own SPF, MX or delegation backs were (cap)",
    "kind": "dkim",
    "count": 79,
    "cap": 27
   },
   {
-   "asked": "DKIM selectors at t.casper.com",
-   "happened": "74 of 106 not asked: only the first 27 and the names its own SPF, MX or delegation backs were (cap)",
+   "asked": "DKIM selectors at mail.casper.com",
+   "happened": "81 of 109 not asked: only the first 27 and the names its own SPF, MX or delegation backs were (cap)",
    "kind": "dkim",
-   "count": 74,
+   "count": 81,
+   "cap": 27
+  },
+  {
+   "asked": "DKIM selectors at orders.casper.com",
+   "happened": "82 of 109 not asked: only the first 27 and the names its own SPF, MX or delegation backs were (cap)",
+   "kind": "dkim",
+   "count": 82,
+   "cap": 27
+  },
+  {
+   "asked": "DKIM selectors at t.casper.com",
+   "happened": "77 of 109 not asked: only the first 27 and the names its own SPF, MX or delegation backs were (cap)",
+   "kind": "dkim",
+   "count": 77,
    "cap": 27
   }
  ],
@@ -2497,10 +2545,13 @@
     "intercom",
     "s1-ionos",
     "s42582890",
+    "s2-ionos",
     "cka",
     "kl",
     "kl1",
     "kl2",
+    "km1",
+    "km2",
     "k2",
     "k1",
     "k3",
@@ -2592,7 +2643,9 @@
     "fwdkim1",
     "bnc3",
     "bounces.cloud.em",
-    "bounces.cloud2.em"
+    "bounces.cloud2.em",
+    "outbound.intercom",
+    "atlassian-bounces"
    ],
    "pages": [
     "https://api.certspotter.com/v1/issuances?domain=casper.com&include_subdomains=true&expand=dns_names"

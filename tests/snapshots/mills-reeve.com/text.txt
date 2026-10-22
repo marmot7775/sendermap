@@ -1,6 +1,6 @@
 ╭───────────────────────────────────────────────────────────────────────────────╮
 │ mills-reeve.com   5 sending services                                          │
-│ 622 lookups in 0.0 s over Google DNS over HTTPS, checked 2026-10-12 01:24 UTC │
+│ 627 lookups in 0.0 s over Google DNS over HTTPS, checked 2026-10-12 01:24 UTC │
 ╰───────────────────────────────────────────────────────────────────────────────╯
 Mimecast stands in front of the domain's mail as a security gateway, so the mailbox provider is not 
 visible from MX.
@@ -83,13 +83,13 @@ NOT RECOGNISED
     + 11 more
 
 NOT CHECKED
-  DKIM selectors at update.mills-reeve.com: 77 of 106 not asked: only the first 27 and the names its
+  DKIM selectors at update.mills-reeve.com: 80 of 109 not asked: only the first 27 and the names its
   own SPF, MX or delegation backs were (cap)                                                        
-  DKIM selectors at updates.mills-reeve.com: 79 of 106 not asked: only the first 27 and the names   
+  DKIM selectors at updates.mills-reeve.com: 82 of 109 not asked: only the first 27 and the names   
   its own SPF, MX or delegation backs were (cap)                                                    
 
 WHAT WAS ASKED
-  mills-reeve.com: 106 DKIM selectors, 23 CNAME labels, 1 page
+  mills-reeve.com: 109 DKIM selectors, 25 CNAME labels, 1 page
   update.mills-reeve.com: 29 DKIM selectors
   updates.mills-reeve.com: 27 DKIM selectors
 

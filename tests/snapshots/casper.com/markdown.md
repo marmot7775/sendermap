@@ -1,6 +1,6 @@
 # Sendermap: casper.com
 
-14 sending services found from public records checked 2026-10-12 01:25 UTC (721 lookups in 0.0 s over Google DNS over HTTPS).
+14 sending services found from public records checked 2026-10-12 01:25 UTC (726 lookups in 0.0 s over Google DNS over HTTPS).
 
 Google Workspace receives the domain's mail and has a DKIM key in place to sign it. Eleven other services are set up to send as the domain: four marketing (Campaign Monitor, Iterable, Mailchimp, Salesforce Marketing Cloud Engagement), two commerce and apps (Docebo, Q4), four transactional (Mailgun, Mandrill, Postmark, SendGrid), one support and CRM (Salesforce); one more is likely from a DKIM key name alone (Customer.io). One service shows an account and nothing set up to send (Microsoft 365); DMARC reports go to DMARCian. Not checked: the website (turned off), DKIM selectors past the first 27 on five subdomains, and the crt.sh certificate log (read only with --ct).
 
@@ -52,15 +52,15 @@ DMARCian
 
 ## Not checked
 
-- DKIM selectors at e.casper.com: 74 of 106 not asked: only the first 27 and the names its own SPF, MX or delegation backs were (cap)
-- DKIM selectors at email.casper.com: 76 of 106 not asked: only the first 27 and the names its own SPF, MX or delegation backs were (cap)
-- DKIM selectors at mail.casper.com: 78 of 106 not asked: only the first 27 and the names its own SPF, MX or delegation backs were (cap)
-- DKIM selectors at orders.casper.com: 79 of 106 not asked: only the first 27 and the names its own SPF, MX or delegation backs were (cap)
-- DKIM selectors at t.casper.com: 74 of 106 not asked: only the first 27 and the names its own SPF, MX or delegation backs were (cap)
+- DKIM selectors at e.casper.com: 77 of 109 not asked: only the first 27 and the names its own SPF, MX or delegation backs were (cap)
+- DKIM selectors at email.casper.com: 79 of 109 not asked: only the first 27 and the names its own SPF, MX or delegation backs were (cap)
+- DKIM selectors at mail.casper.com: 81 of 109 not asked: only the first 27 and the names its own SPF, MX or delegation backs were (cap)
+- DKIM selectors at orders.casper.com: 82 of 109 not asked: only the first 27 and the names its own SPF, MX or delegation backs were (cap)
+- DKIM selectors at t.casper.com: 77 of 109 not asked: only the first 27 and the names its own SPF, MX or delegation backs were (cap)
 
 ## What was asked
 
-- **casper.com**: 106 DKIM selectors, 23 CNAME labels, 1 page
+- **casper.com**: 109 DKIM selectors, 25 CNAME labels, 1 page
 - **e.casper.com**: 32 DKIM selectors
 - **email.casper.com**: 30 DKIM selectors
 - **mail.casper.com**: 28 DKIM selectors

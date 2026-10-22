@@ -255,13 +255,21 @@
           "value": "track.customer.io"
         }
       ],
-      "checked": "2026-10-09, the vendor's own domains customer.io, customeriomail.com: the scripts and stylesheets the homepage loads; TXT at 184 DKIM selectors; homepage not readable at customeriomail.com. None of the entries here was found. 2026-10-10, the 2,003 domains in data/hunt_domains.txt (tools/hunt_proofs.py): none of the entries left here was found there either.",
+      "checked": "2026-10-09, the vendor's own domains customer.io, customeriomail.com: the scripts and stylesheets the homepage loads; TXT at 184 DKIM selectors; homepage not readable at customeriomail.com. None of the entries here was found. 2026-10-10, the 2,003 domains in data/hunt_domains.txt (tools/hunt_proofs.py): none of the entries left here was found there either. 2026-10-22, the 2,003 domains of data/hunt_domains.txt and 50 more mapped that day, by DoH: no key at cio or customerio.",
       "selectors": [
         {
           "shape": {
             "kind": "fixed",
             "names": [
               "customerio"
+            ]
+          }
+        },
+        {
+          "shape": {
+            "kind": "fixed",
+            "names": [
+              "cio"
             ]
           }
         }
@@ -499,17 +507,7 @@
           "value": "kundenserver.de"
         }
       ],
-      "checked": "2026-10-09, the vendor's own domains ionos.com, ionos.de, kundenserver.de: MX at the apex and 70 labels; TXT at 184 DKIM selectors. None of the entries here was found. 2026-10-10, the 2,003 domains in data/hunt_domains.txt (tools/hunt_proofs.py): none of the entries left here was found there either.",
-      "selectors": [
-        {
-          "shape": {
-            "kind": "fixed",
-            "names": [
-              "s2-ionos"
-            ]
-          }
-        }
-      ]
+      "checked": "2026-10-09, the vendor's own domains ionos.com, ionos.de, kundenserver.de: MX at the apex and 70 labels; TXT at 184 DKIM selectors. None of the entries here was found. 2026-10-10, the 2,003 domains in data/hunt_domains.txt (tools/hunt_proofs.py): none of the entries left here was found there either. 2026-10-22: s2-ionos proven on goodsitesforkids.org and moved."
     },
     "Iterable": {
       "category": "Marketing",
@@ -537,7 +535,7 @@
           "value": "infusionmail.com"
         }
       ],
-      "checked": "2026-10-09, the vendor's own domains keap.com, infusionsoft.com, infusionmail.com: SPF at the apex and 70 labels, with every include and redirect below them. None of the entries here was found. 2026-10-10, the 2,003 domains in data/hunt_domains.txt (tools/hunt_proofs.py): none of the entries left here was found there either."
+      "checked": "2026-10-09, the vendor's own domains keap.com, infusionsoft.com, infusionmail.com: SPF at the apex and 70 labels, with every include and redirect below them. None of the entries here was found. 2026-10-10, the 2,003 domains in data/hunt_domains.txt (tools/hunt_proofs.py): none of the entries left here was found there either. 2026-10-22, the 2,003 domains of data/hunt_domains.txt and 50 more mapped that day, by DoH: no SPF at the apex or eight sending labels includes infusionmail.com."
     },
     "Kit": {
       "category": "Marketing",
@@ -580,29 +578,13 @@
           "value": "static-forms.klaviyo.com"
         }
       ],
-      "checked": "2026-10-09, the vendor's own domains klaviyo.com, klaviyodns.com, klaviyomail.com: SPF at the apex and 70 labels, with every include and redirect below them; the CNAMEs of 184 DKIM selectors; CNAMEs at the bounce labels; CNAMEs at the tracking labels; the scripts and stylesheets the homepage loads; TXT at 184 DKIM selectors; homepage not readable at klaviyodns.com, klaviyomail.com. None of the entries here was found. 2026-10-10, the 2,003 domains in data/hunt_domains.txt (tools/hunt_proofs.py): none of the entries left here was found there either.",
+      "checked": "2026-10-09, the vendor's own domains klaviyo.com, klaviyodns.com, klaviyomail.com: SPF at the apex and 70 labels, with every include and redirect below them; the CNAMEs of 184 DKIM selectors; CNAMEs at the bounce labels; CNAMEs at the tracking labels; the scripts and stylesheets the homepage loads; TXT at 184 DKIM selectors; homepage not readable at klaviyodns.com, klaviyomail.com. None of the entries here was found. 2026-10-10, the 2,003 domains in data/hunt_domains.txt (tools/hunt_proofs.py): none of the entries left here was found there either. 2026-10-22, the 2,003 domains of data/hunt_domains.txt and 50 more mapped that day, by DoH: km1 and km2 proven on target.com and moved; kt1, kt2, ks1 and ks2 were found nowhere.",
       "selectors": [
         {
           "shape": {
             "kind": "fixed",
             "names": [
               "klaviyo"
-            ]
-          }
-        },
-        {
-          "shape": {
-            "kind": "fixed",
-            "names": [
-              "km1"
-            ]
-          }
-        },
-        {
-          "shape": {
-            "kind": "fixed",
-            "names": [
-              "km2"
             ]
           }
         },
@@ -1178,12 +1160,7 @@
     },
     "Wix": {
       "category": "Commerce and apps",
-      "website": [
-        {
-          "value": "static.wixstatic.com"
-        }
-      ],
-      "checked": "2026-10-09, the vendor's own domains wix.com: the scripts and stylesheets the homepage loads; TXT at 184 DKIM selectors. None of the entries here was found. 2026-10-10, the 2,003 domains in data/hunt_domains.txt (tools/hunt_proofs.py): none of the entries left here was found there either.",
+      "checked": "2026-10-09, the vendor's own domains wix.com: the scripts and stylesheets the homepage loads; TXT at 184 DKIM selectors. None of the entries here was found. 2026-10-10, the 2,003 domains in data/hunt_domains.txt (tools/hunt_proofs.py): none of the entries left here was found there either. 2026-10-22, the 2,003 domains of data/hunt_domains.txt and 50 more mapped that day, by DoH: static.wixstatic.com proven on wixstudio.com and moved; the wix selector was not looked for again.",
       "selectors": [
         {
           "shape": {
@@ -1263,7 +1240,7 @@
     },
     "Cheetah Digital": {
       "category": "Marketing",
-      "checked": "2026-10-11, the 2,049 domains of data/hunt_domains.txt plus 75 brands named in the E2 survey or likely customers (tools/hunt_proofs.py), NS asked by hand at every sending name whose SPF or MX names the vendor, and the vendor's documentation: none of chtah.com, cheetahmail.com or chtah.net was found in any SPF, MX, NS or CNAME, including at the US retail, travel and publishing brands added for this search; no customer setup page was readable.",
+      "checked": "2026-10-11, the 2,049 domains of data/hunt_domains.txt plus 75 brands named in the E2 survey or likely customers (tools/hunt_proofs.py), NS asked by hand at every sending name whose SPF or MX names the vendor, and the vendor's documentation: none of chtah.com, cheetahmail.com or chtah.net was found in any SPF, MX, NS or CNAME, including at the US retail, travel and publishing brands added for this search; no customer setup page was readable. 2026-10-22, the 2,003 domains of data/hunt_domains.txt and 50 more mapped that day, by DoH: no SPF or MX at the apex or the common sending labels names chtah.com, chtah.net or cheetahmail.com.",
       "delegation_ns": [
         {
           "value": "chtah.com"
@@ -1389,7 +1366,7 @@
     },
     "Optimizely Campaign": {
       "category": "Marketing",
-      "checked": "2026-10-11, the 2,049 domains of data/hunt_domains.txt plus 75 brands named in the E2 survey or likely customers (tools/hunt_proofs.py), NS asked by hand at every sending name whose SPF or MX names the vendor, and the vendor's documentation: return_path and tracking srv2.de: Optimizely's documentation sets the technical subdomain by A and MX records, not a CNAME, and none was found. The DKIM CNAME is at the selector mailing, which is not in the probe sweep.",
+      "checked": "2026-10-11, the 2,049 domains of data/hunt_domains.txt plus 75 brands named in the E2 survey or likely customers (tools/hunt_proofs.py), NS asked by hand at every sending name whose SPF or MX names the vendor, and the vendor's documentation: return_path and tracking srv2.de: Optimizely's documentation sets the technical subdomain by A and MX records, not a CNAME, and none was found. 2026-10-22: the selector mailing is now a backed only name in vendors.json, asked wherever SPF or MX shows Optimizely Campaign.",
       "return_path": [
         {
           "value": "srv2.de"
@@ -1398,6 +1375,20 @@
       "tracking": [
         {
           "value": "srv2.de"
+        }
+      ]
+    },
+    "Sailthru": {
+      "category": "Marketing",
+      "checked": "2026-10-22, named on the vendor's DNS setup page (products.zetaglobal.com). The 2,003 domains of data/hunt_domains.txt and 50 more, by DoH: no key at sailthru2.",
+      "selectors": [
+        {
+          "shape": {
+            "kind": "fixed",
+            "names": [
+              "sailthru2"
+            ]
+          }
         }
       ]
     }

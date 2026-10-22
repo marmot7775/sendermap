@@ -71,7 +71,9 @@
     "fwdkim1",
     "bnc3",
     "bounces.cloud.em",
-    "bounces.cloud2.em"
+    "bounces.cloud2.em",
+    "outbound.intercom",
+    "atlassian-bounces"
    ],
    "pages": [
     "https://example.com/",

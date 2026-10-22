@@ -1,6 +1,6 @@
 # Sendermap: mills-reeve.com
 
-5 sending services found from public records checked 2026-10-12 01:24 UTC (622 lookups in 0.0 s over Google DNS over HTTPS).
+5 sending services found from public records checked 2026-10-12 01:24 UTC (627 lookups in 0.0 s over Google DNS over HTTPS).
 
 Mimecast stands in front of the domain's mail as a security gateway, so the mailbox provider is not visible from MX. Four other services are set up to send as the domain: one commerce and apps (Docebo), one support and CRM (Freshdesk), one mailbox (Microsoft 365), one transactional (SendGrid). DMARC reports go to Mimecast DMARC Analyzer. Not checked: the website (turned off), DKIM selectors past the first 27 on two subdomains, and the crt.sh certificate log (read only with --ct).
 
@@ -23,7 +23,7 @@ Mimecast stands in front of the domain's mail as a security gateway, so the mail
 | Docebo | Commerce and apps | Configured | SPF: include:docebosaas.com |  |
 | Freshdesk | Support and CRM | Configured | SPF range: ip4:3.120.181.200/29 |  |
 | Microsoft 365 | Mailbox | Configured | SPF: include:spf.protection.outlook.com; Verification token: MS=ms75548982; Autodiscover CNAME: autodiscover.mills-reeve.com | setup incomplete: SPF present, DKIM missing, MX not used (optional, MX at mills-reeve.com), bounce CNAME not needed |
-| SendGrid | Transactional | Configured | DKIM keys: s1, s2 (1024 and 2048 bit, by CNAME) | setup complete: DKIM present, bounce CNAME not used (optional, CNAME at 23 labels under mills-reeve.com), SPF not needed, tracking CNAME not used (optional, CNAME at 23 labels under mills-reeve.com) |
+| SendGrid | Transactional | Configured | DKIM keys: s1, s2 (1024 and 2048 bit, by CNAME) | setup complete: DKIM present, bounce CNAME not used (optional, CNAME at 25 labels under mills-reeve.com), SPF not needed, tracking CNAME not used (optional, CNAME at 25 labels under mills-reeve.com) |
 
 ## Records
 
@@ -93,12 +93,12 @@ Mimecast DMARC Analyzer
 
 ## Not checked
 
-- DKIM selectors at update.mills-reeve.com: 77 of 106 not asked: only the first 27 and the names its own SPF, MX or delegation backs were (cap)
-- DKIM selectors at updates.mills-reeve.com: 79 of 106 not asked: only the first 27 and the names its own SPF, MX or delegation backs were (cap)
+- DKIM selectors at update.mills-reeve.com: 80 of 109 not asked: only the first 27 and the names its own SPF, MX or delegation backs were (cap)
+- DKIM selectors at updates.mills-reeve.com: 82 of 109 not asked: only the first 27 and the names its own SPF, MX or delegation backs were (cap)
 
 ## What was asked
 
-- **mills-reeve.com**: 106 DKIM selectors, 23 CNAME labels, 1 page
+- **mills-reeve.com**: 109 DKIM selectors, 25 CNAME labels, 1 page
 - **update.mills-reeve.com**: 29 DKIM selectors
 - **updates.mills-reeve.com**: 27 DKIM selectors
 
@@ -111,8 +111,8 @@ Mimecast DMARC Analyzer
 
 - **mills-reeve.com**
   - Pages: `https://api.certspotter.com/v1/issuances?domain=mills-reeve.com&include_subdomains=true&expand=dns_names`
-  - CNAME labels: `bounce`, `bounces`, `em`, `email`, `mail`, `send`, `mta`, `rp`, `pm-bounces`, `links`, `link`, `click`, `track`, `tracking`, `url`, `go`, `autodiscover`, `cf-bounce`, `eversrv`, `fwdkim1`, `bnc3`, `bounces.cloud.em`, `bounces.cloud2.em`
-  - DKIM selectors: `selector1`, `selector2`, `acdkim1`, `acdkim2`, `ses`, `aweber_key_a`, `aweber_key_b`, `aweber_key_c`, `brevo`, `brevo1`, `brevo2`, `cm`, `cf2024-1`, `ctct1`, `ctct2`, `krs`, `e2ma-k1`, `e2ma-k2`, `e2ma-k3`, `everlytickey1`, `everlytickey2`, `fm2`, `fm1`, `fm3`, `mesmtp`, `secureserver1`, `secureserver2`, `google`, `gapps`, `gor`, `strong1`, `strong2`, `hs1`, `hs2`, `intercom`, `s1-ionos`, `s42582890`, `cka`, `kl`, `kl1`, `kl2`, `k2`, `k1`, `k3`, `litesrv`, `mg`, `mailgun`, `mg1`, `pdk1`, `pdk2`, `mailjet`, `mailpoet2`, `mailpoet1`, `mandrill`, `mte1`, `mte2`, `marketo`, `mkto`, `mkto1`, `mimecast`, `mimecast20190719`, `pepipost`, `pp1`, `protonmail`, `protonmail2`, `protonmail3`, `resend`, `sailthru`, `salesforce`, `salesforce2`, `salesforce1`, `sf`, `sf1`, `sf2`, `sfdc`, `200608`, `pardot`, `sfmc`, `s1`, `s2`, `smtpapi`, `scph0819`, `sparkpost`, `squarespace`, `zendesk1`, `zendesk2`, `zoho`, `api`, `default`, `dk`, `dkim`, `dkim1`, `dkim2`, `email`, `k`, `key`, `key1`, `key2`, `mail`, `mta`, `mx`, `pm`, `s`, `selector`, `smtp`, `sp`
+  - CNAME labels: `bounce`, `bounces`, `em`, `email`, `mail`, `send`, `mta`, `rp`, `pm-bounces`, `links`, `link`, `click`, `track`, `tracking`, `url`, `go`, `autodiscover`, `cf-bounce`, `eversrv`, `fwdkim1`, `bnc3`, `bounces.cloud.em`, `bounces.cloud2.em`, `outbound.intercom`, `atlassian-bounces`
+  - DKIM selectors: `selector1`, `selector2`, `acdkim1`, `acdkim2`, `ses`, `aweber_key_a`, `aweber_key_b`, `aweber_key_c`, `brevo`, `brevo1`, `brevo2`, `cm`, `cf2024-1`, `ctct1`, `ctct2`, `krs`, `e2ma-k1`, `e2ma-k2`, `e2ma-k3`, `everlytickey1`, `everlytickey2`, `fm2`, `fm1`, `fm3`, `mesmtp`, `secureserver1`, `secureserver2`, `google`, `gapps`, `gor`, `strong1`, `strong2`, `hs1`, `hs2`, `intercom`, `s1-ionos`, `s42582890`, `s2-ionos`, `cka`, `kl`, `kl1`, `kl2`, `km1`, `km2`, `k2`, `k1`, `k3`, `litesrv`, `mg`, `mailgun`, `mg1`, `pdk1`, `pdk2`, `mailjet`, `mailpoet2`, `mailpoet1`, `mandrill`, `mte1`, `mte2`, `marketo`, `mkto`, `mkto1`, `mimecast`, `mimecast20190719`, `pepipost`, `pp1`, `protonmail`, `protonmail2`, `protonmail3`, `resend`, `sailthru`, `salesforce`, `salesforce2`, `salesforce1`, `sf`, `sf1`, `sf2`, `sfdc`, `200608`, `pardot`, `sfmc`, `s1`, `s2`, `smtpapi`, `scph0819`, `sparkpost`, `squarespace`, `zendesk1`, `zendesk2`, `zoho`, `api`, `default`, `dk`, `dkim`, `dkim1`, `dkim2`, `email`, `k`, `key`, `key1`, `key2`, `mail`, `mta`, `mx`, `pm`, `s`, `selector`, `smtp`, `sp`
 - **update.mills-reeve.com**
   - DKIM selectors: `acdkim1`, `acdkim2`, `ses`, `aweber_key_a`, `aweber_key_b`, `aweber_key_c`, `brevo`, `brevo1`, `brevo2`, `cm`, `cf2024-1`, `ctct1`, `ctct2`, `krs`, `e2ma-k1`, `e2ma-k2`, `e2ma-k3`, `everlytickey1`, `everlytickey2`, `fm2`, `fm1`, `fm3`, `mesmtp`, `secureserver1`, `secureserver2`, `google`, `gapps`, `mimecast`, `mimecast20190719`
 - **updates.mills-reeve.com**
