@@ -132,7 +132,11 @@ async def test_a_subdomain_with_no_selectors_has_no_cap_gap(offline: httpx.Async
 
 async def test_json_gains_absences_and_denial(offline: httpx.AsyncClient) -> None:
     result = await map_domain(
-        "acme.test", checked_at=CHECKED, resolver=Zone(), http=offline, use_web=False
+        "acme.test",
+        checked_at=CHECKED,
+        resolver=Zone().exists("acme.test"),
+        http=offline,
+        use_web=False,
     )
     data = json.loads(json.dumps(result.to_dict()))
     (absence,) = data["absences"]
@@ -148,7 +152,11 @@ async def test_json_gains_absences_and_denial(offline: httpx.AsyncClient) -> Non
 
 async def test_text_and_markdown_show_checked_and_not_there(offline: httpx.AsyncClient) -> None:
     result = await map_domain(
-        "acme.test", checked_at=CHECKED, resolver=Zone(), http=offline, use_web=False
+        "acme.test",
+        checked_at=CHECKED,
+        resolver=Zone().exists("acme.test"),
+        http=offline,
+        use_web=False,
     )
     page = markdown.render(result)
     assert "## Checked and not there" in page

@@ -103,6 +103,10 @@ async def map_domain(
         rules = ctx.catalog.rules
         say = progress or _quiet
 
+        if missing := await _no_domain(ctx, started):
+            await say("Done")
+            return with_claimed(missing, claimed, ctx.catalog)
+
         await say("Reading MX, SPF, DMARC and the website")
         async with asyncio.TaskGroup() as tg:
             spf_task = tg.create_task(spf.collect(ctx, domain))
@@ -145,14 +149,8 @@ async def map_domain(
             networks.collect(ctx, domain, tree.ranges),
         )
 
-        picked = discovered.sending[:MAX_SUBDOMAINS]
-        if dropped := len(discovered.sending) - len(picked):
-            happened = (
-                f"{dropped} of {len(discovered.sending)} not checked: only the first "
-                f"{MAX_SUBDOMAINS} in alphabetical order were (cap)"
-            )
-            gap = Gap("sending subdomains", happened, GapKind.SUBDOMAINS, dropped, MAX_SUBDOMAINS)
-            apex += Observed(gaps=(gap,))
+        picked, capped = _capped(discovered.sending)
+        apex += capped
         await say(f"Checking {len(picked)} sending subdomains")
         under = await asyncio.gather(
             *(_subdomain(ctx, rules, name, discovered.delegations) for name in picked)
@@ -204,6 +202,40 @@ async def map_domain(
         result = replace(result, story=story_module.write(result))
         await say("Done")
         return with_claimed(result, claimed, ctx.catalog)
+
+
+def _capped(sending: tuple[str, ...]) -> tuple[tuple[str, ...], Observed]:
+    """The sending subdomains within the cap, and the gap for those past it."""
+    picked = sending[:MAX_SUBDOMAINS]
+    if not (dropped := len(sending) - len(picked)):
+        return picked, Observed()
+    happened = (
+        f"{dropped} of {len(sending)} not checked: only the first {MAX_SUBDOMAINS} in "
+        "alphabetical order were (cap)"
+    )
+    gap = Gap("sending subdomains", happened, GapKind.SUBDOMAINS, dropped, MAX_SUBDOMAINS)
+    return picked, Observed(gaps=(gap,))
+
+
+async def _no_domain(ctx: Context, started: float) -> SenderMap | None:
+    """The map of a domain DNS says does not exist, read from its MX answer, which the MX source
+    reuses from the cache otherwise: its one finding and the story that says so. None for a
+    domain that exists, or when the MX source breaks (the full run then records the gap)."""
+    received = await _guard(mx.collect(ctx, ctx.domain), "MX", GapKind.MX)
+    if not any(f.title == mx.NO_DOMAIN for f in received.findings):
+        return None
+    result = SenderMap(
+        domain=ctx.domain,
+        services=(),
+        run=Run(
+            checked_at=ctx.checked_at,
+            elapsed=round(time.perf_counter() - started, 2),
+            lookups=ctx.dns.count,
+            resolver=ctx.dns.name,
+        ),
+        findings=received.findings,
+    )
+    return replace(result, story=story_module.write(result))
 
 
 async def _subdomain(
