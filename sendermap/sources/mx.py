@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from ..dns import Answer, Status
 from ..model import (
     Claim,
     Evidence,
@@ -19,6 +20,8 @@ from . import Context, negative
 
 # The title of the finding a null MX at the domain raises (RFC 7505).
 NULL_MX = "The domain accepts no mail"
+# The title of the finding a domain that does not exist in DNS raises.
+NO_DOMAIN = "The domain does not exist in DNS"
 
 
 async def collect(ctx: Context, where: str) -> Observed:
@@ -29,6 +32,8 @@ async def collect(ctx: Context, where: str) -> Observed:
         return Observed(gaps=(gap,), reads=(read,))
     if not answer.ok:
         none = Read("mx", where, Outcome.NONE, (negative(answer, ctx.checked_at),))
+        if where == ctx.domain and answer.status is Status.NXDOMAIN and not answer.chain:
+            return Observed(findings=(_no_domain(ctx, answer),), reads=(none,))
         return Observed(reads=(none,))
     claims: list[Claim] = []
     unknowns: list[Unknown] = []
@@ -54,6 +59,16 @@ async def collect(ctx: Context, where: str) -> Observed:
     found = tuple(Evidence(where, "MX", r, ctx.checked_at) for r in answer.records)
     read = Read("mx", where, Outcome.FOUND, found)
     return Observed(tuple(claims), tuple(unknowns), tuple(findings), reads=(read,))
+
+
+def _no_domain(ctx: Context, answer: Answer) -> Finding:
+    return Finding(
+        Severity.WARNING,
+        NO_DOMAIN,
+        f"DNS answers no such name for {ctx.domain}, so no mail can be sent or received as it. "
+        "Check the spelling, or whether the registration has lapsed.",
+        (negative(answer, ctx.checked_at),),
+    )
 
 
 def exchange(record: str) -> str:

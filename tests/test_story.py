@@ -7,10 +7,10 @@ from html import escape
 from pathlib import Path
 
 import pytest
-from conftest import CHECKED
+from conftest import CHECKED, Zone
 from rich.console import Console
 
-from sendermap import catalog, story
+from sendermap import catalog, map_domain, story
 from sendermap.model import (
     Checked,
     Claim,
@@ -407,4 +407,15 @@ def test_an_optional_record_that_is_missing_reads_not_used() -> None:
     assert line(Setup("SendGrid", DOMAIN, items, False)) == (
         "Setup at acme.test: SPF missing (no SPF), "
         "bounce CNAME not used (optional, CNAME at 23 labels under acme.test)."
+    )
+
+
+async def test_a_domain_that_does_not_exist_says_so_first() -> None:
+    result = await map_domain(
+        "gone.example", checked_at=CHECKED, resolver=Zone(), use_web=False, use_subdomains=False
+    )
+    (finding,) = [f for f in result.findings if f.title == "The domain does not exist in DNS"]
+    assert str(finding.evidence[0]) == "gone.example MX no such name"
+    assert result.story.startswith(
+        "gone.example does not exist in DNS, so nothing sends or receives mail as it."
     )
