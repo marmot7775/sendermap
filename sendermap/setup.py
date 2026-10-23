@@ -345,8 +345,9 @@ def _listed(items: Iterable[str]) -> str:
 
 def _findings(service: Service, setups: tuple[Setup, ...], domain: str) -> list[Finding]:
     """What a setup raises. A service known only by account traces raises one note asking
-    whether the account is still used, and nothing about what its setup lacks. Broken items
-    raise nothing new: the key findings already exist."""
+    whether the account is still used, and nothing about what its setup lacks. A service the map
+    holds only as likely raises notes, not warnings: nothing shows it sends, so a record it lacks
+    may not be needed. Broken items raise nothing new: the key findings already exist."""
     if all(c.kind.tier is Tier.ACCOUNT_ONLY for c in service.claims):
         return [
             Finding(
@@ -359,6 +360,7 @@ def _findings(service: Service, setups: tuple[Setup, ...], domain: str) -> list[
             )
         ]
     found: list[Finding] = []
+    likely = service.tier is Tier.LIKELY
     receives = service.category in RECEIVERS
     for setup in setups:
         in_mx = receives and any(
@@ -370,7 +372,7 @@ def _findings(service: Service, setups: tuple[Setup, ...], domain: str) -> list[
             if in_mx and item.record in ("dkim", "spf"):
                 found.append(_receiver(service.name, setup.where, item))
             elif item.need is Need.REQUIRED:
-                found.append(_lacking(service.name, setup.where, item))
+                found.append(_lacking(service.name, setup.where, item, likely=likely))
     return found
 
 
@@ -393,12 +395,15 @@ def _receiver(name: str, where: str, item: SetupItem) -> Finding:
     )
 
 
-def _lacking(name: str, where: str, item: SetupItem) -> Finding:
-    severity = Severity.WARNING if item.record in ("dkim", "spf") else Severity.NOTE
+def _lacking(name: str, where: str, item: SetupItem, *, likely: bool = False) -> Finding:
+    important = item.record in ("dkim", "spf") and not likely
+    detail = f"Its documented setup needs it and the map shows it missing: {item.detail}."
+    if likely:
+        detail += " The map shows this service only as likely, so check it still sends first."
     return Finding(
-        severity,
+        Severity.WARNING if important else Severity.NOTE,
         f"{name} at {where} has no {WORDS[item.record]}",
-        f"Its documented setup needs it and the map shows it missing: {item.detail}.",
+        detail,
         item.evidence,
     )
 
