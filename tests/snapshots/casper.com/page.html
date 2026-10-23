@@ -6,73 +6,17 @@
 <section class="view-section attention">
 <h3 class="section-title">Needs attention</h3>
 <div class="finding warning">
-<h4>The google key at casper.com is 1024-bit</h4>
+<h4>Eight DKIM keys at casper.com are 1024-bit: google, cm, k1, mandrill, salesforce, s2, smtpapi and mx</h4>
 <p>Some receivers already treat 1024-bit RSA keys as weak. Rotate to 2048-bit.</p>
 <details class="records"><summary>Records</summary>
 <ul class="records">
 <li class="ev mono">google._domainkey.casper.com TXT v=DKIM1; k=rsa; p=MIGfMA0GCSqG..., 1024-bit, fp e6d74f2ed99fdbb5</li>
-</ul>
-</details>
-</div>
-<div class="finding warning">
-<h4>The cm key at casper.com is 1024-bit</h4>
-<p>Some receivers already treat 1024-bit RSA keys as weak. Rotate to 2048-bit.</p>
-<details class="records"><summary>Records</summary>
-<ul class="records">
 <li class="ev mono">cm._domainkey.casper.com TXT k=rsa; p=MIGfMA0GCSqG..., 1024-bit, fp 9347c624a5a8cd6f</li>
-</ul>
-</details>
-</div>
-<div class="finding warning">
-<h4>The k1 key at casper.com is 1024-bit</h4>
-<p>Some receivers already treat 1024-bit RSA keys as weak. Rotate to 2048-bit.</p>
-<details class="records"><summary>Records</summary>
-<ul class="records">
 <li class="ev mono">k1._domainkey.casper.com TXT k=rsa; p=MIGfMA0GCSqG..., 1024-bit, fp 53d7bb0466c8346d via dkim.mcsv.net</li>
-</ul>
-</details>
-</div>
-<div class="finding warning">
-<h4>The mandrill key at casper.com is 1024-bit</h4>
-<p>Some receivers already treat 1024-bit RSA keys as weak. Rotate to 2048-bit.</p>
-<details class="records"><summary>Records</summary>
-<ul class="records">
 <li class="ev mono">mandrill._domainkey.casper.com TXT v=DKIM1; k=rsa; p=MIGfMA0GCSqG..., 1024-bit, fp 9cee89b6f986543a</li>
-</ul>
-</details>
-</div>
-<div class="finding warning">
-<h4>The salesforce key at casper.com is 1024-bit</h4>
-<p>Some receivers already treat 1024-bit RSA keys as weak. Rotate to 2048-bit.</p>
-<details class="records"><summary>Records</summary>
-<ul class="records">
 <li class="ev mono">salesforce._domainkey.casper.com TXT v=DKIM1; k=rsa; p=MIGfMA0GCSqG..., 1024-bit, fp 2b895d381a879705</li>
-</ul>
-</details>
-</div>
-<div class="finding warning">
-<h4>The s2 key at casper.com is 1024-bit</h4>
-<p>Some receivers already treat 1024-bit RSA keys as weak. Rotate to 2048-bit.</p>
-<details class="records"><summary>Records</summary>
-<ul class="records">
 <li class="ev mono">s2._domainkey.casper.com TXT k=rsa; t=s (strict); p=MIGfMA0GCSqG..., 1024-bit, fp ea13ef38e66c6769 via s2.domainkey.u895984.wl235.sendgrid.net</li>
-</ul>
-</details>
-</div>
-<div class="finding warning">
-<h4>The smtpapi key at casper.com is 1024-bit</h4>
-<p>Some receivers already treat 1024-bit RSA keys as weak. Rotate to 2048-bit.</p>
-<details class="records"><summary>Records</summary>
-<ul class="records">
 <li class="ev mono">smtpapi._domainkey.casper.com TXT k=rsa; t=s (strict); p=MIGfMA0GCSqG..., 1024-bit, fp 303963420cfee1c6</li>
-</ul>
-</details>
-</div>
-<div class="finding warning">
-<h4>The mx key at casper.com is 1024-bit</h4>
-<p>Some receivers already treat 1024-bit RSA keys as weak. Rotate to 2048-bit.</p>
-<details class="records"><summary>Records</summary>
-<ul class="records">
 <li class="ev mono">mx._domainkey.casper.com TXT v=DKIM1; k=rsa; p=MIGfMA0GCSqG..., 1024-bit, fp 273e0630e2eb6478</li>
 </ul>
 </details>
@@ -476,13 +420,13 @@
 <section class="view-section not-checked">
 <h3 class="section-title">Not checked</h3>
 <ul class="gaps">
-<li><span class="mono">the website</span>: not read: web checks were turned off (--no-web)</li>
-<li><span class="mono">certificate transparency, crt.sh: GET https://crt.sh/?q=%25.casper.com&amp;output=json</span>: not asked: read only with --ct (it also holds expired certificates)</li>
 <li><span class="mono">DKIM selectors at e.casper.com</span>: 74 of 106 not asked: only the first 27 and the names its own SPF, MX or delegation backs were (cap)</li>
 <li><span class="mono">DKIM selectors at email.casper.com</span>: 76 of 106 not asked: only the first 27 and the names its own SPF, MX or delegation backs were (cap)</li>
 <li><span class="mono">DKIM selectors at mail.casper.com</span>: 78 of 106 not asked: only the first 27 and the names its own SPF, MX or delegation backs were (cap)</li>
 <li><span class="mono">DKIM selectors at orders.casper.com</span>: 79 of 106 not asked: only the first 27 and the names its own SPF, MX or delegation backs were (cap)</li>
 <li><span class="mono">DKIM selectors at t.casper.com</span>: 74 of 106 not asked: only the first 27 and the names its own SPF, MX or delegation backs were (cap)</li>
+<li><span class="mono">the website</span>: web checks were turned off (--no-web)</li>
+<li><span class="mono">certificate transparency, crt.sh</span>: read only with --ct (it also holds expired certificates)</li>
 </ul>
 </section>
 <section class="view-section asked">

@@ -17,6 +17,7 @@ from __future__ import annotations
 import asyncio
 import base64
 import hashlib
+import re
 from collections.abc import Iterable, Mapping
 from dataclasses import dataclass
 from datetime import datetime
@@ -195,11 +196,9 @@ async def collect(
         found = next((a for a in answers if _exists(a)), None)
         if found is None:
             happened = (
-                f"{NO_SELECTORS}: {base} does not exist and the zone returns no such name for "
-                f"names that do not exist. The sweep of {len(names)} names was not run for that "
-                f"reason; only the {len(check)} names the domain's MX, SPF and delegations back "
-                "or hint at were asked, as a check on servers that answer no such name for a "
-                "name with names below it (RFC 8020 section 5)"
+                f"{NO_SELECTORS}: {base} does not exist, so the {len(names)}-name sweep was "
+                f"skipped; the {len(check)} names its MX, SPF and delegations point to were "
+                "asked as a check, and none exists (RFC 8020 section 5)"
             )
             evidence = (negative(node, ctx.checked_at), negative(canary, ctx.checked_at))
             absence = Absence(f"DKIM keys at {where}", happened, evidence)
@@ -454,6 +453,10 @@ def _malformed(ctx: Context, where: str, selector: str, answer: Answer) -> Findi
         "leaves it empty.",
         evidence,
     )
+
+
+# The title of a short-key finding, so a view can say several at one name once.
+SHORT_KEY_TITLE = re.compile(r"^The (\S+) key at (\S+) is (\d+)-bit$")
 
 
 def _short_key(selector: str, where: str, bits: int, evidence: Evidence) -> Finding:

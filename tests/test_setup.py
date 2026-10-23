@@ -3,6 +3,7 @@ its evidence, the findings a setup raises, the bounce domain folded into the set
 complete, the views, the loading rules, and that a setup asks DNS nothing more."""
 
 import json
+import re
 from dataclasses import replace
 from pathlib import Path
 from typing import Any
@@ -338,7 +339,7 @@ async def test_every_view_shows_the_setup_in_one_clause(offline: httpx.AsyncClie
     console = Console(record=True, width=400)
     text.render(result, console)
     shown = console.export_text()
-    assert clause in shown and f"{clause} (" not in shown
+    assert re.search(r"Setup +incomplete: DKIM missing *\n", shown)
     (row,) = [r for r in markdown.render(result).splitlines() if r.startswith("| Microsoft 365")]
     assert row.endswith(f"| {clause} |")
     # With evidence, every item, in the words setup.line uses.

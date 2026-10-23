@@ -6,14 +6,7 @@ Google Workspace receives the domain's mail and has a DKIM key in place to sign 
 
 ## Needs attention
 
-- **The google key at casper.com is 1024-bit** (warning). Some receivers already treat 1024-bit RSA keys as weak. Rotate to 2048-bit.
-- **The cm key at casper.com is 1024-bit** (warning). Some receivers already treat 1024-bit RSA keys as weak. Rotate to 2048-bit.
-- **The k1 key at casper.com is 1024-bit** (warning). Some receivers already treat 1024-bit RSA keys as weak. Rotate to 2048-bit.
-- **The mandrill key at casper.com is 1024-bit** (warning). Some receivers already treat 1024-bit RSA keys as weak. Rotate to 2048-bit.
-- **The salesforce key at casper.com is 1024-bit** (warning). Some receivers already treat 1024-bit RSA keys as weak. Rotate to 2048-bit.
-- **The s2 key at casper.com is 1024-bit** (warning). Some receivers already treat 1024-bit RSA keys as weak. Rotate to 2048-bit.
-- **The smtpapi key at casper.com is 1024-bit** (warning). Some receivers already treat 1024-bit RSA keys as weak. Rotate to 2048-bit.
-- **The mx key at casper.com is 1024-bit** (warning). Some receivers already treat 1024-bit RSA keys as weak. Rotate to 2048-bit.
+- **Eight DKIM keys at casper.com are 1024-bit: google, cm, k1, mandrill, salesforce, s2, smtpapi and mx** (warning). Some receivers already treat 1024-bit RSA keys as weak. Rotate to 2048-bit.
 - **Google Workspace at e.casper.com has no SPF** (warning). Its documented setup needs it and the map shows it missing: the record does not authorize _spf.google.com.
 - **Google Workspace at e.casper.com has no DKIM** (warning). Its documented setup needs it and the map shows it missing: no key at google._domainkey, a name that does not exist.
 - **Google Workspace at mail.casper.com has no SPF** (warning). Its documented setup needs it and the map shows it missing: the record does not authorize _spf.google.com.
@@ -59,8 +52,6 @@ DMARCian
 
 ## Not checked
 
-- the website: not read: web checks were turned off (--no-web)
-- certificate transparency, crt.sh: GET https://crt.sh/?q=%25.casper.com&output=json: not asked: read only with --ct (it also holds expired certificates)
 - DKIM selectors at e.casper.com: 74 of 106 not asked: only the first 27 and the names its own SPF, MX or delegation backs were (cap)
 - DKIM selectors at email.casper.com: 76 of 106 not asked: only the first 27 and the names its own SPF, MX or delegation backs were (cap)
 - DKIM selectors at mail.casper.com: 78 of 106 not asked: only the first 27 and the names its own SPF, MX or delegation backs were (cap)
@@ -75,3 +66,8 @@ DMARCian
 - **mail.casper.com**: 28 DKIM selectors
 - **orders.casper.com**: 27 DKIM selectors
 - **t.casper.com**: 32 DKIM selectors
+
+## Not run
+
+- the website: web checks were turned off (--no-web)
+- certificate transparency, crt.sh: read only with --ct (it also holds expired certificates)

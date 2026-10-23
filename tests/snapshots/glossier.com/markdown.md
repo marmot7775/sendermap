@@ -6,8 +6,7 @@ Google Workspace receives the domain's mail and has a DKIM key in place to sign 
 
 ## Needs attention
 
-- **The mandrill key at glossier.com is 1024-bit** (warning). Some receivers already treat 1024-bit RSA keys as weak. Rotate to 2048-bit.
-- **The s2 key at glossier.com is 1024-bit** (warning). Some receivers already treat 1024-bit RSA keys as weak. Rotate to 2048-bit.
+- **Two DKIM keys at glossier.com are 1024-bit: mandrill and s2** (warning). Some receivers already treat 1024-bit RSA keys as weak. Rotate to 2048-bit.
 - **Google Workspace at receipts.glossier.com has no SPF** (warning). Its documented setup needs it and the map shows it missing: 209.85.220.41, one of Google Workspace's addresses, gets softfail at ~all.
 - **Google Workspace at receipts.glossier.com has no DKIM** (warning). Its documented setup needs it and the map shows it missing: no key at google._domainkey, a name with no TXT record; this zone gives that answer for every name that does not exist.
 - **SPF at glossier.com is managed through Valimail** (note). A hosted or macro record can authorize services without naming them, so the services it covers do not show in the record itself.
@@ -38,8 +37,6 @@ Valimail
 
 ## Not checked
 
-- the website: not read: web checks were turned off (--no-web)
-- certificate transparency, crt.sh: GET https://crt.sh/?q=%25.glossier.com&output=json: not asked: read only with --ct (it also holds expired certificates)
 - DKIM selectors at marketing.glossier.com: 79 of 106 not asked: only the first 27 and the names its own SPF, MX or delegation backs were (cap)
 - DKIM selectors at receipts.glossier.com: 79 of 106 not asked: only the first 27 and the names its own SPF, MX or delegation backs were (cap)
 - DKIM selectors at send.glossier.com: 79 of 106 not asked: only the first 27 and the names its own SPF, MX or delegation backs were (cap)
@@ -50,3 +47,8 @@ Valimail
 - **marketing.glossier.com**: 27 DKIM selectors
 - **receipts.glossier.com**: 27 DKIM selectors
 - **send.glossier.com**: 27 DKIM selectors
+
+## Not run
+
+- the website: web checks were turned off (--no-web)
+- certificate transparency, crt.sh: read only with --ct (it also holds expired certificates)
