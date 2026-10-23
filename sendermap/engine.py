@@ -9,6 +9,7 @@ each sending subdomain gets its own smaller scan, ranked by its own MX and SPF.
 from __future__ import annotations
 
 import asyncio
+import re
 import time
 from collections.abc import Awaitable, Callable, Iterable, Mapping, Sequence
 from contextlib import AsyncExitStack
@@ -355,11 +356,28 @@ async def _quiet(_: str) -> None:
     return None
 
 
+# One label of a hostname once IDNA-encoded (RFC 1123 section 2.1), and a top-level domain,
+# which is never all digits, so an IPv4 address is not taken for a domain.
+_LABEL = re.compile(r"^(?!-)[a-z0-9-]{1,63}(?<!-)$")
+_TLD = re.compile(r"^(?=.*[a-z])[a-z0-9-]+$")
+
+
 def clean_domain(text: str) -> str:
-    """Accept a domain however it is pasted: a URL, an address, trailing dots, capitals."""
+    """Accept a domain however it is pasted: a URL, an address, trailing dots, capitals. Refuse
+    an IP address, a wildcard, and anything that is not a hostname."""
     value = text.strip().lower()
     value = value.split("://", 1)[-1].split("/", 1)[0].split("@")[-1].split(":", 1)[0]
     value = value.strip(".").removeprefix("www.")
-    if not value or "." not in value or any(c.isspace() for c in value):
+    try:
+        ascii_name = value.encode("idna").decode("ascii")
+    except UnicodeError:
+        ascii_name = ""
+    labels = ascii_name.split(".")
+    if (
+        len(labels) < 2
+        or len(ascii_name) > 253
+        or not all(_LABEL.match(label) for label in labels)
+        or not _TLD.match(labels[-1])
+    ):
         raise ValueError(f"not a domain: {text!r}")
-    return value.encode("idna").decode("ascii")
+    return ascii_name
