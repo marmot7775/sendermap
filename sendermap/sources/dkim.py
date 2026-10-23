@@ -205,12 +205,7 @@ async def collect(
             return _scan(
                 ctx, where, check, answers, backed=backed, canary=canary, denial=denial
             ) + Observed(absences=(absence,))
-        what = "a key" if any("p" in tags(r) for r in found.records) else "a record"
-        happened = (
-            f"the server answered no such name at {base} but {what} exists at {found.name}, so "
-            "existence could not be read from it"
-        )
-        contradicted = Observed(gaps=(Gap(f"DKIM keys at {where}", happened, GapKind.DKIM, 1),))
+        contradicted = Observed(findings=(_denied_node(ctx, base, node, found),))
     answers = await _ask(ctx, base, names)
     observed = (
         _scan(ctx, where, names, answers, backed=backed, canary=canary, denial=denial)
@@ -225,6 +220,26 @@ async def collect(
         absence = Absence(f"DKIM keys at {where}", happened, (negative(node, ctx.checked_at),))
         observed += Observed(absences=(absence,))
     return observed
+
+
+def _denied_node(ctx: Context, base: str, node: Answer, found: Answer) -> Finding:
+    """The zone says `base` does not exist while a name below it does: an empty non-terminal
+    answered NXDOMAIN, against RFC 8020. Every selector is still asked, so nothing is unchecked,
+    but a resolver that trusts the answer stops there."""
+    what = "a key" if any("p" in tags(r) for r in found.records) else "a record"
+    return Finding(
+        Severity.NOTE,
+        f"DNS says {base} does not exist, but {what} sits under it",
+        f"The domain's DNS servers answer no such name for {base}, yet {found.name} has {what}. "
+        "Under RFC 8020 a no-such-name answer covers every name below it, so a resolver that "
+        "applies the rule can fail to find the domain's DKIM keys. Most resolvers still look "
+        "them up; the fault is in the DNS host and is theirs to fix. Every selector was asked.",
+        (negative(node, ctx.checked_at), *_evidence(ctx, found)),
+    )
+
+
+def _evidence(ctx: Context, answer: Answer) -> tuple[Evidence, ...]:
+    return tuple(Evidence(answer.name, "TXT", r, ctx.checked_at) for r in answer.records)
 
 
 def _denial(canary: Answer) -> Denial:
@@ -444,7 +459,7 @@ def _joined(items: list[str]) -> str:
 
 
 def _malformed(ctx: Context, where: str, selector: str, answer: Answer) -> Finding:
-    evidence = tuple(Evidence(answer.name, "TXT", r, ctx.checked_at) for r in answer.records)
+    evidence = _evidence(ctx, answer)
     return Finding(
         Severity.WARNING,
         f"The {selector} DKIM record at {where} has no p= tag",
