@@ -11,6 +11,8 @@ fails before anything is published.
 
 ## Unreleased
 
+## 0.1.3 (2026-10-23)
+
 - The terminal and Markdown views render one view model (`render/view.py`) and say each thing once: findings come first, each service shows one evidence line per kind ("DKIM keys: selector1, selector2 (both 2048 bit, by CNAME)") and its setup in one clause ("setup complete", or only what is missing), an item a finding names is said in the setup by its state alone, and What was asked gives counts. Full records and the names asked print with `--evidence`, the names in Markdown as a last section, Appendix: names asked. The Markdown senders table gains a Setup column, and its Setups section goes. Allbirds' Markdown view falls from 111 lines to 76.
 - The site renders the same view as the command line. The page's HTML is rendered on the server from the one View (`render/html.py`), every string escaped there, and app.js keeps only the form, the stream, the ring map and the buttons, so the page holds no third copy of the rendering logic and no longer shows the old layout (services before findings, a setup line per record). Each service's records in full and the names asked sit inside details elements. The stream's `map` event now carries `{"map": ..., "html": ...}`, and `GET /api/map.html` returns the fragment with the same limits and cache as `/api/map`.
 - The terminal view is easier to read. Each service is a block: its name and category, then one line per kind of record with the labels in a column, then its setup, coloured by whether it is complete. Wrapped lines keep their indent everywhere, so a long finding, gap or record no longer runs back to the left margin. The story prints one sentence per line.
