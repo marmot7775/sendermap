@@ -19,6 +19,7 @@ fails before anything is published.
 - The absence for a zone with no DKIM selectors says it in one sentence: "_domainkey.bounce.allbirds.com does not exist, so the 27-name sweep was skipped; the 8 names its MX, SPF and delegations point to were asked as a check, and none exists".
 - A subdomain that is a CNAME to the domain or to another sending subdomain is no longer mapped as a sending subdomain of its own. www.github.com, gist.github.com and shop.github.com are aliases of github.com and answer with its SPF and MX, so Microsoft 365 and Google Workspace showed at each with a missing DKIM key there: nine findings for setups no one made. An alias to a name outside the domain still counts, since its records are nowhere else in the map.
 - A zone that answers no such name for `_domainkey.<domain>` while a key sits under it is now a note, not a gap. Every selector is still asked there, so nothing went unchecked, but the story read "one DKIM selector that could not be read". The note says what the DNS host does wrong: under RFC 8020 that answer covers every name below it. functionalmedicinecoaching.org, on Bluehost's nameservers, answers this way.
+- A record that a likely service's setup lacks is a note, not a warning, and says to check the service still sends first. goop.com showed "Cloudflare Email Routing at goop.com has no SPF" as a warning from a DKIM key name alone, while its mail goes to Google.
 
 ## 0.1.2 (2026-10-15)
 
