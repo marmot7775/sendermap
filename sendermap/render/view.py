@@ -13,12 +13,15 @@ from collections.abc import Iterable
 from dataclasses import dataclass
 from datetime import UTC
 
+from .. import story
 from ..model import (
     CertificateEvidence,
     Checked,
     Claim,
     CtStatus,
     Finding,
+    Gap,
+    GapKind,
     Kind,
     Need,
     Reconciled,
@@ -33,6 +36,7 @@ from ..model import (
     Unknown,
 )
 from ..setup import WORDS, words
+from ..sources.dkim import SHORT_KEY_TITLE
 
 __all__ = [
     "CLAIMED_PARTS",
@@ -46,6 +50,7 @@ __all__ = [
     "Head",
     "KindLine",
     "NetworkGroup",
+    "OffView",
     "SenderMap",
     "ServiceView",
     "TierView",
@@ -96,6 +101,8 @@ class Head:
     resolver: str
     checked_at: str
     story: str
+    # The story's sentences, each a line of its own in the terminal view.
+    sentences: tuple[str, ...] = ()
 
     def summary(self) -> str:
         """How the map was made in one sentence, such as "15 sending services found from public
@@ -184,6 +191,15 @@ class GapView:
 
 
 @dataclass(frozen=True, slots=True)
+class OffView:
+    """A check that did not run because it is opt-in or was turned off: what it is, in a few
+    words, and how to run it."""
+
+    check: str
+    how: str
+
+
+@dataclass(frozen=True, slots=True)
 class AskedView:
     """What was asked at one name, counted, and the names in full when evidence is set."""
 
@@ -207,6 +223,7 @@ class View:
     gaps: tuple[GapView, ...]
     asked: tuple[AskedView, ...]
     evidence: bool
+    off: tuple[OffView, ...] = ()
 
 
 def view(result: SenderMap, *, evidence: bool) -> View:
@@ -222,7 +239,7 @@ def view(result: SenderMap, *, evidence: bool) -> View:
             )
     return View(
         head=_head(result),
-        findings=tuple(_finding(f, evidence) for f in _by_severity(result.findings)),
+        findings=tuple(_findings(_by_severity(result.findings), evidence)),
         tiers=tuple(TierView(tier, tuple(services)) for tier, services in tiers.items()),
         reporting=tuple(s.name for s in result.reporting),
         claimed=tuple(
@@ -236,13 +253,22 @@ def view(result: SenderMap, *, evidence: bool) -> View:
         absences=tuple(
             AbsenceView(a.asked, a.happened, tuple(map(str, a.evidence))) for a in result.absences
         ),
-        gaps=tuple(GapView(g.asked, g.happened) for g in result.gaps),
+        gaps=tuple(GapView(g.asked, g.happened) for g in result.gaps if g.kind is not GapKind.OFF),
         asked=tuple(
             AskedView(c.where, asked(c), tuple(asked_in_full(c)) if evidence else ())
             for c in result.checked
         ),
         evidence=evidence,
+        off=tuple(_off(g) for g in result.gaps if g.kind is GapKind.OFF),
     )
+
+
+def _off(gap: Gap) -> OffView:
+    """An opt-in or turned-off check in a few words: the check without the request it would
+    make, and the reason as the source wrote it."""
+    check = gap.asked.split(": GET ", 1)[0]
+    how = gap.happened.removeprefix("not asked: ").removeprefix("not read: ")
+    return OffView(check, how)
 
 
 def _head(result: SenderMap) -> Head:
@@ -255,7 +281,14 @@ def _head(result: SenderMap) -> Head:
         resolver_words(run.resolver),
         run.checked_at.astimezone(UTC).strftime("%Y-%m-%d %H:%M UTC"),
         result.story,
+        _sentences(result),
     )
+
+
+def _sentences(result: SenderMap) -> tuple[str, ...]:
+    """The story's sentences, or the story whole when it is not the one the rules write."""
+    said = story.sentences(result)
+    return tuple(said) if " ".join(said) == result.story else (result.story,)
 
 
 def _by_severity(findings: Iterable[Finding]) -> list[Finding]:
@@ -265,6 +298,46 @@ def _by_severity(findings: Iterable[Finding]) -> list[Finding]:
 def _finding(finding: Finding, evidence: bool) -> FindingView:
     records = tuple(map(str, finding.evidence)) if evidence else ()
     return FindingView(finding.severity.value, finding.title, finding.detail, records)
+
+
+def _findings(findings: list[Finding], evidence: bool) -> list[FindingView]:
+    """Each finding in order, with the short-key findings at one name and of one size said once,
+    where the first of them stood: "Three DKIM keys at goop.com are 1024-bit: s1, s2 and k1"."""
+    groups: dict[tuple[str, str, str], list[tuple[str, Finding]]] = {}
+    order: list[Finding | tuple[str, str, str]] = []
+    for f in findings:
+        match = SHORT_KEY_TITLE.match(f.title)
+        if match is None:
+            order.append(f)
+            continue
+        selector, where, bits = match.groups()
+        key = (where, bits, f.detail)
+        if key not in groups:
+            groups[key] = []
+            order.append(key)
+        groups[key].append((selector, f))
+    shown: list[FindingView] = []
+    for item in order:
+        if isinstance(item, Finding):
+            shown.append(_finding(item, evidence))
+            continue
+        members = groups[item]
+        if len(members) == 1:
+            shown.append(_finding(members[0][1], evidence))
+            continue
+        where, bits, detail = item
+        selectors = _listed(selector for selector, _ in members)
+        title = f"{_count_words(len(members))} DKIM keys at {where} are {bits}-bit: {selectors}"
+        records = tuple(str(e) for _, f in members for e in f.evidence) if evidence else ()
+        shown.append(FindingView(members[0][1].severity.value, title, detail, records))
+    return shown
+
+
+_NUMBERS = ("Zero", "One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine", "Ten")
+
+
+def _count_words(n: int) -> str:
+    return _NUMBERS[n] if n < len(_NUMBERS) else str(n)
 
 
 # ---------------------------------------------------------------- services

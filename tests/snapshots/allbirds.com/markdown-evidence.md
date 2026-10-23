@@ -6,9 +6,8 @@ Microsoft 365 receives the domain's mail and has a DKIM key in place to sign it.
 
 ## Needs attention
 
-- **The k1 key at allbirds.com is 1024-bit** (warning). Some receivers already treat 1024-bit RSA keys as weak. Rotate to 2048-bit.
+- **Two DKIM keys at allbirds.com are 1024-bit: k1 and mandrill** (warning). Some receivers already treat 1024-bit RSA keys as weak. Rotate to 2048-bit.
   - `k1._domainkey.allbirds.com TXT k=rsa; p=MIGfMA0GCSqG..., 1024-bit, fp 53d7bb0466c8346d via dkim.mcsv.net`
-- **The mandrill key at allbirds.com is 1024-bit** (warning). Some receivers already treat 1024-bit RSA keys as weak. Rotate to 2048-bit.
   - `mandrill._domainkey.allbirds.com TXT v=DKIM1; k=rsa; p=MIGfMA0GCSqG..., 1024-bit, fp 9cee89b6f986543a`
 - **Google Workspace at alerts.allbirds.com has no DKIM** (warning). Its documented setup needs it and the map shows it missing: no key at google._domainkey, a name that does not exist.
   - `google._domainkey.alerts.allbirds.com TXT no such name`
@@ -210,10 +209,10 @@ Microsoft 365 receives the domain's mail and has a DKIM key in place to sign it.
 
 - DKIM keys at alerts.allbirds.com: selectors exist but none of the 32 names asked is one
   - `_domainkey.alerts.allbirds.com TXT no record of this type`
-- DKIM keys at bounce.allbirds.com: no selectors exist: _domainkey.bounce.allbirds.com does not exist and the zone returns no such name for names that do not exist. The sweep of 27 names was not run for that reason; only the 8 names the domain's MX, SPF and delegations back or hint at were asked, as a check on servers that answer no such name for a name with names below it (RFC 8020 section 5)
+- DKIM keys at bounce.allbirds.com: no selectors exist: _domainkey.bounce.allbirds.com does not exist, so the 27-name sweep was skipped; the 8 names its MX, SPF and delegations point to were asked as a check, and none exists (RFC 8020 section 5)
   - `_domainkey.bounce.allbirds.com TXT no such name`
   - `sendermap-wildcard-check._domainkey.bounce.allbirds.com TXT no such name`
-- DKIM keys at email.allbirds.com: no selectors exist: _domainkey.email.allbirds.com does not exist and the zone returns no such name for names that do not exist. The sweep of 32 names was not run for that reason; only the 13 names the domain's MX, SPF and delegations back or hint at were asked, as a check on servers that answer no such name for a name with names below it (RFC 8020 section 5)
+- DKIM keys at email.allbirds.com: no selectors exist: _domainkey.email.allbirds.com does not exist, so the 32-name sweep was skipped; the 13 names its MX, SPF and delegations point to were asked as a check, and none exists (RFC 8020 section 5)
   - `_domainkey.email.allbirds.com TXT no such name`
   - `sendermap-wildcard-check._domainkey.email.allbirds.com TXT no such name`
 - DKIM keys at info.allbirds.com: selectors exist but none of the 27 names asked is one
@@ -223,8 +222,6 @@ Microsoft 365 receives the domain's mail and has a DKIM key in place to sign it.
 
 ## Not checked
 
-- the website: not read: web checks were turned off (--no-web)
-- certificate transparency, crt.sh: GET https://crt.sh/?q=%25.allbirds.com&output=json: not asked: read only with --ct (it also holds expired certificates)
 - certificate log names more than 2 labels deep: 34 not asked (cap of 2 labels below the domain)
 - sending subdomains: TXT, MX and NS at apisdk.allbirds.com, community.allbirds.com, dataplane.allbirds.com, jssdk.allbirds.com, rerun.allbirds.com, www.jssdk.allbirds.com: the domain's DNS servers failed to answer (SERVFAIL), so whether they send is not known
 - DKIM selectors at alerts.allbirds.com: 74 of 106 not asked: only the first 27 and the names its own SPF, MX or delegation backs were (cap)
@@ -239,6 +236,11 @@ Microsoft 365 receives the domain's mail and has a DKIM key in place to sign it.
 - **email.allbirds.com**: 13 DKIM selectors
 - **info.allbirds.com**: 27 DKIM selectors
 - **mail.allbirds.com**: 32 DKIM selectors
+
+## Not run
+
+- the website: web checks were turned off (--no-web)
+- certificate transparency, crt.sh: read only with --ct (it also holds expired certificates)
 
 ## Appendix: names asked
 

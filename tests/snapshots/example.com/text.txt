@@ -3,19 +3,18 @@
 │ 208 lookups in 0.0 s over Google DNS over HTTPS, checked 2026-10-12 01:25 UTC │
 ╰───────────────────────────────────────────────────────────────────────────────╯
 No sending service shows in DNS for example.com: a null MX that says it accepts no mail, no sender 
-in SPF, and a wildcard that answers every DKIM name. Not checked: the crt.sh certificate log (read 
-only with --ct).
+in SPF, and a wildcard that answers every DKIM name.
+Not checked: the crt.sh certificate log (read only with --ct).
 
 NEEDS ATTENTION
   ● The domain accepts no mail
-    It publishes a null MX record, which tells senders it receives no email.                        
+    It publishes a null MX record, which tells senders it receives no email.
   ● Every name under _domainkey.example.com answers with a key
     A wildcard record makes every selector look published, so keys there say nothing about which    
     services sign for the domain.                                                                   
 
-NOT CHECKED
-  certificate transparency, crt.sh: GET https://crt.sh/?q=%25.example.com&output=json: not asked: 
-read only with --ct (it also holds expired certificates)
-
 WHAT WAS ASKED
   example.com: 23 CNAME labels, 2 pages
+
+NOT RUN
+  certificate transparency, crt.sh: read only with --ct (it also holds expired certificates)

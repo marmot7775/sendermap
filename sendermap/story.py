@@ -43,8 +43,13 @@ SIGNING = {
 
 def write(result: SenderMap) -> str:
     """The paragraph: the sentences that have something to say, in order."""
-    sentences = (risks, receivers, senders, traces, unchecked)
-    return " ".join(s for build in sentences if (s := build(result)))
+    return " ".join(sentences(result))
+
+
+def sentences(result: SenderMap) -> list[str]:
+    """The paragraph's sentences one by one, for a view that sets each on a line of its own."""
+    builders = (risks, receivers, senders, traces, unchecked)
+    return [s for build in builders if (s := build(result))]
 
 
 def number(n: int) -> str:

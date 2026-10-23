@@ -4367,7 +4367,7 @@
   },
   {
    "asked": "DKIM keys at bounce.allbirds.com",
-   "happened": "no selectors exist: _domainkey.bounce.allbirds.com does not exist and the zone returns no such name for names that do not exist. The sweep of 27 names was not run for that reason; only the 8 names the domain's MX, SPF and delegations back or hint at were asked, as a check on servers that answer no such name for a name with names below it (RFC 8020 section 5)",
+   "happened": "no selectors exist: _domainkey.bounce.allbirds.com does not exist, so the 27-name sweep was skipped; the 8 names its MX, SPF and delegations point to were asked as a check, and none exists (RFC 8020 section 5)",
    "evidence": [
     {
      "name": "_domainkey.bounce.allbirds.com",
@@ -4385,7 +4385,7 @@
   },
   {
    "asked": "DKIM keys at email.allbirds.com",
-   "happened": "no selectors exist: _domainkey.email.allbirds.com does not exist and the zone returns no such name for names that do not exist. The sweep of 32 names was not run for that reason; only the 13 names the domain's MX, SPF and delegations back or hint at were asked, as a check on servers that answer no such name for a name with names below it (RFC 8020 section 5)",
+   "happened": "no selectors exist: _domainkey.email.allbirds.com does not exist, so the 32-name sweep was skipped; the 13 names its MX, SPF and delegations point to were asked as a check, and none exists (RFC 8020 section 5)",
    "evidence": [
     {
      "name": "_domainkey.email.allbirds.com",

@@ -42,8 +42,8 @@ async def test_no_domainkey_in_a_classic_zone_is_an_absence_and_only_the_check_r
     (absence,) = observed.absences
     assert absence.asked == "DKIM keys at example.com"
     assert absence.happened.startswith(
-        "no selectors exist: _domainkey.example.com does not exist and the zone returns no such "
-        "name for names that do not exist. The sweep of 21 names was not run"
+        "no selectors exist: _domainkey.example.com does not exist, so the 21-name sweep was "
+        "skipped"
     )
     assert [str(e) for e in absence.evidence] == [
         "_domainkey.example.com TXT no such name",

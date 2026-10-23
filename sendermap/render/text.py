@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from rich.console import Console, Group
+from rich.console import Console
 from rich.padding import Padding
 from rich.panel import Panel
 from rich.table import Table
@@ -31,16 +31,16 @@ def show(shown: View, console: Console) -> None:
     _findings(shown, console)
     for tier in shown.tiers:
         console.print(Text(f"\n{tier.tier.upper()}", style=_TIER_STYLE[tier.tier]))
-        console.print(_services(tier.services))
+        _services(tier.services, console)
     if shown.reporting:
         _heading("REPORTS GO TO", console, style="bold magenta")
-        console.print(Text(f"  {', '.join(shown.reporting)}"))
+        _line(", ".join(shown.reporting), console, 2)
     if shown.claimed:
         _heading("CLAIMED SENDERS", console)
         for part in shown.claimed:
-            console.print(Text(f"  {part.heading}"))
+            _line(part.heading, console, 2)
             for item in part.items:
-                console.print(Text(f"    {item}", style=_DIM))
+                _line(item, console, 4, _DIM)
     if shown.unknowns:
         _heading("NOT RECOGNISED", console)
         for unknown in shown.unknowns:
@@ -49,21 +49,31 @@ def show(shown: View, console: Console) -> None:
 
 
 def _checks(shown: View, console: Console) -> None:
-    """What the logs, the absences, the gaps and the questions asked say."""
+    """What the logs, the absences, the gaps, the questions asked and the checks not run say."""
     _dim_section("CERTIFICATE TRANSPARENCY", shown.ct, console)
     if shown.absences:
         _heading("CHECKED AND NOT THERE", console)
         for a in shown.absences:
-            console.print(Text(f"  {a.asked}: {a.happened}"))
+            _line(f"{a.asked}: {a.happened}", console, 2)
             for answer in a.answers:
-                console.print(Text(f"    {answer}", style=_DIM))
+                _line(answer, console, 4, _DIM)
     _dim_section("NOT CHECKED", [f"{g.asked}: {g.happened}" for g in shown.gaps], console)
     if shown.asked:
         _heading("WHAT WAS ASKED", console)
         for record in shown.asked:
-            console.print(Text(f"  {record.where}: {record.counts}", style=_DIM))
+            _line(f"{record.where}: {record.counts}", console, 2, _DIM)
             for heading, names in record.names:
-                console.print(Text(f"    {heading}: {', '.join(names)}", style=_DIM))
+                _line(f"{heading}: {', '.join(names)}", console, 4, _DIM)
+    if shown.off:
+        _heading("NOT RUN", console)
+        for off in shown.off:
+            _line(f"{off.check}: {off.how}", console, 2, _DIM)
+
+
+def _line(text: str | Text, console: Console, indent: int, style: str = "") -> None:
+    """One line at `indent`, wrapped lines kept at the same indent."""
+    body = text if isinstance(text, Text) else Text(text, style=style)
+    console.print(Padding(body, (0, 0, 0, indent), expand=False))
 
 
 def _heading(title: str, console: Console, style: str = "bold") -> None:
@@ -74,7 +84,7 @@ def _dim_section(title: str, lines: tuple[str, ...] | list[str], console: Consol
     if lines:
         _heading(title, console)
         for line in lines:
-            console.print(Text(f"  {line}", style=_DIM))
+            _line(line, console, 2, _DIM)
 
 
 def _head(shown: View, console: Console) -> None:
@@ -87,8 +97,8 @@ def _head(shown: View, console: Console) -> None:
     )
     headline = Text.assemble((head.domain, "bold"), f"   {count}\n", (how, _DIM))
     console.print(Panel(headline, border_style=_DIM, expand=False))
-    if head.story:
-        console.print(Text(head.story))
+    for sentence in head.sentences if head.story else ():
+        console.print(Text(sentence))
 
 
 def _findings(shown: View, console: Console) -> None:
@@ -96,26 +106,47 @@ def _findings(shown: View, console: Console) -> None:
         return
     _heading("NEEDS ATTENTION", console)
     for f in shown.findings:
-        console.print(Text.assemble(("  ● ", _SEVERITY_STYLE[f.severity]), (f.title, "bold")))
-        console.print(Padding(Text(f.detail, style=_DIM), (0, 0, 0, 4)))
+        marker = Text("● ", style=_SEVERITY_STYLE[f.severity])
+        grid = Table.grid()
+        grid.add_column(width=2)
+        grid.add_column()
+        grid.add_row(marker, Text(f.title, style="bold"))
+        console.print(Padding(grid, (0, 0, 0, 2), expand=False))
+        _line(f.detail, console, 4, _DIM)
         for record in f.records:
-            console.print(Padding(Text(record, style=_DIM), (0, 0, 0, 6)))
+            _line(record, console, 6, _DIM)
 
 
-def _services(services: tuple[ServiceView, ...]) -> Table:
-    table = Table.grid(padding=(0, 2))
-    table.add_column(no_wrap=True)
-    table.add_column(style=_DIM, no_wrap=True)
-    table.add_column(overflow="fold")
+def _services(services: tuple[ServiceView, ...], console: Console) -> None:
+    """Each service as a block: its name, category and where, then one line per kind of record,
+    wrapped at the indent it starts at, then its setup."""
+    width = max([len("Setup"), *(len(k.label) for s in services for k in s.kinds)]) + 2
     for service in services:
-        lines = [Text(f"at {service.where}", style=_DIM)] if service.where else []
+        head = Text.assemble((service.name, "bold"), "  ", (service.category, _DIM))
+        if service.where:
+            head.append(f"  at {service.where}", style=_DIM)
+        _line(head, console, 2)
+        rows = Table.grid()
+        rows.add_column(width=width, style=_DIM, no_wrap=True)
+        rows.add_column(overflow="fold")
         for kind in service.kinds:
-            lines.append(Text(str(kind)))
-            lines += [Text(f"  {record}", style=_DIM) for record in kind.records]
+            rows.add_row(kind.label, kind.summary)
+            for record in kind.records:
+                rows.add_row("", Text(record, style=_DIM))
         if service.setup:
-            lines.append(Text(service.setup))
-        table.add_row(Text(f"  {service.name}", style="bold"), service.category, Group(*lines))
-    return table
+            rows.add_row("Setup", _setup(service.setup))
+        console.print(Padding(rows, (0, 0, 0, 4), expand=False))
+
+
+def _setup(clause: str) -> Text:
+    """The setup clause without its leading word, coloured by whether it is complete."""
+    said = clause.removeprefix("setup ")
+    style = "green" if said == "complete" else "yellow"
+    head, _, rest = said.partition(": ")
+    text = Text(head, style=style)
+    if rest:
+        text.append(f": {rest}")
+    return text
 
 
 def _unknown(item: UnknownView, console: Console) -> None:
@@ -123,11 +154,11 @@ def _unknown(item: UnknownView, console: Console) -> None:
     addresses, and the records shown, with how many more there are."""
     where = f"  at {item.where}" if item.where else ""
     if item.grouped:
-        console.print(Text(f"  {item.label}{where}", style=_DIM))
-        console.print(Text(f"    {', '.join(item.values)}", style=_DIM))
+        _line(Text.assemble(item.label, (where, _DIM)), console, 2)
+        _line(", ".join(item.values), console, 4, _DIM)
     else:
-        console.print(Text(f"  {item.label}: {item.values[0]}{where}", style=_DIM))
+        _line(Text.assemble(f"{item.label}: {item.values[0]}", (where, _DIM)), console, 2)
     for record in item.records:
-        console.print(Text(f"    {record}", style=_DIM))
+        _line(record, console, 4, _DIM)
     if item.more:
-        console.print(Text(f"    + {item.more} more", style=_DIM))
+        _line(f"+ {item.more} more", console, 4, _DIM)

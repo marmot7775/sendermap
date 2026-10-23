@@ -3,14 +3,16 @@
 │ 600 lookups in 0.0 s over Google DNS over HTTPS, checked 2026-10-12 01:24 UTC │
 ╰───────────────────────────────────────────────────────────────────────────────╯
 Mimecast stands in front of the domain's mail as a security gateway, so the mailbox provider is not 
-visible from MX. Four other services are set up to send as the domain: one commerce and apps 
-(Docebo), one support and CRM (Freshdesk), one mailbox (Microsoft 365), one transactional 
-(SendGrid). DMARC reports go to Mimecast DMARC Analyzer. Not checked: the website (turned off), DKIM
-selectors past the first 27 on two subdomains, and the crt.sh certificate log (read only with --ct).
+visible from MX.
+Four other services are set up to send as the domain: one commerce and apps (Docebo), one support 
+and CRM (Freshdesk), one mailbox (Microsoft 365), one transactional (SendGrid).
+DMARC reports go to Mimecast DMARC Analyzer.
+Not checked: the website (turned off), DKIM selectors past the first 27 on two subdomains, and the 
+crt.sh certificate log (read only with --ct).
 
 NEEDS ATTENTION
   ● The s2 key at mills-reeve.com is 1024-bit
-    Some receivers already treat 1024-bit RSA keys as weak. Rotate to 2048-bit.                     
+    Some receivers already treat 1024-bit RSA keys as weak. Rotate to 2048-bit.
   ● Microsoft 365 at mills-reeve.com has no DKIM
     Its documented setup needs it and the map shows it missing: no key at selector1._domainkey or   
     selector2._domainkey, names with no TXT record; this zone gives that answer for every name that 
@@ -20,20 +22,24 @@ NEEDS ATTENTION
     server that holds the mailboxes, and MX records do not say which server that is.                
 
 IN USE
-  Mimecast  Security gateway  MX: eu-smtp-inbound-1.mimecast.com, eu-smtp-inbound-2.mimecast.com    
-                              SPF: include:eu._netblocks.mimecast.com,                              
-                              include:_netblocks.mimecast.com at mills-reeve.com and                
-                              update.mills-reeve.com                                                
+  Mimecast  Security gateway
+    MX     eu-smtp-inbound-1.mimecast.com, eu-smtp-inbound-2.mimecast.com                           
+    SPF    include:eu._netblocks.mimecast.com, include:_netblocks.mimecast.com at mills-reeve.com   
+           and update.mills-reeve.com                                                               
 
 CONFIGURED
-  Docebo         Commerce and apps  SPF: include:docebosaas.com                     
-  Freshdesk      Support and CRM    SPF range: ip4:3.120.181.200/29                 
-  Microsoft 365  Mailbox            SPF: include:spf.protection.outlook.com         
-                                    Verification token: MS=ms75548982               
-                                    Autodiscover CNAME: autodiscover.mills-reeve.com
-                                    setup incomplete: DKIM missing                  
-  SendGrid       Transactional      DKIM keys: s1, s2 (1024 and 2048 bit, by CNAME) 
-                                    setup complete                                  
+  Docebo  Commerce and apps
+    SPF                 include:docebosaas.com
+  Freshdesk  Support and CRM
+    SPF range           ip4:3.120.181.200/29
+  Microsoft 365  Mailbox
+    SPF                 include:spf.protection.outlook.com
+    Verification token  MS=ms75548982                     
+    Autodiscover CNAME  autodiscover.mills-reeve.com      
+    Setup               incomplete: DKIM missing          
+  SendGrid  Transactional
+    DKIM keys           s1, s2 (1024 and 2048 bit, by CNAME)
+    Setup               complete                            
 
 REPORTS GO TO
   Mimecast DMARC Analyzer
@@ -69,23 +75,24 @@ NOT RECOGNISED
     updates.mills-reeve.com TXT include:cecollect.com
   mail server: mail.cecollect.com  at updates.mills-reeve.com
     updates.mills-reeve.com MX 10 mail.cecollect.com
-  1 range and 11 addresses in AS2914 (NTT-DATA-2914 - NTT America, Inc., US)  at 
-updates.mills-reeve.com
-    62.73.189.146, 83.231.138.176/28, 62.73.162.65, 62.73.162.66, 62.73.162.67, 62.73.162.68, 
-62.73.162.69, 62.73.162.70, 62.73.162.71, 62.73.162.72, 62.73.162.73, 62.73.162.74
+  1 range and 11 addresses in AS2914 (NTT-DATA-2914 - NTT America, Inc., US)  at                    
+  updates.mills-reeve.com                                                                           
+    62.73.189.146, 83.231.138.176/28, 62.73.162.65, 62.73.162.66, 62.73.162.67, 62.73.162.68,       
+    62.73.162.69, 62.73.162.70, 62.73.162.71, 62.73.162.72, 62.73.162.73, 62.73.162.74              
     cecollect.com TXT ip4:62.73.189.146
     + 11 more
 
 NOT CHECKED
-  the website: not read: web checks were turned off (--no-web)
-  certificate transparency, crt.sh: GET https://crt.sh/?q=%25.mills-reeve.com&output=json: not 
-asked: read only with --ct (it also holds expired certificates)
   DKIM selectors at update.mills-reeve.com: 77 of 106 not asked: only the first 27 and the names its
-own SPF, MX or delegation backs were (cap)
-  DKIM selectors at updates.mills-reeve.com: 79 of 106 not asked: only the first 27 and the names 
-its own SPF, MX or delegation backs were (cap)
+  own SPF, MX or delegation backs were (cap)                                                        
+  DKIM selectors at updates.mills-reeve.com: 79 of 106 not asked: only the first 27 and the names   
+  its own SPF, MX or delegation backs were (cap)                                                    
 
 WHAT WAS ASKED
   mills-reeve.com: 106 DKIM selectors, 23 CNAME labels, 1 page
   update.mills-reeve.com: 29 DKIM selectors
   updates.mills-reeve.com: 27 DKIM selectors
+
+NOT RUN
+  the website: web checks were turned off (--no-web)
+  certificate transparency, crt.sh: read only with --ct (it also holds expired certificates)
