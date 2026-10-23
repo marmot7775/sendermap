@@ -12,6 +12,11 @@ about mail and is not asked about further.
 A zone with a wildcard answers every name: shopify.com and gov.uk give the same SPF at any
 label. So a name no one would publish is asked first, and a candidate whose SPF or MX is the
 same as that name's is the wildcard answering, not a subdomain of its own.
+
+A candidate that is an alias of the domain or of another candidate, as www.github.com is of
+github.com, answers with that name's SPF and MX. Those are already mapped where they are
+published, so the alias is not a sending subdomain: counting it would repeat each service at
+it and report a DKIM key missing there that was never set up.
 """
 
 from __future__ import annotations
@@ -51,7 +56,10 @@ async def discover(ctx: Context, logged: Iterable[str]) -> Found:
     wildcard, *found = await asyncio.gather(
         _asked(ctx, f"{WILDCARD_CHECK}.{ctx.domain}"), *(_asked(ctx, n) for n in candidates)
     )
-    answers = [_sends(ctx, each, wildcard) for each in found]
+    mapped = {ctx.domain, *candidates}
+    answers = [
+        (False, ()) if _alias_of(each, mapped) else _sends(ctx, each, wildcard) for each in found
+    ]
     sending = tuple(
         name for name, (sends, _) in zip(candidates, answers, strict=True) if sends is True
     )
@@ -84,6 +92,12 @@ async def _asked(ctx: Context, name: str) -> Asked:
         ctx.dns.txt(name), ctx.dns.query(name, "MX"), ctx.dns.query(name, "NS")
     )
     return txt, mx, ns
+
+
+def _alias_of(answers: Asked, mapped: set[str]) -> bool:
+    """Whether the name's SPF or MX came through a CNAME to a name that is mapped anyway."""
+    txt, mx, _ = answers
+    return any(a.target in mapped for a in (txt, mx) if a.target)
 
 
 def _sends(ctx: Context, answers: Asked, wildcard: Asked) -> tuple[bool | str, tuple[Claim, ...]]:
