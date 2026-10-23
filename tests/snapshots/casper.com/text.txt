@@ -1,6 +1,6 @@
 ╭───────────────────────────────────────────────────────────────────────────────╮
 │ casper.com   14 sending services                                              │
-│ 726 lookups in 0.0 s over Google DNS over HTTPS, checked 2026-10-12 01:25 UTC │
+│ 728 lookups in 0.0 s over Google DNS over HTTPS, checked 2026-10-12 01:25 UTC │
 ╰───────────────────────────────────────────────────────────────────────────────╯
 Google Workspace receives the domain's mail and has a DKIM key in place to sign it.
 Eleven other services are set up to send as the domain: four marketing (Campaign Monitor, Iterable, 
