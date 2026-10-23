@@ -1,6 +1,6 @@
 ╭───────────────────────────────────────────────────────────────────────────────╮
 │ mills-reeve.com   5 sending services                                          │
-│ 627 lookups in 0.0 s over Google DNS over HTTPS, checked 2026-10-12 01:24 UTC │
+│ 629 lookups in 0.0 s over Google DNS over HTTPS, checked 2026-10-12 01:24 UTC │
 ╰───────────────────────────────────────────────────────────────────────────────╯
 Mimecast stands in front of the domain's mail as a security gateway, so the mailbox provider is not 
 visible from MX.

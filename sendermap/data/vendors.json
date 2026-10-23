@@ -6314,6 +6314,49 @@
         "Oracle Marketing Cloud"
       ]
     },
+    "Listrak": {
+      "spf_includes": [
+        {
+          "value": "esp1.co",
+          "proof": {
+            "domain": "goop.com",
+            "record": "bounce.goop.com",
+            "date": "2026-10-23"
+          }
+        }
+      ],
+      "mx": [
+        {
+          "value": "esp1.co",
+          "proof": {
+            "domain": "goop.com",
+            "record": "bounce.goop.com",
+            "date": "2026-10-23"
+          }
+        }
+      ],
+      "tracking": [
+        {
+          "value": "esp1.co",
+          "proof": {
+            "domain": "goop.com",
+            "record": "email.goop.com",
+            "date": "2026-10-23"
+          }
+        }
+      ],
+      "networks": [
+        {
+          "value": "AS394396",
+          "proof": {
+            "domain": "esp1.co",
+            "record": "bounce.esp1.co",
+            "date": "2026-10-23"
+          }
+        }
+      ],
+      "category": "Marketing"
+    },
     "Epsilon": {
       "spf_includes": [
         {
