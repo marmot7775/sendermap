@@ -138,7 +138,9 @@ async def test_a_crash_in_the_subdomain_search_is_reported_as_a_crash(
         raise KeyError("wordlist")
 
     monkeypatch.setattr(subdomains, "discover", crash)
-    result = await map_domain("acme.test", checked_at=CHECKED, resolver=Zone(), http=offline)
+    result = await map_domain(
+        "acme.test", checked_at=CHECKED, resolver=Zone().exists("acme.test"), http=offline
+    )
     assert asked(result)["sending subdomains"] == "the search crashed: KeyError"
     assert not any("Cert Spotter" in g.asked for g in result.gaps)
 
