@@ -9,7 +9,7 @@ from conftest import CHECKED, Zone, context
 from rich.console import Console
 
 from sendermap import map_domain
-from sendermap.model import Claim, Denial, Evidence, Kind, Observed
+from sendermap.model import Claim, Denial, Evidence, Kind, Observed, Severity
 from sendermap.render import markdown, text
 from sendermap.sources import CANARY, dkim
 
@@ -53,14 +53,17 @@ async def test_no_domainkey_in_a_classic_zone_is_an_absence_and_only_the_check_r
     assert observed.gaps == ()
 
 
-async def test_a_key_the_check_finds_under_a_denied_node_is_a_gap_and_the_full_sweep_runs() -> None:
+async def test_a_key_under_a_denied_node_is_a_note_and_the_full_sweep_runs() -> None:
     zone = Zone(nxdomain={"_domainkey.example.com"}).add("s3._domainkey.example.com", "TXT", KEY)
     observed = await scan(zone)
-    assert observed.absences == ()
-    assert {g.asked: g.happened for g in observed.gaps} == {
-        "DKIM keys at example.com": "the server answered no such name at _domainkey.example.com "
-        "but a key exists at s3._domainkey.example.com, so existence could not be read from it"
-    }
+    assert observed.absences == () and observed.gaps == ()
+    (finding,) = [f for f in observed.findings if "does not exist" in f.title]
+    assert finding.severity is Severity.NOTE
+    assert finding.title == "DNS says _domainkey.example.com does not exist, but a key sits under it"
+    assert [str(e).split(" TXT ")[0] for e in finding.evidence] == [
+        "_domainkey.example.com",
+        "s3._domainkey.example.com",
+    ]
     assert set(asked_under(zone)) == {*NAMES, "hs1"}
     assert [u.value for u in observed.unknowns] == ["s3"]
 

@@ -18,6 +18,7 @@ fails before anything is published.
 - Checks that are opt-in or turned off (crt.sh without `--ct`, `--no-web`, `--no-subdomains`) move out of Not checked into a short Not run section at the end, without the request they would have made. Not checked now holds only questions that were asked and got no usable answer. The story still names them.
 - The absence for a zone with no DKIM selectors says it in one sentence: "_domainkey.bounce.allbirds.com does not exist, so the 27-name sweep was skipped; the 8 names its MX, SPF and delegations point to were asked as a check, and none exists".
 - A subdomain that is a CNAME to the domain or to another sending subdomain is no longer mapped as a sending subdomain of its own. www.github.com, gist.github.com and shop.github.com are aliases of github.com and answer with its SPF and MX, so Microsoft 365 and Google Workspace showed at each with a missing DKIM key there: nine findings for setups no one made. An alias to a name outside the domain still counts, since its records are nowhere else in the map.
+- A zone that answers no such name for `_domainkey.<domain>` while a key sits under it is now a note, not a gap. Every selector is still asked there, so nothing went unchecked, but the story read "one DKIM selector that could not be read". The note says what the DNS host does wrong: under RFC 8020 that answer covers every name below it. functionalmedicinecoaching.org, on Bluehost's nameservers, answers this way.
 
 ## 0.1.2 (2026-10-15)
 
