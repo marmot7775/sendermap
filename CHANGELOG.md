@@ -22,6 +22,7 @@ fails before anything is published.
 - A record that a likely service's setup lacks is a note, not a warning, and says to check the service still sends first. goop.com showed "Cloudflare Email Routing at goop.com has no SPF" as a warning from a DKIM key name alone, while its mail goes to Google.
 - A domain that does not exist in DNS says so: a finding, "The domain does not exist in DNS", and a story that leads with it, instead of "No sending service shows in DNS" as for a real domain with no mail set up.
 - A pasted value is refused unless it is a hostname: an IP address (`192.0.2.1` was mapped as a domain), a wildcard, characters a hostname cannot hold, a label of more than 63 characters or a numeric top-level domain now reads "not a domain" on the command line, the site and the MCP server alike, and a malformed name no longer raises an IDNA error.
+- The MCP tool's text reply lists findings most severe first, with short keys at one name said once, as the other views do. It listed them in the order the sources raised them.
 
 ## 0.1.2 (2026-10-15)
 
