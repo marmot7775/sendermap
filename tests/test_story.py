@@ -419,3 +419,13 @@ async def test_a_domain_that_does_not_exist_says_so_first() -> None:
     assert result.story.startswith(
         "gone.example does not exist in DNS, so nothing sends or receives mail as it."
     )
+
+
+async def test_a_domain_that_does_not_exist_is_asked_nothing_more() -> None:
+    zone = Zone()
+    result = await map_domain("gone.example", checked_at=CHECKED, resolver=zone, use_web=False)
+    assert result.run.lookups == 1 and result.services == () and result.gaps == ()
+    assert (
+        result.story
+        == "gone.example does not exist in DNS, so nothing sends or receives mail as it."
+    )

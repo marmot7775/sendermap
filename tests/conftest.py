@@ -49,6 +49,12 @@ class Zone:
         self.records.setdefault((norm(name), rtype), []).extend(values)
         return self
 
+    def exists(self, *names: str) -> Zone:
+        """Give each name a record no source asks for, so it exists and holds nothing else."""
+        for name in names:
+            self.add(name, "SOA", f"ns.{name} hostmaster.{name} 1 7200 3600 1209600 300")
+        return self
+
     def public(self, *hosts: str) -> Zone:
         """Give each host a public address, so the web guard lets a page there be fetched."""
         for host in hosts:
