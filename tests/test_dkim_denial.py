@@ -59,7 +59,9 @@ async def test_a_key_under_a_denied_node_is_a_note_and_the_full_sweep_runs() -> 
     assert observed.absences == () and observed.gaps == ()
     (finding,) = [f for f in observed.findings if "does not exist" in f.title]
     assert finding.severity is Severity.NOTE
-    assert finding.title == "DNS says _domainkey.example.com does not exist, but a key sits under it"
+    assert finding.title == (
+        "DNS says _domainkey.example.com does not exist, but a key sits under it"
+    )
     assert [str(e).split(" TXT ")[0] for e in finding.evidence] == [
         "_domainkey.example.com",
         "s3._domainkey.example.com",
