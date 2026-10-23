@@ -21,7 +21,7 @@ from fastmcp.exceptions import ToolError
 import sendermap
 from sendermap import catalog, cli, mcp_server
 from sendermap.engine import Progress, map_domain
-from sendermap.model import SenderMap
+from sendermap.model import Finding, Run, SenderMap, Severity
 
 VALIDATOR = Draft202012Validator(sendermap.schema())
 CLAIMED = ["Office 365", "Mailchimp", "Acme Mail"]
@@ -228,3 +228,21 @@ def _sentences(text: str) -> list[str]:
 
 async def _quiet(_: str) -> None:
     return None
+
+
+def test_the_text_block_says_short_keys_at_one_name_once_most_severe_first() -> None:
+    warn = "Some receivers already treat 1024-bit RSA keys as weak. Rotate to 2048-bit."
+    findings = (
+        Finding(Severity.NOTE, "A note", "Said last."),
+        Finding(Severity.WARNING, "The s1 key at mapped.test is 1024-bit", warn),
+        Finding(Severity.WARNING, "The s2 key at mapped.test is 1024-bit", warn),
+        Finding(Severity.RISK, "A risk", "Said first."),
+    )
+    shown = SenderMap("mapped.test", (), Run(CHECKED, 0.0, 0, "fake zone"), findings=findings)
+    lines = mcp_server.text(shown).splitlines()
+    assert lines[2:] == [
+        "Needs attention:",
+        "- A risk (risk). Said first.",
+        f"- Two DKIM keys at mapped.test are 1024-bit: s1 and s2 (warning). {warn}",
+        "- A note (note). Said last.",
+    ]

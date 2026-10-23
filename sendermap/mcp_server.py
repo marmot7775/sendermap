@@ -5,7 +5,7 @@ Two tools, both read only: `sendermap_map` maps a domain and returns the senderm
 structured content, validated against the schema it declares as its output schema;
 `sendermap_vendor` returns one vendor's block from the vendor data. Two resources: the schema
 and the vendor list. The tools build nothing of their own: the map is `map_domain`'s, the story
-is the map's, the claimed sections are `render.claimed_parts`'s.
+is the map's, the findings and the claimed sections are the View's (`render/view.py`).
 """
 
 from __future__ import annotations
@@ -31,6 +31,7 @@ from .engine import Progress, clean_domain, map_domain
 from .model import SenderMap
 from .reconcile import names, with_claimed
 from .render import claimed_parts
+from .render.view import view
 from .sources.ct import default_cache
 
 SCHEMA_URI = "sendermap://schema/sendermap-1.json"
@@ -226,12 +227,13 @@ def structured(result: SenderMap, detail: str) -> dict[str, Any]:
 
 
 def text(result: SenderMap) -> str:
-    """The story, then each finding on one line, then the claimed sections when a list was
-    given: the words the Markdown view uses."""
+    """The story, then each finding on one line, most severe first and short keys at one name
+    said once, then the claimed sections when a list was given: the words the Markdown view
+    uses."""
     lines = [result.story or f"Sendermap: {result.domain}"]
-    if result.findings:
+    if findings := view(result, evidence=False).findings:
         lines += ["", "Needs attention:"]
-        lines += [f"- {f.title} ({f.severity.value}). {f.detail}" for f in result.findings]
+        lines += [f"- {f.title} ({f.severity}). {f.detail}" for f in findings]
     if result.reconciliation:
         lines += ["", "Claimed senders:"]
         for heading, items in claimed_parts(result.reconciliation):
