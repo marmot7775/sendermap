@@ -6,21 +6,14 @@ Google Workspace receives the domain's mail and has a DKIM key in place to sign 
 
 ## Needs attention
 
-- **The google key at casper.com is 1024-bit** (warning). Some receivers already treat 1024-bit RSA keys as weak. Rotate to 2048-bit.
+- **Eight DKIM keys at casper.com are 1024-bit: google, cm, k1, mandrill, salesforce, s2, smtpapi and mx** (warning). Some receivers already treat 1024-bit RSA keys as weak. Rotate to 2048-bit.
   - `google._domainkey.casper.com TXT v=DKIM1; k=rsa; p=MIGfMA0GCSqG..., 1024-bit, fp e6d74f2ed99fdbb5`
-- **The cm key at casper.com is 1024-bit** (warning). Some receivers already treat 1024-bit RSA keys as weak. Rotate to 2048-bit.
   - `cm._domainkey.casper.com TXT k=rsa; p=MIGfMA0GCSqG..., 1024-bit, fp 9347c624a5a8cd6f`
-- **The k1 key at casper.com is 1024-bit** (warning). Some receivers already treat 1024-bit RSA keys as weak. Rotate to 2048-bit.
   - `k1._domainkey.casper.com TXT k=rsa; p=MIGfMA0GCSqG..., 1024-bit, fp 53d7bb0466c8346d via dkim.mcsv.net`
-- **The mandrill key at casper.com is 1024-bit** (warning). Some receivers already treat 1024-bit RSA keys as weak. Rotate to 2048-bit.
   - `mandrill._domainkey.casper.com TXT v=DKIM1; k=rsa; p=MIGfMA0GCSqG..., 1024-bit, fp 9cee89b6f986543a`
-- **The salesforce key at casper.com is 1024-bit** (warning). Some receivers already treat 1024-bit RSA keys as weak. Rotate to 2048-bit.
   - `salesforce._domainkey.casper.com TXT v=DKIM1; k=rsa; p=MIGfMA0GCSqG..., 1024-bit, fp 2b895d381a879705`
-- **The s2 key at casper.com is 1024-bit** (warning). Some receivers already treat 1024-bit RSA keys as weak. Rotate to 2048-bit.
   - `s2._domainkey.casper.com TXT k=rsa; t=s (strict); p=MIGfMA0GCSqG..., 1024-bit, fp ea13ef38e66c6769 via s2.domainkey.u895984.wl235.sendgrid.net`
-- **The smtpapi key at casper.com is 1024-bit** (warning). Some receivers already treat 1024-bit RSA keys as weak. Rotate to 2048-bit.
   - `smtpapi._domainkey.casper.com TXT k=rsa; t=s (strict); p=MIGfMA0GCSqG..., 1024-bit, fp 303963420cfee1c6`
-- **The mx key at casper.com is 1024-bit** (warning). Some receivers already treat 1024-bit RSA keys as weak. Rotate to 2048-bit.
   - `mx._domainkey.casper.com TXT v=DKIM1; k=rsa; p=MIGfMA0GCSqG..., 1024-bit, fp 273e0630e2eb6478`
 - **Google Workspace at e.casper.com has no SPF** (warning). Its documented setup needs it and the map shows it missing: the record does not authorize _spf.google.com.
   - `e.casper.com TXT v=spf1 include:mailgun.org ~all`
@@ -169,8 +162,6 @@ DMARCian
 
 ## Not checked
 
-- the website: not read: web checks were turned off (--no-web)
-- certificate transparency, crt.sh: GET https://crt.sh/?q=%25.casper.com&output=json: not asked: read only with --ct (it also holds expired certificates)
 - DKIM selectors at e.casper.com: 74 of 106 not asked: only the first 27 and the names its own SPF, MX or delegation backs were (cap)
 - DKIM selectors at email.casper.com: 76 of 106 not asked: only the first 27 and the names its own SPF, MX or delegation backs were (cap)
 - DKIM selectors at mail.casper.com: 78 of 106 not asked: only the first 27 and the names its own SPF, MX or delegation backs were (cap)
@@ -185,6 +176,11 @@ DMARCian
 - **mail.casper.com**: 28 DKIM selectors
 - **orders.casper.com**: 27 DKIM selectors
 - **t.casper.com**: 32 DKIM selectors
+
+## Not run
+
+- the website: web checks were turned off (--no-web)
+- certificate transparency, crt.sh: read only with --ct (it also holds expired certificates)
 
 ## Appendix: names asked
 

@@ -2,31 +2,20 @@
 │ casper.com   14 sending services                                              │
 │ 699 lookups in 0.0 s over Google DNS over HTTPS, checked 2026-10-12 01:25 UTC │
 ╰───────────────────────────────────────────────────────────────────────────────╯
-Google Workspace receives the domain's mail and has a DKIM key in place to sign it. Eleven other 
-services are set up to send as the domain: four marketing (Campaign Monitor, Iterable, Mailchimp, 
-Salesforce Marketing Cloud Engagement), two commerce and apps (Docebo, Q4), four transactional 
-(Mailgun, Mandrill, Postmark, SendGrid), one support and CRM (Salesforce); one more is likely from a
-DKIM key name alone (Customer.io). One service shows an account and nothing set up to send 
-(Microsoft 365); DMARC reports go to DMARCian. Not checked: the website (turned off), DKIM selectors
-past the first 27 on five subdomains, and the crt.sh certificate log (read only with --ct).
+Google Workspace receives the domain's mail and has a DKIM key in place to sign it.
+Eleven other services are set up to send as the domain: four marketing (Campaign Monitor, Iterable, 
+Mailchimp, Salesforce Marketing Cloud Engagement), two commerce and apps (Docebo, Q4), four 
+transactional (Mailgun, Mandrill, Postmark, SendGrid), one support and CRM (Salesforce); one more is
+likely from a DKIM key name alone (Customer.io).
+One service shows an account and nothing set up to send (Microsoft 365); DMARC reports go to 
+DMARCian.
+Not checked: the website (turned off), DKIM selectors past the first 27 on five subdomains, and the 
+crt.sh certificate log (read only with --ct).
 
 NEEDS ATTENTION
-  ● The google key at casper.com is 1024-bit
-    Some receivers already treat 1024-bit RSA keys as weak. Rotate to 2048-bit.                     
-  ● The cm key at casper.com is 1024-bit
-    Some receivers already treat 1024-bit RSA keys as weak. Rotate to 2048-bit.                     
-  ● The k1 key at casper.com is 1024-bit
-    Some receivers already treat 1024-bit RSA keys as weak. Rotate to 2048-bit.                     
-  ● The mandrill key at casper.com is 1024-bit
-    Some receivers already treat 1024-bit RSA keys as weak. Rotate to 2048-bit.                     
-  ● The salesforce key at casper.com is 1024-bit
-    Some receivers already treat 1024-bit RSA keys as weak. Rotate to 2048-bit.                     
-  ● The s2 key at casper.com is 1024-bit
-    Some receivers already treat 1024-bit RSA keys as weak. Rotate to 2048-bit.                     
-  ● The smtpapi key at casper.com is 1024-bit
-    Some receivers already treat 1024-bit RSA keys as weak. Rotate to 2048-bit.                     
-  ● The mx key at casper.com is 1024-bit
-    Some receivers already treat 1024-bit RSA keys as weak. Rotate to 2048-bit.                     
+  ● Eight DKIM keys at casper.com are 1024-bit: google, cm, k1, mandrill, salesforce, s2, smtpapi   
+    and mx                                                                                          
+    Some receivers already treat 1024-bit RSA keys as weak. Rotate to 2048-bit.
   ● Google Workspace at e.casper.com has no SPF
     Its documented setup needs it and the map shows it missing: the record does not authorize       
     _spf.google.com.                                                                                
@@ -40,7 +29,7 @@ NEEDS ATTENTION
     Its documented setup needs it and the map shows it missing: no key at google._domainkey, a name 
     that does not exist.                                                                            
   ● Google Workspace at orders.casper.com has no SPF
-    Its documented setup needs it and the map shows it missing: no SPF record.                      
+    Its documented setup needs it and the map shows it missing: no SPF record.
   ● The mte1 key at casper.com and the mte1 key at email.casper.com are the same key
     They publish one public key, fp 402b5aebde0f1c9f, so one private key signs for all of them, and 
     replacing the key at one selector leaves it live at the others.                                 
@@ -53,63 +42,65 @@ NEEDS ATTENTION
     its records.                                                                                    
 
 IN USE
-  Google Workspace  Mailbox  MX: aspmx.l.google.com, alt1.aspmx.l.google.com and 3 more             
-                             SPF: include:_spf.google.com                                           
-                             MX for a subdomain's mail: aspmx.l.google.com, alt1.aspmx.l.google.com 
-                             and 5 more at e.casper.com, mail.casper.com and orders.casper.com      
-                             DKIM keys: google (1024 and 2048 bit, named for it) at casper.com and  
-                             orders.casper.com                                                      
-                             setup incomplete: SPF missing at e.casper.com, mail.casper.com and     
-                             orders.casper.com, DKIM missing at e.casper.com and mail.casper.com    
+  Google Workspace  Mailbox
+    MX                         aspmx.l.google.com, alt1.aspmx.l.google.com and 3 more               
+    SPF                        include:_spf.google.com                                              
+    MX for a subdomain's mail  aspmx.l.google.com, alt1.aspmx.l.google.com and 5 more at            
+                               e.casper.com, mail.casper.com and orders.casper.com                  
+    DKIM keys                  google (1024 and 2048 bit, named for it) at casper.com and           
+                               orders.casper.com                                                    
+    Setup                      incomplete: SPF missing at e.casper.com, mail.casper.com and         
+                               orders.casper.com, DKIM missing at e.casper.com and mail.casper.com  
 
 CONFIGURED
-  Campaign Monitor                       Marketing          SPF: include:_spf.createsend.com        
-                                                            DKIM key: cm (1024 bit, named for it)   
-                                                            setup complete                          
-  Docebo                                 Commerce and apps  SPF: include:docebosaas.com             
-  Iterable                               Marketing          Tracking CNAME: links.casper.com        
-  Mailchimp                              Marketing          DKIM key: k1 (1024 bit, by CNAME)       
-                                                            setup complete                          
-  Mailgun                                Transactional      MX for bounces: mxa.mailgun.org,        
-                                                            mxb.mailgun.org at e.casper.com and     
-                                                            t.casper.com                            
-                                                            SPF: include:mailgun.org at e.casper.com
-                                                            and t.casper.com                        
-                                                            setup complete                          
-  Mandrill                               Transactional      DKIM keys: mte1, mte2 (all 2048 bit, by 
-                                                            CNAME) at casper.com and                
-                                                            email.casper.com                        
-                                                            SPF: include:spf.mandrillapp.com at     
-                                                            email.casper.com                        
-                                                            DKIM key: mandrill (1024 bit, named for 
-                                                            it)                                     
-                                                            setup complete                          
-  Postmark                               Transactional      Bounce CNAME: pm-bounces.casper.com     
-                                                            setup complete                          
-  Q4                                     Commerce and apps  SPF: include:_spf.q4press.com           
-  Salesforce                             Support and CRM    SPF: include:_spf.salesforce.com        
-                                                            DKIM key: salesforce (1024 bit, named   
-                                                            for it)                                 
-  Salesforce Marketing Cloud Engagement  Marketing          at mail.casper.com                      
-                                                            SPF: include:cust-spf.exacttarget.com   
-                                                            Delegated by NS: mail.casper.com        
-  SendGrid                               Transactional      DKIM keys: s1, s2 (1024 and 2048 bit, by
-                                                            CNAME)                                  
-                                                            DKIM key: smtpapi (1024 bit, named for  
-                                                            it)                                     
-                                                            setup complete                          
+  Campaign Monitor  Marketing
+    SPF              include:_spf.createsend.com
+    DKIM key         cm (1024 bit, named for it)
+    Setup            complete                   
+  Docebo  Commerce and apps
+    SPF              include:docebosaas.com
+  Iterable  Marketing
+    Tracking CNAME   links.casper.com
+  Mailchimp  Marketing
+    DKIM key         k1 (1024 bit, by CNAME)
+    Setup            complete               
+  Mailgun  Transactional
+    MX for bounces   mxa.mailgun.org, mxb.mailgun.org at e.casper.com and t.casper.com
+    SPF              include:mailgun.org at e.casper.com and t.casper.com             
+    Setup            complete                                                         
+  Mandrill  Transactional
+    DKIM keys        mte1, mte2 (all 2048 bit, by CNAME) at casper.com and email.casper.com
+    SPF              include:spf.mandrillapp.com at email.casper.com                       
+    DKIM key         mandrill (1024 bit, named for it)                                     
+    Setup            complete                                                              
+  Postmark  Transactional
+    Bounce CNAME     pm-bounces.casper.com
+    Setup            complete             
+  Q4  Commerce and apps
+    SPF              include:_spf.q4press.com
+  Salesforce  Support and CRM
+    SPF              include:_spf.salesforce.com        
+    DKIM key         salesforce (1024 bit, named for it)
+  Salesforce Marketing Cloud Engagement  Marketing  at mail.casper.com
+    SPF              include:cust-spf.exacttarget.com
+    Delegated by NS  mail.casper.com                 
+  SendGrid  Transactional
+    DKIM keys        s1, s2 (1024 and 2048 bit, by CNAME)
+    DKIM key         smtpapi (1024 bit, named for it)    
+    Setup            complete                            
 
 LIKELY
-  Customer.io  Marketing  at e.casper.com                       
-                          DKIM key: krs (2048 bit, named for it)
-                          setup complete                        
+  Customer.io  Marketing  at e.casper.com
+    DKIM key  krs (2048 bit, named for it)
+    Setup     complete                    
 
 ACCOUNT ONLY
-  Microsoft 365  Mailbox  Verification token: MS=ms55520198                                         
-                          setup incomplete: SPF missing (the record does not authorize              
-                          spf.protection.outlook.com), DKIM missing (no key at selector1._domainkey 
-                          or selector2._domainkey, names with no TXT record; this zone gives that   
-                          answer for every name that does not exist)                                
+  Microsoft 365  Mailbox
+    Verification token  MS=ms55520198                                                               
+    Setup               incomplete: SPF missing (the record does not authorize                      
+                        spf.protection.outlook.com), DKIM missing (no key at selector1._domainkey or
+                        selector2._domainkey, names with no TXT record; this zone gives that answer 
+                        for every name that does not exist)                                         
 
 REPORTS GO TO
   DMARCian
@@ -127,19 +118,16 @@ CHECKED AND NOT THERE
     _domainkey.t.casper.com TXT no record of this type
 
 NOT CHECKED
-  the website: not read: web checks were turned off (--no-web)
-  certificate transparency, crt.sh: GET https://crt.sh/?q=%25.casper.com&output=json: not asked: 
-read only with --ct (it also holds expired certificates)
   DKIM selectors at e.casper.com: 74 of 106 not asked: only the first 27 and the names its own SPF, 
-MX or delegation backs were (cap)
-  DKIM selectors at email.casper.com: 76 of 106 not asked: only the first 27 and the names its own 
-SPF, MX or delegation backs were (cap)
-  DKIM selectors at mail.casper.com: 78 of 106 not asked: only the first 27 and the names its own 
-SPF, MX or delegation backs were (cap)
+  MX or delegation backs were (cap)                                                                 
+  DKIM selectors at email.casper.com: 76 of 106 not asked: only the first 27 and the names its own  
+  SPF, MX or delegation backs were (cap)                                                            
+  DKIM selectors at mail.casper.com: 78 of 106 not asked: only the first 27 and the names its own   
+  SPF, MX or delegation backs were (cap)                                                            
   DKIM selectors at orders.casper.com: 79 of 106 not asked: only the first 27 and the names its own 
-SPF, MX or delegation backs were (cap)
+  SPF, MX or delegation backs were (cap)                                                            
   DKIM selectors at t.casper.com: 74 of 106 not asked: only the first 27 and the names its own SPF, 
-MX or delegation backs were (cap)
+  MX or delegation backs were (cap)                                                                 
 
 WHAT WAS ASKED
   casper.com: 106 DKIM selectors, 23 CNAME labels, 1 page
@@ -148,3 +136,7 @@ WHAT WAS ASKED
   mail.casper.com: 28 DKIM selectors
   orders.casper.com: 27 DKIM selectors
   t.casper.com: 32 DKIM selectors
+
+NOT RUN
+  the website: web checks were turned off (--no-web)
+  certificate transparency, crt.sh: read only with --ct (it also holds expired certificates)

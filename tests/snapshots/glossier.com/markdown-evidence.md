@@ -6,9 +6,8 @@ Google Workspace receives the domain's mail and has a DKIM key in place to sign 
 
 ## Needs attention
 
-- **The mandrill key at glossier.com is 1024-bit** (warning). Some receivers already treat 1024-bit RSA keys as weak. Rotate to 2048-bit.
+- **Two DKIM keys at glossier.com are 1024-bit: mandrill and s2** (warning). Some receivers already treat 1024-bit RSA keys as weak. Rotate to 2048-bit.
   - `mandrill._domainkey.glossier.com TXT v=DKIM1; k=rsa; p=MIGfMA0GCSqG..., 1024-bit, fp 9cee89b6f986543a`
-- **The s2 key at glossier.com is 1024-bit** (warning). Some receivers already treat 1024-bit RSA keys as weak. Rotate to 2048-bit.
   - `s2._domainkey.glossier.com TXT k=rsa; t=s (strict); p=MIGfMA0GCSqG..., 1024-bit, fp 493ef754cca287c6 via s2.domainkey.u246655.wl156.sendgrid.net`
 - **Google Workspace at receipts.glossier.com has no SPF** (warning). Its documented setup needs it and the map shows it missing: 209.85.220.41, one of Google Workspace's addresses, gets softfail at ~all.
   - `receipts.glossier.com TXT ~all`
@@ -122,8 +121,6 @@ Valimail
 
 ## Not checked
 
-- the website: not read: web checks were turned off (--no-web)
-- certificate transparency, crt.sh: GET https://crt.sh/?q=%25.glossier.com&output=json: not asked: read only with --ct (it also holds expired certificates)
 - DKIM selectors at marketing.glossier.com: 79 of 106 not asked: only the first 27 and the names its own SPF, MX or delegation backs were (cap)
 - DKIM selectors at receipts.glossier.com: 79 of 106 not asked: only the first 27 and the names its own SPF, MX or delegation backs were (cap)
 - DKIM selectors at send.glossier.com: 79 of 106 not asked: only the first 27 and the names its own SPF, MX or delegation backs were (cap)
@@ -134,6 +131,11 @@ Valimail
 - **marketing.glossier.com**: 27 DKIM selectors
 - **receipts.glossier.com**: 27 DKIM selectors
 - **send.glossier.com**: 27 DKIM selectors
+
+## Not run
+
+- the website: web checks were turned off (--no-web)
+- certificate transparency, crt.sh: read only with --ct (it also holds expired certificates)
 
 ## Appendix: names asked
 

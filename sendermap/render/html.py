@@ -19,6 +19,7 @@ from .view import (
     FindingView,
     GapView,
     Head,
+    OffView,
     SenderMap,
     ServiceView,
     TierView,
@@ -47,7 +48,7 @@ def show(shown: View) -> str:
         _unknowns(shown.unknowns),
         _list("Certificate transparency", "ct", shown.ct),
         _absences(shown.absences),
-        _gaps(shown.gaps),
+        _gaps(shown.gaps, shown.off),
         _asked(shown.asked),
     ]
     return "".join(parts)
@@ -207,10 +208,11 @@ def _absences(absences: tuple[AbsenceView, ...]) -> str:
     return _section("Checked and not there", "absences", body)
 
 
-def _gaps(gaps: tuple[GapView, ...]) -> str:
-    if not gaps:
+def _gaps(gaps: tuple[GapView, ...], off: tuple[OffView, ...]) -> str:
+    if not gaps and not off:
         return ""
     items = [f'<li><span class="mono">{_e(g.asked)}</span>: {_e(g.happened)}</li>' for g in gaps]
+    items += [f'<li><span class="mono">{_e(o.check)}</span>: {_e(o.how)}</li>' for o in off]
     return _section("Not checked", "not-checked", ['<ul class="gaps">', *items, "</ul>"])
 
 

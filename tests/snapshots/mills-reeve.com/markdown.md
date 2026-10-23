@@ -43,8 +43,6 @@ Mimecast DMARC Analyzer
 
 ## Not checked
 
-- the website: not read: web checks were turned off (--no-web)
-- certificate transparency, crt.sh: GET https://crt.sh/?q=%25.mills-reeve.com&output=json: not asked: read only with --ct (it also holds expired certificates)
 - DKIM selectors at update.mills-reeve.com: 77 of 106 not asked: only the first 27 and the names its own SPF, MX or delegation backs were (cap)
 - DKIM selectors at updates.mills-reeve.com: 79 of 106 not asked: only the first 27 and the names its own SPF, MX or delegation backs were (cap)
 
@@ -53,3 +51,8 @@ Mimecast DMARC Analyzer
 - **mills-reeve.com**: 106 DKIM selectors, 23 CNAME labels, 1 page
 - **update.mills-reeve.com**: 29 DKIM selectors
 - **updates.mills-reeve.com**: 27 DKIM selectors
+
+## Not run
+
+- the website: web checks were turned off (--no-web)
+- certificate transparency, crt.sh: read only with --ct (it also holds expired certificates)

@@ -377,7 +377,8 @@ def test_every_view_carries_the_story() -> None:
     console = Console(record=True, width=2000)
     text.render(mapped, console)
     shown = console.export_text().splitlines()
-    assert shown[4] == mapped.story  # under the headline's panel
+    said = story.sentences(mapped)
+    assert len(said) > 1 and shown[4 : 4 + len(said)] == said  # under the panel, one per line
     md = markdown.render(mapped).split("\n")
     assert md[0] == f"# Sendermap: {DOMAIN}" and md[4] == mapped.story  # under the counts
     assert mapped.to_dict()["story"] == mapped.story

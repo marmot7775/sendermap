@@ -48,6 +48,8 @@ def _checks(shown: View) -> list[str]:
     if shown.asked:
         lines += _section("What was asked")
         lines += [f"- **{record.where}**: {record.counts}" for record in shown.asked]
+    if shown.off:
+        lines += [*_section("Not run"), *(f"- {o.check}: {o.how}" for o in shown.off)]
     if any(record.names for record in shown.asked):
         lines += _section("Appendix: names asked")
         for record in shown.asked:
