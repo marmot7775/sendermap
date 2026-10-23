@@ -119,13 +119,31 @@ async def test_mx_and_spf_hints_put_google_and_microsoft_selectors_first(
         ("https://www.example.com/pricing?x=1", "example.com"),
         ("neil@example.com", "example.com"),
         ("bücher.de", "xn--bcher-kva.de"),
+        ("EXAMPLE.COM:443", "example.com"),
+        ("http://user:pw@host.example.com/", "host.example.com"),
+        ("example.xn--p1ai", "example.xn--p1ai"),
     ],
 )
 def test_a_domain_is_accepted_however_it_is_pasted(pasted: str, domain: str) -> None:
     assert clean_domain(pasted) == domain
 
 
-@pytest.mark.parametrize("bad", ["", "localhost", "not a domain"])
+@pytest.mark.parametrize(
+    "bad",
+    [
+        "",
+        "localhost",
+        "not a domain",
+        "192.0.2.1",
+        "http://192.0.2.1/",
+        "*.example.com",
+        "exa!mple.com",
+        "-bad.example.com",
+        "a..b.com",
+        "x" * 64 + ".com",
+        "example.123",
+    ],
+)
 def test_nonsense_is_refused(bad: str) -> None:
     with pytest.raises(ValueError):
         clean_domain(bad)
