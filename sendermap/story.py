@@ -13,7 +13,7 @@ from collections.abc import Callable, Sequence
 
 from .model import Denial, Gap, GapKind, Kind, SenderMap, Service, Severity, State, Tier
 from .sources.ct import CRT_SH
-from .sources.mx import NULL_MX
+from .sources.mx import NO_DOMAIN, NULL_MX
 from .sources.spf_checks import EVALUATION
 
 _NUMBERS = (
@@ -125,6 +125,8 @@ def nothing(result: SenderMap) -> str:
     came back empty, written only when the map records what was asked at the domain. A part
     whose kind has a gap is left to the Not checked sentence. The map keeps no SPF record, only
     what SPF names, so SPF is worded by that."""
+    if any(f.title == NO_DOMAIN for f in result.findings):
+        return f"{result.domain} does not exist in DNS, so nothing sends or receives mail as it."
     here = next((c for c in result.checked if c.where == result.domain), None)
     if here is None:  # nothing shows the domain was asked
         return ""
