@@ -97,7 +97,9 @@ def _page(ctx: Context, url: str) -> tuple[Checked, ...]:
 
 
 def _cut(asked: str, cut: bool, kind: GapKind) -> tuple[Gap, ...]:
-    happened = f"only the first {MAX_BYTES:,} bytes were read (cap); the rest was not"
+    happened = (
+        f"the rest was not read. The first {MAX_BYTES:,} bytes were read (cap {MAX_BYTES:,} bytes)."
+    )
     return (Gap(asked, happened, kind, cap=MAX_BYTES),) if cut else ()
 
 

@@ -57,13 +57,14 @@ Microsoft 365 receives the domain's mail and has a DKIM key in place to sign it.
 
 ## Not checked
 
-- certificate log names more than 2 labels deep: 34 not asked (cap of 2 labels below the domain)
+- certificate log names more than 2 labels deep: 34 not asked. Names up to 2 labels below the domain were asked (cap 2 labels).
 - sending subdomains: TXT, MX and NS at apisdk.allbirds.com, community.allbirds.com, dataplane.allbirds.com, jssdk.allbirds.com, rerun.allbirds.com, www.jssdk.allbirds.com: the domain's DNS servers failed to answer (SERVFAIL), so whether they send is not known
-- DKIM selectors at alerts.allbirds.com: 77 of 109 not asked: only the first 27 and the names its own SPF, MX or delegation backs were (cap)
-- DKIM selectors at info.allbirds.com: 82 of 109 not asked: only the first 27 and the names its own SPF, MX or delegation backs were (cap)
-- DKIM selectors at mail.allbirds.com: 77 of 109 not asked: only the first 27 and the names its own SPF, MX or delegation backs were (cap)
+- DKIM selectors at alerts and mail.allbirds.com: 77 of 109 not asked at each. The first 27 were asked, plus any the name's own SPF, MX or delegation points to (cap 27).
+- DKIM selectors at info.allbirds.com: 82 of 109 not asked. The first 27 were asked, plus any the name's own SPF, MX or delegation points to (cap 27).
 
 ## What was asked
+
+753 lookups at 6 names
 
 - **allbirds.com**: 109 DKIM selectors, 25 CNAME labels, 1 page
 - **alerts.allbirds.com**: 32 DKIM selectors

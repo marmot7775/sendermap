@@ -121,11 +121,11 @@ Valimail
 
 ## Not checked
 
-- DKIM selectors at marketing.glossier.com: 82 of 109 not asked: only the first 27 and the names its own SPF, MX or delegation backs were (cap)
-- DKIM selectors at receipts.glossier.com: 82 of 109 not asked: only the first 27 and the names its own SPF, MX or delegation backs were (cap)
-- DKIM selectors at send.glossier.com: 82 of 109 not asked: only the first 27 and the names its own SPF, MX or delegation backs were (cap)
+- DKIM selectors at marketing, receipts and send.glossier.com: 82 of 109 not asked at each. The first 27 were asked, plus any the name's own SPF, MX or delegation points to (cap 27).
 
 ## What was asked
+
+739 lookups at 4 names
 
 - **glossier.com**: 109 DKIM selectors, 25 CNAME labels, 1 page
 - **marketing.glossier.com**: 27 DKIM selectors

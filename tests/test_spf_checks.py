@@ -173,7 +173,10 @@ async def test_past_the_budget_a_gap_names_the_vendors_left(
     vendors = list(CATALOG.sending_ips)
     (left,) = [g for g in result.gaps if g.cap]
     assert left.asked == f"SPF evaluation at example.test for {', '.join(vendors[16:])}"
-    assert left.happened == "not evaluated: the budget of 10 lookups per map was spent (cap)"
+    assert left.happened == (
+        "not evaluated. Evaluations ran until the budget of 10 lookups per map was spent "
+        "(cap 10 lookups)."
+    )
     assert (left.kind, left.count, left.cap) == (GapKind.SPF, len(vendors) - 16, 10)
 
 

@@ -40,7 +40,10 @@ RANGE_KINDS = frozenset({"IP address in SPF", "IP range in SPF"})
 PUBLISHED = "published ranges: SPF of "
 # How far below a service's own SPF record its published ranges are read.
 MAX_PUBLISHED_DEPTH = 3
-TOO_DEEP = f"includes more than {MAX_PUBLISHED_DEPTH} levels deep not read (cap)"
+TOO_DEEP = (
+    f"includes more than {MAX_PUBLISHED_DEPTH} levels deep not read. Includes up to "
+    f"{MAX_PUBLISHED_DEPTH} levels deep were read (cap {MAX_PUBLISHED_DEPTH} levels)."
+)
 
 Network = ipaddress.IPv4Network | ipaddress.IPv6Network
 # {network: {service: the term in that service's own SPF record that publishes it}}
@@ -93,7 +96,10 @@ async def collect(ctx: Context, where: str, ranges: list[tuple[str, Evidence]]) 
     picked = rest[:MAX_RANGES]
     if dropped := len(rest) - len(picked):
         asked = f"network owners of the IP ranges in SPF at {where}"
-        happened = f"{dropped} of {len(rest)} not looked up: only the first {MAX_RANGES} were (cap)"
+        happened = (
+            f"{dropped} of {len(rest)} not looked up. The first {MAX_RANGES} were looked up "
+            f"(cap {MAX_RANGES})."
+        )
         gaps += (Gap(asked, happened, GapKind.NETWORKS, dropped, MAX_RANGES),)
     owners = await asyncio.gather(*(range_owner(ctx, n) for _, _, n, _ in picked))
     unknowns: list[Unknown] = []

@@ -46,7 +46,7 @@ __all__ = [
     "AskedView",
     "ClaimedPart",
     "FindingView",
-    "GapView",
+    "GapGroup",
     "Head",
     "KindLine",
     "NetworkGroup",
@@ -60,7 +60,9 @@ __all__ = [
     "asked_in_full",
     "claimed_parts",
     "ct_lines",
+    "grouped_gaps",
     "grouped_unknowns",
+    "listed",
     "resolver_words",
     "view",
 ]
@@ -185,9 +187,41 @@ class AbsenceView:
 
 
 @dataclass(frozen=True, slots=True)
-class GapView:
+class GapGroup:
+    """The gaps of one kind, cap and outcome, said once: what was asked without the name, the
+    names it applies to in map order, the outcome, the total count and the cap. `named` is
+    false for a gap with no name of its own, which holds the domain as its one name."""
+
     asked: str
+    names: tuple[str, ...]
     happened: str
+    kind: GapKind
+    count: int
+    cap: int
+    named: bool = True
+
+    def places(self) -> tuple[str, ...]:
+        """The names as a line shows them: those that share a parent lead with their own labels
+        and the last carries the parent, as in "marketing", "receipts", "send.glossier.com"."""
+        if len(self.names) < 2:
+            return self.names
+        parent = _shared_parent(self.names)
+        if not parent:
+            return self.names
+        cut = len(parent) + 1
+        return (*(n[:-cut] for n in self.names[:-1]), self.names[-1])
+
+    def outcome(self) -> str:
+        """What happened, with "at each" after its first sentence when it applies to several
+        names: "82 of 109 not asked at each. The first 27 were asked, ..."."""
+        if len(self.names) < 2:
+            return self.happened
+        first, stop, rest = self.happened.partition(". ")
+        return f"{first} at each{stop}{rest}"
+
+    def __str__(self) -> str:
+        where = f" at {listed(self.places())}" if self.named else ""
+        return f"{self.asked}{where}: {self.outcome()}"
 
 
 @dataclass(frozen=True, slots=True)
@@ -220,10 +254,12 @@ class View:
     unknowns: tuple[UnknownView, ...]
     ct: tuple[str, ...]
     absences: tuple[AbsenceView, ...]
-    gaps: tuple[GapView, ...]
+    gaps: tuple[GapGroup, ...]
     asked: tuple[AskedView, ...]
     evidence: bool
     off: tuple[OffView, ...] = ()
+    # What was asked in all, as one line: "739 lookups at 4 names".
+    asked_total: str = ""
 
 
 def view(result: SenderMap, *, evidence: bool) -> View:
@@ -253,13 +289,14 @@ def view(result: SenderMap, *, evidence: bool) -> View:
         absences=tuple(
             AbsenceView(a.asked, a.happened, tuple(map(str, a.evidence))) for a in result.absences
         ),
-        gaps=tuple(GapView(g.asked, g.happened) for g in result.gaps if g.kind is not GapKind.OFF),
+        gaps=tuple(grouped_gaps(result.gaps, domain)),
         asked=tuple(
             AskedView(c.where, asked(c), tuple(asked_in_full(c)) if evidence else ())
             for c in result.checked
         ),
         evidence=evidence,
         off=tuple(_off(g) for g in result.gaps if g.kind is GapKind.OFF),
+        asked_total=_asked_total(result),
     )
 
 
@@ -326,7 +363,7 @@ def _findings(findings: list[Finding], evidence: bool) -> list[FindingView]:
             shown.append(_finding(members[0][1], evidence))
             continue
         where, bits, detail = item
-        selectors = _listed(selector for selector, _ in members)
+        selectors = listed(selector for selector, _ in members)
         title = f"{_count_words(len(members))} DKIM keys at {where} are {bits}-bit: {selectors}"
         records = tuple(str(e) for _, f in members for e in f.evidence) if evidence else ()
         shown.append(FindingView(members[0][1].severity.value, title, detail, records))
@@ -432,7 +469,7 @@ def _kind_line(kind: Kind, claims: list[Claim], base: str, evidence: bool) -> Ki
         summary += f" ({', '.join(notes)})"
     names = list(dict.fromkeys(c.where for c in claims))
     if names != [base]:
-        summary += f" at {_listed(names)}"
+        summary += f" at {listed(names)}"
     records = tuple(_record(c) for c in claims) if evidence else ()
     shown = one if len({c.evidence for c in claims}) == 1 else several
     return KindLine(shown, summary, records)
@@ -459,7 +496,7 @@ def _bits(claims: list[Claim]) -> str:
     if not distinct:
         return ""
     if len(distinct) > 1:
-        return f"{_listed([str(n) for n in distinct])} bit"
+        return f"{listed([str(n) for n in distinct])} bit"
     prefix = {1: "", 2: "both "}.get(len(sizes), "all ")
     return f"{prefix}{distinct[0]} bit"
 
@@ -510,7 +547,7 @@ def _setup_clause(
     if not said:
         return head
     one_name = {s.where for s in service.setups} == {base}
-    parts = [text if one_name else f"{text} at {_listed(names)}" for text, names in said.items()]
+    parts = [text if one_name else f"{text} at {listed(names)}" for text, names in said.items()]
     return f"{head}: {', '.join(parts)}"
 
 
@@ -561,8 +598,8 @@ class NetworkGroup:
         parts = [f"{ranges} range{'s' if ranges != 1 else ''}"] if ranges else []
         if addresses:
             parts.append(f"{addresses} address{'es' if addresses != 1 else ''}")
-        listed = f"; listed by {self.listed}" if self.listed else ""
-        return f"{' and '.join(parts)} in {self.asn} ({self.name}){listed}"
+        by = f"; listed by {self.listed}" if self.listed else ""
+        return f"{' and '.join(parts)} in {self.asn} ({self.name}){by}"
 
 
 def grouped_unknowns(unknowns: tuple[Unknown, ...]) -> list[Unknown | NetworkGroup]:
@@ -577,8 +614,8 @@ def grouped_unknowns(unknowns: tuple[Unknown, ...]) -> list[Unknown | NetworkGro
         if match is None:
             order.append(u)
             continue
-        cidr, asn, name, listed = match.groups()
-        key = (asn, name, listed or "", u.where)
+        cidr, asn, name, publishers = match.groups()
+        key = (asn, name, publishers or "", u.where)
         if key not in keyed:
             keyed[key] = []
             order.append(key)
@@ -606,6 +643,51 @@ def _unknown(item: Unknown | NetworkGroup, domain: str, evidence: bool) -> Unkno
     return UnknownView(item.heading(), values, where, True, tuple(shown), len(records) - len(shown))
 
 
+# ---------------------------------------------------------------- not checked
+
+# A gap's question that ends at the name it was asked at: "DKIM selectors at send.glossier.com".
+_AT_NAME = re.compile(r"^(.+) at ([A-Za-z0-9_-]+(?:\.[A-Za-z0-9_-]+)+)$")
+
+
+def grouped_gaps(gaps: Iterable[Gap], domain: str) -> list[GapGroup]:
+    """The gaps that are not turned-off checks, one group per question, kind, cap and outcome,
+    where the first of them stood, the names in map order and the counts added up. A gap whose
+    question names no name of its own carries the domain."""
+    groups: dict[tuple[str, str, GapKind, int, bool], list[tuple[str, Gap]]] = {}
+    for gap in gaps:
+        if gap.kind is GapKind.OFF:
+            continue
+        match = _AT_NAME.match(gap.asked)
+        question, name = match.groups() if match else (gap.asked, domain)
+        key = (question, gap.happened, gap.kind, gap.cap, match is not None)
+        groups.setdefault(key, []).append((name, gap))
+    return [
+        GapGroup(
+            question,
+            tuple(dict.fromkeys(name for name, _ in members)),
+            happened,
+            kind,
+            sum(g.count for _, g in members),
+            cap,
+            named,
+        )
+        for (question, happened, kind, cap, named), members in groups.items()
+    ]
+
+
+def _shared_parent(names: Iterable[str]) -> str:
+    """The longest parent of two labels or more that every name sits under, or empty."""
+    split = [n.split(".") for n in names]
+    shared: list[str] = []
+    for labels in zip(*(reversed(s) for s in split), strict=False):
+        if len(set(labels)) != 1:
+            break
+        shared.insert(0, labels[0])
+    while shared and any(len(s) <= len(shared) for s in split):
+        shared.pop(0)
+    return ".".join(shared) if len(shared) >= 2 else ""
+
+
 # ---------------------------------------------------------------- claimed, CT, asked
 
 
@@ -628,6 +710,14 @@ def _reconciled(item: Reconciled, part: str) -> str:
     if [item.service] != list(item.claimed_as) and item.claimed_as:
         line += f" (claimed as {', '.join(f'"{text}"' for text in item.claimed_as)})"
     return line
+
+
+def _asked_total(result: SenderMap) -> str:
+    if not result.checked:
+        return ""
+    lookups, names = result.run.lookups, len(result.checked)
+    plural = ("s" if lookups != 1 else "", "s" if names != 1 else "")
+    return f"{lookups} lookup{plural[0]} at {names} name{plural[1]}"
 
 
 def asked(checked: Checked) -> str:
@@ -686,6 +776,7 @@ def ct_lines(result: SenderMap) -> list[str]:
     return lines
 
 
-def _listed(items: Iterable[str]) -> str:
+def listed(items: Iterable[str]) -> str:
+    """The items as prose: a; a and b; a, b and c."""
     names = list(items)
     return names[0] if len(names) == 1 else f"{', '.join(names[:-1])} and {names[-1]}"

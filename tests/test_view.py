@@ -10,9 +10,9 @@ from pathlib import Path
 import pytest
 from rich.console import Console
 
-from sendermap.model import SenderMap, State
+from sendermap.model import Gap, GapKind, SenderMap, State
 from sendermap.render import markdown, text, view
-from sendermap.render.view import ServiceView, View
+from sendermap.render.view import ServiceView, View, grouped_gaps
 from sendermap.testing import replay
 
 CORPUS = Path(__file__).parent / "corpus"
@@ -148,3 +148,43 @@ def test_the_views_import_nothing_from_the_model() -> None:
         source = (render / module).read_text()
         assert "..model" not in source and "sendermap.model" not in source
         assert "from .view import" in source
+
+
+def _cap(name: str, unasked: int = 82, cap: int = 27) -> Gap:
+    happened = f"{unasked} of 109 not asked. The first {cap} were asked (cap {cap})."
+    return Gap(f"DKIM selectors at {name}", happened, GapKind.DKIM, unasked, cap)
+
+
+def test_gaps_of_one_kind_and_cap_collapse_to_one_group() -> None:
+    names = ("marketing.glossier.com", "receipts.glossier.com", "send.glossier.com")
+    (group,) = grouped_gaps([_cap(n) for n in names], "glossier.com")
+    assert group.names == names and group.count == 246 and group.cap == 27
+    assert str(group) == (
+        "DKIM selectors at marketing, receipts and send.glossier.com: 82 of 109 not asked at "
+        "each. The first 27 were asked (cap 27)."
+    )
+
+
+def test_gaps_with_different_caps_stay_apart() -> None:
+    groups = grouped_gaps([_cap("a.glossier.com"), _cap("b.glossier.com", cap=30)], "glossier.com")
+    assert [g.names for g in groups] == [("a.glossier.com",), ("b.glossier.com",)]
+
+
+def test_names_that_share_no_parent_are_written_in_full() -> None:
+    (group,) = grouped_gaps([_cap("mail.a.com"), _cap("mail.b.com")], "a.com")
+    assert group.places() == ("mail.a.com", "mail.b.com")
+    (group,) = grouped_gaps([_cap("a.com"), _cap("send.a.com")], "a.com")
+    assert group.places() == ("a.com", "send.a.com")
+
+
+def test_a_gap_without_a_name_carries_the_domain() -> None:
+    gap = Gap("sending subdomains", "3 of 8 not checked.", GapKind.SUBDOMAINS, 3, 5)
+    (group,) = grouped_gaps([gap], "glossier.com")
+    assert group.names == ("glossier.com",) and not group.named
+    assert str(group) == "sending subdomains: 3 of 8 not checked."
+
+
+async def test_what_was_asked_leads_with_the_total() -> None:
+    result = await mapped(CORPUS / "glossier.com")
+    shown = view(result, evidence=False)
+    assert shown.asked_total == f"{result.run.lookups} lookups at 4 names"

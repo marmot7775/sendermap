@@ -210,8 +210,8 @@ def _capped(sending: tuple[str, ...]) -> tuple[tuple[str, ...], Observed]:
     if not (dropped := len(sending) - len(picked)):
         return picked, Observed()
     happened = (
-        f"{dropped} of {len(sending)} not checked: only the first {MAX_SUBDOMAINS} in "
-        "alphabetical order were (cap)"
+        f"{dropped} of {len(sending)} not checked. The first {MAX_SUBDOMAINS} in alphabetical "
+        f"order were checked (cap {MAX_SUBDOMAINS})."
     )
     gap = Gap("sending subdomains", happened, GapKind.SUBDOMAINS, dropped, MAX_SUBDOMAINS)
     return picked, Observed(gaps=(gap,))
@@ -254,8 +254,8 @@ async def _subdomain(
     swept = not any(a.happened.startswith(dkim.NO_SELECTORS) for a in keys.absences)
     if swept and (unasked := len(set(order) - set(probed))):
         happened = (
-            f"{unasked} of {len(order)} not asked: only the first {SUBDOMAIN_PROBES} and the "
-            "names its own SPF, MX or delegation backs were (cap)"
+            f"{unasked} of {len(order)} not asked. The first {SUBDOMAIN_PROBES} were asked, plus "
+            f"any the name's own SPF, MX or delegation points to (cap {SUBDOMAIN_PROBES})."
         )
         gap = Gap(f"DKIM selectors at {name}", happened, GapKind.DKIM, unasked, SUBDOMAIN_PROBES)
         budget = Observed(gaps=(gap,))

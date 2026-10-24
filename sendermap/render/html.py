@@ -17,7 +17,7 @@ from .view import (
     AskedView,
     ClaimedPart,
     FindingView,
-    GapView,
+    GapGroup,
     Head,
     OffView,
     SenderMap,
@@ -25,6 +25,7 @@ from .view import (
     TierView,
     UnknownView,
     View,
+    listed,
     view,
 )
 
@@ -49,7 +50,7 @@ def show(shown: View) -> str:
         _list("Certificate transparency", "ct", shown.ct),
         _absences(shown.absences),
         _gaps(shown.gaps, shown.off),
-        _asked(shown.asked),
+        _asked(shown.asked, shown.asked_total),
     ]
     return "".join(parts)
 
@@ -226,29 +227,36 @@ def _absences(absences: tuple[AbsenceView, ...]) -> str:
     return _section("Checked and not there", "absences", body)
 
 
-def _gaps(gaps: tuple[GapView, ...], off: tuple[OffView, ...]) -> str:
+def _gaps(gaps: tuple[GapGroup, ...], off: tuple[OffView, ...]) -> str:
     if not gaps and not off:
         return ""
-    items = [f'<li><span class="mono">{_e(g.asked)}</span>: {_e(g.happened)}</li>' for g in gaps]
+    items = [f"<li>{_gap(g)}</li>" for g in gaps]
     items += [f'<li><span class="mono">{_e(o.check)}</span>: {_e(o.how)}</li>' for o in off]
     return _section("Not checked", "not-checked", ['<ul class="gaps">', *items, "</ul>"])
 
 
-def _asked(asked: tuple[AskedView, ...]) -> str:
-    """What was asked at each name, counted, with every name inside Names asked."""
+def _gap(group: GapGroup) -> str:
+    """One group as a line of prose with only the names in mono."""
+    names = listed(f'<span class="mono">{_e(n)}</span>' for n in group.places())
+    where = f" at {names}" if group.named else ""
+    return f"{_e(group.asked)}{where}: {_e(group.outcome())}"
+
+
+def _asked(asked: tuple[AskedView, ...], total: str) -> str:
+    """What was asked in all, then at each name, counted, with every name inside Names asked."""
     if not asked:
         return ""
     counts = [f'<li><span class="mono">{_e(a.where)}</span>: {_e(a.counts)}</li>' for a in asked]
-    body = ['<ul class="gaps">', *counts, "</ul>"]
+    body = [f'<p class="asked-total">{_e(total)}</p>', '<ul class="gaps">', *counts, "</ul>"]
     names: list[str] = []
     for a in asked:
         if not a.names:
             continue
         names += [f'<h4 class="mono">{_e(a.where)}</h4>', "<ul>"]
-        for heading, listed in a.names:
-            joined = _e(", ".join(listed))
+        for heading, shown in a.names:
+            joined = _e(", ".join(shown))
             names.append(
-                f'<li>{_e(heading)} ({len(listed)}): <span class="mono">{joined}</span></li>'
+                f'<li>{_e(heading)} ({len(shown)}): <span class="mono">{joined}</span></li>'
             )
         names.append("</ul>")
     if names:

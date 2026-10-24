@@ -4068,7 +4068,7 @@
   },
   {
    "asked": "certificate log names more than 2 labels deep",
-   "happened": "34 not asked (cap of 2 labels below the domain)",
+   "happened": "34 not asked. Names up to 2 labels below the domain were asked (cap 2 labels).",
    "kind": "certificate_log",
    "count": 34,
    "cap": 2
@@ -4082,21 +4082,21 @@
   },
   {
    "asked": "DKIM selectors at alerts.allbirds.com",
-   "happened": "77 of 109 not asked: only the first 27 and the names its own SPF, MX or delegation backs were (cap)",
+   "happened": "77 of 109 not asked. The first 27 were asked, plus any the name's own SPF, MX or delegation points to (cap 27).",
    "kind": "dkim",
    "count": 77,
    "cap": 27
   },
   {
    "asked": "DKIM selectors at info.allbirds.com",
-   "happened": "82 of 109 not asked: only the first 27 and the names its own SPF, MX or delegation backs were (cap)",
+   "happened": "82 of 109 not asked. The first 27 were asked, plus any the name's own SPF, MX or delegation points to (cap 27).",
    "kind": "dkim",
    "count": 82,
    "cap": 27
   },
   {
    "asked": "DKIM selectors at mail.allbirds.com",
-   "happened": "77 of 109 not asked: only the first 27 and the names its own SPF, MX or delegation backs were (cap)",
+   "happened": "77 of 109 not asked. The first 27 were asked, plus any the name's own SPF, MX or delegation points to (cap 27).",
    "kind": "dkim",
    "count": 77,
    "cap": 27

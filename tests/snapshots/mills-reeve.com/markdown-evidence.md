@@ -93,10 +93,12 @@ Mimecast DMARC Analyzer
 
 ## Not checked
 
-- DKIM selectors at update.mills-reeve.com: 80 of 109 not asked: only the first 27 and the names its own SPF, MX or delegation backs were (cap)
-- DKIM selectors at updates.mills-reeve.com: 82 of 109 not asked: only the first 27 and the names its own SPF, MX or delegation backs were (cap)
+- DKIM selectors at update.mills-reeve.com: 80 of 109 not asked. The first 27 were asked, plus any the name's own SPF, MX or delegation points to (cap 27).
+- DKIM selectors at updates.mills-reeve.com: 82 of 109 not asked. The first 27 were asked, plus any the name's own SPF, MX or delegation points to (cap 27).
 
 ## What was asked
+
+629 lookups at 3 names
 
 - **mills-reeve.com**: 109 DKIM selectors, 25 CNAME labels, 1 page
 - **update.mills-reeve.com**: 29 DKIM selectors

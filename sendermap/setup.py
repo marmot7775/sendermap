@@ -294,7 +294,7 @@ def _unfound(rule: SetupRule, where: str, question: str, asked: Asked) -> SetupI
     unasked = [s for s in current if s not in reads]
     if unasked and not (absent and absent.happened.startswith(NO_SELECTORS)):
         cap = next((g for g in asked.gaps if g.asked == f"DKIM selectors at {where}"), None)
-        why = f"{cap.asked}: {cap.happened}" if cap else "not asked"
+        why = f"{cap.asked}: {cap.happened.rstrip('.')}" if cap else "not asked"
         return _not_checked(rule, question, f"{_listed(unasked)} not asked ({why})")
     none = [r for r in reads.values() if r]
     evidence = tuple(e for r in none for e in r.evidence)

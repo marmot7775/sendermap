@@ -162,13 +162,14 @@ DMARCian
 
 ## Not checked
 
-- DKIM selectors at e.casper.com: 77 of 109 not asked: only the first 27 and the names its own SPF, MX or delegation backs were (cap)
-- DKIM selectors at email.casper.com: 79 of 109 not asked: only the first 27 and the names its own SPF, MX or delegation backs were (cap)
-- DKIM selectors at mail.casper.com: 81 of 109 not asked: only the first 27 and the names its own SPF, MX or delegation backs were (cap)
-- DKIM selectors at orders.casper.com: 82 of 109 not asked: only the first 27 and the names its own SPF, MX or delegation backs were (cap)
-- DKIM selectors at t.casper.com: 77 of 109 not asked: only the first 27 and the names its own SPF, MX or delegation backs were (cap)
+- DKIM selectors at e and t.casper.com: 77 of 109 not asked at each. The first 27 were asked, plus any the name's own SPF, MX or delegation points to (cap 27).
+- DKIM selectors at email.casper.com: 79 of 109 not asked. The first 27 were asked, plus any the name's own SPF, MX or delegation points to (cap 27).
+- DKIM selectors at mail.casper.com: 81 of 109 not asked. The first 27 were asked, plus any the name's own SPF, MX or delegation points to (cap 27).
+- DKIM selectors at orders.casper.com: 82 of 109 not asked. The first 27 were asked, plus any the name's own SPF, MX or delegation points to (cap 27).
 
 ## What was asked
+
+728 lookups at 6 names
 
 - **casper.com**: 109 DKIM selectors, 25 CNAME labels, 1 page
 - **e.casper.com**: 32 DKIM selectors

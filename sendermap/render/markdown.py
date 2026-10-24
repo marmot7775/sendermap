@@ -44,9 +44,9 @@ def _checks(shown: View) -> list[str]:
             lines.append(f"- {a.asked}: {a.happened}")
             lines += [f"  - `{answer}`" for answer in a.answers]
     if shown.gaps:
-        lines += [*_section("Not checked"), *(f"- {g.asked}: {g.happened}" for g in shown.gaps)]
+        lines += [*_section("Not checked"), *(f"- {g}" for g in shown.gaps)]
     if shown.asked:
-        lines += _section("What was asked")
+        lines += [*_section("What was asked"), shown.asked_total, ""]
         lines += [f"- **{record.where}**: {record.counts}" for record in shown.asked]
     if shown.off:
         lines += [*_section("Not run"), *(f"- {o.check}: {o.how}" for o in shown.off)]
