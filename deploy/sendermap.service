@@ -1,0 +1,42 @@
+[Unit]
+Description=Sendermap website and MCP endpoint (FastAPI)
+After=network.target
+
+[Service]
+Type=simple
+User=marmot7
+WorkingDirectory=/home/marmot7
+Environment="PATH=/home/marmot7/sendermap-venv/bin"
+# Hosts /mcp answers for besides localhost. Any other Host header is refused.
+Environment="SENDERMAP_MCP_HOSTS=sendermap.dev,www.sendermap.dev"
+# One worker: the cache, rate limits and in-flight map live in process
+# memory. nginx terminates TLS and proxies to loopback; only 127.0.0.1 is
+# trusted for forwarded headers. The app turns uvicorn's access log off
+# itself, and the flag keeps it off whatever the app does.
+ExecStart=/home/marmot7/sendermap-venv/bin/uvicorn sendermap.web.app:app --host 127.0.0.1 --port 8001 --proxy-headers --forwarded-allow-ips 127.0.0.1 --no-access-log
+Restart=always
+RestartSec=3
+LimitNOFILE=65535
+TasksMax=512
+
+# Hardening, same set as dns-auditor.service
+NoNewPrivileges=true
+PrivateTmp=true
+PrivateDevices=true
+ProtectSystem=strict
+ProtectHome=read-only
+ProtectKernelTunables=true
+ProtectKernelModules=true
+ProtectControlGroups=true
+RestrictNamespaces=true
+RestrictRealtime=true
+LockPersonality=true
+MemoryDenyWriteExecute=true
+RestrictSUIDSGID=true
+CapabilityBoundingSet=
+AmbientCapabilities=
+SystemCallFilter=@system-service
+SystemCallErrorNumber=EPERM
+
+[Install]
+WantedBy=multi-user.target
