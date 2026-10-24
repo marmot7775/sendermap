@@ -26,6 +26,11 @@ let claimed = "";
 
 document.addEventListener("DOMContentLoaded", () => {
   figure = $("map-wrap");
+  let scale = 0;
+  new ResizeObserver(() => {
+    const now = $("map").getBoundingClientRect().width;
+    if (drawn && now && Math.abs(now - scale) > 1) { scale = now; drawMap(drawn.domain, drawn.senders); }
+  }).observe($("map"));
   $("lookup").addEventListener("submit", (e) => {
     e.preventDefault();
     start($("domain").value);
@@ -105,18 +110,32 @@ function render(map, fragment) {
   let lead = view.querySelector(".lead");
   if (!lead) { lead = document.createElement("div"); lead.className = "lead"; view.prepend(lead); }
   lead.append(figure);
-  drawMap(map.domain, map.services.filter((s) => s.role === "sender"));
   show("result");
+  drawMap(map.domain, map.services.filter((s) => s.role === "sender"));
   $("result").scrollIntoView({ behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" });
 }
 
 // ------------------------------------------------------------------ the map
 
+// The map is drawn in a 720 by 720 box that the page shows at whatever size the column allows,
+// near 340px on a desktop and a phone alike. Text is sized from that scale so none renders under
+// MIN_TEXT pixels, and every label is measured once drawn: one that would leave the box or cover
+// a node or another label is dropped, and the legend and the cards carry it instead.
+const BOX = 720;
+const MIN_TEXT = 11;
+let drawn = null;
+
 function drawMap(domain, senders) {
+  drawn = { domain, senders };
   const svg = $("map");
   svg.replaceChildren();
   svg.setAttribute("aria-label", `Map of ${senders.length} services sending as ${domain}`);
-  const C = 360;
+  const ctm = svg.getScreenCTM();
+  if (!ctm || !ctm.a) return; // not on screen yet: the resize observer draws it once it is
+  const units = (px) => Math.max(px / ctm.a, 1);
+  const text = units(MIN_TEXT);
+  const nodeR = Math.max(17, units(13));
+  const C = BOX / 2;
 
   for (const tier of TIERS) svg.append(el("circle", { class: "ring", cx: C, cy: C, r: tier.radius }));
 
@@ -126,6 +145,7 @@ function drawMap(domain, senders) {
   const gap = groups.length > 1 ? 0.1 : 0;
   let angle = -Math.PI / 2 + gap / 2;
   const nodes = [];
+  const sectors = [];
 
   for (const group of groups) {
     const width = (2 * Math.PI - gap * groups.length) * Math.max(group.items.length, 1.5) / total;
@@ -138,9 +158,7 @@ function drawMap(domain, senders) {
       const edge = angle - gap / 2;
       svg.append(el("line", { class: "divider", x1: C + Math.cos(edge) * 64, y1: C + Math.sin(edge) * 64, x2: C + Math.cos(edge) * 336, y2: C + Math.sin(edge) * 336 }));
     }
-    const mid = angle + width / 2;
-    const lx = C + Math.cos(mid) * 350, ly = C + Math.sin(mid) * 350;
-    svg.append(el("text", { class: "sector-label", x: lx, y: ly + 4, "text-anchor": anchor(mid) }, group.category));
+    sectors.push({ category: group.category, mid: angle + width / 2 });
     angle += width + gap;
   }
 
@@ -148,44 +166,75 @@ function drawMap(domain, senders) {
     svg.append(el("line", { class: "spoke", x1: C, y1: C, x2: C + Math.cos(n.a) * n.r, y2: C + Math.sin(n.a) * n.r }));
   }
   svg.append(el("circle", { class: "core", cx: C, cy: C, r: 50 }));
-  svg.append(el("text", { class: "core-text", x: C, y: C + 5, "text-anchor": "middle" }, shorten(domain, 15)));
+  const core = el("text", { class: "core-text", x: C, y: C + text * 0.35, "text-anchor": "middle", "font-size": text }, domain);
+  svg.append(core);
+  if (core.getComputedTextLength() > 100 - units(8)) core.remove(); // the domain heads the page anyway
 
-  const labels = placeLabels(nodes, C);
-  nodes.forEach((n, i) => {
+  const taken = [];
+  const groupsDrawn = nodes.map((n) => {
     const x = C + Math.cos(n.a) * n.r, y = C + Math.sin(n.a) * n.r;
+    taken.push({ left: x - nodeR, right: x + nodeR, top: y - nodeR, bottom: y + nodeR });
     const g = el("g", { class: "node", tabindex: 0, role: "button", "aria-label": `${n.service.name}, ${n.service.tier}` });
     g.append(el("title", {}, `${n.service.name}: ${n.service.tier}, ${n.service.claims[0].kind}`));
-    g.append(el("circle", { cx: x, cy: y, r: 17, class: `t-${TIER[n.service.tier].key}` }));
-    g.append(el("text", { class: "initials", x, y: y + 4, "text-anchor": "middle" }, initials(n.service.name)));
-    const label = labels[i];
-    g.append(el("text", { class: "name", x: label.x, y: label.y, "text-anchor": label.anchor }, n.service.name));
+    g.append(el("circle", { cx: x, cy: y, r: nodeR, class: `t-${TIER[n.service.tier].key}` }));
+    g.append(el("text", { class: "initials", x, y: y + text * 0.35, "text-anchor": "middle", "font-size": text }, initials(n.service.name)));
     const go = () => focusCard(n.service.name);
     g.addEventListener("click", go);
     g.addEventListener("keydown", (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); go(); } });
     svg.append(g);
+    return g;
   });
+
+  for (const sector of sectors) {
+    const label = el("text", { class: "sector-label", x: C + Math.cos(sector.mid) * 350, y: C + Math.sin(sector.mid) * 350 + text * 0.35, "text-anchor": anchor(sector.mid), "font-size": text }, sector.category);
+    svg.append(label);
+    keepIfClear(label, taken);
+  }
+
+  const labels = nodes.map((n, i) => {
+    const label = el("text", { class: "name", "text-anchor": anchor(n.a), "font-size": text }, n.service.name);
+    groupsDrawn[i].append(label);
+    return { a: n.a, out: n.r + nodeR + units(6), anchor: anchor(n.a), width: label.getComputedTextLength(), height: text, label };
+  });
+  for (const l of placeLabels(labels, C)) {
+    l.label.setAttribute("x", l.x);
+    l.label.setAttribute("y", l.y);
+    keepIfClear(l.label, taken);
+  }
+}
+
+// A label stays when it sits inside the box and clear of everything kept before it.
+function keepIfClear(label, taken) {
+  const b = label.getBBox();
+  const box = { left: b.x, right: b.x + b.width, top: b.y, bottom: b.y + b.height };
+  const inside = box.left >= 0 && box.top >= 0 && box.right <= BOX && box.bottom <= BOX;
+  if (inside && !taken.some((t) => overlaps(box, t))) taken.push(box);
+  else label.remove();
+}
+
+function overlaps(p, q) {
+  return p.left < q.right && q.left < p.right && p.top < q.bottom && q.top < p.bottom;
 }
 
 // Labels sit just outside their node. Where two would overlap, the later one moves outward
-// along its spoke until it clears; a few passes settle even a crowded ring.
-function placeLabels(nodes, C) {
-  const labels = nodes.map((n) => ({ a: n.a, out: n.r + 26, anchor: anchor(n.a), width: n.service.name.length * 7.8 + 6 }));
+// along its spoke until it clears; a few passes settle even a crowded ring. A label pushed
+// out of the box is dropped afterwards.
+function placeLabels(labels, C) {
   const box = (l) => {
-    const x = C + Math.cos(l.a) * l.out, y = C + Math.sin(l.a) * l.out + 4;
+    const x = C + Math.cos(l.a) * l.out, y = C + Math.sin(l.a) * l.out + l.height * 0.35;
     const left = l.anchor === "start" ? x : l.anchor === "end" ? x - l.width : x - l.width / 2;
-    return { x, y, left, right: left + l.width, top: y - 12, bottom: y + 4 };
+    return { x, y, left, right: left + l.width, top: y - l.height, bottom: y + l.height * 0.3 };
   };
-  const hits = (p, q) => p.left < q.right && q.left < p.right && p.top < q.bottom && q.top < p.bottom;
   for (let pass = 0; pass < 40; pass++) {
     let moved = false;
     for (let i = 0; i < labels.length; i++) {
       for (let j = i + 1; j < labels.length; j++) {
-        if (hits(box(labels[i]), box(labels[j]))) { labels[j].out += 8; moved = true; }
+        if (overlaps(box(labels[i]), box(labels[j]))) { labels[j].out += labels[j].height * 0.6; moved = true; }
       }
     }
     if (!moved) break;
   }
-  return labels.map((l) => ({ ...box(l), anchor: l.anchor }));
+  return labels.map((l) => ({ ...box(l), label: l.label }));
 }
 
 function anchor(a) {
