@@ -170,11 +170,7 @@ function drawMap(domain, senders) {
   for (const n of nodes) {
     svg.append(el("line", { class: "spoke", x1: C, y1: C, x2: C + Math.cos(n.a) * n.r, y2: C + Math.sin(n.a) * n.r }));
   }
-  const coreR = 50 * FIT;
-  svg.append(el("circle", { class: "core", cx: C, cy: C, r: coreR }));
-  const core = el("text", { class: "core-text", x: C, y: C + text * 0.35, "text-anchor": "middle", "font-size": text }, domain);
-  svg.append(core);
-  if (core.getComputedTextLength() > 2 * coreR - units(8)) core.remove(); // the domain heads the page anyway
+  svg.append(el("circle", { class: "core", cx: C, cy: C, r: 25 * FIT })); // a plain hub: the domain heads the page
 
   const taken = [];
   const named = nodes.map((n) => {
