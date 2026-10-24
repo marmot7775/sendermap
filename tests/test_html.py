@@ -86,7 +86,7 @@ def test_every_string_from_dns_is_escaped() -> None:
     }
 
 
-def test_a_card_carries_its_id() -> None:
+def test_a_slug_names_the_row_id() -> None:
     assert slug("Microsoft 365") == "microsoft-365"
     assert slug("Customer.io") == "customer-io"
     assert slug(HOSTILE) == "-script-alert-1---script---quoted-"
@@ -100,7 +100,7 @@ async def test_sections_follow_the_views_order(case: Path) -> None:
     assert titles == [t for t in SECTIONS if t in titles]
     assert page.startswith('<header class="view-head">\n<h2>')
     for s in result.senders:
-        assert f'<article class="card" id="service-{slug(s.name)}">' in page
+        assert f'<article class="row" id="service-{slug(s.name)}">' in page
 
 
 @pytest.mark.parametrize("case", CASES, ids=[c.name for c in CASES])
@@ -131,3 +131,19 @@ def test_the_names_asked_sit_under_names_asked() -> None:
     page = html(hostile_map())
     (names,) = [d for d in _DETAILS.findall(page) if "<summary>Names asked</summary>" in d]
     assert escape(HOSTILE, quote=True) in names
+
+
+@pytest.mark.parametrize("case", CASES, ids=[c.name for c in CASES])
+async def test_a_row_carries_its_id_and_the_decider_first(case: Path) -> None:
+    result = await mapped(case)
+    page = html(result)
+    shown = view(result, evidence=True)
+    for service in (s for tier in shown.tiers for s in tier.services):
+        row = page.split(f'<article class="row" id="service-{slug(service.name)}">\n', 1)[1]
+        row = row.split("</article>", 1)[0]
+        body = row.split('<div class="row-body">\n', 1)[1]
+        decider = service.kinds[0]
+        assert body.startswith(
+            f'<p class="decider"><span class="kind">{escape(decider.label)}</span>: '
+            f"{escape(decider.summary)}</p>"
+        )

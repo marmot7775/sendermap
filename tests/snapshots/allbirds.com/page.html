@@ -62,18 +62,20 @@
 </section>
 <section class="view-section tier">
 <h3 class="section-title">In use</h3>
-<div class="cards">
-<article class="card" id="service-microsoft-365">
-<div class="card-head"><h4>Microsoft 365</h4><span class="badge b-in-use">In use</span></div>
+<div class="rows">
+<article class="row" id="service-microsoft-365">
+<h4>Microsoft 365</h4>
 <p class="meta">Mailbox</p>
+<span class="badge b-in-use">In use</span>
+<div class="row-body">
+<p class="decider"><span class="kind">MX</span>: allbirds-com.mail.protection.outlook.com</p>
 <ul class="claims">
-<li class="decider"><span class="kind">MX</span>: allbirds-com.mail.protection.outlook.com</li>
 <li><span class="kind">SPF</span>: include:spf.protection.outlook.com</li>
 <li><span class="kind">DKIM keys</span>: selector1, selector2 (both 2048 bit, by CNAME)</li>
 <li><span class="kind">Verification tokens</span>: MS=A01B077C9CEAFC03E22F0B625C7E7600E37CC59A, MS=ms40651830, MS=ms79507765</li>
 <li><span class="kind">Autodiscover CNAME</span>: autodiscover.allbirds.com</li>
 </ul>
-<p class="meta setup">setup complete</p>
+<p class="setup">setup complete</p>
 <details class="records"><summary>All records</summary>
 <p class="kind">MX</p>
 <ul class="records">
@@ -98,19 +100,22 @@
 <ul class="records">
 <li class="ev mono">autodiscover.allbirds.com CNAME autodiscover.outlook.com</li>
 </ul>
-<p class="meta setup">setup complete: SPF present, DKIM present, MX present, bounce CNAME not needed</p>
+<p class="setup">setup complete: SPF present, DKIM present, MX present, bounce CNAME not needed</p>
 </details>
+</div>
 </article>
 </div>
 </section>
 <section class="view-section tier">
 <h3 class="section-title">Configured</h3>
-<div class="cards">
-<article class="card" id="service-amazon-ses">
-<div class="card-head"><h4>Amazon SES</h4><span class="badge b-configured">Configured</span></div>
+<div class="rows">
+<article class="row" id="service-amazon-ses">
+<h4>Amazon SES</h4>
 <p class="meta">Transactional</p>
+<span class="badge b-configured">Configured</span>
+<div class="row-body">
+<p class="decider"><span class="kind">SPF ranges</span>: ip4:199.255.192.0/22, ip4:199.127.232.0/22 and 11 more</p>
 <ul class="claims">
-<li class="decider"><span class="kind">SPF ranges</span>: ip4:199.255.192.0/22, ip4:199.127.232.0/22 and 11 more</li>
 <li><span class="kind">SPF</span>: include:amazonses.com at alerts.allbirds.com and mail.allbirds.com</li>
 </ul>
 <details class="records"><summary>All records</summary>
@@ -136,13 +141,14 @@
 <li class="ev mono">mail.allbirds.com TXT include:amazonses.com</li>
 </ul>
 </details>
+</div>
 </article>
-<article class="card" id="service-freshdesk">
-<div class="card-head"><h4>Freshdesk</h4><span class="badge b-configured">Configured</span></div>
+<article class="row" id="service-freshdesk">
+<h4>Freshdesk</h4>
 <p class="meta">Support and CRM</p>
-<ul class="claims">
-<li class="decider"><span class="kind">SPF ranges</span>: ip4:3.7.25.40/29, ip4:13.127.153.86 and 6 more</li>
-</ul>
+<span class="badge b-configured">Configured</span>
+<div class="row-body">
+<p class="decider"><span class="kind">SPF ranges</span>: ip4:3.7.25.40/29, ip4:13.127.153.86 and 6 more</p>
 <details class="records"><summary>All records</summary>
 <p class="kind">SPF ranges</p>
 <ul class="records">
@@ -156,17 +162,20 @@
 <li class="ev mono">_spf1.allbirds_com._d.easydmarc.pro TXT ip4:3.25.47.0/29 via fdspfaus.freshemail.io TXT ip4:3.25.47.0/29</li>
 </ul>
 </details>
+</div>
 </article>
-<article class="card" id="service-google-workspace">
-<div class="card-head"><h4>Google Workspace</h4><span class="badge b-configured">Configured</span></div>
+<article class="row" id="service-google-workspace">
+<h4>Google Workspace</h4>
 <p class="meta">Mailbox</p>
+<span class="badge b-configured">Configured</span>
+<div class="row-body">
+<p class="decider"><span class="kind">SPF ranges</span>: ip4:74.125.0.0/16, ip4:209.85.128.0/17 and 6 more</p>
 <ul class="claims">
-<li class="decider"><span class="kind">SPF ranges</span>: ip4:74.125.0.0/16, ip4:209.85.128.0/17 and 6 more</li>
 <li><span class="kind">MX for a subdomain&#x27;s mail</span>: aspmx.l.google.com, alt1.aspmx.l.google.com, alt2.aspmx.l.google.com at mail.allbirds.com</li>
 <li><span class="kind">SPF</span>: include:_spf.google.com at alerts.allbirds.com and mail.allbirds.com</li>
 <li><span class="kind">DKIM key</span>: google (2048 bit, named for it)</li>
 </ul>
-<p class="meta setup">setup incomplete: DKIM missing at alerts.allbirds.com and mail.allbirds.com</p>
+<p class="setup">setup incomplete: DKIM missing at alerts.allbirds.com and mail.allbirds.com</p>
 <details class="records"><summary>All records</summary>
 <p class="kind">SPF ranges</p>
 <ul class="records">
@@ -194,47 +203,52 @@
 <ul class="records">
 <li class="ev mono">google._domainkey.allbirds.com TXT v=DKIM1; k=rsa; p=MIIBIjANBgkq..., 2048-bit, fp d8f8fdab59ca9b21</li>
 </ul>
-<p class="meta setup">setup incomplete: SPF present at allbirds.com, alerts.allbirds.com and mail.allbirds.com, DKIM present at allbirds.com, MX not used (optional, MX at allbirds.com) at allbirds.com, bounce CNAME not needed at allbirds.com, alerts.allbirds.com and mail.allbirds.com, DKIM missing at alerts.allbirds.com and mail.allbirds.com, MX not used (optional, MX at alerts.allbirds.com) at alerts.allbirds.com, MX present at mail.allbirds.com</p>
+<p class="setup">setup incomplete: SPF present at allbirds.com, alerts.allbirds.com and mail.allbirds.com, DKIM present at allbirds.com, MX not used (optional, MX at allbirds.com) at allbirds.com, bounce CNAME not needed at allbirds.com, alerts.allbirds.com and mail.allbirds.com, DKIM missing at alerts.allbirds.com and mail.allbirds.com, MX not used (optional, MX at alerts.allbirds.com) at alerts.allbirds.com, MX present at mail.allbirds.com</p>
 </details>
+</div>
 </article>
-<article class="card" id="service-iterable">
-<div class="card-head"><h4>Iterable</h4><span class="badge b-configured">Configured</span></div>
+<article class="row" id="service-iterable">
+<h4>Iterable</h4>
 <p class="meta">Marketing</p>
-<ul class="claims">
-<li class="decider"><span class="kind">Tracking CNAME</span>: links.allbirds.com</li>
-</ul>
+<span class="badge b-configured">Configured</span>
+<div class="row-body">
+<p class="decider"><span class="kind">Tracking CNAME</span>: links.allbirds.com</p>
 <details class="records"><summary>All records</summary>
 <p class="kind">Tracking CNAME</p>
 <ul class="records">
 <li class="ev mono">links.allbirds.com CNAME links.iterable.com</li>
 </ul>
 </details>
+</div>
 </article>
-<article class="card" id="service-mailchimp">
-<div class="card-head"><h4>Mailchimp</h4><span class="badge b-configured">Configured</span></div>
+<article class="row" id="service-mailchimp">
+<h4>Mailchimp</h4>
 <p class="meta">Marketing</p>
-<ul class="claims">
-<li class="decider"><span class="kind">DKIM key</span>: k1 (1024 bit, by CNAME)</li>
-</ul>
-<p class="meta setup">setup complete</p>
+<span class="badge b-configured">Configured</span>
+<div class="row-body">
+<p class="decider"><span class="kind">DKIM key</span>: k1 (1024 bit, by CNAME)</p>
+<p class="setup">setup complete</p>
 <details class="records"><summary>All records</summary>
 <p class="kind">DKIM key</p>
 <ul class="records">
 <li class="ev mono">k1._domainkey.allbirds.com TXT k=rsa; p=MIGfMA0GCSqG..., 1024-bit, fp 53d7bb0466c8346d via dkim.mcsv.net</li>
 </ul>
-<p class="meta setup">setup complete: DKIM present (older setup: a key at k1; the current setup names k2), SPF not needed, bounce CNAME not needed</p>
+<p class="setup">setup complete: DKIM present (older setup: a key at k1; the current setup names k2), SPF not needed, bounce CNAME not needed</p>
 </details>
+</div>
 </article>
-<article class="card" id="service-mailgun">
-<div class="card-head"><h4>Mailgun</h4><span class="badge b-configured">Configured</span></div>
+<article class="row" id="service-mailgun">
+<h4>Mailgun</h4>
 <p class="meta">Transactional</p>
+<span class="badge b-configured">Configured</span>
+<div class="row-body">
+<p class="decider"><span class="kind">SPF ranges</span>: ip4:141.193.32.0/23, ip4:159.135.140.80/29 and 16 more</p>
 <ul class="claims">
-<li class="decider"><span class="kind">SPF ranges</span>: ip4:141.193.32.0/23, ip4:159.135.140.80/29 and 16 more</li>
 <li><span class="kind">Tracking CNAME</span>: email.allbirds.com</li>
 <li><span class="kind">MX for bounces</span>: mxa.mailgun.org, mxb.mailgun.org at email.allbirds.com</li>
 <li><span class="kind">SPF</span>: include:mailgun.org, include:_spf.mailgun.org, include:_spf.eu.mailgun.org at alerts.allbirds.com, email.allbirds.com and mail.allbirds.com</li>
 </ul>
-<p class="meta setup">setup complete</p>
+<p class="setup">setup complete</p>
 <details class="records"><summary>All records</summary>
 <p class="kind">SPF ranges</p>
 <ul class="records">
@@ -273,16 +287,17 @@
 <li class="ev mono">email.allbirds.com TXT include:_spf.eu.mailgun.org</li>
 <li class="ev mono">mail.allbirds.com TXT include:mailgun.org</li>
 </ul>
-<p class="meta setup">setup complete: SPF present at allbirds.com, alerts.allbirds.com and mail.allbirds.com, MX not used (optional, MX at allbirds.com) at allbirds.com, tracking CNAME present at allbirds.com, MX not used (optional, MX at alerts.allbirds.com) at alerts.allbirds.com, tracking CNAME not checked (no label was asked at alerts.allbirds.com) at alerts.allbirds.com, MX not used (optional, MX at mail.allbirds.com) at mail.allbirds.com, tracking CNAME not checked (no label was asked at mail.allbirds.com) at mail.allbirds.com</p>
+<p class="setup">setup complete: SPF present at allbirds.com, alerts.allbirds.com and mail.allbirds.com, MX not used (optional, MX at allbirds.com) at allbirds.com, tracking CNAME present at allbirds.com, MX not used (optional, MX at alerts.allbirds.com) at alerts.allbirds.com, tracking CNAME not checked (no label was asked at alerts.allbirds.com) at alerts.allbirds.com, MX not used (optional, MX at mail.allbirds.com) at mail.allbirds.com, tracking CNAME not checked (no label was asked at mail.allbirds.com) at mail.allbirds.com</p>
 </details>
+</div>
 </article>
-<article class="card" id="service-mailjet">
-<div class="card-head"><h4>Mailjet</h4><span class="badge b-configured">Configured</span></div>
+<article class="row" id="service-mailjet">
+<h4>Mailjet</h4>
 <p class="meta">Transactional</p>
-<ul class="claims">
-<li class="decider"><span class="kind">SPF ranges</span>: ip4:87.253.232.0/21, ip4:185.189.236.0/22 and 2 more</li>
-</ul>
-<p class="meta setup">setup incomplete: DKIM missing</p>
+<span class="badge b-configured">Configured</span>
+<div class="row-body">
+<p class="decider"><span class="kind">SPF ranges</span>: ip4:87.253.232.0/21, ip4:185.189.236.0/22 and 2 more</p>
+<p class="setup">setup incomplete: DKIM missing</p>
 <details class="records"><summary>All records</summary>
 <p class="kind">SPF ranges</p>
 <ul class="records">
@@ -291,32 +306,36 @@
 <li class="ev mono">_spf1.allbirds_com._d.easydmarc.pro TXT ip4:185.211.120.0/22 via 1.120.211.185.origin.asn.cymru.com TXT 200069 | 185.211.120.0/24 | US | ripencc | 2017-07-04 via as200069.asn.cymru.com TXT 200069 | FR | ripencc | 2013-10-16 | MAILJET, FR via 1.122.211.185.origin.asn.cymru.com TXT 200069 | 185.211.122.0/24 | US | ripencc | 2017-07-04 via 1.123.211.185.origin.asn.cymru.com TXT 200069 | 185.211.123.0/24 | US | ripencc | 2017-07-04</li>
 <li class="ev mono">_spf1.allbirds_com._d.easydmarc.pro TXT ip4:185.250.236.0/22 via 1.236.250.185.origin.asn.cymru.com TXT 200069 | 185.250.236.0/24 | GB | ripencc | 2018-03-21 via as200069.asn.cymru.com TXT 200069 | FR | ripencc | 2013-10-16 | MAILJET, FR via 1.238.250.185.origin.asn.cymru.com TXT 200069 | 185.250.238.0/24 | GB | ripencc | 2018-03-21 via 1.239.250.185.origin.asn.cymru.com TXT 200069 | 185.250.239.0/24 | GB | ripencc | 2018-03-21</li>
 </ul>
-<p class="meta setup">setup incomplete: SPF present, DKIM missing</p>
+<p class="setup">setup incomplete: SPF present, DKIM missing</p>
 </details>
+</div>
 </article>
-<article class="card" id="service-postmark">
-<div class="card-head"><h4>Postmark</h4><span class="badge b-configured">Configured</span></div>
+<article class="row" id="service-postmark">
+<h4>Postmark</h4>
 <p class="meta">Transactional</p>
-<ul class="claims">
-<li class="decider"><span class="kind">Bounce CNAME</span>: pm-bounces.allbirds.com</li>
-</ul>
-<p class="meta setup">setup complete</p>
+<span class="badge b-configured">Configured</span>
+<div class="row-body">
+<p class="decider"><span class="kind">Bounce CNAME</span>: pm-bounces.allbirds.com</p>
+<p class="setup">setup complete</p>
 <details class="records"><summary>All records</summary>
 <p class="kind">Bounce CNAME</p>
 <ul class="records">
 <li class="ev mono">pm-bounces.allbirds.com CNAME pm.mtasv.net</li>
 </ul>
-<p class="meta setup">setup complete: SPF not needed, bounce CNAME present</p>
+<p class="setup">setup complete: SPF not needed, bounce CNAME present</p>
 </details>
+</div>
 </article>
-<article class="card" id="service-sendgrid">
-<div class="card-head"><h4>SendGrid</h4><span class="badge b-configured">Configured</span></div>
+<article class="row" id="service-sendgrid">
+<h4>SendGrid</h4>
 <p class="meta">Transactional</p>
+<span class="badge b-configured">Configured</span>
+<div class="row-body">
+<p class="decider"><span class="kind">SPF ranges</span>: ip4:208.117.48.0/20, ip4:50.31.32.0/19 and 16 more</p>
 <ul class="claims">
-<li class="decider"><span class="kind">SPF ranges</span>: ip4:208.117.48.0/20, ip4:50.31.32.0/19 and 16 more</li>
 <li><span class="kind">DKIM keys</span>: s1, s2 (both 2048 bit, by CNAME)</li>
 </ul>
-<p class="meta setup">setup complete</p>
+<p class="setup">setup complete</p>
 <details class="records"><summary>All records</summary>
 <p class="kind">SPF ranges</p>
 <ul class="records">
@@ -344,15 +363,16 @@
 <li class="ev mono">s1._domainkey.allbirds.com TXT k=rsa; t=s (strict); p=MIIBIjANBgkq..., 2048-bit, fp 1613a2732ba0bb85 via s1.domainkey.u246613.wl114.sendgrid.net</li>
 <li class="ev mono">s2._domainkey.allbirds.com TXT k=rsa; t=s (strict); p=MIIBIjANBgkq..., 2048-bit, fp 74e0ef530aa45e05 via s2.domainkey.u246613.wl114.sendgrid.net</li>
 </ul>
-<p class="meta setup">setup complete: DKIM present, bounce CNAME not used (optional, CNAME at 25 labels under allbirds.com), SPF not needed, tracking CNAME not used (optional, CNAME at 25 labels under allbirds.com)</p>
+<p class="setup">setup complete: DKIM present, bounce CNAME not used (optional, CNAME at 25 labels under allbirds.com), SPF not needed, tracking CNAME not used (optional, CNAME at 25 labels under allbirds.com)</p>
 </details>
+</div>
 </article>
-<article class="card" id="service-shopify">
-<div class="card-head"><h4>Shopify</h4><span class="badge b-configured">Configured</span></div>
+<article class="row" id="service-shopify">
+<h4>Shopify</h4>
 <p class="meta">Commerce and apps</p>
-<ul class="claims">
-<li class="decider"><span class="kind">SPF</span>: include:shops.shopify.com at alerts.allbirds.com and mail.allbirds.com</li>
-</ul>
+<span class="badge b-configured">Configured</span>
+<div class="row-body">
+<p class="decider"><span class="kind">SPF</span>: include:shops.shopify.com at alerts.allbirds.com and mail.allbirds.com</p>
 <details class="records"><summary>All records</summary>
 <p class="kind">SPF</p>
 <ul class="records">
@@ -360,15 +380,18 @@
 <li class="ev mono">mail.allbirds.com TXT include:shops.shopify.com</li>
 </ul>
 </details>
+</div>
 </article>
-<article class="card" id="service-sparkpost">
-<div class="card-head"><h4>SparkPost</h4><span class="badge b-configured">Configured</span></div>
+<article class="row" id="service-sparkpost">
+<h4>SparkPost</h4>
 <p class="meta">Transactional</p>
+<span class="badge b-configured">Configured</span>
+<div class="row-body">
+<p class="decider"><span class="kind">Bounce CNAME</span>: bounce.allbirds.com</p>
 <ul class="claims">
-<li class="decider"><span class="kind">Bounce CNAME</span>: bounce.allbirds.com</li>
 <li><span class="kind">MX for bounces</span>: smtp.sparkpostmail.com at bounce.allbirds.com and info.allbirds.com</li>
 </ul>
-<p class="meta setup">setup complete</p>
+<p class="setup">setup complete</p>
 <details class="records"><summary>All records</summary>
 <p class="kind">Bounce CNAME</p>
 <ul class="records">
@@ -379,16 +402,17 @@
 <li class="ev mono">bounce.allbirds.com MX 5 smtp.sparkpostmail.com</li>
 <li class="ev mono">info.allbirds.com MX 5 smtp.sparkpostmail.com</li>
 </ul>
-<p class="meta setup">setup complete: tracking CNAME not used (optional, CNAME at 25 labels under allbirds.com), MX not used (optional, MX at allbirds.com)</p>
+<p class="setup">setup complete: tracking CNAME not used (optional, CNAME at 25 labels under allbirds.com), MX not used (optional, MX at allbirds.com)</p>
 </details>
+</div>
 </article>
-<article class="card" id="service-zendesk">
-<div class="card-head"><h4>Zendesk</h4><span class="badge b-configured">Configured</span></div>
+<article class="row" id="service-zendesk">
+<h4>Zendesk</h4>
 <p class="meta">Support and CRM</p>
-<ul class="claims">
-<li class="decider"><span class="kind">SPF ranges</span>: ip4:103.151.192.0/23, ip4:185.12.80.0/22 and 3 more</li>
-</ul>
-<p class="meta setup">setup complete</p>
+<span class="badge b-configured">Configured</span>
+<div class="row-body">
+<p class="decider"><span class="kind">SPF ranges</span>: ip4:103.151.192.0/23, ip4:185.12.80.0/22 and 3 more</p>
+<p class="setup">setup complete</p>
 <details class="records"><summary>All records</summary>
 <p class="kind">SPF ranges</p>
 <ul class="records">
@@ -398,43 +422,46 @@
 <li class="ev mono">_spf.allbirds_com._d.easydmarc.pro TXT ip4:192.161.144.0/20 via mail.zendesk.com TXT ip4:192.161.144.0/20</li>
 <li class="ev mono">_spf.allbirds_com._d.easydmarc.pro TXT ip4:216.198.0.0/18 via mail.zendesk.com TXT ip4:216.198.0.0/18</li>
 </ul>
-<p class="meta setup">setup complete: SPF present, DKIM not used (optional, TXT at zendesk1._domainkey.allbirds.com and TXT at zendesk2._domainkey.allbirds.com)</p>
+<p class="setup">setup complete: SPF present, DKIM not used (optional, TXT at zendesk1._domainkey.allbirds.com and TXT at zendesk2._domainkey.allbirds.com)</p>
 </details>
+</div>
 </article>
 </div>
 </section>
 <section class="view-section tier">
 <h3 class="section-title">Likely</h3>
-<div class="cards">
-<article class="card" id="service-customer-io">
-<div class="card-head"><h4>Customer.io</h4><span class="badge b-likely">Likely</span></div>
+<div class="rows">
+<article class="row" id="service-customer-io">
+<h4>Customer.io</h4>
 <p class="meta">Marketing</p>
-<ul class="claims">
-<li class="decider"><span class="kind">DKIM key</span>: krs (2048 bit, named for it)</li>
-</ul>
-<p class="meta setup">setup complete</p>
+<span class="badge b-likely">Likely</span>
+<div class="row-body">
+<p class="decider"><span class="kind">DKIM key</span>: krs (2048 bit, named for it)</p>
+<p class="setup">setup complete</p>
 <details class="records"><summary>All records</summary>
 <p class="kind">DKIM key</p>
 <ul class="records">
 <li class="ev mono">krs._domainkey.allbirds.com TXT k=rsa; p=MIIBIjANBgkq..., 2048-bit, fp f65b843679924ff6</li>
 </ul>
-<p class="meta setup">setup complete: tracking CNAME not used (optional, CNAME at 25 labels under allbirds.com)</p>
+<p class="setup">setup complete: tracking CNAME not used (optional, CNAME at 25 labels under allbirds.com)</p>
 </details>
+</div>
 </article>
-<article class="card" id="service-mandrill">
-<div class="card-head"><h4>Mandrill</h4><span class="badge b-likely">Likely</span></div>
+<article class="row" id="service-mandrill">
+<h4>Mandrill</h4>
 <p class="meta">Transactional</p>
-<ul class="claims">
-<li class="decider"><span class="kind">DKIM key</span>: mandrill (1024 bit, named for it)</li>
-</ul>
-<p class="meta setup">setup complete</p>
+<span class="badge b-likely">Likely</span>
+<div class="row-body">
+<p class="decider"><span class="kind">DKIM key</span>: mandrill (1024 bit, named for it)</p>
+<p class="setup">setup complete</p>
 <details class="records"><summary>All records</summary>
 <p class="kind">DKIM key</p>
 <ul class="records">
 <li class="ev mono">mandrill._domainkey.allbirds.com TXT v=DKIM1; k=rsa; p=MIGfMA0GCSqG..., 1024-bit, fp 9cee89b6f986543a</li>
 </ul>
-<p class="meta setup">setup complete: DKIM present (older setup: a key at mandrill; the current setup names mte1 and mte2), bounce CNAME not used (optional, CNAME at 25 labels under allbirds.com), tracking CNAME not used (optional, CNAME at 25 labels under allbirds.com)</p>
+<p class="setup">setup complete: DKIM present (older setup: a key at mandrill; the current setup names mte1 and mte2), bounce CNAME not used (optional, CNAME at 25 labels under allbirds.com), tracking CNAME not used (optional, CNAME at 25 labels under allbirds.com)</p>
 </details>
+</div>
 </article>
 </div>
 </section>

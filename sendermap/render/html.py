@@ -55,7 +55,7 @@ def show(shown: View) -> str:
 
 
 def slug(name: str) -> str:
-    """A service name as a card's id suffix: lowercased, anything outside a to z and 0 to 9 a
+    """A service name as a row's id suffix: lowercased, anything outside a to z and 0 to 9 a
     hyphen. "Customer.io" is "customer-io"."""
     return _NOT_SLUG.sub("-", name.lower())
 
@@ -139,36 +139,43 @@ def _findings(findings: tuple[FindingView, ...]) -> str:
 
 
 def _tier(tier: TierView) -> str:
-    cards = [line for service in tier.services for line in _card(service)]
-    return _section(tier.tier, "tier", ['<div class="cards">', *cards, "</div>"])
+    rows = [line for service in tier.services for line in _row(service)]
+    return _section(tier.tier, "tier", ['<div class="rows">', *rows, "</div>"])
 
 
-def _card(service: ServiceView) -> list[str]:
-    """One service: its evidence one line per kind and its setup in one clause, then every
-    record, and the setup item by item, inside All records."""
+def _row(service: ServiceView) -> list[str]:
+    """One service as a row: name, category and where, tier badge, then the deciding kind with
+    the other kinds and the setup in one clause under it, and every record, with the setup item
+    by item, inside All records."""
     badge = f"b-{slug(service.tier)}"
     meta = service.category + (f", at {service.where}" if service.where else "")
+    first, rest = service.kinds[:1], service.kinds[1:]
     lines = [
-        f'<article class="card" id="service-{_e(slug(service.name))}">',
-        f'<div class="card-head"><h4>{_e(service.name)}</h4>'
-        f'<span class="badge {_e(badge)}">{_e(service.tier)}</span></div>',
+        f'<article class="row" id="service-{_e(slug(service.name))}">',
+        f"<h4>{_e(service.name)}</h4>",
         f'<p class="meta">{_e(meta)}</p>',
-        '<ul class="claims">',
-        *(
-            f'<li{_DECIDER if i == 0 else ""}><span class="kind">{_e(k.label)}</span>'
-            f": {_e(k.summary)}</li>"
-            for i, k in enumerate(service.kinds)
-        ),
-        "</ul>",
+        f'<span class="badge {_e(badge)}">{_e(service.tier)}</span>',
+        '<div class="row-body">',
+        *(f"<p{_DECIDER}>{_kind_line(k.label, k.summary)}</p>" for k in first),
     ]
+    if rest:
+        lines += [
+            '<ul class="claims">',
+            *(f"<li>{_kind_line(k.label, k.summary)}</li>" for k in rest),
+            "</ul>",
+        ]
     if service.brief:
-        lines.append(f'<p class="meta setup">{_e(service.brief)}</p>')
+        lines.append(f'<p class="setup">{_e(service.brief)}</p>')
     full: list[str] = []
     for kind in service.kinds:
         full += [f'<p class="kind">{_e(kind.label)}</p>', *_records(kind.records)]
     if service.setup and service.setup != service.brief:
-        full.append(f'<p class="meta setup">{_e(service.setup)}</p>')
-    return [*lines, *_details("All records", "records", full), "</article>"]
+        full.append(f'<p class="setup">{_e(service.setup)}</p>')
+    return [*lines, *_details("All records", "records", full), "</div>", "</article>"]
+
+
+def _kind_line(label: str, summary: str) -> str:
+    return f'<span class="kind">{_e(label)}</span>: {_e(summary)}'
 
 
 def _reporting(names: tuple[str, ...]) -> str:

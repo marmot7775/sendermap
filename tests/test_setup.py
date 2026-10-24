@@ -348,10 +348,10 @@ async def test_every_view_shows_the_setup_in_one_clause(offline: httpx.AsyncClie
     assert "SPF present" in line and "SPF present" in full
     # The web page leads with the clause and keeps every item inside All records.
     page = html.html(result)
-    card = page[page.index('id="service-microsoft-365"') :]
-    card = card[: card.index("</article>")]
-    assert card.index(f'<p class="meta setup">{clause}</p>') < card.index("All records")
-    assert card.index("SPF present") > card.index("All records")
+    row = page[page.index('id="service-microsoft-365"') :]
+    row = row[: row.index("</article>")]
+    assert row.index(f'<p class="setup">{clause}</p>') < row.index("All records")
+    assert row.index("SPF present") > row.index("All records")
 
 
 def _with_setup(vendor: str, *items: dict[str, Any]) -> dict[str, Any]:
