@@ -16,6 +16,7 @@ NEEDS ATTENTION
       *._domainkey.example.com TXT v=DKIM1; p=
 
 WHAT WAS ASKED
+  210 lookups at 1 name
   example.com: 25 CNAME labels, 2 pages
     Pages: https://example.com/,                                                                    
     https://api.certspotter.com/v1/issuances?domain=example.com&include_subdomains=true&expand=dns_n

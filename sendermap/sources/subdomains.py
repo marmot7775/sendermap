@@ -143,13 +143,16 @@ def _from_certificates(ctx: Context, logged: Iterable[str]) -> tuple[set[str], t
         (deep if too_deep else names).add(name)
     gaps: tuple[Gap, ...] = ()
     if deep:
-        happened = f"{len(deep)} not asked (cap of {MAX_CT_DEPTH} labels below the domain)"
+        happened = (
+            f"{len(deep)} not asked. Names up to {MAX_CT_DEPTH} labels below the domain were "
+            f"asked (cap {MAX_CT_DEPTH} labels)."
+        )
         asked = f"certificate log names more than {MAX_CT_DEPTH} labels deep"
         gaps += (Gap(asked, happened, GapKind.CERTIFICATE_LOG, len(deep), MAX_CT_DEPTH),)
     if len(names) > MAX_FROM_CT:
         happened = (
-            f"{len(names) - MAX_FROM_CT} of {len(names)} not asked: only the first {MAX_FROM_CT} "
-            "in alphabetical order were (cap)"
+            f"{len(names) - MAX_FROM_CT} of {len(names)} not asked. The first {MAX_FROM_CT} in "
+            f"alphabetical order were asked (cap {MAX_FROM_CT})."
         )
         dropped = len(names) - MAX_FROM_CT
         gaps += (

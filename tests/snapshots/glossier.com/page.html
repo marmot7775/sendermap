@@ -326,15 +326,14 @@
 <section class="view-section not-checked">
 <h3 class="section-title">Not checked</h3>
 <ul class="gaps">
-<li><span class="mono">DKIM selectors at marketing.glossier.com</span>: 82 of 109 not asked: only the first 27 and the names its own SPF, MX or delegation backs were (cap)</li>
-<li><span class="mono">DKIM selectors at receipts.glossier.com</span>: 82 of 109 not asked: only the first 27 and the names its own SPF, MX or delegation backs were (cap)</li>
-<li><span class="mono">DKIM selectors at send.glossier.com</span>: 82 of 109 not asked: only the first 27 and the names its own SPF, MX or delegation backs were (cap)</li>
+<li>DKIM selectors at <span class="mono">marketing</span>, <span class="mono">receipts</span> and <span class="mono">send.glossier.com</span>: 82 of 109 not asked at each. The first 27 were asked, plus any the name&#x27;s own SPF, MX or delegation points to (cap 27).</li>
 <li><span class="mono">the website</span>: web checks were turned off (--no-web)</li>
 <li><span class="mono">certificate transparency, crt.sh</span>: read only with --ct (it also holds expired certificates)</li>
 </ul>
 </section>
 <section class="view-section asked">
 <h3 class="section-title">What was asked</h3>
+<p class="asked-total">739 lookups at 4 names</p>
 <ul class="gaps">
 <li><span class="mono">glossier.com</span>: 109 DKIM selectors, 25 CNAME labels, 1 page</li>
 <li><span class="mono">marketing.glossier.com</span>: 27 DKIM selectors</li>

@@ -11,6 +11,8 @@ No sending service shows in DNS for example.com: a null MX that says it accepts 
 
 ## What was asked
 
+210 lookups at 1 name
+
 - **example.com**: 25 CNAME labels, 2 pages
 
 ## Not run

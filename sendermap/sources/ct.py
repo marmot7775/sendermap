@@ -211,8 +211,8 @@ async def collect(ctx: Context, logs: Logs) -> tuple[Observed, CtSummary]:
     observed = Observed()
     if dropped := len(names) - len(picked):
         happened = (
-            f"{dropped} of {len(names)} not resolved: only the first {MAX_NAMES} in "
-            "alphabetical order were (cap)"
+            f"{dropped} of {len(names)} not resolved. The first {MAX_NAMES} in alphabetical "
+            f"order were resolved (cap {MAX_NAMES})."
         )
         gap = Gap(
             "names from certificate logs", happened, GapKind.CERTIFICATE_LOG, dropped, MAX_NAMES

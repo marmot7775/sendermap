@@ -56,7 +56,7 @@ async def test_ranges_past_the_cap_are_a_gap(monkeypatch: pytest.MonkeyPatch) ->
     observed = await networks.collect(context(Zone()), "example.com", ranges)
     assert len(observed.unknowns) == 1
     assert asked(observed)["network owners of the IP ranges in SPF at example.com"] == (
-        "1 of 2 not looked up: only the first 1 were (cap)"
+        "1 of 2 not looked up. The first 1 were looked up (cap 1)."
     )
 
 
@@ -78,7 +78,10 @@ async def test_spf_includes_past_the_depth_cap_are_a_gap() -> None:
     observed, _ = await spf.collect(context(zone), "example.com")
     (gap,) = observed.gaps
     assert gap.asked.endswith(f"l{spf.MAX_DEPTH + 1}.example.net")
-    assert gap.happened == f"1 not walked (cap of {spf.MAX_DEPTH} levels)"
+    assert gap.happened == (
+        f"1 not walked. Includes up to {spf.MAX_DEPTH} levels deep were walked "
+        f"(cap {spf.MAX_DEPTH} levels)."
+    )
 
 
 async def test_a_page_cut_at_the_size_cap_is_a_gap(monkeypatch: pytest.MonkeyPatch) -> None:
@@ -91,8 +94,8 @@ async def test_a_page_cut_at_the_size_cap_is_a_gap(monkeypatch: pytest.MonkeyPat
         ctx = context(Zone().public("example.com"))
         ctx = Context(ctx.domain, ctx.dns, ctx.catalog, ctx.checked_at, http)
         observed = await web.collect(ctx)
-    assert asked(observed)["the website: GET https://example.com/"].startswith(
-        "only the first 10 bytes"
+    assert asked(observed)["the website: GET https://example.com/"] == (
+        "the rest was not read. The first 10 bytes were read (cap 10 bytes)."
     )
 
 

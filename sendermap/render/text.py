@@ -57,9 +57,10 @@ def _checks(shown: View, console: Console) -> None:
             _line(f"{a.asked}: {a.happened}", console, 2)
             for answer in a.answers:
                 _line(answer, console, 4, _DIM)
-    _dim_section("NOT CHECKED", [f"{g.asked}: {g.happened}" for g in shown.gaps], console)
+    _dim_section("NOT CHECKED", [str(g) for g in shown.gaps], console)
     if shown.asked:
         _heading("WHAT WAS ASKED", console)
+        _line(shown.asked_total, console, 2, _DIM)
         for record in shown.asked:
             _line(f"{record.where}: {record.counts}", console, 2, _DIM)
             for heading, names in record.names:

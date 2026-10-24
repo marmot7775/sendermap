@@ -130,7 +130,10 @@ async def collect(ctx: Context, where: str) -> tuple[Observed, SpfTree]:
     walked = await _Walk(ctx, where).visit(where, record, depth=0, inside=None, authorized=True)
     if too_deep := list(dict.fromkeys(walked.too_deep)):
         asked = f"SPF includes more than {MAX_DEPTH} levels below {where}: {', '.join(too_deep)}"
-        happened = f"{len(too_deep)} not walked (cap of {MAX_DEPTH} levels)"
+        happened = (
+            f"{len(too_deep)} not walked. Includes up to {MAX_DEPTH} levels deep were walked "
+            f"(cap {MAX_DEPTH} levels)."
+        )
         gap = Gap(asked, happened, GapKind.SPF, len(too_deep), MAX_DEPTH)
         walked += _Walked(observed=Observed(gaps=(gap,)))
     tree = SpfTree(

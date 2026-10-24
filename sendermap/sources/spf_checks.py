@@ -157,7 +157,8 @@ def _left(asks: Sequence[_Ask]) -> Observed:
     gaps = tuple(
         Gap(
             f"{EVALUATION} at {where} for {', '.join(vendors)}",
-            f"not evaluated: the budget of {BUDGET} lookups per map was spent (cap)",
+            f"not evaluated. Evaluations ran until the budget of {BUDGET} lookups per map was "
+            f"spent (cap {BUDGET} lookups).",
             GapKind.SPF,
             len(vendors),
             BUDGET,
