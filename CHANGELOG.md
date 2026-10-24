@@ -11,6 +11,15 @@ fails before anything is published.
 
 ## Unreleased
 
+## 0.1.4 (2026-10-24)
+
+- The site leads with the story and the ring map side by side, above Needs attention, so the findings sit above the fold. The story prints one sentence per paragraph, its Not checked sentence muted. From 900px up the map takes a fixed 340px column beside the story; below that it stacks under the story and grows to 560px.
+- Every service name and sector label fits on the ring map. The rings stop inside the box to leave an outer band for names; each label sits outward along its own angle, at 10px (12px past 600px rendered), and a label that would collide is tried one line out, then one line up or down, before it is dropped. glossier.com shows 9 of 9 names and 4 of 4 sectors at 1280, 899 and 390px, where before it showed 3 and 1. The map draws after the result is shown and redraws on resize.
+- The map centre is a plain hub at half its old size. The domain no longer prints in it, since it fit only sometimes and heads the page already.
+- Services on the site are rows, not cards: name, category and where, tier badge, then the deciding record with the others under it, the setup clause and All records. Four columns from 900px up, two lines below. Each row keeps its `service-<slug>` id, so a tap on the map still lands on it.
+- Not checked and What was asked say each reason once in all three views. Gaps of one question, kind, cap and outcome are one group listing the names together ("DKIM selectors at marketing, receipts and send.glossier.com: 82 of 109 not asked at each"), with the cap said last. What was asked leads with the lookups and names in all.
+- certifi in `uv.lock` moves to 2026.10.23, past the emSign root CAs whose intermediate keys were compromised. It comes in through httpx; no code changes.
+
 ## 0.1.3 (2026-10-23)
 
 - The terminal and Markdown views render one view model (`render/view.py`) and say each thing once: findings come first, each service shows one evidence line per kind ("DKIM keys: selector1, selector2 (both 2048 bit, by CNAME)") and its setup in one clause ("setup complete", or only what is missing), an item a finding names is said in the setup by its state alone, and What was asked gives counts. Full records and the names asked print with `--evidence`, the names in Markdown as a last section, Appendix: names asked. The Markdown senders table gains a Setup column, and its Setups section goes. Allbirds' Markdown view falls from 111 lines to 76.
