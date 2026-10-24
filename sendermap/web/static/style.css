@@ -109,7 +109,8 @@ button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 .actions button { font-size: .9rem; font-weight: 500; padding: 8px 12px; min-height: 40px; }
 
 .map-wrap { margin: 0; background: var(--surface); border: 1px solid var(--line); border-radius: 18px; box-shadow: var(--shadow); padding: 10px 10px 16px; }
-#map { width: 100%; height: auto; max-height: 340px; display: block; }
+#map { width: 100%; height: auto; max-width: 560px; margin: 0 auto; display: block; }
+@media (min-width: 900px) { #map { max-height: 340px; } }
 .ring { fill: none; stroke: var(--line); stroke-width: 1; }
 .ring-label { fill: var(--ink-3); font-size: 11px; letter-spacing: .06em; text-transform: uppercase; }
 .spoke { stroke: var(--line); stroke-width: 1; }
