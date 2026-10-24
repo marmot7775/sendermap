@@ -61,17 +61,19 @@
 </section>
 <section class="view-section tier">
 <h3 class="section-title">In use</h3>
-<div class="cards">
-<article class="card" id="service-google-workspace">
-<div class="card-head"><h4>Google Workspace</h4><span class="badge b-in-use">In use</span></div>
+<div class="rows">
+<article class="row" id="service-google-workspace">
+<h4>Google Workspace</h4>
 <p class="meta">Mailbox</p>
+<span class="badge b-in-use">In use</span>
+<div class="row-body">
+<p class="decider"><span class="kind">MX</span>: aspmx.l.google.com, alt1.aspmx.l.google.com and 3 more</p>
 <ul class="claims">
-<li class="decider"><span class="kind">MX</span>: aspmx.l.google.com, alt1.aspmx.l.google.com and 3 more</li>
 <li><span class="kind">SPF passes its address</span>: ip4:209.85.128.0/17</li>
 <li><span class="kind">MX for a subdomain&#x27;s mail</span>: aspmx.l.google.com, alt1.aspmx.l.google.com and 3 more at receipts.glossier.com</li>
 <li><span class="kind">DKIM key</span>: google (2048 bit, named for it)</li>
 </ul>
-<p class="meta setup">setup incomplete: SPF missing at receipts.glossier.com, DKIM missing at receipts.glossier.com</p>
+<p class="setup">setup incomplete: SPF missing at receipts.glossier.com, DKIM missing at receipts.glossier.com</p>
 <details class="records"><summary>All records</summary>
 <p class="kind">MX</p>
 <ul class="records">
@@ -97,19 +99,22 @@
 <ul class="records">
 <li class="ev mono">google._domainkey.glossier.com TXT v=DKIM1; k=rsa; p=MIIBIjANBgkq..., 2048-bit, fp 40785b4787f0f30f via glossier.com MX 10 aspmx.l.google.com</li>
 </ul>
-<p class="meta setup">setup incomplete: SPF present at glossier.com, DKIM present at glossier.com, MX present at glossier.com and receipts.glossier.com, bounce CNAME not needed at glossier.com and receipts.glossier.com, SPF missing at receipts.glossier.com, DKIM missing at receipts.glossier.com</p>
+<p class="setup">setup incomplete: SPF present at glossier.com, DKIM present at glossier.com, MX present at glossier.com and receipts.glossier.com, bounce CNAME not needed at glossier.com and receipts.glossier.com, SPF missing at receipts.glossier.com, DKIM missing at receipts.glossier.com</p>
 </details>
+</div>
 </article>
 </div>
 </section>
 <section class="view-section tier">
 <h3 class="section-title">Configured</h3>
-<div class="cards">
-<article class="card" id="service-help-scout">
-<div class="card-head"><h4>Help Scout</h4><span class="badge b-configured">Configured</span></div>
+<div class="rows">
+<article class="row" id="service-help-scout">
+<h4>Help Scout</h4>
 <p class="meta">Support and CRM</p>
+<span class="badge b-configured">Configured</span>
+<div class="row-body">
+<p class="decider"><span class="kind">SPF passes its address</span>: ip4:52.0.20.102</p>
 <ul class="claims">
-<li class="decider"><span class="kind">SPF passes its address</span>: ip4:52.0.20.102</li>
 <li><span class="kind">DKIM keys</span>: strong1, strong2 (both 2048 bit, by CNAME)</li>
 </ul>
 <details class="records"><summary>All records</summary>
@@ -123,16 +128,19 @@
 <li class="ev mono">strong2._domainkey.glossier.com TXT v=DKIM1; k=rsa; p=MIIBIjANBgkq..., 2048-bit, fp 6d999cc9f7fe9631 via strong2._domainkey.helpscout.net</li>
 </ul>
 </details>
+</div>
 </article>
-<article class="card" id="service-klaviyo">
-<div class="card-head"><h4>Klaviyo</h4><span class="badge b-configured">Configured</span></div>
+<article class="row" id="service-klaviyo">
+<h4>Klaviyo</h4>
 <p class="meta">Marketing</p>
+<span class="badge b-configured">Configured</span>
+<div class="row-body">
+<p class="decider"><span class="kind">DKIM keys</span>: kl, kl2 (both 2048 bit, by CNAME)</p>
 <ul class="claims">
-<li class="decider"><span class="kind">DKIM keys</span>: kl, kl2 (both 2048 bit, by CNAME)</li>
 <li><span class="kind">Bounce CNAME</span>: send.glossier.com</li>
 <li><span class="kind">Verification token</span>: klaviyo-site-verification=Sn6eFZ</li>
 </ul>
-<p class="meta setup">setup complete</p>
+<p class="setup">setup complete</p>
 <details class="records"><summary>All records</summary>
 <p class="kind">DKIM keys</p>
 <ul class="records">
@@ -147,30 +155,32 @@
 <ul class="records">
 <li class="ev mono">glossier.com TXT klaviyo-site-verification=Sn6eFZ</li>
 </ul>
-<p class="meta setup">setup complete: DKIM present, bounce CNAME present, SPF not needed</p>
+<p class="setup">setup complete: DKIM present, bounce CNAME present, SPF not needed</p>
 </details>
+</div>
 </article>
-<article class="card" id="service-postmark">
-<div class="card-head"><h4>Postmark</h4><span class="badge b-configured">Configured</span></div>
+<article class="row" id="service-postmark">
+<h4>Postmark</h4>
 <p class="meta">Transactional</p>
-<ul class="claims">
-<li class="decider"><span class="kind">Bounce CNAME</span>: pm-bounces.glossier.com</li>
-</ul>
-<p class="meta setup">setup complete</p>
+<span class="badge b-configured">Configured</span>
+<div class="row-body">
+<p class="decider"><span class="kind">Bounce CNAME</span>: pm-bounces.glossier.com</p>
+<p class="setup">setup complete</p>
 <details class="records"><summary>All records</summary>
 <p class="kind">Bounce CNAME</p>
 <ul class="records">
 <li class="ev mono">pm-bounces.glossier.com CNAME pm.mtasv.net</li>
 </ul>
-<p class="meta setup">setup complete: SPF not needed, bounce CNAME present</p>
+<p class="setup">setup complete: SPF not needed, bounce CNAME present</p>
 </details>
+</div>
 </article>
-<article class="card" id="service-salesforce">
-<div class="card-head"><h4>Salesforce</h4><span class="badge b-configured">Configured</span></div>
+<article class="row" id="service-salesforce">
+<h4>Salesforce</h4>
 <p class="meta">Support and CRM</p>
-<ul class="claims">
-<li class="decider"><span class="kind">DKIM keys</span>: salesforce2, salesforce1 (both 2048 bit, by CNAME)</li>
-</ul>
+<span class="badge b-configured">Configured</span>
+<div class="row-body">
+<p class="decider"><span class="kind">DKIM keys</span>: salesforce2, salesforce1 (both 2048 bit, by CNAME)</p>
 <details class="records"><summary>All records</summary>
 <p class="kind">DKIM keys</p>
 <ul class="records">
@@ -178,18 +188,21 @@
 <li class="ev mono">salesforce1._domainkey.glossier.com TXT v=DKIM1; p=MIIBIjANBgkq..., 2048-bit, fp b89c6f4a80bb10de via salesforce1.6nkqhl.custdkim.salesforce.com</li>
 </ul>
 </details>
+</div>
 </article>
-<article class="card" id="service-sendgrid">
-<div class="card-head"><h4>SendGrid</h4><span class="badge b-configured">Configured</span></div>
+<article class="row" id="service-sendgrid">
+<h4>SendGrid</h4>
 <p class="meta">Transactional</p>
+<span class="badge b-configured">Configured</span>
+<div class="row-body">
+<p class="decider"><span class="kind">DKIM keys</span>: s1, s2 (1024 and 2048 bit, by CNAME)</p>
 <ul class="claims">
-<li class="decider"><span class="kind">DKIM keys</span>: s1, s2 (1024 and 2048 bit, by CNAME)</li>
 <li><span class="kind">Tracking CNAME</span>: link.glossier.com</li>
 <li><span class="kind">MX for bounces</span>: mx.sendgrid.net, mx2.sendgrid.net at marketing.glossier.com and send.glossier.com</li>
 <li><span class="kind">SPF</span>: include:ab.sendgrid.net, include:sendgrid.net at marketing.glossier.com and send.glossier.com</li>
 <li><span class="kind">SPF ranges</span>: ip4:208.117.48.0/20, ip4:50.31.32.0/19 and 9 more at marketing.glossier.com</li>
 </ul>
-<p class="meta setup">setup complete</p>
+<p class="setup">setup complete</p>
 <details class="records"><summary>All records</summary>
 <p class="kind">DKIM keys</p>
 <ul class="records">
@@ -225,17 +238,20 @@
 <li class="ev mono">marketing.glossier.com TXT ip4:167.89.0.0/17 via 1.0.89.167.origin.asn.cymru.com TXT 11377 | 167.89.0.0/18 | US | arin | 2013-10-31 via as11377.asn.cymru.com TXT 11377 | US | arin | 2012-06-28 | SENDGRID - SendGrid, Inc., US via 1.64.89.167.origin.asn.cymru.com TXT 11377 | 167.89.64.0/19 | US | arin | 2013-10-31 via 1.96.89.167.origin.asn.cymru.com TXT 11377 | 167.89.96.0/20 | US | arin | 2013-10-31</li>
 <li class="ev mono">marketing.glossier.com TXT ip4:168.245.0.0/17 via 1.0.245.168.origin.asn.cymru.com TXT 11377 | 168.245.0.0/18 | US | arin | 2016-11-10 via as11377.asn.cymru.com TXT 11377 | US | arin | 2012-06-28 | SENDGRID - SendGrid, Inc., US via 1.64.245.168.origin.asn.cymru.com TXT 11377 | 168.245.64.0/20 | US | arin | 2016-11-10 via 1.96.245.168.origin.asn.cymru.com TXT 11377 | 168.245.96.0/19 | US | arin | 2016-11-10</li>
 </ul>
-<p class="meta setup">setup complete: DKIM present, bounce CNAME present, SPF not needed, tracking CNAME present</p>
+<p class="setup">setup complete: DKIM present, bounce CNAME present, SPF not needed, tracking CNAME present</p>
 </details>
+</div>
 </article>
-<article class="card" id="service-zendesk">
-<div class="card-head"><h4>Zendesk</h4><span class="badge b-configured">Configured</span></div>
+<article class="row" id="service-zendesk">
+<h4>Zendesk</h4>
 <p class="meta">Support and CRM</p>
+<span class="badge b-configured">Configured</span>
+<div class="row-body">
+<p class="decider"><span class="kind">SPF passes its address</span>: ip4:103.151.192.0/23</p>
 <ul class="claims">
-<li class="decider"><span class="kind">SPF passes its address</span>: ip4:103.151.192.0/23</li>
 <li><span class="kind">DKIM keys</span>: zendesk1, zendesk2 (both 2048 bit, by CNAME)</li>
 </ul>
-<p class="meta setup">setup complete</p>
+<p class="setup">setup complete</p>
 <details class="records"><summary>All records</summary>
 <p class="kind">SPF passes its address</p>
 <ul class="records">
@@ -246,46 +262,49 @@
 <li class="ev mono">zendesk1._domainkey.glossier.com TXT v=DKIM1; t=s (strict); n=core; k=rsa; p=MIIBIjANBgkq..., 2048-bit, fp 45ce096f162d5ec4 via zendesk1._domainkey.zendesk.com</li>
 <li class="ev mono">zendesk2._domainkey.glossier.com TXT v=DKIM1; t=s (strict); n=core; k=rsa; p=MIIBIjANBgkq..., 2048-bit, fp c5fa8a017cd8c5a5 via zendesk2._domainkey.zendesk.com</li>
 </ul>
-<p class="meta setup">setup complete: SPF present, DKIM present</p>
+<p class="setup">setup complete: SPF present, DKIM present</p>
 </details>
+</div>
 </article>
 </div>
 </section>
 <section class="view-section tier">
 <h3 class="section-title">Likely</h3>
-<div class="cards">
-<article class="card" id="service-mandrill">
-<div class="card-head"><h4>Mandrill</h4><span class="badge b-likely">Likely</span></div>
+<div class="rows">
+<article class="row" id="service-mandrill">
+<h4>Mandrill</h4>
 <p class="meta">Transactional</p>
-<ul class="claims">
-<li class="decider"><span class="kind">DKIM key</span>: mandrill (1024 bit, named for it)</li>
-</ul>
-<p class="meta setup">setup complete</p>
+<span class="badge b-likely">Likely</span>
+<div class="row-body">
+<p class="decider"><span class="kind">DKIM key</span>: mandrill (1024 bit, named for it)</p>
+<p class="setup">setup complete</p>
 <details class="records"><summary>All records</summary>
 <p class="kind">DKIM key</p>
 <ul class="records">
 <li class="ev mono">mandrill._domainkey.glossier.com TXT v=DKIM1; k=rsa; p=MIGfMA0GCSqG..., 1024-bit, fp 9cee89b6f986543a</li>
 </ul>
-<p class="meta setup">setup complete: DKIM present (older setup: a key at mandrill; the current setup names mte1 and mte2), bounce CNAME not used (optional, CNAME at 25 labels under glossier.com), tracking CNAME not used (optional, CNAME at 25 labels under glossier.com)</p>
+<p class="setup">setup complete: DKIM present (older setup: a key at mandrill; the current setup names mte1 and mte2), bounce CNAME not used (optional, CNAME at 25 labels under glossier.com), tracking CNAME not used (optional, CNAME at 25 labels under glossier.com)</p>
 </details>
+</div>
 </article>
 </div>
 </section>
 <section class="view-section tier">
 <h3 class="section-title">Account only</h3>
-<div class="cards">
-<article class="card" id="service-amazon-ses">
-<div class="card-head"><h4>Amazon SES</h4><span class="badge b-account-only">Account only</span></div>
+<div class="rows">
+<article class="row" id="service-amazon-ses">
+<h4>Amazon SES</h4>
 <p class="meta">Transactional</p>
-<ul class="claims">
-<li class="decider"><span class="kind">Verification token</span>: amazonses:awBV5EM6W53p2/Xbg80uJ29zurZnGsMMJcLLLp6vUcY=</li>
-</ul>
+<span class="badge b-account-only">Account only</span>
+<div class="row-body">
+<p class="decider"><span class="kind">Verification token</span>: amazonses:awBV5EM6W53p2/Xbg80uJ29zurZnGsMMJcLLLp6vUcY=</p>
 <details class="records"><summary>All records</summary>
 <p class="kind">Verification token</p>
 <ul class="records">
 <li class="ev mono">glossier.com TXT amazonses:awBV5EM6W53p2/Xbg80uJ29zurZnGsMMJcLLLp6vUcY=</li>
 </ul>
 </details>
+</div>
 </article>
 </div>
 </section>
