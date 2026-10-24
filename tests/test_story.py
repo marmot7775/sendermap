@@ -383,11 +383,21 @@ def test_every_view_carries_the_story() -> None:
     assert md[0] == f"# Sendermap: {DOMAIN}" and md[4] == mapped.story  # under the counts
     assert mapped.to_dict()["story"] == mapped.story
     page = html.html(mapped)
-    assert f'<p class="story">{escape(mapped.story)}</p>' in page
-    assert page.index('class="story"') < page.index("Needs attention")
-    # The page puts the ring map right after the story.
+    assert said[-1].startswith("Not checked")  # the one sentence the page mutes
+    paragraphs = [*(f"<p>{escape(s)}</p>" for s in said[:-1])]
+    paragraphs.append(f'<p class="story-muted">{escape(said[-1])}</p>')
+    assert "\n".join(['<div class="lead">', '<div class="story">', *paragraphs]) in page
+    assert page.index('class="lead"') < page.index("Needs attention")
+    # The page puts the ring map in the lead block, beside the story.
     js = (Path(text.__file__).parent.parent / "web" / "static" / "app.js").read_text()
-    assert "story.after(figure)" in js
+    assert "lead.append(figure)" in js
+
+
+def test_a_story_the_rules_did_not_write_is_one_paragraph() -> None:
+    written = "A story written by hand. It has two sentences."
+    page = html.html(replace(every_sentence(), story=written))
+    story_block = page[page.index('<div class="story">') : page.index("</div>")]
+    assert story_block.count("<p") == 1 and f"<p>{escape(written)}</p>" in story_block
 
 
 # ------------------------------------------------------------------ optional wording

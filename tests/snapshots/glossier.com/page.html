@@ -2,7 +2,14 @@
 <h2>glossier.com</h2>
 <p class="summary">9 sending services found from public records checked 2026-10-12 01:25 UTC (739 lookups in 0.0 s over Google DNS over HTTPS).</p>
 </header>
-<p class="story">Google Workspace receives the domain&#x27;s mail and has a DKIM key in place to sign it. Six other services are set up to send as the domain: three support and CRM (Help Scout, Salesforce, Zendesk), one marketing (Klaviyo), two transactional (Postmark, SendGrid); one more is likely from a DKIM key name alone (Mandrill). One service shows an account and nothing set up to send (Amazon SES); DMARC reports go to Valimail. Not checked: the website (turned off), DKIM selectors past the first 27 on three subdomains, and the crt.sh certificate log (read only with --ct).</p>
+<div class="lead">
+<div class="story">
+<p>Google Workspace receives the domain&#x27;s mail and has a DKIM key in place to sign it.</p>
+<p>Six other services are set up to send as the domain: three support and CRM (Help Scout, Salesforce, Zendesk), one marketing (Klaviyo), two transactional (Postmark, SendGrid); one more is likely from a DKIM key name alone (Mandrill).</p>
+<p>One service shows an account and nothing set up to send (Amazon SES); DMARC reports go to Valimail.</p>
+<p class="story-muted">Not checked: the website (turned off), DKIM selectors past the first 27 on three subdomains, and the crt.sh certificate log (read only with --ct).</p>
+</div>
+</div>
 <section class="view-section attention">
 <h3 class="section-title">Needs attention</h3>
 <div class="finding warning">

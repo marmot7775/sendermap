@@ -91,7 +91,8 @@ function fail(message) {
 // ------------------------------------------------------------------ the result
 
 // The fragment is the View the command line shows. Its head moves into the result head beside
-// the actions, and the ring map goes between the story and Needs attention.
+// the actions, and the ring map goes into the lead block beside the story, above Needs
+// attention. A map with no story gets a lead block of its own for the figure.
 function render(map, fragment) {
   current = map;
   hide("progress");
@@ -101,8 +102,9 @@ function render(map, fragment) {
   const view = $("view");
   view.innerHTML = fragment;
   $("head").replaceChildren(...view.querySelectorAll(".view-head"));
-  const story = view.querySelector(".story");
-  if (story) story.after(figure); else view.prepend(figure);
+  let lead = view.querySelector(".lead");
+  if (!lead) { lead = document.createElement("div"); lead.className = "lead"; view.prepend(lead); }
+  lead.append(figure);
   drawMap(map.domain, map.services.filter((s) => s.role === "sender"));
   show("result");
   $("result").scrollIntoView({ behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" });

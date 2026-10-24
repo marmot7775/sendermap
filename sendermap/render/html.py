@@ -107,8 +107,19 @@ def _head(head: Head) -> str:
         "</header>",
     ]
     if head.story:
-        lines.append(f'<p class="story">{_e(head.story)}</p>')
+        lines += ['<div class="lead">', *_story(head), "</div>"]
     return "\n".join(lines) + "\n"
+
+
+def _story(head: Head) -> list[str]:
+    """The story one paragraph per sentence, the Not checked one muted. A story the rules did not
+    write comes as one string and stays one paragraph."""
+    said = head.sentences or (head.story,)
+    paragraphs = [
+        f'<p class="story-muted">{_e(s)}</p>' if s.startswith("Not checked") else f"<p>{_e(s)}</p>"
+        for s in said
+    ]
+    return ['<div class="story">', *paragraphs, "</div>"]
 
 
 def _findings(findings: tuple[FindingView, ...]) -> str:
