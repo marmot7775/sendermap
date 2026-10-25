@@ -15,6 +15,14 @@ fails before anything is published.
   reports how much of what they publish Sendermap names, with the unnamed evidence ranked by how
   many domains publish it. Runs are kept in `benchmark/runs/`; `--compare` shows what changed
   between two. The 0.1.7 baseline is in `benchmark/README.md`.
+- Four services from the benchmark's work list are named. Yandex 360 by its MX (`mx.yandex.net`,
+  `mx.yandex.ru`) and SPF (`_spf.yandex.net`, `_spf.yandex.ru`), with a setup from Yandex's own
+  MX and SPF pages. VK WorkSpace, the former Mail.ru for business, by its MX (`emx.mail.ru`,
+  `mxs.mail.ru`), its SPF (`_spf.mail.ru`) and its `mailru-domain:` token. Amazon WorkMail by an
+  autodiscover CNAME into `awsapps.com`; its MX and SPF are Amazon SES hosts and stay unnamed.
+  ResellerClub by `_spf.myorderbox.com`, which hosts and registrars publish so the reseller
+  platform can send its notices as them: it sits in Commerce and apps, not Mailbox. Every map
+  asks nine more SPF lookups, for the ranges these includes publish.
 
 ## 0.1.7 (2026-10-25)
 

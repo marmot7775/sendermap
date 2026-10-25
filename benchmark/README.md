@@ -40,9 +40,9 @@ A service a domain lost with no catalog change behind it is either drift or a bu
 
 Leads a catalog pass should look at, from the run's ranked tables:
 
-- Mailbox services with no entry: Yandex 360 (`mx.yandex.net`), Mail.ru for business
-  (`emx.mail.ru`, `_spf.mail.ru`), Amazon WorkMail (`*.awsapps.com` autodiscover), the
-  ResellerClub family's hosted mail (`_spf.myorderbox.com`).
+- Done after the run: Yandex 360, VK WorkSpace (Mail.ru for business), Amazon WorkMail by its
+  autodiscover CNAME, and ResellerClub. `_spf.myorderbox.com` turned out to be the reseller
+  platform's notification mail, not hosted mail, so ResellerClub is in Commerce and apps.
 - Report receivers with no entry: `rua.dmarc.emailanalyst.com`, the US federal DMARC receiver
   (`dmarc.cyber.dhs.gov`).
 - Proofpoint's own networks (AS22843, AS26211) in SPF at 6 domains, not credited.

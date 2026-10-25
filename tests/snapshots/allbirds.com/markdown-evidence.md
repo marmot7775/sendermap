@@ -1,7 +1,7 @@
 # Sendermap: allbirds.com
 
 15 services send email as this domain · 3 things to fix  
-Checked 2026-10-12 01:24 UTC · 753 lookups in 0.0 s over Google DNS over HTTPS
+Checked 2026-10-12 01:24 UTC · 763 lookups in 0.0 s over Google DNS over HTTPS
 
 Microsoft 365 receives the domain's mail and has a DKIM key in place to sign it.
 
@@ -306,7 +306,7 @@ Transactional · likely
 
 ## How this was checked
 
-Asked 753 lookups at 6 names:
+Asked 763 lookups at 6 names:
 
 - allbirds.com: 109 DKIM selectors, 25 CNAME labels, 1 page
 - alerts.allbirds.com: 32 DKIM selectors

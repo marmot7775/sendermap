@@ -1,7 +1,7 @@
 # Sendermap: casper.com
 
 14 services send email as this domain · 4 things to fix  
-Checked 2026-10-12 01:25 UTC · 729 lookups in 0.0 s over Google DNS over HTTPS
+Checked 2026-10-12 01:25 UTC · 739 lookups in 0.0 s over Google DNS over HTTPS
 
 Google Workspace receives the domain's mail and has a DKIM key in place to sign it.
 
@@ -243,7 +243,7 @@ Mailbox · account only
 
 ## How this was checked
 
-Asked 729 lookups at 6 names:
+Asked 739 lookups at 6 names:
 
 - casper.com: 109 DKIM selectors, 25 CNAME labels, 1 page
 - e.casper.com: 32 DKIM selectors

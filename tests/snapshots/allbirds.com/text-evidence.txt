@@ -1,7 +1,7 @@
 ╭──────────────────────────────────────────────────────────────────────────────────╮
 │  allbirds.com                                                                    │
 │  15 services send email as this domain   ·   3 things to fix                     │
-│  checked 2026-10-12 01:24 UTC · 753 lookups in 0.0 s over Google DNS over HTTPS  │
+│  checked 2026-10-12 01:24 UTC · 763 lookups in 0.0 s over Google DNS over HTTPS  │
 ╰──────────────────────────────────────────────────────────────────────────────────╯
 
   Microsoft 365 receives the domain's mail and has a DKIM key in place to sign it.
@@ -419,7 +419,7 @@ CHECKED AND NOT THERE
     _domainkey.mail.allbirds.com TXT no record of this type
 
 HOW THIS WAS CHECKED
-  Asked 753 lookups at 6 names:
+  Asked 763 lookups at 6 names:
     allbirds.com: 109 DKIM selectors, 25 CNAME labels, 1 page
     alerts.allbirds.com: 32 DKIM selectors
     bounce.allbirds.com: 8 DKIM selectors
