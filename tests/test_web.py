@@ -168,3 +168,11 @@ def test_the_page_holds_no_copy_of_the_views_logic() -> None:
     ):
         assert f'id="{gone}"' not in page
     assert 'id="view"' in page
+
+
+async def test_the_page_links_its_assets_by_version() -> None:
+    async with client() as c:
+        page = (await c.get("/")).text
+    for asset in site.ASSETS:
+        assert f'"{asset}?v={sendermap.__version__}"' in page
+        assert f'"{asset}"' not in page
