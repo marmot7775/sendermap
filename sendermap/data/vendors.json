@@ -4126,6 +4126,24 @@
             "date": "2026-10-10"
           }
         }
+      ],
+      "networks": [
+        {
+          "value": "AS22843",
+          "proof": {
+            "domain": "pphosted.com",
+            "record": "mx0b-00148501.pphosted.com",
+            "date": "2026-10-25"
+          }
+        },
+        {
+          "value": "AS26211",
+          "proof": {
+            "domain": "pphosted.com",
+            "record": "mx0a-00148501.pphosted.com",
+            "date": "2026-10-25"
+          }
+        }
       ]
     },
     "Proton Mail": {
