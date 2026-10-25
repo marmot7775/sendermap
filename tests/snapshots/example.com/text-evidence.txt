@@ -19,11 +19,11 @@ NOTES
 HOW THIS WAS CHECKED
   Asked 210 lookups at 1 name:
     example.com: 25 CNAME labels, 2 pages
+      Pages: https://example.com/,                                                                  
+      https://api.certspotter.com/v1/issuances?domain=example.com&include_subdomains=true&expand=dns
+      _names                                                                                        
+      CNAME labels: bounce, bounces, em, email, mail, send, mta, rp, pm-bounces, links, link, click,
+      track, tracking, url, go, autodiscover, cf-bounce, eversrv, fwdkim1, bnc3, bounces.cloud.em,  
+      bounces.cloud2.em, outbound.intercom, atlassian-bounces                                       
   Not run: certificate transparency, crt.sh: read only with --ct (it also holds expired             
   certificates)                                                                                     
-    example.com, Pages: https://example.com/,                                                       
-    https://api.certspotter.com/v1/issuances?domain=example.com&include_subdomains=true&expand=dns_n
-    ames                                                                                            
-    example.com, CNAME labels: bounce, bounces, em, email, mail, send, mta, rp, pm-bounces, links,  
-    link, click, track, tracking, url, go, autodiscover, cf-bounce, eversrv, fwdkim1, bnc3,         
-    bounces.cloud.em, bounces.cloud2.em, outbound.intercom, atlassian-bounces                       

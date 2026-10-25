@@ -135,6 +135,7 @@
 {"chain": [], "name": "_spf.mailgun.org", "records": ["v=spf1 include:_spf1.mailgun.org include:_spf2.mailgun.org ~all"], "rtype": "TXT", "status": "ok"},
 {"chain": [], "name": "_spf.mailspamprotection.com", "records": ["v=spf1 ip4:185.56.84.0/24 ip4:185.56.85.0/24 ip4:185.56.86.0/24 ip4:185.56.87.0/24 ~all"], "rtype": "TXT", "status": "ok"},
 {"chain": [], "name": "_spf.mx.cloudflare.net", "records": ["v=spf1 ip4:104.30.0.0/19 ip6:2405:8100:c000::/38 ~all"], "rtype": "TXT", "status": "ok"},
+{"chain": [], "name": "_spf.myorderbox.com", "records": ["v=spf1 ip4:162.215.231.0/24 ip4:162.214.222.0/24 ?all"], "rtype": "TXT", "status": "ok"},
 {"chain": [], "name": "_spf.netigate.se", "records": ["v=spf1 ip4:89.45.227.221 ip4:89.45.227.195 ip4:86.107.243.139 ip4:143.55.236.39 ip4:141.193.32.19 -all"], "rtype": "TXT", "status": "ok"},
 {"chain": [], "name": "_spf.protonmail.ch", "records": ["v=spf1 ip4:185.70.40.0/24 ip4:185.70.41.0/24 ip4:185.70.43.0/24 ip4:79.135.106.0/24 ip4:79.135.107.0/24 ip4:109.224.244.0/24 include:_spf2.protonmail.ch ~all"], "rtype": "TXT", "status": "ok"},
 {"chain": [], "name": "_spf.q4press.com", "records": ["v=spf1 a:web.q4press.com -all"], "rtype": "TXT", "status": "ok"},

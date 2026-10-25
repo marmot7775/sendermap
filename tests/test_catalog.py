@@ -62,6 +62,14 @@ def test_tracking_labels_prefer_the_tracking_table() -> None:
     assert C.label_cname("bounce", "example.net") is None
 
 
+def test_a_web_host_is_a_website_except_at_a_tracking_label() -> None:
+    assert C.is_website("mail", "ghs.googlehosted.com")
+    assert C.is_website("EM", "em.dell.com.edgekey.net")
+    assert not C.is_website("link", "d15y5qe1i4b8ob.cloudfront.net")  # a CDN can serve clicks
+    assert not C.is_website("mail", "mailrelay.us-west-2.elb.amazonaws.com")
+    assert not C.is_website("mail", "googlehosted.com.evil.example")
+
+
 def test_website_signatures_match_hosts_and_their_subdomains_only() -> None:
     page = '<script src="https://eu1.static.zdassets.com/x.js"></script> notstatic.zdassets.com'
     loaded = ["eu1.static.zdassets.com"]

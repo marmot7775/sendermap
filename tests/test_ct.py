@@ -27,6 +27,7 @@ from sendermap.model import (
     Tier,
 )
 from sendermap.render import ct_lines, markdown
+from sendermap.render.view import view
 from sendermap.sources import Context, ct
 
 RECORDED = json.loads((Path(__file__).parent / "fixtures" / "crtsh_allbirds.json").read_text())
@@ -344,3 +345,84 @@ async def test_the_map_and_its_markdown_carry_the_ct_section(tmp_path: Path) -> 
         "status": "read",
         "logged": 9,
     }
+
+
+async def test_a_cached_answer_dated_without_a_zone_is_fetched_again(tmp_path: Path) -> None:
+    # A cache written by hand or by an older build: comparing it with the map's aware time
+    # raised TypeError instead of counting as no cache.
+    for key in ("crtsh", "certspotter"):
+        (tmp_path / key).mkdir()
+        stored = {"fetched_at": "2026-10-09T11:00:00", "rows": []}
+        (tmp_path / key / f"{DOMAIN}.json").write_text(json.dumps(stored))
+    logs = Logs()
+    _, summary = await run(logs, tmp_path)
+    assert len(logs.requests) == 2
+    assert [p.status for p in summary.providers] == [CtStatus.READ, CtStatus.READ]
+
+
+@pytest.mark.parametrize(
+    ("answer", "said"),
+    [
+        (httpx.Response(200, text="<html>busy</html>"), "the answer was not JSON"),
+        (
+            httpx.Response(200, json={"error": "rate limited"}),
+            "the answer was not a list of certificates",
+        ),
+    ],
+)
+async def test_an_answer_that_is_not_a_list_of_certificates_is_a_gap(
+    answer: httpx.Response, said: str
+) -> None:
+    async with httpx.AsyncClient(transport=httpx.MockTransport(lambda _: answer)) as http:
+        fetched = await ct._fetch(http, ct.CRT_SH, DOMAIN)
+    assert fetched == f"unavailable after {ct.CRT_SH.tries} tries: {said}"
+
+
+async def test_no_web_client_fetches_nothing() -> None:
+    assert await ct._fetch(None, ct.CRT_SH, DOMAIN) == "not fetched: no web client"
+
+
+def logged(name: str) -> Logs:
+    return Logs(body=[{"name_value": name, "not_before": "2026-01-01", "not_after": "2027-01-01"}])
+
+
+async def test_a_logged_name_in_a_range_one_service_publishes_is_credited_to_it() -> None:
+    dns = (
+        Zone()
+        .add("amazonses.com", "TXT", "v=spf1 ip4:198.51.100.0/24 -all")
+        .add("ses.allbirds.com", "A", "198.51.100.9", "0.bogus")  # sorted first
+    )
+    observed, _ = await run(logged("ses.allbirds.com"), None, dns=dns)
+    (claim,) = observed.claims
+    assert (claim.service, claim.kind, claim.where) == (
+        "Amazon SES",
+        Kind.CT_ADDRESS,
+        "ses.allbirds.com",
+    )
+    assert claim.evidence.value.startswith("A 198.51.100.9; named in a certificate")
+    assert [s.value for s in claim.supporting] == ["ip4:198.51.100.0/24"]
+
+
+async def test_the_map_names_the_mx_host_a_logged_name_points_at(tmp_path: Path) -> None:
+    async with httpx.AsyncClient(transport=httpx.MockTransport(Logs())) as http:
+        result = await map_domain(
+            DOMAIN,
+            checked_at=CHECKED,
+            resolver=zone(),
+            http=http,
+            use_web=False,
+            use_subdomains=False,
+            use_ct=True,
+            ct_cache=tmp_path,
+        )
+    mailgun = next(s for s in view(result, evidence=False).services if s.name == "Mailgun")
+    # The summary was the certificate's last date, "2027-01-01", the last word of its value.
+    assert [k.summary for k in mailgun.kinds] == ["mxa.mailgun.org"]
+
+
+async def test_a_cache_that_cannot_be_written_is_skipped(tmp_path: Path) -> None:
+    blocked = tmp_path / "cache"
+    blocked.write_text("a file where the directory would go")
+    logs = Logs()
+    _, summary = await run(logs, blocked)
+    assert [p.status for p in summary.providers] == [CtStatus.READ, CtStatus.READ]

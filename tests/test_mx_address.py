@@ -55,3 +55,9 @@ async def test_an_mx_host_whose_lookup_fails_stays_unknown() -> None:
     observed = await mx.collect(context(zone, "acme.test"), "acme.test")
     assert observed.claims == ()
     assert [u.value for u in observed.unknowns] == [HOST]
+
+
+async def test_an_mx_address_that_is_not_an_address_is_skipped() -> None:
+    zone = sendgrid_mx().add(HOST, "A", "0.bogus")  # answers are sorted, so this comes first
+    observed = await mx.collect(context(zone, "acme.test"), "acme.test")
+    assert [c.service for c in observed.claims] == ["SendGrid"]

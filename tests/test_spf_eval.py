@@ -242,3 +242,87 @@ def test_dns_over_https_reads_ptr_records() -> None:
     answer = parse_doh("10.2.0.192.in-addr.arpa", "PTR", body)
     assert answer.status is Status.OK
     assert answer.records == ("mail.example.com",)
+
+
+# ---------------------------------------------------------------- edges the suite does not reach
+
+
+def sender(local: str, domain: str = "example.com") -> str:
+    """A MAIL FROM at the reserved example domain, built from its parts."""
+    return f"{local}@{domain}"
+
+
+async def checked(
+    record: str, ip: str = KNOWN_IP, local: str = "news", zone: Zone | None = None
+) -> tuple[Verdict, Zone]:
+    zone = (zone or Zone()).add("example.com", "TXT", record)
+    ctx = Context("example.com", Lookups(zone), CATALOG, CHECKED)
+    return await check_host(ctx, ip, "example.com", sender(local), "mail.example.com"), zone
+
+
+def test_a_mail_from_without_a_local_part_is_postmaster() -> None:
+    assert mail_from("example.com", "mail.example.net") == (sender("postmaster"), "example.com")
+
+
+@pytest.mark.parametrize(
+    ("record", "ip", "local", "reason"),
+    [
+        ("v=spf1 -all", "not-an-ip", "a", "not an IP address: not-an-ip"),
+        ("v=spf1 a.b -all", KNOWN_IP, "a", "unreadable term: a.b"),
+        ("v=spf1 exists:%{l0}.example.com -all", KNOWN_IP, "a", "macro %{l0} keeps no parts"),
+        ("v=spf1 redirect=%{l}", KNOWN_IP, "a", "redirect=%{l} names no domain"),
+    ],
+)
+async def test_permerrors_name_what_was_wrong(
+    record: str, ip: str, local: str, reason: str
+) -> None:
+    found, _ = await checked(record, ip, local)
+    assert (found.result, found.reason) == (Result.PERMERROR, reason)
+
+
+async def test_an_include_that_expands_to_no_domain_does_not_match() -> None:
+    found, _ = await checked("v=spf1 include:%{l} -all", local="a")
+    assert (found.result, found.mechanism) == (Result.FAIL, "-all")
+
+
+async def test_a_name_longer_than_253_characters_loses_labels_from_the_left() -> None:
+    record = "v=spf1 exists:%{l}.%{l}.%{l}.%{l}.%{l}.example.com -all"
+    _, zone = await checked(record, local="x" * 60)
+    (asked,) = [name for name, rtype in zone.asked if rtype == "A"]
+    assert len(asked) <= 253 and asked.endswith(f"{'x' * 60}.example.com")
+
+
+async def test_an_address_record_that_is_not_an_address_is_skipped() -> None:
+    zone = Zone().add("example.com", "A", "192.0.2.1", "0.bogus")  # sorted first
+    found, _ = await checked("v=spf1 a/24 -all", zone=zone)
+    assert (found.result, found.mechanism) == (Result.PASS, "a/24")
+
+
+async def test_the_i_macro_of_an_ipv6_address_is_one_label_per_nibble() -> None:
+    nibbles = ".".join("20010db8000000000000000000000001")
+    zone = Zone().add(f"{nibbles}.ip6.example.com", "A", "127.0.0.2")
+    found, _ = await checked("v=spf1 exists:%{i}.ip6.example.com -all", ip="2001:db8::1", zone=zone)
+    assert found.result is Result.PASS
+
+
+@pytest.mark.parametrize(
+    ("ptr", "expected"),
+    [
+        ("example.com", "example.com"),  # the domain itself
+        ("mail.example.com", "mail.example.com"),  # a name under it
+        ("other.org", "other.org"),  # neither: the first validated name
+    ],
+)
+async def test_the_p_macro_prefers_the_domain_then_a_name_under_it(ptr: str, expected: str) -> None:
+    zone = (
+        Zone()
+        .add("10.2.0.192.in-addr.arpa", "PTR", "localhost", ptr)  # one label: never asked
+        .add(ptr, "A", "0.junk", KNOWN_IP)  # sorted first, and not an address
+        .add(f"{expected}.ok.example.net", "A", "127.0.0.2")
+    )
+    found, asked = await checked(
+        "v=spf1 ptr:nomatch.org exists:%{p}.ok.example.net -all", zone=zone
+    )
+    assert found.result is Result.PASS
+    assert ("localhost", "A") not in asked.asked
+    assert asked.asked.count(("10.2.0.192.in-addr.arpa", "PTR")) == 1  # validated once per check

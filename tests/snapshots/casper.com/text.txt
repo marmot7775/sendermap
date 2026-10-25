@@ -1,7 +1,7 @@
 ╭──────────────────────────────────────────────────────────────────────────────────╮
 │  casper.com                                                                      │
 │  14 services send email as this domain   ·   4 things to fix                     │
-│  checked 2026-10-12 01:25 UTC · 739 lookups in 0.0 s over Google DNS over HTTPS  │
+│  checked 2026-10-12 01:25 UTC · 740 lookups in 0.0 s over Google DNS over HTTPS  │
 ╰──────────────────────────────────────────────────────────────────────────────────╯
 
   Google Workspace receives the domain's mail and has a DKIM key in place to sign it.
@@ -13,38 +13,21 @@
   DMARCian.                                                                                         
 
 AT A GLANCE
-  ●  Google Workspace                                         Mailbox            Receives mail   ⚠  
-                                                                                                 se…
-                                                                                                 in…
-  ●  Campaign Monitor                                         Marketing          Set up to send  ✓  
-                                                                                                 se…
-                                                                                                 co…
-  ●  Docebo                                                   Commerce and apps  Set up to send     
-  ●  Iterable                                                 Marketing          Set up to send     
-  ●  Mailchimp                                                Marketing          Set up to send  ✓  
-                                                                                                 se…
-                                                                                                 co…
-  ●  Mailgun                                                  Transactional      Set up to send  ✓  
-                                                                                                 se…
-                                                                                                 co…
-  ●  Mandrill                                                 Transactional      Set up to send  ✓  
-                                                                                                 se…
-                                                                                                 co…
-  ●  Postmark                                                 Transactional      Set up to send  ✓  
-                                                                                                 se…
-                                                                                                 co…
-  ●  Q4                                                       Commerce and apps  Set up to send     
-  ●  Salesforce                                               Support and CRM    Set up to send     
-  ●  Salesforce Marketing Cloud Engagement (mail.casper.com)  Marketing          Set up to send     
-  ●  SendGrid                                                 Transactional      Set up to send  ✓  
-                                                                                                 se…
-                                                                                                 co…
-  ◐  Customer.io (e.casper.com)                               Marketing          Likely          fr…
-                                                                                                 DK…
-                                                                                                 key
-  ○  Microsoft 365                                            Mailbox            Account only    fr…
-                                                                                                 Ve…
-                                                                                                 to…
+  ●  Google Workspace                    Mailbox            Receives mail   ⚠ setup incomplete      
+  ●  Campaign Monitor                    Marketing          Set up to send  ✓ setup complete        
+  ●  Docebo                              Commerce and apps  Set up to send                          
+  ●  Iterable                            Marketing          Set up to send                          
+  ●  Mailchimp                           Marketing          Set up to send  ✓ setup complete        
+  ●  Mailgun                             Transactional      Set up to send  ✓ setup complete        
+  ●  Mandrill                            Transactional      Set up to send  ✓ setup complete        
+  ●  Postmark                            Transactional      Set up to send  ✓ setup complete        
+  ●  Q4                                  Commerce and apps  Set up to send                          
+  ●  Salesforce                          Support and CRM    Set up to send                          
+  ●  Salesforce Marketing Cloud          Marketing          Set up to send                          
+     Engagement (mail.casper.com)                                                                   
+  ●  SendGrid                            Transactional      Set up to send  ✓ setup complete        
+  ◐  Customer.io (e.casper.com)          Marketing          Likely          from: DKIM key          
+  ○  Microsoft 365                       Mailbox            Account only    from: Verification token
   Reports go to DMARCian.
 
 FIX THESE
@@ -154,7 +137,7 @@ CHECKED AND NOT THERE
     _domainkey.t.casper.com TXT no record of this type
 
 HOW THIS WAS CHECKED
-  Asked 739 lookups at 6 names:
+  Asked 740 lookups at 6 names:
     casper.com: 110 DKIM selectors, 25 CNAME labels, 1 page
     e.casper.com: 32 DKIM selectors
     email.casper.com: 30 DKIM selectors

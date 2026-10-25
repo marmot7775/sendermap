@@ -432,8 +432,15 @@ WITH_SETUP = {
 }
 # Receivers with no setup, because no page on their own docs site names the values to a plain
 # HTTP client: Mimecast's and Proofpoint's refuse it or need a login, and no Microsoft page names
-# the consumer Outlook.com MX.
-RECEIVERS_WITHOUT_DOCS = {"Mimecast", "Proofpoint", "Outlook.com (consumer)", "SiteGround"}
+# the consumer Outlook.com MX. Amazon WorkMail's MX and SPF are Amazon SES hosts, which the
+# catalog holds no proven pattern for, so a setup could name none of them.
+RECEIVERS_WITHOUT_DOCS = {
+    "Mimecast",
+    "Proofpoint",
+    "Outlook.com (consumer)",
+    "SiteGround",
+    "Amazon WorkMail",
+}
 
 
 def test_the_vendors_carry_a_setup_backed_by_their_own_docs() -> None:
