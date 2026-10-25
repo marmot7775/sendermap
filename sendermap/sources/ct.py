@@ -347,9 +347,10 @@ def _cached(cache: Path | None, provider: Provider, domain: str, now: datetime) 
         stored = json.loads((cache / provider.key / f"{domain}.json").read_text())
         fetched = datetime.fromisoformat(stored["fetched_at"])
         rows = [(str(n), str(b), str(a)) for n, b, a in stored["rows"]]
+        fresh = timedelta(0) <= now - fetched < CACHE_FOR  # TypeError when one has no zone
     except (OSError, ValueError, KeyError, TypeError):
         return None
-    return rows if timedelta(0) <= now - fetched < CACHE_FOR else None
+    return rows if fresh else None
 
 
 def _store(
