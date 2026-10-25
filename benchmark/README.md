@@ -48,8 +48,9 @@ Leads a catalog pass should look at, from the run's ranked tables:
 - Report receivers with no entry: `rua.dmarc.emailanalyst.com`, the US federal DMARC receiver
   (`dmarc.cyber.dhs.gov`).
 - Proofpoint's own networks (AS22843, AS26211) in SPF at 6 domains, not credited.
-- `selector1` CNAMEd into `outbound.protection.outlook.com` at 7 domains, which the catalog does
-  not match: either a Microsoft 365 shape to add or a common misconfiguration to name.
+- `selector1` CNAMEd into `outbound.protection.outlook.com` at 4 domains (microsoft.com,
+  live.com, msn.com, sharepoint.com): Microsoft signing its own mail through Exchange Online,
+  now credited to Microsoft 365.
 - Not senders: CNAMEs to web hosting and CDNs (`ghs.googlehosted.com`, `cloudfront.net`,
   `edgekey.net`, `fastly.net`) at labels the label source asks. They inflate the named count;
   the label source could skip a target that is a known web host.
