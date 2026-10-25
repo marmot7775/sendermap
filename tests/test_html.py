@@ -25,20 +25,11 @@ from sendermap.model import (
 )
 from sendermap.render import markdown, view
 from sendermap.render.html import html, slug
+from sendermap.render.view import SECTIONS as NAMED
 
 DOMAIN = "acme.test"
 HOSTILE = '<script>alert(1)</script> "quoted"'
-SECTIONS = (
-    "At a glance",
-    "Fix these",
-    "Notes",
-    "Evidence, service by service",
-    "Claimed senders",
-    "Not recognised",
-    "Certificate transparency",
-    "Checked and not there",
-    "How this was checked",
-)
+SECTIONS = tuple(name for _, name in NAMED)
 _DETAILS = re.compile(r"<details\b.*?</details>", re.S)
 _TITLES = re.compile(r'<h3 class="section-title">([^<]*)</h3>')
 

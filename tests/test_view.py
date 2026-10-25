@@ -47,7 +47,10 @@ async def test_findings_precede_services(case: Path) -> None:
         return
     first = min(shown.index(h) for h in ("\nFIX THESE\n", "\nNOTES\n") if h in shown)
     assert shown.index("\nAT A GLANCE\n") < first < shown.index("\nEVIDENCE, SERVICE BY SERVICE\n")
-    assert md.index("## Needs attention") < md.index("## Senders")
+    md_first = min(md.index(h) for h in ("\n## Fix these\n", "\n## Notes\n") if h in md)
+    assert (
+        md.index("\n## At a glance\n") < md_first < md.index("\n## Evidence, service by service\n")
+    )
 
 
 async def test_findings_are_ordered_risk_warning_note() -> None:
@@ -118,9 +121,12 @@ async def test_names_asked_print_only_with_evidence(case: Path) -> None:
         assert all(n in rendered for n in names)
 
 
-async def test_the_markdown_view_of_allbirds_is_short() -> None:
-    md = markdown.render(await mapped(CORPUS / "allbirds.com"))
-    assert len(md.splitlines()) < 120
+@pytest.mark.parametrize("case", CASES, ids=[c.name for c in CASES])
+async def test_the_markdown_says_no_more_than_the_terminal(case: Path) -> None:
+    """The Markdown follows the terminal's layout, so it holds no more lines of words."""
+    shown, md = both(await mapped(case), evidence=False)
+    words = [len([line for line in v.splitlines() if line.strip()]) for v in (shown, md)]
+    assert words[1] <= words[0]
 
 
 def service_view(shown: View, name: str) -> ServiceView:

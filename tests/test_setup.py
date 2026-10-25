@@ -340,8 +340,8 @@ async def test_every_view_shows_the_setup_in_one_clause(offline: httpx.AsyncClie
     text.render(result, console)
     shown = console.export_text()
     assert re.search(r"Setup +incomplete: DKIM missing *\n", shown)
-    (row,) = [r for r in markdown.render(result).splitlines() if r.startswith("| Microsoft 365")]
-    assert row.endswith(f"| {clause} |")
+    block = markdown.render(result).split("\n### Microsoft 365\n")[1].split("\n#")[0]
+    assert f"\n- Setup: {clause.removeprefix('setup ')}\n" in block
     # With evidence, every item, in the words setup.line uses.
     line = setup.line(service(result, "Microsoft 365").setups[0])
     full = markdown.render(result, evidence=True)

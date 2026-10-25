@@ -42,6 +42,7 @@ __all__ = [
     "CLAIMED_PARTS",
     "NETWORK_VALUE",
     "RESOLVERS",
+    "SECTIONS",
     "STATUS",
     "AbsenceView",
     "AskedView",
@@ -98,6 +99,21 @@ STATUS = {
     Tier.ACCOUNT_ONLY.value: "Account only",
 }
 
+# The sections under a map's head, as (key, name), in the order every view shows them. The text,
+# HTML and Markdown renderers each walk this tuple and take every name from it, so a section is
+# renamed, added or moved here and nowhere else.
+SECTIONS = (
+    ("glance", "At a glance"),
+    ("fixes", "Fix these"),
+    ("notes", "Notes"),
+    ("evidence", "Evidence, service by service"),
+    ("claimed", "Claimed senders"),
+    ("unknowns", "Not recognised"),
+    ("ct", "Certificate logs"),
+    ("absences", "Checked and not there"),
+    ("how", "How this was checked"),
+)
+
 # ---------------------------------------------------------------- the View
 
 
@@ -115,14 +131,35 @@ class Head:
     # The story's sentences, each a line of its own in the terminal view.
     sentences: tuple[str, ...] = ()
 
-    def summary(self) -> str:
-        """How the map was made in one sentence, such as "15 sending services found from public
-        records checked <when> (724 lookups in 3.2 s over <resolver>)." for allbirds.com."""
-        count = f"{self.senders} sending service{'s' if self.senders != 1 else ''}"
-        return (
-            f"{count} found from public records checked {self.checked_at} ({self.lookups} "
-            f"lookups in {self.elapsed:.1f} s over {self.resolver})."
+    def tally(self, fixes: int) -> tuple[str, str]:
+        """How many services send as the domain and how many things to fix, in words:
+        ("15 services send email as this domain", "3 things to fix"). The second is "nothing to
+        fix" when services send and none needs fixing, and empty when none sends."""
+        count = self.senders
+        senders = (
+            f"{count} service{'s' if count != 1 else ''} send{'s' if count == 1 else ''} "
+            "email as this domain"
+            if count
+            else "No sending service found"
         )
+        if fixes:
+            return senders, f"{fixes} thing{'s' if fixes != 1 else ''} to fix"
+        return senders, "nothing to fix" if count else ""
+
+    def made(self) -> str:
+        """How the map was made in one line: "checked <when> · 724 lookups in 3.2 s over
+        <resolver>"."""
+        return (
+            f"checked {self.checked_at} · {self.lookups} lookups in {self.elapsed:.1f} s "
+            f"over {self.resolver}"
+        )
+
+    @property
+    def lede(self) -> tuple[str, ...]:
+        """The story's sentences without the last, what was not checked, which every view says
+        in full under How this was checked. A story the rules did not write is one sentence."""
+        said = self.sentences or ((self.story,) if self.story else ())
+        return tuple(s for s in said if s and not s.startswith("Not checked"))
 
 
 @dataclass(frozen=True, slots=True)

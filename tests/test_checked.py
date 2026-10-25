@@ -65,13 +65,13 @@ async def test_the_checked_record_holds_every_dkim_name_the_scan_asked() -> None
 
 async def test_markdown_shows_the_gaps_and_what_was_asked() -> None:
     page = markdown.render(await acme_map())
-    assert "## Not checked" in page
-    assert "- DMARC: TXT at _dmarc.acme.test: lookup failed" in page
-    assert "## What was asked" in page
-    assert "- **email.acme.test**: " in page and "`google`" not in page
+    how = page.split("\n## How this was checked\n")[1]
+    assert "\nNot checked:\n\n- DMARC: TXT at _dmarc.acme.test: lookup failed\n" in how
+    assert how.startswith("\nAsked ")
+    assert "\n- email.acme.test: " in how and "`google`" not in page
     full = markdown.render(await acme_map(), evidence=True)
-    assert full.rstrip().split("\n## ")[-1].startswith("Appendix: names asked")
-    assert "`google`" in full.split("## Appendix: names asked")[1]
+    names = full.split("\n## How this was checked\n")[1].split("\nNames asked:\n")[1]
+    assert "## " not in names and "`google`" in names
 
 
 async def test_the_terminal_shows_the_gaps_and_what_was_asked() -> None:

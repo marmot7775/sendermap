@@ -382,8 +382,10 @@ def test_every_view_carries_the_story() -> None:
     # terminal says in full under HOW THIS WAS CHECKED.
     assert said[-1].startswith("Not checked")
     assert len(said) > 2 and [s.strip() for s in shown[6 : 6 + len(said) - 1]] == said[:-1]
+    # Under the counts, a sentence a paragraph, and the same sentence left out.
     md = markdown.render(mapped).split("\n")
-    assert md[0] == f"# Sendermap: {DOMAIN}" and md[4] == mapped.story  # under the counts
+    assert md[0] == f"# Sendermap: {DOMAIN}"
+    assert md[5 : 5 + 2 * (len(said) - 1) : 2] == said[:-1] and said[-1] not in md
     assert mapped.to_dict()["story"] == mapped.story
     page = html.html(mapped)
     assert said[-1].startswith("Not checked")  # the one sentence the page mutes

@@ -11,6 +11,9 @@ fails before anything is published.
 
 ## Unreleased
 
+- The Markdown export follows the terminal layout. It opens with the domain, the count of services and of things to fix, and how the map was made, then the story a sentence a paragraph. At a glance gives one line per service, Fix these numbers the risks and warnings with Notes after them, Evidence, service by service gives each service a heading with one line per kind of record, and How this was checked comes last with what was asked, not checked and not run. The senders table is gone, so the export has no line a mail client wraps mid-row, and every record sits in a code span. 0.1.6's export still used the old section names (Needs attention, Senders, What was asked).
+- The section names and their order live in one place, `render.view.SECTIONS`, which the text, web page and Markdown renderers all walk. A test renders every corpus domain all three ways and checks the same sections come out in the same order. The web page's Certificate transparency section is now Certificate logs, as the terminal already said.
+
 ## 0.1.6 (2026-10-25)
 
 - The page links its stylesheet and script with the version as a query string (`/static/style.css?v=0.1.6`), so Cloudflare's cache of static files, kept for four hours, cannot serve the last release's stylesheet to this release's page. 0.1.5's page showed its new glance table unstyled until the cache expired.

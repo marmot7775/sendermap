@@ -228,8 +228,8 @@ def structured(result: SenderMap, detail: str) -> dict[str, Any]:
 
 def text(result: SenderMap) -> str:
     """The story, then each finding on one line, most severe first and short keys at one name
-    said once, then the claimed sections when a list was given: the words the Markdown view
-    uses."""
+    said once, then the claimed sections when a list was given, in the words the views use for
+    them."""
     lines = [result.story or f"Sendermap: {result.domain}"]
     if findings := view(result, evidence=False).findings:
         lines += ["", "Needs attention:"]

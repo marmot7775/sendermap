@@ -13,16 +13,13 @@ from collections.abc import Iterable
 from html import escape
 
 from .view import (
-    AbsenceView,
+    SECTIONS,
     AskedView,
-    ClaimedPart,
-    FindingView,
     GapGroup,
     Head,
     OffView,
     SenderMap,
     ServiceView,
-    UnknownView,
     View,
     listed,
     view,
@@ -38,20 +35,9 @@ def html(result: SenderMap) -> str:
 
 
 def show(shown: View) -> str:
-    """One View as an HTML fragment, each section left out when it is empty."""
-    parts = [
-        _head(shown),
-        _glance(shown),
-        _fixes(shown.fixes),
-        _notes(shown.notes),
-        _evidence(shown.services),
-        _claimed(shown.claimed),
-        _unknowns(shown.unknowns),
-        _list("Certificate transparency", "ct", shown.ct),
-        _absences(shown.absences),
-        _how(shown),
-    ]
-    return "".join(parts)
+    """One View as an HTML fragment: the head, then each section in SECTIONS' order, left out
+    when it is empty."""
+    return _head(shown) + "".join(_SECTIONS[key](shown, name) for key, name in SECTIONS)
 
 
 def slug(name: str) -> str:
@@ -146,7 +132,7 @@ def _story(head: Head) -> list[str]:
 _STATE_MARK = {"complete": "✓ ", "incomplete": "⚠ ", "unchecked": "? ", "basis": ""}
 
 
-def _glance(shown: View) -> str:
+def _glance(shown: View, title: str) -> str:
     """One table row per service, each name linking to its evidence, then where reports go."""
     if not shown.services:
         return ""
@@ -171,11 +157,12 @@ def _glance(shown: View) -> str:
     body += ["</tbody>", "</table>"]
     if shown.reporting:
         body.append(f'<p class="reports">Reports go to {_e(listed(shown.reporting))}.</p>')
-    return _section("At a glance", "glance", body)
+    return _section(title, "glance", body)
 
 
-def _fixes(findings: tuple[FindingView, ...]) -> str:
+def _fixes(shown: View, title: str) -> str:
     """The risks and warnings, numbered."""
+    findings = shown.fixes
     if not findings:
         return ""
     body = ['<ol class="fixes">']
@@ -189,11 +176,12 @@ def _fixes(findings: tuple[FindingView, ...]) -> str:
             body += _details("Records", "records", _records(f.records))
         body.append("</li>")
     body.append("</ol>")
-    return _section("Fix these", "attention", body)
+    return _section(title, "attention", body)
 
 
-def _notes(findings: tuple[FindingView, ...]) -> str:
+def _notes(shown: View, title: str) -> str:
     """The notes: worth knowing, nothing to fix."""
+    findings = shown.notes
     if not findings:
         return ""
     body = ['<ul class="notes">']
@@ -203,14 +191,15 @@ def _notes(findings: tuple[FindingView, ...]) -> str:
             body += _details("Records", "records", _records(f.records))
         body.append("</li>")
     body.append("</ul>")
-    return _section("Notes", "notes", body)
+    return _section(title, "notes", body)
 
 
-def _evidence(services: tuple[ServiceView, ...]) -> str:
+def _evidence(shown: View, title: str) -> str:
+    services = shown.services
     if not services:
         return ""
     rows = [line for service in services for line in _row(service)]
-    return _section("Evidence, service by service", "tier", ['<div class="rows">', *rows, "</div>"])
+    return _section(title, "tier", ['<div class="rows">', *rows, "</div>"])
 
 
 def _row(service: ServiceView) -> list[str]:
@@ -248,22 +237,22 @@ def _kind_line(label: str, summary: str) -> str:
     return f'<span class="kind">{_e(label)}</span>: {_e(summary)}'
 
 
-def _claimed(parts: tuple[ClaimedPart, ...]) -> str:
-    if not parts:
+def _claimed(shown: View, title: str) -> str:
+    if not shown.claimed:
         return ""
     body: list[str] = []
-    for part in parts:
+    for part in shown.claimed:
         body += [f"<h4>{_e(part.heading)}</h4>", '<ul class="gaps">']
         body += [f"<li>{_e(item)}</li>" for item in part.items]
         body.append("</ul>")
-    return _section("Claimed senders", "claimed", body)
+    return _section(title, "claimed", body)
 
 
-def _unknowns(unknowns: tuple[UnknownView, ...]) -> str:
-    if not unknowns:
+def _unknowns(shown: View, title: str) -> str:
+    if not shown.unknowns:
         return ""
     body = ['<ul class="unknowns">']
-    for item in unknowns:
+    for item in shown.unknowns:
         at = f" at {_e(item.where)}" if item.where else ""
         values = f'<span class="mono">{_e(", ".join(item.values))}</span>'
         head = (
@@ -276,21 +265,25 @@ def _unknowns(unknowns: tuple[UnknownView, ...]) -> str:
             body += _details(more, "records", _records(extra))
         body.append("</li>")
     body.append("</ul>")
-    return _section("Not recognised", "unknowns", body)
+    return _section(title, "unknowns", body)
 
 
-def _absences(absences: tuple[AbsenceView, ...]) -> str:
-    if not absences:
+def _ct(shown: View, title: str) -> str:
+    return _list(title, "ct", shown.ct)
+
+
+def _absences(shown: View, title: str) -> str:
+    if not shown.absences:
         return ""
     body = ['<ul class="gaps absences">']
-    for a in absences:
+    for a in shown.absences:
         answers = "".join(f'<span class="ev mono">{_e(answer)}</span>' for answer in a.answers)
         body.append(f'<li><span class="mono">{_e(a.asked)}</span>: {_e(a.happened)}{answers}</li>')
     body.append("</ul>")
-    return _section("Checked and not there", "absences", body)
+    return _section(title, "absences", body)
 
 
-def _how(shown: View) -> str:
+def _how(shown: View, title: str) -> str:
     """What was asked, not checked and not run, closed under one summary line."""
     gaps = _gaps(shown.gaps, shown.off)
     asked = _asked(shown.asked, shown.asked_total)
@@ -302,7 +295,7 @@ def _how(shown: View) -> str:
         parts.append(f"{skipped} thing{'s' if skipped != 1 else ''} not checked")
     summary = " · ".join(parts) or "Details"
     body = [*gaps, *asked]
-    return _section("How this was checked", "how-checked", _details(summary, "how", body))
+    return _section(title, "how-checked", _details(summary, "how", body))
 
 
 def _gaps(gaps: tuple[GapGroup, ...], off: tuple[OffView, ...]) -> list[str]:
@@ -341,3 +334,16 @@ def _asked(asked: tuple[AskedView, ...], total: str) -> list[str]:
     if names:
         body += _details("Names asked", "asked", names)
     return body
+
+
+_SECTIONS = {
+    "glance": _glance,
+    "fixes": _fixes,
+    "notes": _notes,
+    "evidence": _evidence,
+    "claimed": _claimed,
+    "unknowns": _unknowns,
+    "ct": _ct,
+    "absences": _absences,
+    "how": _how,
+}

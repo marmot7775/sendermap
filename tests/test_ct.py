@@ -335,7 +335,7 @@ async def test_the_map_and_its_markdown_carry_the_ct_section(tmp_path: Path) -> 
     tracking = next(s for s in result.senders if s.name == "Customer.io")
     assert tracking.tier is Tier.CONFIGURED
     page = markdown.render(result)
-    assert "## Certificate transparency" in page
+    assert "## Certificate logs" in page
     assert "9 names logged (Cert Spotter read, 0 names; crt.sh read, 9 names)" in page
     assert "Possible past vendor: SparkPost at app-email.allbirds.com" in page
     assert result.to_dict()["historical"][0]["evidence"]["not_after"] == "2020-12-10T23:33:19"

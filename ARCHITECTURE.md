@@ -138,7 +138,7 @@ Assembly
   story.write: the paragraph from the map; no query
   reconcile.with_claimed: the claimed names against the services; no query
   -> render.view: one View, findings first, each thing said once; no query
-  -> render.text | render.markdown (both from the View) | to_dict JSON | web stream
+  -> render.text | render.html | render.markdown (all from the View, sections in render.view.SECTIONS) | to_dict JSON | web stream
 ```
 
 Each source returns an `Observed`: claims, unknowns, findings, gaps and what it checked. Sources never raise
@@ -209,8 +209,8 @@ for the check and a private one a moment later (DNS rebinding) is not caught.
 | `sources/networks.py` | Naming SPF IP ranges by the ranges services publish, then by network owner |
 | `sources/ct.py` | Certificate transparency: the only reader of certificate logs. Reads them once per map through a provider list (Cert Spotter always, crt.sh with `--ct`), each with its own tries, timeout and one-day disk cache, into one set of names; with `--ct`, each logged name resolved and matched by the same catalog matchers as the DNS sources |
 | `sources/subdomains.py` | Finding sending subdomains from a wordlist and the names `ct.py` read |
-| `render/view.py` | The View every view renders: findings first, then services by tier with one evidence line per kind and the setup in one clause, then what was not recognised, checked and asked, counted unless evidence is set; and the helpers only views use (unknowns grouped by network, the claimed parts, the CT lines, the resolver words) |
-| `render/text.py`, `render/markdown.py` | The terminal and Markdown views of the View; they hold no logic about the map. `tests/snapshots` holds both, for every corpus case, with evidence off and on |
+| `render/view.py` | `SECTIONS`, the one list of section names in the order every view shows them, and the View every view renders: findings first, then services by tier with one evidence line per kind and the setup in one clause, then what was not recognised, checked and asked, counted unless evidence is set; and the helpers only views use (unknowns grouped by network, the claimed parts, the CT lines, the resolver words) |
+| `render/text.py`, `render/html.py`, `render/markdown.py` | The terminal, web page and Markdown views of the View; they hold no logic about the map, and each walks `SECTIONS` for its sections' names and order, which `tests/test_sections.py` checks. The Markdown follows the terminal's layout in plain headings and lists, records in code spans, so it reads the same pasted as plain text. `tests/snapshots` holds all three, for every corpus case, the text and Markdown with evidence off and on |
 | `cli.py` | The `sendermap` command, and `sendermap mcp`, which starts the MCP server |
 | `mcp_server.py` | The MCP server: its two tools, two resources and instructions, and the summary of a map |
 | `testing.py` | Recording and replaying DNS answers and pages, and replaying a recorded case |
@@ -508,7 +508,7 @@ Counts are in words up to twenty, a pair such as "12 of 36" both in digits once 
 past it, and counted in the function that writes the sentence. The
 words are plain, with no abbreviation the map does not already print, no adjectives and no
 advice. The engine writes the story before the reconciliation, so a claimed list never changes
-it. The text view prints it under the headline, the Markdown view as the first paragraph, the
+it. The text view prints it under the headline, the Markdown view under the counts a sentence a paragraph, the
 web page above the map, and JSON carries it as `story`.
 
 ## Claimed senders

@@ -1,35 +1,163 @@
 # Sendermap: allbirds.com
 
-15 sending services found from public records checked 2026-10-12 01:24 UTC (753 lookups in 0.0 s over Google DNS over HTTPS).
+15 services send email as this domain · 3 things to fix  
+Checked 2026-10-12 01:24 UTC · 753 lookups in 0.0 s over Google DNS over HTTPS
 
-Microsoft 365 receives the domain's mail and has a DKIM key in place to sign it. Twelve other services are set up to send as the domain: six transactional (Amazon SES, Mailgun, Mailjet, Postmark, SendGrid, SparkPost), two support and CRM (Freshdesk, Zendesk), one mailbox (Google Workspace), two marketing (Iterable, Mailchimp), one commerce and apps (Shopify); two more are likely from a DKIM key name alone (Customer.io, Mandrill). Not checked: the website (turned off), DKIM selectors past the first 27 on three subdomains, six subdomains whose DNS failed to answer, 34 names from certificate logs left out by a limit, and the crt.sh certificate log (read only with --ct).
+Microsoft 365 receives the domain's mail and has a DKIM key in place to sign it.
 
-## Needs attention
+Twelve other services are set up to send as the domain: six transactional (Amazon SES, Mailgun, Mailjet, Postmark, SendGrid, SparkPost), two support and CRM (Freshdesk, Zendesk), one mailbox (Google Workspace), two marketing (Iterable, Mailchimp), one commerce and apps (Shopify); two more are likely from a DKIM key name alone (Customer.io, Mandrill).
 
-- **Two DKIM keys at allbirds.com are 1024-bit: k1 (Mailchimp) and mandrill (Mandrill)** (warning). Some receivers already treat 1024-bit RSA keys as weak. Rotate to 2048-bit.
-- **Google Workspace at alerts.allbirds.com and mail.allbirds.com has no DKIM** (warning). Its documented setup needs it and the map shows it missing: no key at google._domainkey, a name that does not exist.
-- **Mailjet at allbirds.com has no DKIM** (warning). Its documented setup needs it and the map shows it missing: no key at mailjet._domainkey, a name that does not exist.
-- **SPF at allbirds.com is managed through EasyDMARC** (note). EasyDMARC copies the domain's senders into its own record. The walk read that record, so the services and ranges it lists are reported here as the domain's.
+## At a glance
 
-## Senders
+- **Microsoft 365** (Mailbox): receives mail; setup complete
+- **Amazon SES** (Transactional): set up to send
+- **Freshdesk** (Support and CRM): set up to send
+- **Google Workspace** (Mailbox): set up to send; setup incomplete
+- **Iterable** (Marketing): set up to send
+- **Mailchimp** (Marketing): set up to send; setup complete
+- **Mailgun** (Transactional): set up to send; setup complete
+- **Mailjet** (Transactional): set up to send; setup incomplete
+- **Postmark** (Transactional): set up to send; setup complete
+- **SendGrid** (Transactional): set up to send; setup complete
+- **Shopify** (Commerce and apps): set up to send
+- **SparkPost** (Transactional): set up to send; setup complete
+- **Zendesk** (Support and CRM): set up to send; setup complete
+- **Customer.io** (Marketing): likely; from: DKIM key
+- **Mandrill** (Transactional): likely; from: DKIM key
 
-| Service | Category | How sure | Evidence | Setup |
-|---|---|---|---|---|
-| Microsoft 365 | Mailbox | In use | MX: allbirds-com.mail.protection.outlook.com; SPF: include:spf.protection.outlook.com; DKIM keys: selector1, selector2 (both 2048 bit, by CNAME); Verification tokens: MS=A01B077C9CEAFC03E22F0B625C7E7600E37CC59A, MS=ms40651830, MS=ms79507765; Autodiscover CNAME: autodiscover.allbirds.com | setup complete |
-| Amazon SES | Transactional | Configured | SPF ranges: ip4:199.255.192.0/22, ip4:199.127.232.0/22 and 11 more; SPF: include:amazonses.com at alerts.allbirds.com and mail.allbirds.com |  |
-| Freshdesk | Support and CRM | Configured | SPF ranges: ip4:3.7.25.40/29, ip4:13.127.153.86 and 6 more |  |
-| Google Workspace | Mailbox | Configured | SPF ranges: ip4:74.125.0.0/16, ip4:209.85.128.0/17 and 6 more; MX for a subdomain's mail: aspmx.l.google.com, alt1.aspmx.l.google.com, alt2.aspmx.l.google.com at mail.allbirds.com; SPF: include:_spf.google.com at alerts.allbirds.com and mail.allbirds.com; DKIM key: google (2048 bit, named for it) | setup incomplete: DKIM missing at alerts.allbirds.com and mail.allbirds.com |
-| Iterable | Marketing | Configured | Tracking CNAME: links.allbirds.com |  |
-| Mailchimp | Marketing | Configured | DKIM key: k1 (1024 bit, by CNAME) | setup complete |
-| Mailgun | Transactional | Configured | SPF ranges: ip4:141.193.32.0/23, ip4:159.135.140.80/29 and 16 more; Tracking CNAME: email.allbirds.com; MX for bounces: mxa.mailgun.org, mxb.mailgun.org at email.allbirds.com; SPF: include:mailgun.org, include:_spf.mailgun.org, include:_spf.eu.mailgun.org at alerts.allbirds.com, email.allbirds.com and mail.allbirds.com | setup complete |
-| Mailjet | Transactional | Configured | SPF ranges: ip4:87.253.232.0/21, ip4:185.189.236.0/22 and 2 more | setup incomplete: DKIM missing |
-| Postmark | Transactional | Configured | Bounce CNAME: pm-bounces.allbirds.com | setup complete |
-| SendGrid | Transactional | Configured | SPF ranges: ip4:208.117.48.0/20, ip4:50.31.32.0/19 and 16 more; DKIM keys: s1, s2 (both 2048 bit, by CNAME) | setup complete |
-| Shopify | Commerce and apps | Configured | SPF: include:shops.shopify.com at alerts.allbirds.com and mail.allbirds.com |  |
-| SparkPost | Transactional | Configured | Bounce CNAME: bounce.allbirds.com; MX for bounces: smtp.sparkpostmail.com at bounce.allbirds.com and info.allbirds.com | setup complete |
-| Zendesk | Support and CRM | Configured | SPF ranges: ip4:103.151.192.0/23, ip4:185.12.80.0/22 and 3 more | setup complete |
-| Customer.io | Marketing | Likely | DKIM key: krs (2048 bit, named for it) | setup complete |
-| Mandrill | Transactional | Likely | DKIM key: mandrill (1024 bit, named for it) | setup complete |
+## Fix these
+
+1. **Two DKIM keys at allbirds.com are 1024-bit: k1 (Mailchimp) and mandrill (Mandrill)** (warning)
+
+   Some receivers already treat 1024-bit RSA keys as weak. Rotate to 2048-bit.
+
+2. **Google Workspace at alerts.allbirds.com and mail.allbirds.com has no DKIM** (warning)
+
+   Its documented setup needs it and the map shows it missing: no key at google._domainkey, a name that does not exist.
+
+3. **Mailjet at allbirds.com has no DKIM** (warning)
+
+   Its documented setup needs it and the map shows it missing: no key at mailjet._domainkey, a name that does not exist.
+
+## Notes
+
+- **SPF at allbirds.com is managed through EasyDMARC**. EasyDMARC copies the domain's senders into its own record. The walk read that record, so the services and ranges it lists are reported here as the domain's.
+
+## Evidence, service by service
+
+### Microsoft 365
+
+Mailbox · receives mail
+
+- MX: allbirds-com.mail.protection.outlook.com
+- SPF: include:spf.protection.outlook.com
+- DKIM keys: selector1, selector2 (both 2048 bit, by CNAME)
+- Verification tokens: MS=A01B077C9CEAFC03E22F0B625C7E7600E37CC59A, MS=ms40651830, MS=ms79507765
+- Autodiscover CNAME: autodiscover.allbirds.com
+- Setup: complete
+
+### Amazon SES
+
+Transactional · set up to send
+
+- SPF ranges: ip4:199.255.192.0/22, ip4:199.127.232.0/22 and 11 more
+- SPF: include:amazonses.com at alerts.allbirds.com and mail.allbirds.com
+
+### Freshdesk
+
+Support and CRM · set up to send
+
+- SPF ranges: ip4:3.7.25.40/29, ip4:13.127.153.86 and 6 more
+
+### Google Workspace
+
+Mailbox · set up to send
+
+- SPF ranges: ip4:74.125.0.0/16, ip4:209.85.128.0/17 and 6 more
+- MX for a subdomain's mail: aspmx.l.google.com, alt1.aspmx.l.google.com, alt2.aspmx.l.google.com at mail.allbirds.com
+- SPF: include:_spf.google.com at alerts.allbirds.com and mail.allbirds.com
+- DKIM key: google (2048 bit, named for it)
+- Setup: incomplete: DKIM missing at alerts.allbirds.com and mail.allbirds.com
+
+### Iterable
+
+Marketing · set up to send
+
+- Tracking CNAME: links.allbirds.com
+
+### Mailchimp
+
+Marketing · set up to send
+
+- DKIM key: k1 (1024 bit, by CNAME)
+- Setup: complete
+
+### Mailgun
+
+Transactional · set up to send
+
+- SPF ranges: ip4:141.193.32.0/23, ip4:159.135.140.80/29 and 16 more
+- Tracking CNAME: email.allbirds.com
+- MX for bounces: mxa.mailgun.org, mxb.mailgun.org at email.allbirds.com
+- SPF: include:mailgun.org, include:_spf.mailgun.org, include:_spf.eu.mailgun.org at alerts.allbirds.com, email.allbirds.com and mail.allbirds.com
+- Setup: complete
+
+### Mailjet
+
+Transactional · set up to send
+
+- SPF ranges: ip4:87.253.232.0/21, ip4:185.189.236.0/22 and 2 more
+- Setup: incomplete: DKIM missing
+
+### Postmark
+
+Transactional · set up to send
+
+- Bounce CNAME: pm-bounces.allbirds.com
+- Setup: complete
+
+### SendGrid
+
+Transactional · set up to send
+
+- SPF ranges: ip4:208.117.48.0/20, ip4:50.31.32.0/19 and 16 more
+- DKIM keys: s1, s2 (both 2048 bit, by CNAME)
+- Setup: complete
+
+### Shopify
+
+Commerce and apps · set up to send
+
+- SPF: include:shops.shopify.com at alerts.allbirds.com and mail.allbirds.com
+
+### SparkPost
+
+Transactional · set up to send
+
+- Bounce CNAME: bounce.allbirds.com
+- MX for bounces: smtp.sparkpostmail.com at bounce.allbirds.com and info.allbirds.com
+- Setup: complete
+
+### Zendesk
+
+Support and CRM · set up to send
+
+- SPF ranges: ip4:103.151.192.0/23, ip4:185.12.80.0/22 and 3 more
+- Setup: complete
+
+### Customer.io
+
+Marketing · likely
+
+- DKIM key: krs (2048 bit, named for it)
+- Setup: complete
+
+### Mandrill
+
+Transactional · likely
+
+- DKIM key: mandrill (1024 bit, named for it)
+- Setup: complete
 
 ## Not recognised
 
@@ -54,25 +182,25 @@ Microsoft 365 receives the domain's mail and has a DKIM key in place to sign it.
 - DKIM keys at mail.allbirds.com: selectors exist but none of the 32 names asked is one
   - `_domainkey.mail.allbirds.com TXT no record of this type`
 
-## Not checked
+## How this was checked
+
+Asked 753 lookups at 6 names:
+
+- allbirds.com: 109 DKIM selectors, 25 CNAME labels, 1 page
+- alerts.allbirds.com: 32 DKIM selectors
+- bounce.allbirds.com: 8 DKIM selectors
+- email.allbirds.com: 13 DKIM selectors
+- info.allbirds.com: 27 DKIM selectors
+- mail.allbirds.com: 32 DKIM selectors
+
+Not checked:
 
 - certificate log names more than 2 labels deep: 34 not asked. Names up to 2 labels below the domain were asked (cap 2 labels).
 - sending subdomains: TXT, MX and NS at apisdk.allbirds.com, community.allbirds.com, dataplane.allbirds.com, jssdk.allbirds.com, rerun.allbirds.com, www.jssdk.allbirds.com: the domain's DNS servers failed to answer (SERVFAIL), so whether they send is not known
 - DKIM selectors at alerts and mail.allbirds.com: 77 of 109 not asked at each. The first 27 were asked, plus any the name's own SPF, MX or delegation points to (cap 27).
 - DKIM selectors at info.allbirds.com: 82 of 109 not asked. The first 27 were asked, plus any the name's own SPF, MX or delegation points to (cap 27).
 
-## What was asked
-
-753 lookups at 6 names
-
-- **allbirds.com**: 109 DKIM selectors, 25 CNAME labels, 1 page
-- **alerts.allbirds.com**: 32 DKIM selectors
-- **bounce.allbirds.com**: 8 DKIM selectors
-- **email.allbirds.com**: 13 DKIM selectors
-- **info.allbirds.com**: 27 DKIM selectors
-- **mail.allbirds.com**: 32 DKIM selectors
-
-## Not run
+Not run:
 
 - the website: web checks were turned off (--no-web)
 - certificate transparency, crt.sh: read only with --ct (it also holds expired certificates)
