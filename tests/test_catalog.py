@@ -28,6 +28,12 @@ def test_selector1_names_nobody_without_the_microsoft_cname() -> None:
     assert C.dkim_key("selector1", chain, backed=None) == "Microsoft 365"
 
 
+def test_microsofts_own_domains_sign_through_exchange_online() -> None:
+    # live.com, msn.com, sharepoint.com: selector1 aliases a key Exchange Online publishes.
+    chain = ("selector1._domainkey.outbound.protection.outlook.com",)
+    assert C.dkim_key("selector1", chain, backed=None) == "Microsoft 365"
+
+
 def test_backing_beats_the_name_table() -> None:
     # k1 on a Mailgun domain is Mailgun's key, not Mailchimp's.
     assert C.dkim_key("k1", (), backed="Mailgun") == "Mailgun"

@@ -15,6 +15,7 @@ fails before anything is published.
   reports how much of what they publish Sendermap names, with the unnamed evidence ranked by how
   many domains publish it. Runs are kept in `benchmark/runs/`; `--compare` shows what changed
   between two. The 0.1.7 baseline is in `benchmark/README.md`.
+- A DKIM selector CNAMEd to `selector1._domainkey.outbound.protection.outlook.com` is credited to Microsoft 365. Microsoft signs for some of its own domains this way (live.com, msn.com, sharepoint.com), and the 0.1.7 benchmark listed it as unknown at four of them.
 
 ## 0.1.7 (2026-10-25)
 
