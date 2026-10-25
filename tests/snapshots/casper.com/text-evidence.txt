@@ -1,7 +1,7 @@
 ╭──────────────────────────────────────────────────────────────────────────────────╮
 │  casper.com                                                                      │
 │  14 services send email as this domain   ·   4 things to fix                     │
-│  checked 2026-10-12 01:25 UTC · 739 lookups in 0.0 s over Google DNS over HTTPS  │
+│  checked 2026-10-12 01:25 UTC · 740 lookups in 0.0 s over Google DNS over HTTPS  │
 ╰──────────────────────────────────────────────────────────────────────────────────╯
 
   Google Workspace receives the domain's mail and has a DKIM key in place to sign it.
@@ -259,7 +259,7 @@ CHECKED AND NOT THERE
     _domainkey.t.casper.com TXT no record of this type
 
 HOW THIS WAS CHECKED
-  Asked 739 lookups at 6 names:
+  Asked 740 lookups at 6 names:
     casper.com: 110 DKIM selectors, 25 CNAME labels, 1 page
       Pages:                                                                                        
       https://api.certspotter.com/v1/issuances?domain=casper.com&include_subdomains=true&expand=dns_

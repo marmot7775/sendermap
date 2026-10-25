@@ -40,11 +40,11 @@ A service a domain lost with no catalog change behind it is either drift or a bu
 
 Leads a catalog pass should look at, from the run's ranked tables:
 
-- Mailbox services with no entry: Yandex 360 and VK WorkMail (Mail.ru for business) are now
-  in the catalog. Still open: Amazon WorkMail (`*.awsapps.com` autodiscover), whose MX and SPF
-  are Amazon SES patterns, so its setup cannot name values of its own yet, and
-  `_spf.myorderbox.com` at hostgator.com, hosting24.com, reg.ru and timeweb.ru, which publishes
-  bare ranges and is not yet tied to a named mailbox product.
+- Mailbox services with no entry: Yandex 360, VK WorkMail (Mail.ru for business) and Amazon
+  WorkMail (by its `*.awsapps.com` autodiscover CNAME) are now in the catalog. WorkMail's MX and
+  SPF are Amazon SES patterns, so it carries no setup. `_spf.myorderbox.com`, at hostgator.com,
+  hosting24.com, reg.ru and timeweb.ru, is ResellerClub's reseller platform sending its notices,
+  not a mailbox, so it is named in Commerce and apps.
 - Report receivers with no entry: done. `emailanalyst.com` is eDataSource and
   `dmarc.cyber.dhs.gov` is CISA.
 - Proofpoint's own networks (AS22843, AS26211) in SPF at 6 domains, not credited.

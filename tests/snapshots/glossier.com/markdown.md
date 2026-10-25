@@ -1,7 +1,7 @@
 # Sendermap: glossier.com
 
 9 services send email as this domain · 3 things to fix  
-Checked 2026-10-12 01:25 UTC · 749 lookups in 0.0 s over Google DNS over HTTPS
+Checked 2026-10-12 01:25 UTC · 750 lookups in 0.0 s over Google DNS over HTTPS
 
 Google Workspace receives the domain's mail and has a DKIM key in place to sign it.
 
@@ -121,7 +121,7 @@ Transactional · account only
 
 ## How this was checked
 
-Asked 749 lookups at 4 names:
+Asked 750 lookups at 4 names:
 
 - glossier.com: 110 DKIM selectors, 25 CNAME labels, 1 page
 - marketing.glossier.com: 27 DKIM selectors

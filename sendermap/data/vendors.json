@@ -7223,6 +7223,24 @@
             "record": "max.ru",
             "date": "2026-10-25"
           }
+        },
+        {
+          "value": "mxs.mail.ru",
+          "proof": {
+            "domain": "vk.com",
+            "record": "vk.com",
+            "date": "2026-10-25"
+          }
+        }
+      ],
+      "verification_txt": [
+        {
+          "value": "mailru-domain:",
+          "proof": {
+            "domain": "vk.ru",
+            "record": "vk.ru",
+            "date": "2026-10-25"
+          }
         }
       ],
       "category": "Mailbox",
@@ -7306,6 +7324,40 @@
       "aliases": [
         "BOD 18-01",
         "DHS DMARC reporting"
+      ]
+    },
+    "Amazon WorkMail": {
+      "other_cname": [
+        {
+          "label": "autodiscover",
+          "target": "awsapps.com",
+          "proof": {
+            "domain": "samsungqbe.com",
+            "record": "autodiscover.samsungqbe.com",
+            "date": "2026-10-25"
+          }
+        }
+      ],
+      "category": "Mailbox",
+      "aliases": [
+        "WorkMail",
+        "AWS WorkMail"
+      ]
+    },
+    "ResellerClub": {
+      "spf_includes": [
+        {
+          "value": "_spf.myorderbox.com",
+          "proof": {
+            "domain": "hostgator.com",
+            "record": "hostgator.com",
+            "date": "2026-10-25"
+          }
+        }
+      ],
+      "category": "Commerce and apps",
+      "aliases": [
+        "OrderBox"
       ]
     }
   }
