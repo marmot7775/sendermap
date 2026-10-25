@@ -405,6 +405,8 @@ WITH_SETUP = {
     "Proton Mail",
     "Rackspace Email",
     "Zoho Mail",
+    "Yandex 360",
+    "VK WorkMail",
     "Barracuda",
     "DuoCircle",
     "Symantec MessageLabs",
@@ -427,19 +429,16 @@ WITH_SETUP = {
     "Customer.io",
     "Sailthru",
     "Trend Micro Email Security",
-    "Yandex 360",
 }
 # Receivers with no setup, because no page on their own docs site names the values to a plain
-# HTTP client: Mimecast's and Proofpoint's refuse it or need a login, no Microsoft page names
-# the consumer Outlook.com MX, and VK WorkSpace's records are named only by hosts' guides.
-# Amazon WorkMail's MX and SPF are Amazon SES hosts, which the catalog holds no proven pattern
-# for, so a setup could name none of them.
+# HTTP client: Mimecast's and Proofpoint's refuse it or need a login, and no Microsoft page names
+# the consumer Outlook.com MX. Amazon WorkMail's MX and SPF are Amazon SES hosts, which the
+# catalog holds no proven pattern for, so a setup could name none of them.
 RECEIVERS_WITHOUT_DOCS = {
     "Mimecast",
     "Proofpoint",
     "Outlook.com (consumer)",
     "SiteGround",
-    "VK WorkSpace",
     "Amazon WorkMail",
 }
 

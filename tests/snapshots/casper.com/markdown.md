@@ -1,7 +1,7 @@
 # Sendermap: casper.com
 
 14 services send email as this domain · 4 things to fix  
-Checked 2026-10-12 01:25 UTC · 739 lookups in 0.0 s over Google DNS over HTTPS
+Checked 2026-10-12 01:25 UTC · 740 lookups in 0.0 s over Google DNS over HTTPS
 
 Google Workspace receives the domain's mail and has a DKIM key in place to sign it.
 
@@ -170,9 +170,9 @@ Mailbox · account only
 
 ## How this was checked
 
-Asked 739 lookups at 6 names:
+Asked 740 lookups at 6 names:
 
-- casper.com: 109 DKIM selectors, 25 CNAME labels, 1 page
+- casper.com: 110 DKIM selectors, 25 CNAME labels, 1 page
 - e.casper.com: 32 DKIM selectors
 - email.casper.com: 30 DKIM selectors
 - mail.casper.com: 28 DKIM selectors
@@ -181,10 +181,10 @@ Asked 739 lookups at 6 names:
 
 Not checked:
 
-- DKIM selectors at e and t.casper.com: 77 of 109 not asked at each. The first 27 were asked, plus any the name's own SPF, MX or delegation points to (cap 27).
-- DKIM selectors at email.casper.com: 79 of 109 not asked. The first 27 were asked, plus any the name's own SPF, MX or delegation points to (cap 27).
-- DKIM selectors at mail.casper.com: 81 of 109 not asked. The first 27 were asked, plus any the name's own SPF, MX or delegation points to (cap 27).
-- DKIM selectors at orders.casper.com: 82 of 109 not asked. The first 27 were asked, plus any the name's own SPF, MX or delegation points to (cap 27).
+- DKIM selectors at e and t.casper.com: 78 of 110 not asked at each. The first 27 were asked, plus any the name's own SPF, MX or delegation points to (cap 27).
+- DKIM selectors at email.casper.com: 80 of 110 not asked. The first 27 were asked, plus any the name's own SPF, MX or delegation points to (cap 27).
+- DKIM selectors at mail.casper.com: 82 of 110 not asked. The first 27 were asked, plus any the name's own SPF, MX or delegation points to (cap 27).
+- DKIM selectors at orders.casper.com: 83 of 110 not asked. The first 27 were asked, plus any the name's own SPF, MX or delegation points to (cap 27).
 
 Not run:
 

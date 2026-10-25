@@ -15,14 +15,17 @@ fails before anything is published.
   reports how much of what they publish Sendermap names, with the unnamed evidence ranked by how
   many domains publish it. Runs are kept in `benchmark/runs/`; `--compare` shows what changed
   between two. The 0.1.7 baseline is in `benchmark/README.md`.
-- Four services from the benchmark's work list are named. Yandex 360 by its MX (`mx.yandex.net`,
-  `mx.yandex.ru`) and SPF (`_spf.yandex.net`, `_spf.yandex.ru`), with a setup from Yandex's own
-  MX and SPF pages. VK WorkSpace, the former Mail.ru for business, by its MX (`emx.mail.ru`,
-  `mxs.mail.ru`), its SPF (`_spf.mail.ru`) and its `mailru-domain:` token. Amazon WorkMail by an
-  autodiscover CNAME into `awsapps.com`; its MX and SPF are Amazon SES hosts and stay unnamed.
-  ResellerClub by `_spf.myorderbox.com`, which hosts and registrars publish so the reseller
-  platform can send its notices as them: it sits in Commerce and apps, not Mailbox. Every map
-  asks nine more SPF lookups, for the ranges these includes publish.
+- Two mailbox services join the catalog, from the 0.1.7 benchmark's work list: Yandex 360
+  (`mx.yandex.net`, `_spf.yandex.net`, the `mail` selector) and VK WorkMail, formerly Mail.ru
+  for business (`emx.mail.ru`, `_spf.mail.ru`, the `mailru` selector). Each pattern has a live
+  proof dated 2026-10-25 and each setup cites the vendor's own docs. `mail` stays a generic name:
+  it credits Yandex 360 only where the domain's SPF or MX already shows Yandex. Every map asks
+  one more DKIM name (`mailru`), so the sweep is 110 names.
+- Two more services from the same work list. Amazon WorkMail is named by an autodiscover CNAME
+  into `awsapps.com`; its MX and SPF are Amazon SES hosts and stay unnamed, so it carries no
+  setup. ResellerClub is named by `_spf.myorderbox.com`, which hosts and registrars publish so the
+  reseller platform can send its notices as them: it sits in Commerce and apps, not Mailbox. VK
+  WorkMail also matches `mxs.mail.ru` in MX and its `mailru-domain:` verification token.
 
 ## 0.1.7 (2026-10-25)
 

@@ -7118,8 +7118,8 @@
         {
           "value": "_spf.yandex.ru",
           "proof": {
-            "domain": "kinopoisk.ru",
-            "record": "kinopoisk.ru",
+            "domain": "yandex.com",
+            "record": "yandex.com",
             "date": "2026-10-25"
           }
         }
@@ -7136,8 +7136,8 @@
         {
           "value": "mx.yandex.ru",
           "proof": {
-            "domain": "kinopoisk.ru",
-            "record": "kinopoisk.ru",
+            "domain": "yandex.ru",
+            "record": "yandex.ru",
             "date": "2026-10-25"
           }
         }
@@ -7145,8 +7145,24 @@
       "category": "Mailbox",
       "aliases": [
         "Yandex Mail",
-        "Yandex Connect",
-        "Yandex.Mail for Domain"
+        "Yandex.Connect"
+      ],
+      "selectors": [
+        {
+          "shape": {
+            "kind": "fixed",
+            "names": [
+              "mail"
+            ]
+          },
+          "source": "pattern",
+          "reference": null,
+          "proof": {
+            "domain": "pikabu.ru",
+            "record": "mail._domainkey.pikabu.ru",
+            "date": "2026-10-25"
+          }
+        }
       ],
       "setup": [
         {
@@ -7157,7 +7173,7 @@
           ],
           "proof": {
             "domain": "yandex.com",
-            "record": "https://yandex.com/support/yandex-360/business/admin/en/domains/dns/mx.html",
+            "record": "https://yandex.com/support/yandex-360/business/admin/en/domains/dns/mx",
             "date": "2026-10-25"
           },
           "note": "Optional here because a security gateway in front of Yandex 360 takes its place in MX."
@@ -7170,20 +7186,31 @@
           ],
           "proof": {
             "domain": "yandex.com",
-            "record": "https://yandex.com/support/yandex-360/business/admin/en/domains/dns/spf.html",
+            "record": "https://yandex.com/support/yandex-360/business/admin/en/domains/dns/spf",
             "date": "2026-10-25"
-          },
-          "note": "The page gives redirect=_spf.yandex.net, or include:_spf.yandex.net when other servers send too."
+          }
+        },
+        {
+          "record": "dkim",
+          "need": "required",
+          "values": [
+            "mail"
+          ],
+          "proof": {
+            "domain": "yandex.com",
+            "record": "https://yandex.com/support/yandex-360/business/admin/en/domains/dns/dkim",
+            "date": "2026-10-25"
+          }
         }
       ]
     },
-    "VK WorkSpace": {
+    "VK WorkMail": {
       "spf_includes": [
         {
           "value": "_spf.mail.ru",
           "proof": {
-            "domain": "vk.com",
-            "record": "vk.com",
+            "domain": "max.ru",
+            "record": "max.ru",
             "date": "2026-10-25"
           }
         }
@@ -7192,8 +7219,8 @@
         {
           "value": "emx.mail.ru",
           "proof": {
-            "domain": "dzen.ru",
-            "record": "dzen.ru",
+            "domain": "max.ru",
+            "record": "max.ru",
             "date": "2026-10-25"
           }
         },
@@ -7219,8 +7246,51 @@
       "category": "Mailbox",
       "aliases": [
         "Mail.ru for business",
-        "Mail.ru",
-        "biz.mail.ru"
+        "VK WorkSpace"
+      ],
+      "selectors": [
+        {
+          "shape": {
+            "kind": "fixed",
+            "names": [
+              "mailru"
+            ]
+          },
+          "source": "pattern",
+          "reference": null,
+          "proof": {
+            "domain": "max.ru",
+            "record": "mailru._domainkey.max.ru",
+            "date": "2026-10-25"
+          }
+        }
+      ],
+      "setup": [
+        {
+          "record": "mx",
+          "need": "optional",
+          "values": [
+            "emx.mail.ru"
+          ],
+          "proof": {
+            "domain": "vk.ru",
+            "record": "https://workspace.vk.ru/docs/saas/ru/get-started/setup/mx-record",
+            "date": "2026-10-25"
+          },
+          "note": "Optional here because a security gateway in front of VK WorkMail takes its place in MX."
+        },
+        {
+          "record": "spf",
+          "need": "required",
+          "values": [
+            "_spf.mail.ru"
+          ],
+          "proof": {
+            "domain": "vk.ru",
+            "record": "https://workspace.vk.ru/docs/saas/ru/get-started/setup/spf-record",
+            "date": "2026-10-25"
+          }
+        }
       ]
     },
     "Amazon WorkMail": {

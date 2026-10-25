@@ -1,7 +1,7 @@
 # Sendermap: mills-reeve.com
 
 5 services send email as this domain · 2 things to fix  
-Checked 2026-10-12 01:24 UTC · 643 lookups in 0.0 s over Google DNS over HTTPS
+Checked 2026-10-12 01:24 UTC · 644 lookups in 0.0 s over Google DNS over HTTPS
 
 Mimecast stands in front of the domain's mail as a security gateway, so the mailbox provider is not visible from MX.
 
@@ -89,16 +89,16 @@ Transactional · set up to send
 
 ## How this was checked
 
-Asked 643 lookups at 3 names:
+Asked 644 lookups at 3 names:
 
-- mills-reeve.com: 109 DKIM selectors, 25 CNAME labels, 1 page
+- mills-reeve.com: 110 DKIM selectors, 25 CNAME labels, 1 page
 - update.mills-reeve.com: 29 DKIM selectors
 - updates.mills-reeve.com: 27 DKIM selectors
 
 Not checked:
 
-- DKIM selectors at update.mills-reeve.com: 80 of 109 not asked. The first 27 were asked, plus any the name's own SPF, MX or delegation points to (cap 27).
-- DKIM selectors at updates.mills-reeve.com: 82 of 109 not asked. The first 27 were asked, plus any the name's own SPF, MX or delegation points to (cap 27).
+- DKIM selectors at update.mills-reeve.com: 81 of 110 not asked. The first 27 were asked, plus any the name's own SPF, MX or delegation points to (cap 27).
+- DKIM selectors at updates.mills-reeve.com: 83 of 110 not asked. The first 27 were asked, plus any the name's own SPF, MX or delegation points to (cap 27).
 
 Not run:
 

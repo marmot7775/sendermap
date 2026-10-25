@@ -500,6 +500,7 @@
 {"chain": [], "name": "mailkit.eu", "records": ["google-site-verification=LoygQLGtvVQKWbug3XSdSg_2NzW9GzrcjOWcvHkLrSE", "mailru-verification: f94c1dd25bca27ad", "v=spf1 ip4:185.136.200.0/22 ~all"], "rtype": "TXT", "status": "ok"},
 {"chain": [], "name": "mailpoet1._domainkey.allbirds.com", "records": [], "rtype": "TXT", "status": "no such name"},
 {"chain": [], "name": "mailpoet2._domainkey.allbirds.com", "records": [], "rtype": "TXT", "status": "no such name"},
+{"chain": [], "name": "mailru._domainkey.allbirds.com", "records": [], "rtype": "TXT", "status": "no such name"},
 {"chain": [], "name": "mailsenders.netsuite.com", "records": ["v=spf1 a:outboundips.netsuite.com -all"], "rtype": "TXT", "status": "ok"},
 {"chain": [], "name": "mandrill._domainkey.allbirds.com", "records": ["v=DKIM1; k=rsa; p=MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCrLHiExVd55zd/IQ/J/mRwSRMAocV/hMB3jXwaHH36d9NaVynQFYV8NaWi69c1veUtRzGt7yAioXqLj7Z4TeEUoOLgrKsn8YnckGs9i3B3tVFB+Ch/4mPhXWiNfNdynHWBcPcbJ8kjEQ2U8y78dHZj1YeRXXVvWob2OaKynO8/lQIDAQAB;"], "rtype": "TXT", "status": "ok"},
 {"chain": [], "name": "mandrillapp.com", "records": ["google-site-verification=2dux36j2swb0zcDthVB4cvIakenujxPx2S1DGvOvhpo", "v=spf1 include:spf.mandrillapp.com ~all", "yahoo-verification-key=J0O8RUMRbvSyIUKQS6MEPRheM44S/KBgM/v+/5AK23o=", "zscaler-verification-42108621-14012026-AQOWfARRgh"], "rtype": "TXT", "status": "ok"},
