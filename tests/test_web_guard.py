@@ -54,6 +54,7 @@ def moved(location: str) -> httpx.Response:
         ("A", "0.0.0.0"),
         ("A", "224.0.0.1"),
         ("A", "240.0.0.1"),
+        ("A", "100.100.100.200"),  # shared address space (RFC 6598), a cloud metadata address
         ("AAAA", "::1"),
         ("AAAA", "fe80::1"),
         ("AAAA", "::ffff:169.254.169.254"),
