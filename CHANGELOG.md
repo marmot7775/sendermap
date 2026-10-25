@@ -21,6 +21,10 @@ fails before anything is published.
   proof dated 2026-10-25 and each setup cites the vendor's own docs. `mail` stays a generic name:
   it credits Yandex 360 only where the domain's SPF or MX already shows Yandex. Every map asks
   one more DKIM name (`mailru`), so the sweep is 110 names.
+- Two report receivers join the catalog: eDataSource (`emailanalyst.com`, whose report
+  addresses take mail at eDataSource's MX hosts; twitter.com, linkedin.com and four more in the
+  benchmark publish it) and CISA (`dmarc.cyber.dhs.gov`, the address BOD 18-01 requires of US
+  federal domains).
 
 ## 0.1.7 (2026-10-25)
 
