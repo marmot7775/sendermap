@@ -22,6 +22,7 @@ import sendermap
 from sendermap import catalog, cli, mcp_server
 from sendermap.engine import Progress, map_domain
 from sendermap.model import Finding, Run, SenderMap, Severity
+from sendermap.render.view import view
 
 VALIDATOR = Draft202012Validator(sendermap.schema())
 CLAIMED = ["Office 365", "Mailchimp", "Acme Mail"]
@@ -85,8 +86,8 @@ async def test_the_text_block_tells_the_story_then_findings_then_claimed() -> No
     expected = await fake("mapped.test", mcp_server.Options(), _quiet)
     assert expected.story
     assert block.text.startswith(expected.story)
-    for finding in expected.findings:
-        assert f"- {finding.title} ({finding.severity.value}). {finding.detail}" in block.text
+    for finding in view(expected, evidence=False).findings:
+        assert f"- {finding.title} ({finding.severity}). {finding.detail}" in block.text
     story_at = block.text.index(expected.story)
     assert story_at < block.text.index("Needs attention:") < block.text.index("Claimed senders:")
     assert 'Microsoft 365, Configured (claimed as "Office 365")' in block.text

@@ -6,11 +6,10 @@ Google Workspace receives the domain's mail and has a DKIM key in place to sign 
 
 ## Needs attention
 
-- **Two DKIM keys at glossier.com are 1024-bit: mandrill and s2** (warning). Some receivers already treat 1024-bit RSA keys as weak. Rotate to 2048-bit.
+- **Two DKIM keys at glossier.com are 1024-bit: mandrill (Mandrill) and s2 (SendGrid)** (warning). Some receivers already treat 1024-bit RSA keys as weak. Rotate to 2048-bit.
 - **Google Workspace at receipts.glossier.com has no SPF** (warning). Its documented setup needs it and the map shows it missing: 209.85.220.41, one of Google Workspace's addresses, gets softfail at ~all.
 - **Google Workspace at receipts.glossier.com has no DKIM** (warning). Its documented setup needs it and the map shows it missing: no key at google._domainkey, a name with no TXT record; this zone gives that answer for every name that does not exist.
-- **SPF at glossier.com is managed through Valimail** (note). A hosted or macro record can authorize services without naming them, so the services it covers do not show in the record itself.
-- **SPF at receipts.glossier.com is managed through Valimail** (note). A hosted or macro record can authorize services without naming them, so the services it covers do not show in the record itself.
+- **SPF at glossier.com and receipts.glossier.com is managed through Valimail** (note). A hosted or macro record can authorize services without naming them, so the services it covers do not show in the record itself.
 
 ## Senders
 
@@ -21,7 +20,7 @@ Google Workspace receives the domain's mail and has a DKIM key in place to sign 
 | Klaviyo | Marketing | Configured | DKIM keys: kl, kl2 (both 2048 bit, by CNAME); Bounce CNAME: send.glossier.com; Verification token: klaviyo-site-verification=Sn6eFZ | setup complete |
 | Postmark | Transactional | Configured | Bounce CNAME: pm-bounces.glossier.com | setup complete |
 | Salesforce | Support and CRM | Configured | DKIM keys: salesforce2, salesforce1 (both 2048 bit, by CNAME) |  |
-| SendGrid | Transactional | Configured | DKIM keys: s1, s2 (1024 and 2048 bit, by CNAME); Tracking CNAME: link.glossier.com; MX for bounces: mx.sendgrid.net, mx2.sendgrid.net at marketing.glossier.com and send.glossier.com; SPF: include:ab.sendgrid.net, include:sendgrid.net at marketing.glossier.com and send.glossier.com; SPF ranges: ip4:208.117.48.0/20, ip4:50.31.32.0/19 and 9 more at marketing.glossier.com | setup complete |
+| SendGrid | Transactional | Configured | DKIM keys: s1 2048 bit, s2 1024 bit (by CNAME); Tracking CNAME: link.glossier.com; MX for bounces: mx.sendgrid.net, mx2.sendgrid.net at marketing.glossier.com and send.glossier.com; SPF: include:ab.sendgrid.net, include:sendgrid.net at marketing.glossier.com and send.glossier.com; SPF ranges: ip4:208.117.48.0/20, ip4:50.31.32.0/19 and 9 more at marketing.glossier.com | setup complete |
 | Zendesk | Support and CRM | Configured | SPF passes its address: ip4:103.151.192.0/23; DKIM keys: zendesk1, zendesk2 (both 2048 bit, by CNAME) | setup complete |
 | Mandrill | Transactional | Likely | DKIM key: mandrill (1024 bit, named for it) | setup complete |
 | Amazon SES | Transactional | Account only | Verification token: amazonses:awBV5EM6W53p2/Xbg80uJ29zurZnGsMMJcLLLp6vUcY= |  |

@@ -6,11 +6,9 @@ Google Workspace receives the domain's mail and has a DKIM key in place to sign 
 
 ## Needs attention
 
-- **Eight DKIM keys at casper.com are 1024-bit: google, cm, k1, mandrill, salesforce, s2, smtpapi and mx** (warning). Some receivers already treat 1024-bit RSA keys as weak. Rotate to 2048-bit.
-- **Google Workspace at e.casper.com has no SPF** (warning). Its documented setup needs it and the map shows it missing: the record does not authorize _spf.google.com.
-- **Google Workspace at e.casper.com has no DKIM** (warning). Its documented setup needs it and the map shows it missing: no key at google._domainkey, a name that does not exist.
-- **Google Workspace at mail.casper.com has no SPF** (warning). Its documented setup needs it and the map shows it missing: the record does not authorize _spf.google.com.
-- **Google Workspace at mail.casper.com has no DKIM** (warning). Its documented setup needs it and the map shows it missing: no key at google._domainkey, a name that does not exist.
+- **Eight DKIM keys at casper.com are 1024-bit: google (Google Workspace), cm (Campaign Monitor), k1 (Mailchimp), mandrill (Mandrill), salesforce (Salesforce), s2 (SendGrid), smtpapi (SendGrid) and mx** (warning). Some receivers already treat 1024-bit RSA keys as weak. Rotate to 2048-bit.
+- **Google Workspace at e.casper.com and mail.casper.com has no SPF** (warning). Its documented setup needs it and the map shows it missing: the record does not authorize _spf.google.com.
+- **Google Workspace at e.casper.com and mail.casper.com has no DKIM** (warning). Its documented setup needs it and the map shows it missing: no key at google._domainkey, a name that does not exist.
 - **Google Workspace at orders.casper.com has no SPF** (warning). Its documented setup needs it and the map shows it missing: no SPF record.
 - **The mte1 key at casper.com and the mte1 key at email.casper.com are the same key** (note). They publish one public key, fp 402b5aebde0f1c9f, so one private key signs for all of them, and replacing the key at one selector leaves it live at the others.
 - **The mte2 key at casper.com and the mte2 key at email.casper.com are the same key** (note). They publish one public key, fp bd970c8868f21f9b, so one private key signs for all of them, and replacing the key at one selector leaves it live at the others.
@@ -31,7 +29,7 @@ Google Workspace receives the domain's mail and has a DKIM key in place to sign 
 | Q4 | Commerce and apps | Configured | SPF: include:_spf.q4press.com |  |
 | Salesforce | Support and CRM | Configured | SPF: include:_spf.salesforce.com; DKIM key: salesforce (1024 bit, named for it) |  |
 | Salesforce Marketing Cloud Engagement (mail.casper.com) | Marketing | Configured | SPF: include:cust-spf.exacttarget.com; Delegated by NS: mail.casper.com |  |
-| SendGrid | Transactional | Configured | DKIM keys: s1, s2 (1024 and 2048 bit, by CNAME); DKIM key: smtpapi (1024 bit, named for it) | setup complete |
+| SendGrid | Transactional | Configured | DKIM keys: s1 2048 bit, s2 1024 bit (by CNAME); DKIM key: smtpapi (1024 bit, named for it) | setup complete |
 | Customer.io (e.casper.com) | Marketing | Likely | DKIM key: krs (2048 bit, named for it) | setup complete |
 | Microsoft 365 | Mailbox | Account only | Verification token: MS=ms55520198 | setup incomplete: SPF missing (the record does not authorize spf.protection.outlook.com), DKIM missing (no key at selector1._domainkey or selector2._domainkey, names with no TXT record; this zone gives that answer for every name that does not exist) |
 

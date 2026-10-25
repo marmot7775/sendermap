@@ -6,9 +6,8 @@ Microsoft 365 receives the domain's mail and has a DKIM key in place to sign it.
 
 ## Needs attention
 
-- **Two DKIM keys at allbirds.com are 1024-bit: k1 and mandrill** (warning). Some receivers already treat 1024-bit RSA keys as weak. Rotate to 2048-bit.
-- **Google Workspace at alerts.allbirds.com has no DKIM** (warning). Its documented setup needs it and the map shows it missing: no key at google._domainkey, a name that does not exist.
-- **Google Workspace at mail.allbirds.com has no DKIM** (warning). Its documented setup needs it and the map shows it missing: no key at google._domainkey, a name that does not exist.
+- **Two DKIM keys at allbirds.com are 1024-bit: k1 (Mailchimp) and mandrill (Mandrill)** (warning). Some receivers already treat 1024-bit RSA keys as weak. Rotate to 2048-bit.
+- **Google Workspace at alerts.allbirds.com and mail.allbirds.com has no DKIM** (warning). Its documented setup needs it and the map shows it missing: no key at google._domainkey, a name that does not exist.
 - **Mailjet at allbirds.com has no DKIM** (warning). Its documented setup needs it and the map shows it missing: no key at mailjet._domainkey, a name that does not exist.
 - **SPF at allbirds.com is managed through EasyDMARC** (note). EasyDMARC copies the domain's senders into its own record. The walk read that record, so the services and ranges it lists are reported here as the domain's.
 

@@ -6,7 +6,7 @@ Mimecast stands in front of the domain's mail as a security gateway, so the mail
 
 ## Needs attention
 
-- **The s2 key at mills-reeve.com is 1024-bit** (warning). Some receivers already treat 1024-bit RSA keys as weak. Rotate to 2048-bit.
+- **The SendGrid key s2 at mills-reeve.com is 1024-bit** (warning). Some receivers already treat 1024-bit RSA keys as weak. Rotate to 2048-bit.
   - `s2._domainkey.mills-reeve.com TXT k=rsa; t=s (strict); p=MIGfMA0GCSqG..., 1024-bit, fp 1d0c1f3114d84753 via s2.domainkey.u10198980.wl231.sendgrid.net`
 - **Microsoft 365 at mills-reeve.com has no DKIM** (warning). Its documented setup needs it and the map shows it missing: no key at selector1._domainkey or selector2._domainkey, names with no TXT record; this zone gives that answer for every name that does not exist.
   - `selector1._domainkey.mills-reeve.com TXT no record of this type`
@@ -23,7 +23,7 @@ Mimecast stands in front of the domain's mail as a security gateway, so the mail
 | Docebo | Commerce and apps | Configured | SPF: include:docebosaas.com |  |
 | Freshdesk | Support and CRM | Configured | SPF range: ip4:3.120.181.200/29 |  |
 | Microsoft 365 | Mailbox | Configured | SPF: include:spf.protection.outlook.com; Verification token: MS=ms75548982; Autodiscover CNAME: autodiscover.mills-reeve.com | setup incomplete: SPF present, DKIM missing, MX not used (optional, MX at mills-reeve.com), bounce CNAME not needed |
-| SendGrid | Transactional | Configured | DKIM keys: s1, s2 (1024 and 2048 bit, by CNAME) | setup complete: DKIM present, bounce CNAME not used (optional, CNAME at 25 labels under mills-reeve.com), SPF not needed, tracking CNAME not used (optional, CNAME at 25 labels under mills-reeve.com) |
+| SendGrid | Transactional | Configured | DKIM keys: s1 2048 bit, s2 1024 bit (by CNAME) | setup complete: DKIM present, bounce CNAME not used (optional, CNAME at 25 labels under mills-reeve.com), SPF not needed, tracking CNAME not used (optional, CNAME at 25 labels under mills-reeve.com) |
 
 ## Records
 

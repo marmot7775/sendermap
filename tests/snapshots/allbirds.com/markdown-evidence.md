@@ -6,13 +6,12 @@ Microsoft 365 receives the domain's mail and has a DKIM key in place to sign it.
 
 ## Needs attention
 
-- **Two DKIM keys at allbirds.com are 1024-bit: k1 and mandrill** (warning). Some receivers already treat 1024-bit RSA keys as weak. Rotate to 2048-bit.
+- **Two DKIM keys at allbirds.com are 1024-bit: k1 (Mailchimp) and mandrill (Mandrill)** (warning). Some receivers already treat 1024-bit RSA keys as weak. Rotate to 2048-bit.
   - `k1._domainkey.allbirds.com TXT k=rsa; p=MIGfMA0GCSqG..., 1024-bit, fp 53d7bb0466c8346d via dkim.mcsv.net`
   - `mandrill._domainkey.allbirds.com TXT v=DKIM1; k=rsa; p=MIGfMA0GCSqG..., 1024-bit, fp 9cee89b6f986543a`
-- **Google Workspace at alerts.allbirds.com has no DKIM** (warning). Its documented setup needs it and the map shows it missing: no key at google._domainkey, a name that does not exist.
+- **Google Workspace at alerts.allbirds.com and mail.allbirds.com has no DKIM** (warning). Its documented setup needs it and the map shows it missing: no key at google._domainkey, a name that does not exist.
   - `google._domainkey.alerts.allbirds.com TXT no such name`
   - `_domainkey.alerts.allbirds.com TXT no record of this type`
-- **Google Workspace at mail.allbirds.com has no DKIM** (warning). Its documented setup needs it and the map shows it missing: no key at google._domainkey, a name that does not exist.
   - `google._domainkey.mail.allbirds.com TXT no such name`
   - `_domainkey.mail.allbirds.com TXT no record of this type`
 - **Mailjet at allbirds.com has no DKIM** (warning). Its documented setup needs it and the map shows it missing: no key at mailjet._domainkey, a name that does not exist.

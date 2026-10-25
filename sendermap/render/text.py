@@ -1,4 +1,9 @@
-"""The terminal view: the View in rich, findings first, then services grouped by tier."""
+"""The terminal view: the View in rich, laid out to be read top down.
+
+A panel with the domain and the count of things to fix, then the services at a glance, then what
+to fix, then the evidence service by service, then what was not recognised, and last, dimmed, how
+the map was made.
+"""
 
 from __future__ import annotations
 
@@ -8,16 +13,19 @@ from rich.panel import Panel
 from rich.table import Table
 from rich.text import Text
 
-from .view import SenderMap, ServiceView, UnknownView, View, view
+from .view import FindingView, SenderMap, ServiceView, UnknownView, View, view
 
-_TIER_STYLE = {
-    "In use": "bold green",
-    "Configured": "bold cyan",
-    "Likely": "bold yellow",
-    "Account only": "bold bright_black",
+# The marker and colour of each tier, by the tier's name in the View.
+_TIER_MARK = {
+    "In use": ("●", "bold green"),
+    "Configured": ("●", "bold cyan"),
+    "Likely": ("◐", "bold yellow"),
+    "Account only": ("○", "bright_black"),
 }
-_SEVERITY_STYLE = {"risk": "bold red", "warning": "yellow", "note": "bright_black"}
+_SEVERITY_STYLE = {"risk": "bold red", "warning": "bold yellow", "note": "bright_black"}
+_FIX = ("risk", "warning")
 _DIM = "bright_black"
+_HEADING = "bold bright_white"
 
 
 def render(result: SenderMap, console: Console, *, evidence: bool = False) -> None:
@@ -28,13 +36,10 @@ def render(result: SenderMap, console: Console, *, evidence: bool = False) -> No
 def show(shown: View, console: Console) -> None:
     """Print one View, each section left out when it is empty."""
     _head(shown, console)
+    _story(shown, console)
+    _glance(shown, console)
     _findings(shown, console)
-    for tier in shown.tiers:
-        console.print(Text(f"\n{tier.tier.upper()}", style=_TIER_STYLE[tier.tier]))
-        _services(tier.services, console)
-    if shown.reporting:
-        _heading("REPORTS GO TO", console, style="bold magenta")
-        _line(", ".join(shown.reporting), console, 2)
+    _evidence(shown, console)
     if shown.claimed:
         _heading("CLAIMED SENDERS", console)
         for part in shown.claimed:
@@ -44,31 +49,18 @@ def show(shown: View, console: Console) -> None:
     if shown.unknowns:
         _heading("NOT RECOGNISED", console)
         for unknown in shown.unknowns:
-            _unknown(unknown, console)
-    _checks(shown, console)
-
-
-def _checks(shown: View, console: Console) -> None:
-    """What the logs, the absences, the gaps, the questions asked and the checks not run say."""
-    _dim_section("CERTIFICATE TRANSPARENCY", shown.ct, console)
+            _unknown(unknown, console, shown.evidence)
+    if shown.ct:
+        _heading("CERTIFICATE LOGS", console)
+        for line in shown.ct:
+            _line(line, console, 2, _DIM)
     if shown.absences:
         _heading("CHECKED AND NOT THERE", console)
         for a in shown.absences:
             _line(f"{a.asked}: {a.happened}", console, 2)
             for answer in a.answers:
                 _line(answer, console, 4, _DIM)
-    _dim_section("NOT CHECKED", [str(g) for g in shown.gaps], console)
-    if shown.asked:
-        _heading("WHAT WAS ASKED", console)
-        _line(shown.asked_total, console, 2, _DIM)
-        for record in shown.asked:
-            _line(f"{record.where}: {record.counts}", console, 2, _DIM)
-            for heading, names in record.names:
-                _line(f"{heading}: {', '.join(names)}", console, 4, _DIM)
-    if shown.off:
-        _heading("NOT RUN", console)
-        for off in shown.off:
-            _line(f"{off.check}: {off.how}", console, 2, _DIM)
+    _how(shown, console)
 
 
 def _line(text: str | Text, console: Console, indent: int, style: str = "") -> None:
@@ -77,57 +69,153 @@ def _line(text: str | Text, console: Console, indent: int, style: str = "") -> N
     console.print(Padding(body, (0, 0, 0, indent), expand=False))
 
 
-def _heading(title: str, console: Console, style: str = "bold") -> None:
-    console.print(Text(f"\n{title}", style=style))
+def _heading(title: str, console: Console) -> None:
+    console.print(Text(f"\n{title}", style=_HEADING))
 
 
-def _dim_section(title: str, lines: tuple[str, ...] | list[str], console: Console) -> None:
-    if lines:
-        _heading(title, console)
-        for line in lines:
-            _line(line, console, 2, _DIM)
+def _fixes(shown: View) -> list[FindingView]:
+    return [f for f in shown.findings if f.severity in _FIX]
+
+
+# ---------------------------------------------------------------- head and glance
 
 
 def _head(shown: View, console: Console) -> None:
-    """The headline and how the map was made in a panel, then the story under it."""
+    """The domain, how many services send as it and how many things need fixing, and how the
+    map was made, in one panel."""
     head = shown.head
-    count = f"{head.senders} sending service{'s' if head.senders != 1 else ''}"
-    how = (
-        f"{head.lookups} lookups in {head.elapsed:.1f} s over {head.resolver}, "
-        f"checked {head.checked_at}"
+    count = head.senders
+    senders = (
+        f"{count} service{'s' if count != 1 else ''} send{'s' if count == 1 else ''} "
+        "email as this domain"
+        if count
+        else "No sending service found"
     )
-    headline = Text.assemble((head.domain, "bold"), f"   {count}\n", (how, _DIM))
-    console.print(Panel(headline, border_style=_DIM, expand=False))
-    for sentence in head.sentences if head.story else ():
-        console.print(Text(sentence))
+    fixes = len(_fixes(shown))
+    line = Text.assemble((head.domain, "bold"), "\n", senders)
+    if fixes:
+        line.append("   ·   ", style=_DIM)
+        line.append(f"{fixes} thing{'s' if fixes != 1 else ''} to fix", style="bold yellow")
+    elif count:
+        line.append("   ·   ", style=_DIM)
+        line.append("nothing to fix", style="green")
+    how = (
+        f"checked {head.checked_at} · {head.lookups} lookups in {head.elapsed:.1f} s "
+        f"over {head.resolver}"
+    )
+    line.append(f"\n{how}", style=_DIM)
+    console.print(Panel(line, border_style="cyan", expand=False, padding=(0, 2)))
+
+
+def _services(shown: View) -> list[ServiceView]:
+    return [s for tier in shown.tiers for s in tier.services]
+
+
+def _story(shown: View, console: Console) -> None:
+    """The story under the panel, a sentence a line. Its last sentence, what was not checked, is
+    said in full under HOW THIS WAS CHECKED, so it is left out here, as the page mutes it."""
+    sentences = [s for s in shown.head.sentences if not s.startswith("Not checked")]
+    if sentences:
+        console.print()
+    for sentence in sentences:
+        _line(sentence, console, 2)
+
+
+def _glance(shown: View, console: Console) -> None:
+    """One row per service: marker, name, category, status and setup, then where reports go."""
+    services = _services(shown)
+    if not services:
+        return
+    _heading("AT A GLANCE", console)
+    grid = Table.grid(padding=(0, 2))
+    grid.add_column(no_wrap=True)
+    grid.add_column(style="bold", no_wrap=True)
+    grid.add_column(style=_DIM, no_wrap=True)
+    grid.add_column(no_wrap=True)
+    grid.add_column()
+    for service in services:
+        mark, style = _TIER_MARK.get(service.tier, ("●", ""))
+        name = f"{service.name} ({service.where})" if service.where else service.name
+        grid.add_row(
+            Text(mark, style=style),
+            name,
+            service.category,
+            Text(service.status, style=style),
+            _setup_glance(service),
+        )
+    console.print(Padding(grid, (0, 0, 0, 2), expand=False))
+    if shown.reporting:
+        _line(f"Reports go to {', '.join(shown.reporting)}.", console, 2, _DIM)
+
+
+def _setup_glance(service: ServiceView) -> Text:
+    """The setup in two or three words, or what the tier rests on for a weak one."""
+    brief = service.brief.removeprefix("setup ")
+    if service.tier in ("Likely", "Account only") and service.kinds:
+        return Text(f"from: {service.kinds[0].label}", style=_DIM)
+    if brief == "complete":
+        return Text("✓ setup complete", style="green")
+    if brief.startswith("incomplete"):
+        return Text("⚠ setup incomplete", style="yellow")
+    if brief.startswith("not fully checked"):
+        return Text("? setup not fully checked", style=_DIM)
+    return Text("")
+
+
+# ---------------------------------------------------------------- findings
 
 
 def _findings(shown: View, console: Console) -> None:
-    if not shown.findings:
+    """Risks and warnings numbered under FIX THESE, notes after them unnumbered."""
+    fixes = _fixes(shown)
+    notes = [f for f in shown.findings if f.severity not in _FIX]
+    if fixes:
+        _heading("FIX THESE", console)
+        for number, f in enumerate(fixes, 1):
+            _finding(f, f"{number:>2} ", console)
+    if notes:
+        _heading("NOTES", console)
+        for f in notes:
+            _finding(f, " · ", console)
+
+
+def _finding(f: FindingView, lead: str, console: Console) -> None:
+    style = _SEVERITY_STYLE[f.severity]
+    grid = Table.grid()
+    grid.add_column(width=len(lead) + 2, no_wrap=True)
+    grid.add_column()
+    marker = Text(lead, style=_DIM)
+    marker.append("▲ " if f.severity in _FIX else "", style=style)
+    title_style = "bold" if f.severity in _FIX else ""
+    grid.add_row(marker, Text(f.title, style=title_style))
+    grid.add_row("", Text(f.detail, style=_DIM))
+    for record in f.records:
+        grid.add_row("", Padding(Text(record, style=_DIM), (0, 0, 0, 2)))
+    console.print(Padding(grid, (0, 0, 0, 1), expand=False))
+
+
+# ---------------------------------------------------------------- evidence
+
+
+def _evidence(shown: View, console: Console) -> None:
+    """Each service as a block: name, category and status, one line per kind of record, then
+    its setup."""
+    services = _services(shown)
+    if not services:
         return
-    _heading("NEEDS ATTENTION", console)
-    for f in shown.findings:
-        marker = Text("● ", style=_SEVERITY_STYLE[f.severity])
-        grid = Table.grid()
-        grid.add_column(width=2)
-        grid.add_column()
-        grid.add_row(marker, Text(f.title, style="bold"))
-        console.print(Padding(grid, (0, 0, 0, 2), expand=False))
-        _line(f.detail, console, 4, _DIM)
-        for record in f.records:
-            _line(record, console, 6, _DIM)
-
-
-def _services(services: tuple[ServiceView, ...], console: Console) -> None:
-    """Each service as a block: its name, category and where, then one line per kind of record,
-    wrapped at the indent it starts at, then its setup."""
+    _heading("EVIDENCE, SERVICE BY SERVICE", console)
     width = max([len("Setup"), *(len(k.label) for s in services for k in s.kinds)]) + 2
     for service in services:
-        head = Text.assemble((service.name, "bold"), "  ", (service.category, _DIM))
+        _, style = _TIER_MARK.get(service.tier, ("●", ""))
+        head = Text.assemble(
+            (service.name, "bold"), ("  ·  ", _DIM), (service.category, _DIM), ("  ·  ", _DIM)
+        )
+        head.append(service.status.lower(), style=style)
         if service.where:
             head.append(f"  at {service.where}", style=_DIM)
+        console.print()
         _line(head, console, 2)
-        rows = Table.grid()
+        rows = Table.grid(padding=(0, 1))
         rows.add_column(width=width, style=_DIM, no_wrap=True)
         rows.add_column(overflow="fold")
         for kind in service.kinds:
@@ -150,16 +238,41 @@ def _setup(clause: str) -> Text:
     return text
 
 
-def _unknown(item: UnknownView, console: Console) -> None:
-    """One unknown with its record, or one network's group: its count line, its ranges and
-    addresses, and the records shown, with how many more there are."""
+def _unknown(item: UnknownView, console: Console, evidence: bool) -> None:
+    """One unknown in a line, or one network's group with its ranges and addresses; the records
+    under it when evidence is set, or always for a group, whose values alone do not say where."""
     where = f"  at {item.where}" if item.where else ""
     if item.grouped:
         _line(Text.assemble(item.label, (where, _DIM)), console, 2)
         _line(", ".join(item.values), console, 4, _DIM)
     else:
-        _line(Text.assemble(f"{item.label}: {item.values[0]}", (where, _DIM)), console, 2)
-    for record in item.records:
-        _line(record, console, 4, _DIM)
-    if item.more:
-        _line(f"+ {item.more} more", console, 4, _DIM)
+        line = Text.assemble((f"{item.label}: ", _DIM), item.values[0], (where, _DIM))
+        _line(line, console, 2)
+    if evidence or item.grouped:
+        for record in item.records:
+            _line(record, console, 4, _DIM)
+        if item.more:
+            _line(f"+ {item.more} more", console, 4, _DIM)
+
+
+# ---------------------------------------------------------------- how the map was made
+
+
+def _how(shown: View, console: Console) -> None:
+    """What was asked, what was not checked and what did not run, in one dimmed block."""
+    lines: list[str] = []
+    if shown.asked:
+        lines.append(f"Asked {shown.asked_total}:")
+        lines += [f"  {record.where}: {record.counts}" for record in shown.asked]
+    lines += [f"Not checked: {g}" for g in shown.gaps]
+    lines += [f"Not run: {off.check}: {off.how}" for off in shown.off]
+    if not shown.evidence:
+        lines.append("Add --evidence to see every record behind each line.")
+    if not lines:
+        return
+    _heading("HOW THIS WAS CHECKED", console)
+    for line in lines:
+        _line(line.lstrip(), console, 4 if line.startswith("  ") else 2, _DIM)
+    for record in shown.asked:
+        for heading, names in record.names:
+            _line(f"{record.where}, {heading}: {', '.join(names)}", console, 4, _DIM)
