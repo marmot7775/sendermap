@@ -45,8 +45,8 @@ Leads a catalog pass should look at, from the run's ranked tables:
   SPF are Amazon SES patterns, so it carries no setup. `_spf.myorderbox.com`, at hostgator.com,
   hosting24.com, reg.ru and timeweb.ru, is ResellerClub's reseller platform sending its notices,
   not a mailbox, so it is named in Commerce and apps.
-- Report receivers with no entry: `rua.dmarc.emailanalyst.com`, the US federal DMARC receiver
-  (`dmarc.cyber.dhs.gov`).
+- Report receivers with no entry: done. `emailanalyst.com` is eDataSource and
+  `dmarc.cyber.dhs.gov` is CISA.
 - Proofpoint's own networks (AS22843, AS26211) in SPF at 6 domains, not credited.
 - `selector1` CNAMEd into `outbound.protection.outlook.com` at 7 domains, which the catalog does
   not match: either a Microsoft 365 shape to add or a common misconfiguration to name.

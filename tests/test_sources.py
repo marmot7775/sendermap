@@ -67,6 +67,7 @@ def test_report_addresses_parse_like_receivers_do() -> None:
         "example.com",
         "ag.dmarcian.com",
     ]
+    assert reports.report_domains("v=DMARC1; rua=https://reports.example.net/", ("rua",)) == []
 
 
 async def test_report_services_are_reporting_and_others_listed() -> None:

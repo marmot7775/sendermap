@@ -31,6 +31,9 @@ from . import Context, http_failure
 USER_AGENT = "Sendermap/0.1 (+https://github.com/marmot7775/sendermap)"
 MAX_BYTES = 2_000_000
 MAX_REDIRECTS = 5
+# RFC 6598 shared address space: carrier NAT, and some clouds' metadata services. Python
+# counts it neither private nor global, so it is named here.
+_SHARED = ipaddress.ip_network("100.64.0.0/10")
 _SUBPROCESSOR_LINK = re.compile(r'href="([^"]*sub-?processors?[^"]*)"', re.IGNORECASE)
 _LOADED = re.compile(
     r"<(?:script\b[^>]*?\ssrc|link\b[^>]*?\shref)\s*=\s*[\"']?([^\"'\s>]+)", re.IGNORECASE
@@ -183,4 +186,5 @@ def _private(address: ipaddress.IPv4Address | ipaddress.IPv6Address) -> bool:
         or address.is_multicast
         or address.is_reserved
         or address.is_unspecified
+        or address in _SHARED
     )

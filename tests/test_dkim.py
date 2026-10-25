@@ -226,3 +226,21 @@ async def test_one_key_at_two_selectors_is_a_note_in_the_map(offline: httpx.Asyn
     (same,) = [f for f in result.findings if "same key" in f.title]
     assert same.severity is Severity.NOTE
     assert [e.name for e in same.evidence] == ["k1._domainkey.acme.test", "s1._domainkey.acme.test"]
+
+
+RSA_ENCRYPTION = der(0x30, der(0x06, bytes.fromhex("2a864886f70d010101")) + der(0x05, b""))
+
+
+@pytest.mark.parametrize(
+    "key",
+    [
+        der(0x30, RSA_ENCRYPTION + der(0x03, b"\x01" + rsa_public_key(1024))),  # unused bits
+        der(0x30, RSA_ENCRYPTION + der(0x03, b"\x00" + der(0x02, b"\x01"))),  # no key inside
+        der(0x30, der(0x02, b"\x00\xc1") + der(0x04, b"\x01")),  # exponent not an INTEGER
+        der(0x30, b"\x02"),  # an element cut short
+        bytes([0x30, 0x85, 1, 0, 0, 0, 0]),  # a length of five bytes
+    ],
+    ids=["unused-bits", "not-a-key", "bad-exponent", "truncated", "long-length"],
+)
+def test_a_malformed_der_key_has_no_size(key: bytes) -> None:
+    assert dkim.Key("s", "s._domainkey.example.com", record(key), ()).bits is None

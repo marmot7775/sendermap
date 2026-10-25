@@ -7293,6 +7293,39 @@
         }
       ]
     },
+    "eDataSource": {
+      "reporting": [
+        {
+          "value": "emailanalyst.com",
+          "proof": {
+            "domain": "twitter.com",
+            "record": "_dmarc.twitter.com",
+            "date": "2026-10-25"
+          }
+        }
+      ],
+      "category": "DMARC reporting",
+      "aliases": [
+        "Email Analyst"
+      ]
+    },
+    "CISA": {
+      "reporting": [
+        {
+          "value": "dmarc.cyber.dhs.gov",
+          "proof": {
+            "domain": "cisa.gov",
+            "record": "_dmarc.cisa.gov",
+            "date": "2026-10-25"
+          }
+        }
+      ],
+      "category": "DMARC reporting",
+      "aliases": [
+        "BOD 18-01",
+        "DHS DMARC reporting"
+      ]
+    },
     "Amazon WorkMail": {
       "other_cname": [
         {

@@ -15,6 +15,14 @@ fails before anything is published.
   reports how much of what they publish Sendermap names, with the unnamed evidence ranked by how
   many domains publish it. Runs are kept in `benchmark/runs/`; `--compare` shows what changed
   between two. The 0.1.7 baseline is in `benchmark/README.md`.
+- Four fixes. An MX found through certificate logs shows its host, not the last date of the
+  certificate ("MX for bounces 2027-01-01"). A certificate log cache whose date has no timezone
+  is read as no cache and the logs are asked again, where the certificate log check crashed and
+  its names were lost. The web checks refuse a homepage or MTA-STS
+  host that resolves into the shared address space 100.64.0.0/10, where carrier NAT and some
+  clouds' metadata services live. On a narrow terminal At a glance folds a long service name
+  instead of dropping the marker and setup columns, and with `--evidence` the names asked at
+  each name print under its count, not after the Not run lines.
 - Two mailbox services join the catalog, from the 0.1.7 benchmark's work list: Yandex 360
   (`mx.yandex.net`, `_spf.yandex.net`, the `mail` selector) and VK WorkMail, formerly Mail.ru
   for business (`emx.mail.ru`, `_spf.mail.ru`, the `mailru` selector). Each pattern has a live
@@ -26,6 +34,10 @@ fails before anything is published.
   setup. ResellerClub is named by `_spf.myorderbox.com`, which hosts and registrars publish so the
   reseller platform can send its notices as them: it sits in Commerce and apps, not Mailbox. VK
   WorkMail also matches `mxs.mail.ru` in MX and its `mailru-domain:` verification token.
+- Two report receivers join the catalog: eDataSource (`emailanalyst.com`, whose report
+  addresses take mail at eDataSource's MX hosts; twitter.com, linkedin.com and four more in the
+  benchmark publish it) and CISA (`dmarc.cyber.dhs.gov`, the address BOD 18-01 requires of US
+  federal domains).
 
 ## 0.1.7 (2026-10-25)
 
