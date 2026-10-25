@@ -2465,37 +2465,37 @@
   },
   {
    "asked": "DKIM selectors at e.casper.com",
-   "happened": "77 of 109 not asked. The first 27 were asked, plus any the name's own SPF, MX or delegation points to (cap 27).",
+   "happened": "78 of 110 not asked. The first 27 were asked, plus any the name's own SPF, MX or delegation points to (cap 27).",
    "kind": "dkim",
-   "count": 77,
+   "count": 78,
    "cap": 27
   },
   {
    "asked": "DKIM selectors at email.casper.com",
-   "happened": "79 of 109 not asked. The first 27 were asked, plus any the name's own SPF, MX or delegation points to (cap 27).",
+   "happened": "80 of 110 not asked. The first 27 were asked, plus any the name's own SPF, MX or delegation points to (cap 27).",
    "kind": "dkim",
-   "count": 79,
+   "count": 80,
    "cap": 27
   },
   {
    "asked": "DKIM selectors at mail.casper.com",
-   "happened": "81 of 109 not asked. The first 27 were asked, plus any the name's own SPF, MX or delegation points to (cap 27).",
-   "kind": "dkim",
-   "count": 81,
-   "cap": 27
-  },
-  {
-   "asked": "DKIM selectors at orders.casper.com",
-   "happened": "82 of 109 not asked. The first 27 were asked, plus any the name's own SPF, MX or delegation points to (cap 27).",
+   "happened": "82 of 110 not asked. The first 27 were asked, plus any the name's own SPF, MX or delegation points to (cap 27).",
    "kind": "dkim",
    "count": 82,
    "cap": 27
   },
   {
-   "asked": "DKIM selectors at t.casper.com",
-   "happened": "77 of 109 not asked. The first 27 were asked, plus any the name's own SPF, MX or delegation points to (cap 27).",
+   "asked": "DKIM selectors at orders.casper.com",
+   "happened": "83 of 110 not asked. The first 27 were asked, plus any the name's own SPF, MX or delegation points to (cap 27).",
    "kind": "dkim",
-   "count": 77,
+   "count": 83,
+   "cap": 27
+  },
+  {
+   "asked": "DKIM selectors at t.casper.com",
+   "happened": "78 of 110 not asked. The first 27 were asked, plus any the name's own SPF, MX or delegation points to (cap 27).",
+   "kind": "dkim",
+   "count": 78,
    "cap": 27
   }
  ],
@@ -2600,6 +2600,8 @@
     "zendesk1",
     "zendesk2",
     "zoho",
+    "mail",
+    "mailru",
     "api",
     "default",
     "dk",
@@ -2611,7 +2613,6 @@
     "key",
     "key1",
     "key2",
-    "mail",
     "mta",
     "mx",
     "pm",

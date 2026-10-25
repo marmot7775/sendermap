@@ -1,0 +1,28 @@
+#!/bin/sh
+# Upgrade sendermap.dev to one released version, named as the SSH command ("0.1.7").
+# The publish workflow's deploy key runs this and nothing else: its line in
+# ~/.ssh/authorized_keys forces command="/home/marmot7/bin/sendermap-upgrade",restrict.
+set -eu
+version="${SSH_ORIGINAL_COMMAND:-${1:-}}"
+case "$version" in
+  "" | *[!0-9.]*) echo "give a version such as 0.1.7" >&2; exit 2 ;;
+esac
+pip=/home/marmot7/sendermap-venv/bin/pip
+# Right after a release the index can lag, so pip is retried for up to five minutes.
+try=0
+until "$pip" install -q --no-cache-dir --upgrade "sendermap[web]==$version"; do
+  try=$((try + 1))
+  [ "$try" -lt 10 ] || exit 1
+  sleep 30
+done
+sudo systemctl restart sendermap
+# The app takes a few seconds to listen; give it thirty.
+for _ in $(seq 30); do
+  if curl -sf http://127.0.0.1:8001/ | grep -q "style.css?v=$version"; then
+    echo "sendermap.dev runs $version"
+    exit 0
+  fi
+  sleep 1
+done
+echo "sendermap did not come up serving $version" >&2
+exit 1

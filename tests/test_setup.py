@@ -405,6 +405,8 @@ WITH_SETUP = {
     "Proton Mail",
     "Rackspace Email",
     "Zoho Mail",
+    "Yandex 360",
+    "VK WorkMail",
     "Barracuda",
     "DuoCircle",
     "Symantec MessageLabs",

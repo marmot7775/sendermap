@@ -57,7 +57,7 @@ def test_the_workflow_publishes_a_tag_by_trusted_publishing() -> None:
     flow: dict[Any, Any] = yaml.safe_load((ROOT / ".github/workflows/publish.yml").read_text())
     assert flow[True] == {"push": {"tags": ["v*"]}}  # YAML reads the key "on" as True
     jobs = flow["jobs"]
-    assert list(jobs) == ["build", "publish", "release", "registry"]
+    assert list(jobs) == ["build", "publish", "release", "registry", "deploy"]
     build = " ".join(str(s.get("run", "")) for s in jobs["build"]["steps"])
     assert "python -m build" in build and "tools/release_notes.py" in build
     assert jobs["build"]["steps"][0]["with"]["fetch-depth"] == 0
@@ -76,6 +76,11 @@ def test_the_workflow_publishes_a_tag_by_trusted_publishing() -> None:
     steps = " ".join(str(s.get("run", "")) for s in registry["steps"])
     assert "mcp-publisher login github-oidc" in steps and "mcp-publisher publish" in steps
     assert "releases/download/v" in steps  # a pinned mcp-publisher, not latest
+    deploy = jobs["deploy"]
+    assert deploy["needs"] == "publish"  # held with publishing, so PyPI has the version
+    run = deploy["steps"][-1]["run"]
+    assert "secrets." not in run  # secrets reach the shell as env, never inlined
+    assert run.rstrip().endswith('"${GITHUB_REF_NAME#v}"')  # the version is the only command
 
 
 def test_the_workflow_says_what_holds_publishing_and_where_it_is_set() -> None:

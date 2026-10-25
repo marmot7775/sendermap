@@ -1,7 +1,7 @@
 ╭──────────────────────────────────────────────────────────────────────────────────╮
 │  allbirds.com                                                                    │
 │  15 services send email as this domain   ·   3 things to fix                     │
-│  checked 2026-10-12 01:24 UTC · 753 lookups in 0.0 s over Google DNS over HTTPS  │
+│  checked 2026-10-12 01:24 UTC · 763 lookups in 0.0 s over Google DNS over HTTPS  │
 ╰──────────────────────────────────────────────────────────────────────────────────╯
 
   Microsoft 365 receives the domain's mail and has a DKIM key in place to sign it.
@@ -419,8 +419,8 @@ CHECKED AND NOT THERE
     _domainkey.mail.allbirds.com TXT no record of this type
 
 HOW THIS WAS CHECKED
-  Asked 753 lookups at 6 names:
-    allbirds.com: 109 DKIM selectors, 25 CNAME labels, 1 page
+  Asked 763 lookups at 6 names:
+    allbirds.com: 110 DKIM selectors, 25 CNAME labels, 1 page
       Pages:                                                                                        
       https://api.certspotter.com/v1/issuances?domain=allbirds.com&include_subdomains=true&expand=dn
       s_names                                                                                       
@@ -435,8 +435,8 @@ HOW THIS WAS CHECKED
       mailpoet1, mandrill, mte1, mte2, marketo, mkto, mkto1, mimecast, mimecast20190719, pepipost,  
       pp1, protonmail, protonmail2, protonmail3, resend, sailthru, salesforce, salesforce2,         
       salesforce1, sf, sf1, sf2, sfdc, 200608, pardot, sfmc, s1, s2, smtpapi, scph0819, sparkpost,  
-      squarespace, zendesk1, zendesk2, zoho, api, default, dk, dkim, dkim1, dkim2, email, k, key,   
-      key1, key2, mail, mta, mx, pm, s, selector, smtp, sp                                          
+      squarespace, zendesk1, zendesk2, zoho, mail, mailru, api, default, dk, dkim, dkim1, dkim2,    
+      email, k, key, key1, key2, mta, mx, pm, s, selector, smtp, sp                                 
     alerts.allbirds.com: 32 DKIM selectors
       DKIM selectors: google, gapps, acdkim1, acdkim2, ses, aweber_key_a, aweber_key_b,             
       aweber_key_c, brevo, brevo1, brevo2, cm, cf2024-1, ctct1, ctct2, krs, e2ma-k1, e2ma-k2,       
@@ -461,9 +461,9 @@ HOW THIS WAS CHECKED
   Not checked: sending subdomains: TXT, MX and NS at apisdk.allbirds.com, community.allbirds.com,   
   dataplane.allbirds.com, jssdk.allbirds.com, rerun.allbirds.com, www.jssdk.allbirds.com: the       
   domain's DNS servers failed to answer (SERVFAIL), so whether they send is not known               
-  Not checked: DKIM selectors at alerts and mail.allbirds.com: 77 of 109 not asked at each. The     
+  Not checked: DKIM selectors at alerts and mail.allbirds.com: 78 of 110 not asked at each. The     
   first 27 were asked, plus any the name's own SPF, MX or delegation points to (cap 27).            
-  Not checked: DKIM selectors at info.allbirds.com: 82 of 109 not asked. The first 27 were asked,   
+  Not checked: DKIM selectors at info.allbirds.com: 83 of 110 not asked. The first 27 were asked,   
   plus any the name's own SPF, MX or delegation points to (cap 27).                                 
   Not run: the website: web checks were turned off (--no-web)
   Not run: certificate transparency, crt.sh: read only with --ct (it also holds expired             

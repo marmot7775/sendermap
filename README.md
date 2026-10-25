@@ -7,7 +7,7 @@
 
 Type a domain, see every service that sends email as it, and the public evidence for each one.
 
-**Status: early release (0.1.6).** The command-line tool works, and the website runs at [sendermap.dev](https://sendermap.dev).
+**Status: early release (0.1.7).** The command-line tool works, and the website runs at [sendermap.dev](https://sendermap.dev).
 Needs Python 3.12 or later.
 
 ## What it shows
@@ -173,6 +173,10 @@ what was checked; Sendermap never reads that file, so a record they would match 
 recognised. A vendor moves from pending to vendors.json with one proof per pattern, the same rule
 as any new block. `tools/hunt_proofs.py` looks for those proofs on the customer domains in
 `data/hunt_domains.txt`, with the same checks as the weekly recheck.
+
+Which vendor to add next comes from [the benchmark](benchmark/README.md): `tools/benchmark.py`
+maps the same 300 domains each release and ranks what it could not name by how many domains
+publish it. On 0.1.7, 83 such groups showed at two domains or more.
 
 Every proof is rechecked against live DNS and the web each week and on any pull request that
 touches `vendors.json`. A proof that no longer holds opens an issue, so a stale pattern is caught

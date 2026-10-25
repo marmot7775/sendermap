@@ -11,6 +11,19 @@ fails before anything is published.
 
 ## Unreleased
 
+- `tools/benchmark.py` maps a fixed list of 300 domains (`data/benchmark_domains.txt`) and
+  reports how much of what they publish Sendermap names, with the unnamed evidence ranked by how
+  many domains publish it. Runs are kept in `benchmark/runs/`; `--compare` shows what changed
+  between two. The 0.1.7 baseline is in `benchmark/README.md`.
+- Two mailbox services join the catalog, from the 0.1.7 benchmark's work list: Yandex 360
+  (`mx.yandex.net`, `_spf.yandex.net`, the `mail` selector) and VK WorkMail, formerly Mail.ru
+  for business (`emx.mail.ru`, `_spf.mail.ru`, the `mailru` selector). Each pattern has a live
+  proof dated 2026-10-25 and each setup cites the vendor's own docs. `mail` stays a generic name:
+  it credits Yandex 360 only where the domain's SPF or MX already shows Yandex. Every map asks
+  one more DKIM name (`mailru`), so the sweep is 110 names.
+
+## 0.1.7 (2026-10-25)
+
 - The Markdown export follows the terminal layout. It opens with the domain, the count of services and of things to fix, and how the map was made, then the story a sentence a paragraph. At a glance gives one line per service, Fix these numbers the risks and warnings with Notes after them, Evidence, service by service gives each service a heading with one line per kind of record, and How this was checked comes last with what was asked, not checked and not run. The senders table is gone, so the export has no line a mail client wraps mid-row, and every record sits in a code span. 0.1.6's export still used the old section names (Needs attention, Senders, What was asked).
 - The section names and their order live in one place, `render.view.SECTIONS`, which the text, web page and Markdown renderers all walk. A test renders every corpus domain all three ways and checks the same sections come out in the same order. The web page's Certificate transparency section is now Certificate logs, as the terminal already said.
 - The `mcp` extra needs FastMCP 4.1.2 or later, which fixes GHSA-7xgj-8392-5q4r (authorization skipped on transformed components) and GHSA-vqqp-x5qm-5qp4 (OAuth client credentials not bound to an issuer). Sendermap's MCP server uses neither component authorization nor an OAuth client, so it was not exposed; the lock moves to 4.1.3.
