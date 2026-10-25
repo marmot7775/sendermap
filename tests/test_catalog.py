@@ -79,3 +79,12 @@ def test_published_ranges_are_read_from_published_spf_where_a_block_names_it() -
     assert sources["HubSpot"] == ["hubspotemail.net"]
     assert sources["Mimecast"] == ["_netblocks.mimecast.com"]
     assert "sendgrid.net" in sources["SendGrid"]
+
+
+def test_inbound_mx_from_the_0_1_7_benchmark() -> None:
+    # eu.wxpcollaboration.hp.com and foundry.openai.com receive through SES; community.openai.com
+    # and community.f5.com are Discourse forums whose replies arrive at discoursemail.com.
+    assert C.mx("inbound-smtp.eu-central-1.amazonaws.com") == "Amazon SES"
+    assert C.mx("inbound-smtp.us-gov-west-1.amazonaws.com") == "Amazon SES"
+    assert C.mx("mx-corp1.discoursemail.com") == "Discourse"
+    assert C.mx("inbound-smtp.eu-central-1.amazonaws.com.evil.example") is None
