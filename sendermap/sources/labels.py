@@ -3,8 +3,9 @@
 A bounce (return path) CNAME lets a service's bounces align with the domain; a tracking CNAME
 serves its click and open links. Either is the service set up to send. A CNAME at one of these
 labels into a zone outside the domain that no service's pattern matches is listed as unknown,
-with its target. A wildcard CNAME answers every label, so one label nobody publishes is asked
-first and any answer matching it is ignored.
+with its target, unless the target is a web host or CDN at a label that is not a tracking
+label: that is a website. A wildcard CNAME answers every label, so one label nobody publishes
+is asked first and any answer matching it is ignored.
 """
 
 from __future__ import annotations
@@ -53,7 +54,7 @@ async def collect(ctx: Context, where: str) -> Observed:
         if match := ctx.catalog.label_cname(label, target):
             service, kind = match
             claims.append(Claim(service, KINDS[kind], where, evidence))
-        elif not _inside(target, ctx.domain):
+        elif not _inside(target, ctx.domain) and not ctx.catalog.is_website(label, target):
             unknowns.append(Unknown(f"CNAME at {label}", target, where, evidence))
     gaps: list[Gap] = []
     if not canary.answered:

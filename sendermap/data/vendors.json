@@ -1,5 +1,5 @@
 {
-  "about": "Email services recognisable from a domain's own DNS. One block per vendor; imported from dns-audit (MIT) at fac9e2e. Hostname patterns match the host itself or any name under it, and the longest match wins. Every pattern is an entry with its value and a proof: a live domain that publishes it, the record name (or, for a website host or a subprocessor name, the page) as found, and the date it was checked. Networks are autonomous system numbers a service owns outright; shared clouds are listed under rules.cloud_networks and never credited to a service. Each selectors entry names a vendor's DKIM selectors with their source and a proof; a fixed shape with several names takes a list of proofs, one per name in order. These entries are the only selector list: they credit keys by name, back generic names, and with rules.generic_selectors make the probe sweep. rules.backed_only_selectors maps a plain selector name to the one vendor it credits, and only where the domain's SPF, MX or an NS delegation already shows that vendor; each carries a proof like a selectors entry. A sending_ip entry is one address the service sends from, for SPF evaluation; its proof's record is either the service's own SPF record, publishing a range that holds the address, or a host of the service's whose A record is the address; each shipped one is an outbound host whose PTR name leads back to the address, which SPF evaluation gives as the HELO name. Hints are MX and SPF values the vendor's customers publish, with the pages that list them. Patterns not yet proven wait in vendors_pending.json, which Sendermap never reads. A setup list names the records the vendor's documentation says a complete setup publishes: each item's record, whether it is needed, its values (patterns of the same block) and a proof whose record is the documentation page that names them all. Aliases are other names a client calls the vendor by, a plain list with no proof: an alias matches text a person typed, never anything in DNS.",
+  "about": "Email services recognisable from a domain's own DNS. One block per vendor; imported from dns-audit (MIT) at fac9e2e. Hostname patterns match the host itself or any name under it, and the longest match wins. Every pattern is an entry with its value and a proof: a live domain that publishes it, the record name (or, for a website host or a subprocessor name, the page) as found, and the date it was checked. Networks are autonomous system numbers a service owns outright; shared clouds are listed under rules.cloud_networks and never credited to a service. Each selectors entry names a vendor's DKIM selectors with their source and a proof; a fixed shape with several names takes a list of proofs, one per name in order. These entries are the only selector list: they credit keys by name, back generic names, and with rules.generic_selectors make the probe sweep. rules.backed_only_selectors maps a plain selector name to the one vendor it credits, and only where the domain's SPF, MX or an NS delegation already shows that vendor; each carries a proof like a selectors entry. A sending_ip entry is one address the service sends from, for SPF evaluation; its proof's record is either the service's own SPF record, publishing a range that holds the address, or a host of the service's whose A record is the address; each shipped one is an outbound host whose PTR name leads back to the address, which SPF evaluation gives as the HELO name. Hints are MX and SPF values the vendor's customers publish, with the pages that list them. Patterns not yet proven wait in vendors_pending.json, which Sendermap never reads. A setup list names the records the vendor's documentation says a complete setup publishes: each item's record, whether it is needed, its values (patterns of the same block) and a proof whose record is the documentation page that names them all. Aliases are other names a client calls the vendor by, a plain list with no proof: an alias matches text a person typed, never anything in DNS. rules.web_hosts are website hosts and CDNs: a CNAME into one at a label that is not a tracking label is a website, not a sender, so it is not listed as unknown; at a tracking label it still is, since sending services serve click links through CDNs.",
   "categories": [
     "Mailbox",
     "Security gateway",
@@ -112,6 +112,17 @@
       "track",
       "tracking",
       "url"
+    ],
+    "web_hosts": [
+      "googlehosted.com",
+      "ghs.google.com",
+      "cloudfront.net",
+      "edgekey.net",
+      "akamaiedge.net",
+      "edgesuite.net",
+      "akamai.net",
+      "fastly.net",
+      "cdn.cloudflare.net"
     ],
     "cloud_networks": {
       "AS16509": "Amazon Web Services",
@@ -3610,6 +3621,14 @@
             "record": "selector1._domainkey.cnn.com",
             "date": "2026-10-10"
           }
+        },
+        {
+          "value": "outbound.protection.outlook.com",
+          "proof": {
+            "domain": "live.com",
+            "record": "selector1._domainkey.live.com",
+            "date": "2026-10-25"
+          }
         }
       ],
       "verification_txt": [
@@ -4140,6 +4159,24 @@
             "domain": "ibm.com",
             "record": "pp1._domainkey.ibm.com",
             "date": "2026-10-10"
+          }
+        }
+      ],
+      "networks": [
+        {
+          "value": "AS22843",
+          "proof": {
+            "domain": "pphosted.com",
+            "record": "mx0b-00148501.pphosted.com",
+            "date": "2026-10-25"
+          }
+        },
+        {
+          "value": "AS26211",
+          "proof": {
+            "domain": "pphosted.com",
+            "record": "mx0a-00148501.pphosted.com",
+            "date": "2026-10-25"
           }
         }
       ]
@@ -7239,6 +7276,24 @@
             "record": "max.ru",
             "date": "2026-10-25"
           }
+        },
+        {
+          "value": "mxs.mail.ru",
+          "proof": {
+            "domain": "vk.com",
+            "record": "vk.com",
+            "date": "2026-10-25"
+          }
+        }
+      ],
+      "verification_txt": [
+        {
+          "value": "mailru-domain:",
+          "proof": {
+            "domain": "vk.ru",
+            "record": "vk.ru",
+            "date": "2026-10-25"
+          }
         }
       ],
       "category": "Mailbox",
@@ -7289,6 +7344,73 @@
             "date": "2026-10-25"
           }
         }
+      ]
+    },
+    "eDataSource": {
+      "reporting": [
+        {
+          "value": "emailanalyst.com",
+          "proof": {
+            "domain": "twitter.com",
+            "record": "_dmarc.twitter.com",
+            "date": "2026-10-25"
+          }
+        }
+      ],
+      "category": "DMARC reporting",
+      "aliases": [
+        "Email Analyst"
+      ]
+    },
+    "CISA": {
+      "reporting": [
+        {
+          "value": "dmarc.cyber.dhs.gov",
+          "proof": {
+            "domain": "cisa.gov",
+            "record": "_dmarc.cisa.gov",
+            "date": "2026-10-25"
+          }
+        }
+      ],
+      "category": "DMARC reporting",
+      "aliases": [
+        "BOD 18-01",
+        "DHS DMARC reporting"
+      ]
+    },
+    "Amazon WorkMail": {
+      "other_cname": [
+        {
+          "label": "autodiscover",
+          "target": "awsapps.com",
+          "proof": {
+            "domain": "samsungqbe.com",
+            "record": "autodiscover.samsungqbe.com",
+            "date": "2026-10-25"
+          }
+        }
+      ],
+      "category": "Mailbox",
+      "aliases": [
+        "WorkMail",
+        "AWS WorkMail"
+      ]
+    },
+    "ResellerClub": {
+      "spf_includes": [
+        {
+          "value": "_spf.myorderbox.com",
+          "proof": {
+            "domain": "hostgator.com",
+            "record": "hostgator.com",
+            "date": "2026-10-25"
+          }
+        }
+      ],
+      "category": "Commerce and apps",
+      "aliases": [
+        "OrderBox"
       ]
     },
     "Discourse": {

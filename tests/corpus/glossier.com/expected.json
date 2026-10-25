@@ -1617,17 +1617,6 @@
  ],
  "unknowns": [
   {
-   "what": "CNAME at mail",
-   "value": "ghs.googlehosted.com",
-   "where": "glossier.com",
-   "evidence": {
-    "name": "mail.glossier.com",
-    "rtype": "CNAME",
-    "value": "ghs.googlehosted.com",
-    "checked_at": "2026-10-12T01:25:09+00:00"
-   }
-  },
-  {
    "what": "CNAME at go",
    "value": "cname.short.io",
    "where": "glossier.com",

@@ -33,6 +33,24 @@ fails before anything is published.
   proof dated 2026-10-25 and each setup cites the vendor's own docs. `mail` stays a generic name:
   it credits Yandex 360 only where the domain's SPF or MX already shows Yandex. Every map asks
   one more DKIM name (`mailru`), so the sweep is 110 names.
+- Two more services from the same work list. Amazon WorkMail is named by an autodiscover CNAME
+  into `awsapps.com`; its MX and SPF are Amazon SES hosts and stay unnamed, so it carries no
+  setup. ResellerClub is named by `_spf.myorderbox.com`, which hosts and registrars publish so the
+  reseller platform can send its notices as them: it sits in Commerce and apps, not Mailbox. VK
+  WorkMail also matches `mxs.mail.ru` in MX and its `mailru-domain:` verification token.
+- Two report receivers join the catalog: eDataSource (`emailanalyst.com`, whose report
+  addresses take mail at eDataSource's MX hosts; twitter.com, linkedin.com and four more in the
+  benchmark publish it) and CISA (`dmarc.cyber.dhs.gov`, the address BOD 18-01 requires of US
+  federal domains).
+- SPF ranges in Proofpoint's own networks, AS22843 and AS26211, are credited to Proofpoint.
+  instagram.com, dropbox.com, oracle.com, ibm.com, stanford.edu and whatsapp.com publish them.
+- A DKIM key CNAMEd into `outbound.protection.outlook.com` is Microsoft 365's. Microsoft's own
+  domains (microsoft.com, live.com, msn.com, sharepoint.com) point `selector1` at the key
+  Exchange Online Protection publishes there.
+- A CNAME at a label such as `mail` or `email` into a web host or CDN (`ghs.googlehosted.com`,
+  CloudFront, Akamai, Fastly) is a website and no longer listed under Not recognised. At a
+  tracking label (`click`, `go`, `link` and the rest) it still is, since sending services serve
+  click links through CDNs. The hosts are `rules.web_hosts` in the catalog.
 
 ## 0.1.7 (2026-10-25)
 
