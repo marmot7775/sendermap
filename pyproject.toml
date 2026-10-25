@@ -23,7 +23,7 @@ classifiers = [
 
 [project.optional-dependencies]
 web = ["fastapi>=0.115", "uvicorn>=0.32", "sendermap[mcp]"]  # the site mounts the MCP server
-mcp = ["fastmcp>=4.1,<5", "jsonschema>=4.23"]
+mcp = ["fastmcp>=4.1.2,<5", "jsonschema>=4.23"]
 
 [dependency-groups]
 dev = [
