@@ -211,8 +211,6 @@ EVIDENCE, SERVICE BY SERVICE
                                 amazonses:awBV5EM6W53p2/Xbg80uJ29zurZnGsMMJcLLLp6vUcY=              
 
 NOT RECOGNISED
-  CNAME at mail: ghs.googlehosted.com
-    mail.glossier.com CNAME ghs.googlehosted.com
   CNAME at go: cname.short.io
     go.glossier.com CNAME cname.short.io
 

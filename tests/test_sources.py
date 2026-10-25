@@ -40,6 +40,18 @@ async def test_bounce_and_tracking_cnames_name_the_services_they_point_at() -> N
     }
 
 
+async def test_a_cname_into_a_web_host_is_unknown_only_at_a_tracking_label() -> None:
+    zone = (
+        Zone()
+        .alias("mail.example.com", "ghs.googlehosted.com")
+        .alias("link.example.com", "d15y5qe1i4b8ob.cloudfront.net")
+    )
+    observed = await labels.collect(context(zone), "example.com")
+    assert [(u.what, u.value) for u in observed.unknowns] == [
+        ("CNAME at link", "d15y5qe1i4b8ob.cloudfront.net")
+    ]
+
+
 async def test_a_wildcard_cname_is_not_evidence(monkeypatch: pytest.MonkeyPatch) -> None:
     zone = Zone()
 

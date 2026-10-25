@@ -90,7 +90,6 @@ EVIDENCE, SERVICE BY SERVICE
     Verification token          amazonses:awBV5EM6W53p2/Xbg80uJ29zurZnGsMMJcLLLp6vUcY=
 
 NOT RECOGNISED
-  CNAME at mail: ghs.googlehosted.com
   CNAME at go: cname.short.io
 
 HOW THIS WAS CHECKED

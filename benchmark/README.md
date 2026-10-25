@@ -52,8 +52,10 @@ Leads a catalog pass should look at, from the run's ranked tables:
   Microsoft's own, pointing at a live Exchange Online Protection key, and is now credited to
   Microsoft 365.
 - Not senders: CNAMEs to web hosting and CDNs (`ghs.googlehosted.com`, `cloudfront.net`,
-  `edgekey.net`, `fastly.net`) at labels the label source asks. They inflate the named count;
-  the label source could skip a target that is a known web host.
+  `edgekey.net`, `fastly.net`) at labels the label source asks. Done for labels that are not
+  tracking labels (`rules.web_hosts`). At `go`, `link`, `click` and the other tracking labels,
+  where most of them are, they stay unknown, since a sending service may serve its click links
+  through a CDN.
 
 Most of the top 300 run their own mail (Google, Microsoft, Amazon, Meta), so their sibling
 domains show up as unknowns too. That is correct and keeps the fully named share low on this

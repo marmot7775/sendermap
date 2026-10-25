@@ -116,7 +116,6 @@ Transactional · account only
 
 ## Not recognised
 
-- CNAME at mail: `ghs.googlehosted.com`, from `mail.glossier.com CNAME ghs.googlehosted.com`
 - CNAME at go: `cname.short.io`, from `go.glossier.com CNAME cname.short.io`
 
 ## How this was checked

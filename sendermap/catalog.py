@@ -133,6 +133,7 @@ class Catalog:
     flattening_spf: frozenset[str]
     cname_labels: tuple[str, ...]
     tracking_labels: frozenset[str]
+    web_hosts: HostTable
     sending_labels: tuple[str, ...]
     website: dict[str, str]
     # The names a sending service goes by, as a subprocessor page would list it, to the service.
@@ -225,6 +226,12 @@ class Catalog:
             if service := self.tables[table].match(target):
                 return service, kind
         return None
+
+    def is_website(self, label: str, target: str) -> bool:
+        """Whether a CNAME at <label>.<domain> into `target` is a website, not a sender: the
+        target is a web host or CDN and the label is not a tracking label, since sending
+        services serve click links through CDNs."""
+        return label.lower() not in self.tracking_labels and bool(self.web_hosts.match(target))
 
     def website_services(self, html: str, loaded: Iterable[str]) -> dict[str, tuple[str, bool]]:
         """{service: (host, loaded)} for every service whose website host the page loads a
@@ -349,6 +356,7 @@ def build(raw: dict[str, Any]) -> Catalog:
         flattening_spf=frozenset(rules.get("flattening_spf", ())),
         cname_labels=tuple(rules["cname_labels"]),
         tracking_labels=frozenset(rules["tracking_labels"]),
+        web_hosts=HostTable({norm(h): norm(h) for h in rules.get("web_hosts", ())}),
         sending_labels=tuple(rules["sending_labels"]),
         website=website,
         subprocessor_names=named,
