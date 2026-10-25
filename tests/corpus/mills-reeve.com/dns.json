@@ -1,4 +1,5 @@
 [
+{"chain": [], "name": "0.144.5.193.origin.asn.cymru.com", "records": ["14618 | 193.5.144.0/24 | GB | ripencc | 2021-04-01"], "rtype": "TXT", "status": "ok"},
 {"chain": [], "name": "1.144.5.193.origin.asn.cymru.com", "records": ["14618 | 193.5.144.0/24 | GB | ripencc | 2021-04-01"], "rtype": "TXT", "status": "ok"},
 {"chain": [], "name": "1._spf.adp.com", "records": ["v=spf1 ip4:91.213.26.62 ip4:195.200.255.124 ip4:91.213.26.109 ip4:217.108.10.20 ip4:194.36.92.218 ip4:198.133.214.248 ip4:207.186.185.110 ip4:202.3.8.210 ip4:203.2.191.230 ip4:206.71.18.20/31 ip4:205.141.244.20 ip4:195.200.255.247 -all"], "rtype": "TXT", "status": "ok"},
 {"chain": [], "name": "102.129.11.3.origin.asn.cymru.com", "records": ["16509 | 3.0.0.0/10 | US | arin | 2017-12-20", "16509 | 3.8.0.0/14 | US | arin | 2017-12-20"], "rtype": "TXT", "status": "ok"},
@@ -350,6 +351,7 @@
 {"chain": [], "name": "m.mills-reeve.com", "records": [], "rtype": "TXT", "status": "no record of this type"},
 {"chain": [], "name": "madgexjb.com", "records": ["v=spf1 ip4:52.209.63.192/27 ip4:34.255.79.211/32 ip4:54.77.239.0/32 ip4:34.247.139.160/32 ip4:34.255.102.32/28 ~all"], "rtype": "TXT", "status": "ok"},
 {"chain": [], "name": "mail._domainkey.mills-reeve.com", "records": [], "rtype": "TXT", "status": "no record of this type"},
+{"chain": [], "name": "mail.cecollect.com", "records": ["62.73.189.146"], "rtype": "A", "status": "ok"},
 {"chain": [], "name": "mail.clinchtalent.com", "records": ["v=spf1 ip4:159.112.242.217 ~all"], "rtype": "TXT", "status": "ok"},
 {"chain": [], "name": "mail.mills-reeve.com", "records": [], "rtype": "CNAME", "status": "no record of this type"},
 {"chain": [], "name": "mail.mills-reeve.com", "records": [], "rtype": "MX", "status": "no record of this type"},
@@ -419,6 +421,8 @@
 {"chain": [], "name": "mte1._domainkey.mills-reeve.com", "records": [], "rtype": "TXT", "status": "no record of this type"},
 {"chain": [], "name": "mte2._domainkey.mills-reeve.com", "records": [], "rtype": "TXT", "status": "no record of this type"},
 {"chain": [], "name": "mx._domainkey.mills-reeve.com", "records": [], "rtype": "TXT", "status": "no record of this type"},
+{"chain": [], "name": "mx01.mail.vx-email.com", "records": ["193.5.144.0"], "rtype": "A", "status": "ok"},
+{"chain": [], "name": "mx02.mail.vx-email.com", "records": ["193.5.144.1"], "rtype": "A", "status": "ok"},
 {"chain": [], "name": "nets1.spf.messagelabs.com", "records": ["v=spf1 ip4:85.158.136.0/21 ip4:193.109.254.0/23 ip4:194.106.220.0/23 ip4:195.245.230.0/23 ip4:95.131.104.0/21 ip4:46.226.48.0/21"], "rtype": "TXT", "status": "ok"},
 {"chain": [], "name": "nets2.spf.messagelabs.com", "records": ["v=spf1 ip4:216.82.240.0/20 ip4:67.219.240.0/20 ip4:117.120.16.0/21 ip4:103.9.96.0/22 ip4:35.228.216.85 ip4:146.148.116.76 ip4:34.141.160.224 ip4:34.70.158.162 ip4:34.74.74.140 ip4:34.83.159.189"], "rtype": "TXT", "status": "ok"},
 {"chain": [], "name": "news.mills-reeve.com", "records": [], "rtype": "MX", "status": "no record of this type"},

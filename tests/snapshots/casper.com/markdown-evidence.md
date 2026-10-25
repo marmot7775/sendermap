@@ -1,6 +1,6 @@
 # Sendermap: casper.com
 
-14 sending services found from public records checked 2026-10-12 01:25 UTC (728 lookups in 0.0 s over Google DNS over HTTPS).
+14 sending services found from public records checked 2026-10-12 01:25 UTC (729 lookups in 0.0 s over Google DNS over HTTPS).
 
 Google Workspace receives the domain's mail and has a DKIM key in place to sign it. Eleven other services are set up to send as the domain: four marketing (Campaign Monitor, Iterable, Mailchimp, Salesforce Marketing Cloud Engagement), two commerce and apps (Docebo, Q4), four transactional (Mailgun, Mandrill, Postmark, SendGrid), one support and CRM (Salesforce); one more is likely from a DKIM key name alone (Customer.io). One service shows an account and nothing set up to send (Microsoft 365); DMARC reports go to DMARCian. Not checked: the website (turned off), DKIM selectors past the first 27 on five subdomains, and the crt.sh certificate log (read only with --ct).
 
@@ -167,7 +167,7 @@ DMARCian
 
 ## What was asked
 
-728 lookups at 6 names
+729 lookups at 6 names
 
 - **casper.com**: 109 DKIM selectors, 25 CNAME labels, 1 page
 - **e.casper.com**: 32 DKIM selectors

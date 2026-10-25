@@ -56,6 +56,7 @@ class Kind(StrEnum):
     DKIM_DANGLING = "DKIM CNAME to a missing key"
     CT_CNAME = "CNAME into its zone at a name from certificate logs"
     CT_ADDRESS = "address in its network at a name from certificate logs"
+    MX_ADDRESS = "mail server's address is in its network (MX)"
     DMARC_REPORTS = "receives DMARC reports"
     TLSRPT_REPORTS = "receives TLS reports"
 
@@ -84,6 +85,9 @@ _KIND_TIER = {
     Kind.CT_CNAME: Tier.CONFIGURED,
     # A web host in a service's network: a landing page or app there, not mail set up.
     Kind.CT_ADDRESS: Tier.LIKELY,
+    # An MX host under the domain's own name whose address is the service's: set up with it, but
+    # the name does not say the service receives the mail.
+    Kind.MX_ADDRESS: Tier.CONFIGURED,
     Kind.DKIM_NAME: Tier.LIKELY,
     Kind.WEBSITE: Tier.LIKELY,
     Kind.WEBSITE_MENTION: Tier.LIKELY,
