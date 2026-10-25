@@ -22,7 +22,6 @@ from .view import (
     OffView,
     SenderMap,
     ServiceView,
-    TierView,
     UnknownView,
     View,
     listed,
@@ -41,16 +40,16 @@ def html(result: SenderMap) -> str:
 def show(shown: View) -> str:
     """One View as an HTML fragment, each section left out when it is empty."""
     parts = [
-        _head(shown.head),
-        _findings(shown.findings),
-        *map(_tier, shown.tiers),
-        _reporting(shown.reporting),
+        _head(shown),
+        _glance(shown),
+        _fixes(shown.fixes),
+        _notes(shown.notes),
+        _evidence(shown.services),
         _claimed(shown.claimed),
         _unknowns(shown.unknowns),
         _list("Certificate transparency", "ct", shown.ct),
         _absences(shown.absences),
-        _gaps(shown.gaps, shown.off),
-        _asked(shown.asked, shown.asked_total),
+        _how(shown),
     ]
     return "".join(parts)
 
@@ -100,11 +99,32 @@ def _list(title: str, kind: str, lines: Iterable[str]) -> str:
 # ---------------------------------------------------------------- sections
 
 
-def _head(head: Head) -> str:
+def _head(shown: View) -> str:
+    """The domain, how many services send as it and how many things to fix, how the map was
+    made, then the story in the lead block."""
+    head = shown.head
+    count = head.senders
+    senders = (
+        f"<strong>{count} service{'s' if count != 1 else ''}</strong> "
+        f"send{'s' if count == 1 else ''} email as this domain"
+        if count
+        else "<strong>No sending service</strong> found"
+    )
+    fixes = len(shown.fixes)
+    if fixes:
+        senders += f' <span class="sep">·</span> <span class="to-fix">{fixes} thing'
+        senders += f"{'s' if fixes != 1 else ''} to fix</span>"
+    elif count:
+        senders += ' <span class="sep">·</span> <span class="no-fix">nothing to fix</span>'
+    how = (
+        f"Checked {head.checked_at} · {head.lookups} lookups in {head.elapsed:.1f} s over "
+        f"{head.resolver}"
+    )
     lines = [
         '<header class="view-head">',
         f"<h2>{_e(head.domain)}</h2>",
-        f'<p class="summary">{_e(head.summary())}</p>',
+        f'<p class="summary">{senders}</p>',
+        f'<p class="checked">{_e(how)}</p>',
         "</header>",
     ]
     if head.story:
@@ -123,25 +143,74 @@ def _story(head: Head) -> list[str]:
     return ['<div class="story">', *paragraphs, "</div>"]
 
 
-def _findings(findings: tuple[FindingView, ...]) -> str:
+_STATE_MARK = {"complete": "✓ ", "incomplete": "⚠ ", "unchecked": "? ", "basis": ""}
+
+
+def _glance(shown: View) -> str:
+    """One table row per service, each name linking to its evidence, then where reports go."""
+    if not shown.services:
+        return ""
+    body = [
+        '<table class="glance">',
+        "<thead><tr><th>Service</th><th>Category</th><th>Status</th><th>Setup</th></tr></thead>",
+        "<tbody>",
+    ]
+    for service in shown.services:
+        key = slug(service.tier)
+        words, state = service.glance
+        name = service.name + (f" ({service.where})" if service.where else "")
+        body += [
+            "<tr>",
+            f'<td class="name"><span class="dot {_e(key)}"></span>'
+            f'<a href="#service-{_e(slug(service.name))}">{_e(name)}</a></td>',
+            f'<td class="category">{_e(service.category)}</td>',
+            f'<td><span class="badge b-{_e(key)}">{_e(service.status)}</span></td>',
+            f'<td class="state {_e(state)}">{_e(_STATE_MARK.get(state, "") + words)}</td>',
+            "</tr>",
+        ]
+    body += ["</tbody>", "</table>"]
+    if shown.reporting:
+        body.append(f'<p class="reports">Reports go to {_e(listed(shown.reporting))}.</p>')
+    return _section("At a glance", "glance", body)
+
+
+def _fixes(findings: tuple[FindingView, ...]) -> str:
+    """The risks and warnings, numbered."""
     if not findings:
         return ""
-    body: list[str] = []
+    body = ['<ol class="fixes">']
     for f in findings:
         body += [
-            f'<div class="finding {_e(f.severity)}">',
+            f'<li class="finding {_e(f.severity)}">',
             f"<h4>{_e(f.title)}</h4>",
             f"<p>{_e(f.detail)}</p>",
         ]
         if f.records:
             body += _details("Records", "records", _records(f.records))
-        body.append("</div>")
-    return _section("Needs attention", "attention", body)
+        body.append("</li>")
+    body.append("</ol>")
+    return _section("Fix these", "attention", body)
 
 
-def _tier(tier: TierView) -> str:
-    rows = [line for service in tier.services for line in _row(service)]
-    return _section(tier.tier, "tier", ['<div class="rows">', *rows, "</div>"])
+def _notes(findings: tuple[FindingView, ...]) -> str:
+    """The notes: worth knowing, nothing to fix."""
+    if not findings:
+        return ""
+    body = ['<ul class="notes">']
+    for f in findings:
+        body += [f"<li><strong>{_e(f.title)}</strong>. {_e(f.detail)}"]
+        if f.records:
+            body += _details("Records", "records", _records(f.records))
+        body.append("</li>")
+    body.append("</ul>")
+    return _section("Notes", "notes", body)
+
+
+def _evidence(services: tuple[ServiceView, ...]) -> str:
+    if not services:
+        return ""
+    rows = [line for service in services for line in _row(service)]
+    return _section("Evidence, service by service", "tier", ['<div class="rows">', *rows, "</div>"])
 
 
 def _row(service: ServiceView) -> list[str]:
@@ -155,7 +224,7 @@ def _row(service: ServiceView) -> list[str]:
         f'<article class="row" id="service-{_e(slug(service.name))}">',
         f"<h4>{_e(service.name)}</h4>",
         f'<p class="meta">{_e(meta)}</p>',
-        f'<span class="badge {_e(badge)}">{_e(service.tier)}</span>',
+        f'<span class="badge {_e(badge)}">{_e(service.status)}</span>',
         '<div class="row-body">',
         *(f"<p{_DECIDER}>{_kind_line(k.label, k.summary)}</p>" for k in first),
     ]
@@ -177,12 +246,6 @@ def _row(service: ServiceView) -> list[str]:
 
 def _kind_line(label: str, summary: str) -> str:
     return f'<span class="kind">{_e(label)}</span>: {_e(summary)}'
-
-
-def _reporting(names: tuple[str, ...]) -> str:
-    if not names:
-        return ""
-    return _section("Reports go to", "reporting", [f"<p>{_e(', '.join(names))}</p>"])
 
 
 def _claimed(parts: tuple[ClaimedPart, ...]) -> str:
@@ -227,12 +290,27 @@ def _absences(absences: tuple[AbsenceView, ...]) -> str:
     return _section("Checked and not there", "absences", body)
 
 
-def _gaps(gaps: tuple[GapGroup, ...], off: tuple[OffView, ...]) -> str:
-    if not gaps and not off:
+def _how(shown: View) -> str:
+    """What was asked, not checked and not run, closed under one summary line."""
+    gaps = _gaps(shown.gaps, shown.off)
+    asked = _asked(shown.asked, shown.asked_total)
+    if not gaps and not asked:
         return ""
+    parts = [shown.asked_total] if shown.asked_total else []
+    skipped = len(shown.gaps) + len(shown.off)
+    if skipped:
+        parts.append(f"{skipped} thing{'s' if skipped != 1 else ''} not checked")
+    summary = " · ".join(parts) or "Details"
+    body = [*gaps, *asked]
+    return _section("How this was checked", "how-checked", _details(summary, "how", body))
+
+
+def _gaps(gaps: tuple[GapGroup, ...], off: tuple[OffView, ...]) -> list[str]:
+    if not gaps and not off:
+        return []
     items = [f"<li>{_gap(g)}</li>" for g in gaps]
     items += [f'<li><span class="mono">{_e(o.check)}</span>: {_e(o.how)}</li>' for o in off]
-    return _section("Not checked", "not-checked", ['<ul class="gaps">', *items, "</ul>"])
+    return ["<h4>Not checked</h4>", '<ul class="gaps">', *items, "</ul>"]
 
 
 def _gap(group: GapGroup) -> str:
@@ -242,12 +320,13 @@ def _gap(group: GapGroup) -> str:
     return f"{_e(group.asked)}{where}: {_e(group.outcome())}"
 
 
-def _asked(asked: tuple[AskedView, ...], total: str) -> str:
+def _asked(asked: tuple[AskedView, ...], total: str) -> list[str]:
     """What was asked in all, then at each name, counted, with every name inside Names asked."""
     if not asked:
-        return ""
+        return []
     counts = [f'<li><span class="mono">{_e(a.where)}</span>: {_e(a.counts)}</li>' for a in asked]
-    body = [f'<p class="asked-total">{_e(total)}</p>', '<ul class="gaps">', *counts, "</ul>"]
+    body = ["<h4>What was asked</h4>", f'<p class="asked-total">{_e(total)}</p>']
+    body += ['<ul class="gaps">', *counts, "</ul>"]
     names: list[str] = []
     for a in asked:
         if not a.names:
@@ -261,4 +340,4 @@ def _asked(asked: tuple[AskedView, ...], total: str) -> str:
         names.append("</ul>")
     if names:
         body += _details("Names asked", "asked", names)
-    return _section("What was asked", "asked", body)
+    return body

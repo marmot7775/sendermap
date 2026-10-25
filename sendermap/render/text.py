@@ -23,7 +23,6 @@ _TIER_MARK = {
     "Account only": ("○", "bright_black"),
 }
 _SEVERITY_STYLE = {"risk": "bold red", "warning": "bold yellow", "note": "bright_black"}
-_FIX = ("risk", "warning")
 _DIM = "bright_black"
 _HEADING = "bold bright_white"
 
@@ -73,10 +72,6 @@ def _heading(title: str, console: Console) -> None:
     console.print(Text(f"\n{title}", style=_HEADING))
 
 
-def _fixes(shown: View) -> list[FindingView]:
-    return [f for f in shown.findings if f.severity in _FIX]
-
-
 # ---------------------------------------------------------------- head and glance
 
 
@@ -91,7 +86,7 @@ def _head(shown: View, console: Console) -> None:
         if count
         else "No sending service found"
     )
-    fixes = len(_fixes(shown))
+    fixes = len(shown.fixes)
     line = Text.assemble((head.domain, "bold"), "\n", senders)
     if fixes:
         line.append("   ·   ", style=_DIM)
@@ -107,10 +102,6 @@ def _head(shown: View, console: Console) -> None:
     console.print(Panel(line, border_style="cyan", expand=False, padding=(0, 2)))
 
 
-def _services(shown: View) -> list[ServiceView]:
-    return [s for tier in shown.tiers for s in tier.services]
-
-
 def _story(shown: View, console: Console) -> None:
     """The story under the panel, a sentence a line. Its last sentence, what was not checked, is
     said in full under HOW THIS WAS CHECKED, so it is left out here, as the page mutes it."""
@@ -123,7 +114,7 @@ def _story(shown: View, console: Console) -> None:
 
 def _glance(shown: View, console: Console) -> None:
     """One row per service: marker, name, category, status and setup, then where reports go."""
-    services = _services(shown)
+    services = shown.services
     if not services:
         return
     _heading("AT A GLANCE", console)
@@ -148,18 +139,19 @@ def _glance(shown: View, console: Console) -> None:
         _line(f"Reports go to {', '.join(shown.reporting)}.", console, 2, _DIM)
 
 
+_GLANCE = {
+    "complete": ("✓ ", "green"),
+    "incomplete": ("⚠ ", "yellow"),
+    "unchecked": ("? ", _DIM),
+    "basis": ("", _DIM),
+}
+
+
 def _setup_glance(service: ServiceView) -> Text:
     """The setup in two or three words, or what the tier rests on for a weak one."""
-    brief = service.brief.removeprefix("setup ")
-    if service.tier in ("Likely", "Account only") and service.kinds:
-        return Text(f"from: {service.kinds[0].label}", style=_DIM)
-    if brief == "complete":
-        return Text("✓ setup complete", style="green")
-    if brief.startswith("incomplete"):
-        return Text("⚠ setup incomplete", style="yellow")
-    if brief.startswith("not fully checked"):
-        return Text("? setup not fully checked", style=_DIM)
-    return Text("")
+    words, state = service.glance
+    mark, style = _GLANCE.get(state, ("", ""))
+    return Text(f"{mark}{words}", style=style)
 
 
 # ---------------------------------------------------------------- findings
@@ -167,8 +159,7 @@ def _setup_glance(service: ServiceView) -> Text:
 
 def _findings(shown: View, console: Console) -> None:
     """Risks and warnings numbered under FIX THESE, notes after them unnumbered."""
-    fixes = _fixes(shown)
-    notes = [f for f in shown.findings if f.severity not in _FIX]
+    fixes, notes = shown.fixes, shown.notes
     if fixes:
         _heading("FIX THESE", console)
         for number, f in enumerate(fixes, 1):
@@ -185,8 +176,9 @@ def _finding(f: FindingView, lead: str, console: Console) -> None:
     grid.add_column(width=len(lead) + 2, no_wrap=True)
     grid.add_column()
     marker = Text(lead, style=_DIM)
-    marker.append("▲ " if f.severity in _FIX else "", style=style)
-    title_style = "bold" if f.severity in _FIX else ""
+    fix = f.severity != "note"
+    marker.append("▲ " if fix else "", style=style)
+    title_style = "bold" if fix else ""
     grid.add_row(marker, Text(f.title, style=title_style))
     grid.add_row("", Text(f.detail, style=_DIM))
     for record in f.records:
@@ -200,7 +192,7 @@ def _finding(f: FindingView, lead: str, console: Console) -> None:
 def _evidence(shown: View, console: Console) -> None:
     """Each service as a block: name, category and status, one line per kind of record, then
     its setup."""
-    services = _services(shown)
+    services = shown.services
     if not services:
         return
     _heading("EVIDENCE, SERVICE BY SERVICE", console)

@@ -1,6 +1,7 @@
 <header class="view-head">
 <h2>casper.com</h2>
-<p class="summary">14 sending services found from public records checked 2026-10-12 01:25 UTC (729 lookups in 0.0 s over Google DNS over HTTPS).</p>
+<p class="summary"><strong>14 services</strong> send email as this domain <span class="sep">·</span> <span class="to-fix">4 things to fix</span></p>
+<p class="checked">Checked 2026-10-12 01:25 UTC · 729 lookups in 0.0 s over Google DNS over HTTPS</p>
 </header>
 <div class="lead">
 <div class="story">
@@ -10,9 +11,103 @@
 <p class="story-muted">Not checked: the website (turned off), DKIM selectors past the first 27 on five subdomains, and the crt.sh certificate log (read only with --ct).</p>
 </div>
 </div>
+<section class="view-section glance">
+<h3 class="section-title">At a glance</h3>
+<table class="glance">
+<thead><tr><th>Service</th><th>Category</th><th>Status</th><th>Setup</th></tr></thead>
+<tbody>
+<tr>
+<td class="name"><span class="dot in-use"></span><a href="#service-google-workspace">Google Workspace</a></td>
+<td class="category">Mailbox</td>
+<td><span class="badge b-in-use">Receives mail</span></td>
+<td class="state incomplete">⚠ setup incomplete</td>
+</tr>
+<tr>
+<td class="name"><span class="dot configured"></span><a href="#service-campaign-monitor">Campaign Monitor</a></td>
+<td class="category">Marketing</td>
+<td><span class="badge b-configured">Set up to send</span></td>
+<td class="state complete">✓ setup complete</td>
+</tr>
+<tr>
+<td class="name"><span class="dot configured"></span><a href="#service-docebo">Docebo</a></td>
+<td class="category">Commerce and apps</td>
+<td><span class="badge b-configured">Set up to send</span></td>
+<td class="state "></td>
+</tr>
+<tr>
+<td class="name"><span class="dot configured"></span><a href="#service-iterable">Iterable</a></td>
+<td class="category">Marketing</td>
+<td><span class="badge b-configured">Set up to send</span></td>
+<td class="state "></td>
+</tr>
+<tr>
+<td class="name"><span class="dot configured"></span><a href="#service-mailchimp">Mailchimp</a></td>
+<td class="category">Marketing</td>
+<td><span class="badge b-configured">Set up to send</span></td>
+<td class="state complete">✓ setup complete</td>
+</tr>
+<tr>
+<td class="name"><span class="dot configured"></span><a href="#service-mailgun">Mailgun</a></td>
+<td class="category">Transactional</td>
+<td><span class="badge b-configured">Set up to send</span></td>
+<td class="state complete">✓ setup complete</td>
+</tr>
+<tr>
+<td class="name"><span class="dot configured"></span><a href="#service-mandrill">Mandrill</a></td>
+<td class="category">Transactional</td>
+<td><span class="badge b-configured">Set up to send</span></td>
+<td class="state complete">✓ setup complete</td>
+</tr>
+<tr>
+<td class="name"><span class="dot configured"></span><a href="#service-postmark">Postmark</a></td>
+<td class="category">Transactional</td>
+<td><span class="badge b-configured">Set up to send</span></td>
+<td class="state complete">✓ setup complete</td>
+</tr>
+<tr>
+<td class="name"><span class="dot configured"></span><a href="#service-q4">Q4</a></td>
+<td class="category">Commerce and apps</td>
+<td><span class="badge b-configured">Set up to send</span></td>
+<td class="state "></td>
+</tr>
+<tr>
+<td class="name"><span class="dot configured"></span><a href="#service-salesforce">Salesforce</a></td>
+<td class="category">Support and CRM</td>
+<td><span class="badge b-configured">Set up to send</span></td>
+<td class="state "></td>
+</tr>
+<tr>
+<td class="name"><span class="dot configured"></span><a href="#service-salesforce-marketing-cloud-engagement">Salesforce Marketing Cloud Engagement (mail.casper.com)</a></td>
+<td class="category">Marketing</td>
+<td><span class="badge b-configured">Set up to send</span></td>
+<td class="state "></td>
+</tr>
+<tr>
+<td class="name"><span class="dot configured"></span><a href="#service-sendgrid">SendGrid</a></td>
+<td class="category">Transactional</td>
+<td><span class="badge b-configured">Set up to send</span></td>
+<td class="state complete">✓ setup complete</td>
+</tr>
+<tr>
+<td class="name"><span class="dot likely"></span><a href="#service-customer-io">Customer.io (e.casper.com)</a></td>
+<td class="category">Marketing</td>
+<td><span class="badge b-likely">Likely</span></td>
+<td class="state basis">from: DKIM key</td>
+</tr>
+<tr>
+<td class="name"><span class="dot account-only"></span><a href="#service-microsoft-365">Microsoft 365</a></td>
+<td class="category">Mailbox</td>
+<td><span class="badge b-account-only">Account only</span></td>
+<td class="state basis">from: Verification token</td>
+</tr>
+</tbody>
+</table>
+<p class="reports">Reports go to DMARCian.</p>
+</section>
 <section class="view-section attention">
-<h3 class="section-title">Needs attention</h3>
-<div class="finding warning">
+<h3 class="section-title">Fix these</h3>
+<ol class="fixes">
+<li class="finding warning">
 <h4>Eight DKIM keys at casper.com are 1024-bit: google (Google Workspace), cm (Campaign Monitor), k1 (Mailchimp), mandrill (Mandrill), salesforce (Salesforce), s2 (SendGrid), smtpapi (SendGrid) and mx</h4>
 <p>Some receivers already treat 1024-bit RSA keys as weak. Rotate to 2048-bit.</p>
 <details class="records"><summary>Records</summary>
@@ -27,8 +122,8 @@
 <li class="ev mono">mx._domainkey.casper.com TXT v=DKIM1; k=rsa; p=MIGfMA0GCSqG..., 1024-bit, fp 273e0630e2eb6478</li>
 </ul>
 </details>
-</div>
-<div class="finding warning">
+</li>
+<li class="finding warning">
 <h4>Google Workspace at e.casper.com and mail.casper.com has no SPF</h4>
 <p>Its documented setup needs it and the map shows it missing: the record does not authorize _spf.google.com.</p>
 <details class="records"><summary>Records</summary>
@@ -37,8 +132,8 @@
 <li class="ev mono">mail.casper.com TXT v=spf1 include:cust-spf.exacttarget.com -all</li>
 </ul>
 </details>
-</div>
-<div class="finding warning">
+</li>
+<li class="finding warning">
 <h4>Google Workspace at e.casper.com and mail.casper.com has no DKIM</h4>
 <p>Its documented setup needs it and the map shows it missing: no key at google._domainkey, a name that does not exist.</p>
 <details class="records"><summary>Records</summary>
@@ -47,8 +142,8 @@
 <li class="ev mono">google._domainkey.mail.casper.com TXT no such name</li>
 </ul>
 </details>
-</div>
-<div class="finding warning">
+</li>
+<li class="finding warning">
 <h4>Google Workspace at orders.casper.com has no SPF</h4>
 <p>Its documented setup needs it and the map shows it missing: no SPF record.</p>
 <details class="records"><summary>Records</summary>
@@ -56,44 +151,44 @@
 <li class="ev mono">orders.casper.com TXT no record of this type</li>
 </ul>
 </details>
-</div>
-<div class="finding note">
-<h4>The mte1 key at casper.com and the mte1 key at email.casper.com are the same key</h4>
-<p>They publish one public key, fp 402b5aebde0f1c9f, so one private key signs for all of them, and replacing the key at one selector leaves it live at the others.</p>
+</li>
+</ol>
+</section>
+<section class="view-section notes">
+<h3 class="section-title">Notes</h3>
+<ul class="notes">
+<li><strong>The mte1 key at casper.com and the mte1 key at email.casper.com are the same key</strong>. They publish one public key, fp 402b5aebde0f1c9f, so one private key signs for all of them, and replacing the key at one selector leaves it live at the others.
 <details class="records"><summary>Records</summary>
 <ul class="records">
 <li class="ev mono">mte1._domainkey.casper.com TXT v=DKIM1; k=rsa; p=MIIBIjANBgkq..., 2048-bit, fp 402b5aebde0f1c9f via dkim1.mandrillapp.com</li>
 <li class="ev mono">mte1._domainkey.email.casper.com TXT v=DKIM1; k=rsa; p=MIIBIjANBgkq..., 2048-bit, fp 402b5aebde0f1c9f via dkim1.mandrillapp.com</li>
 </ul>
 </details>
-</div>
-<div class="finding note">
-<h4>The mte2 key at casper.com and the mte2 key at email.casper.com are the same key</h4>
-<p>They publish one public key, fp bd970c8868f21f9b, so one private key signs for all of them, and replacing the key at one selector leaves it live at the others.</p>
+</li>
+<li><strong>The mte2 key at casper.com and the mte2 key at email.casper.com are the same key</strong>. They publish one public key, fp bd970c8868f21f9b, so one private key signs for all of them, and replacing the key at one selector leaves it live at the others.
 <details class="records"><summary>Records</summary>
 <ul class="records">
 <li class="ev mono">mte2._domainkey.casper.com TXT v=DKIM1; k=rsa; p=MIIBIjANBgkq..., 2048-bit, fp bd970c8868f21f9b via dkim2.mandrillapp.com</li>
 <li class="ev mono">mte2._domainkey.email.casper.com TXT v=DKIM1; k=rsa; p=MIIBIjANBgkq..., 2048-bit, fp bd970c8868f21f9b via dkim2.mandrillapp.com</li>
 </ul>
 </details>
-</div>
-<div class="finding note">
-<h4>Microsoft 365 shows only an account at casper.com</h4>
-<p>The records name an account (a verification token, an autodiscover CNAME, or a revoked or dangling key) and nothing that sends or receives mail. Is the account still used? If not, remove its records.</p>
+</li>
+<li><strong>Microsoft 365 shows only an account at casper.com</strong>. The records name an account (a verification token, an autodiscover CNAME, or a revoked or dangling key) and nothing that sends or receives mail. Is the account still used? If not, remove its records.
 <details class="records"><summary>Records</summary>
 <ul class="records">
 <li class="ev mono">casper.com TXT MS=ms55520198</li>
 </ul>
 </details>
-</div>
+</li>
+</ul>
 </section>
 <section class="view-section tier">
-<h3 class="section-title">In use</h3>
+<h3 class="section-title">Evidence, service by service</h3>
 <div class="rows">
 <article class="row" id="service-google-workspace">
 <h4>Google Workspace</h4>
 <p class="meta">Mailbox</p>
-<span class="badge b-in-use">In use</span>
+<span class="badge b-in-use">Receives mail</span>
 <div class="row-body">
 <p class="decider"><span class="kind">MX</span>: aspmx.l.google.com, alt1.aspmx.l.google.com and 3 more</p>
 <ul class="claims">
@@ -142,15 +237,10 @@
 </details>
 </div>
 </article>
-</div>
-</section>
-<section class="view-section tier">
-<h3 class="section-title">Configured</h3>
-<div class="rows">
 <article class="row" id="service-campaign-monitor">
 <h4>Campaign Monitor</h4>
 <p class="meta">Marketing</p>
-<span class="badge b-configured">Configured</span>
+<span class="badge b-configured">Set up to send</span>
 <div class="row-body">
 <p class="decider"><span class="kind">SPF</span>: include:_spf.createsend.com</p>
 <ul class="claims">
@@ -173,7 +263,7 @@
 <article class="row" id="service-docebo">
 <h4>Docebo</h4>
 <p class="meta">Commerce and apps</p>
-<span class="badge b-configured">Configured</span>
+<span class="badge b-configured">Set up to send</span>
 <div class="row-body">
 <p class="decider"><span class="kind">SPF</span>: include:docebosaas.com</p>
 <details class="records"><summary>All records</summary>
@@ -187,7 +277,7 @@
 <article class="row" id="service-iterable">
 <h4>Iterable</h4>
 <p class="meta">Marketing</p>
-<span class="badge b-configured">Configured</span>
+<span class="badge b-configured">Set up to send</span>
 <div class="row-body">
 <p class="decider"><span class="kind">Tracking CNAME</span>: links.casper.com</p>
 <details class="records"><summary>All records</summary>
@@ -201,7 +291,7 @@
 <article class="row" id="service-mailchimp">
 <h4>Mailchimp</h4>
 <p class="meta">Marketing</p>
-<span class="badge b-configured">Configured</span>
+<span class="badge b-configured">Set up to send</span>
 <div class="row-body">
 <p class="decider"><span class="kind">DKIM key</span>: k1 (1024 bit, by CNAME)</p>
 <p class="setup">setup complete</p>
@@ -217,7 +307,7 @@
 <article class="row" id="service-mailgun">
 <h4>Mailgun</h4>
 <p class="meta">Transactional</p>
-<span class="badge b-configured">Configured</span>
+<span class="badge b-configured">Set up to send</span>
 <div class="row-body">
 <p class="decider"><span class="kind">MX for bounces</span>: mxa.mailgun.org, mxb.mailgun.org at e.casper.com and t.casper.com</p>
 <ul class="claims">
@@ -244,7 +334,7 @@
 <article class="row" id="service-mandrill">
 <h4>Mandrill</h4>
 <p class="meta">Transactional</p>
-<span class="badge b-configured">Configured</span>
+<span class="badge b-configured">Set up to send</span>
 <div class="row-body">
 <p class="decider"><span class="kind">DKIM keys</span>: mte1, mte2 (all 2048 bit, by CNAME) at casper.com and email.casper.com</p>
 <ul class="claims">
@@ -275,7 +365,7 @@
 <article class="row" id="service-postmark">
 <h4>Postmark</h4>
 <p class="meta">Transactional</p>
-<span class="badge b-configured">Configured</span>
+<span class="badge b-configured">Set up to send</span>
 <div class="row-body">
 <p class="decider"><span class="kind">Bounce CNAME</span>: pm-bounces.casper.com</p>
 <p class="setup">setup complete</p>
@@ -291,7 +381,7 @@
 <article class="row" id="service-q4">
 <h4>Q4</h4>
 <p class="meta">Commerce and apps</p>
-<span class="badge b-configured">Configured</span>
+<span class="badge b-configured">Set up to send</span>
 <div class="row-body">
 <p class="decider"><span class="kind">SPF</span>: include:_spf.q4press.com</p>
 <details class="records"><summary>All records</summary>
@@ -305,7 +395,7 @@
 <article class="row" id="service-salesforce">
 <h4>Salesforce</h4>
 <p class="meta">Support and CRM</p>
-<span class="badge b-configured">Configured</span>
+<span class="badge b-configured">Set up to send</span>
 <div class="row-body">
 <p class="decider"><span class="kind">SPF</span>: include:_spf.salesforce.com</p>
 <ul class="claims">
@@ -326,7 +416,7 @@
 <article class="row" id="service-salesforce-marketing-cloud-engagement">
 <h4>Salesforce Marketing Cloud Engagement</h4>
 <p class="meta">Marketing, at mail.casper.com</p>
-<span class="badge b-configured">Configured</span>
+<span class="badge b-configured">Set up to send</span>
 <div class="row-body">
 <p class="decider"><span class="kind">SPF</span>: include:cust-spf.exacttarget.com</p>
 <ul class="claims">
@@ -347,7 +437,7 @@
 <article class="row" id="service-sendgrid">
 <h4>SendGrid</h4>
 <p class="meta">Transactional</p>
-<span class="badge b-configured">Configured</span>
+<span class="badge b-configured">Set up to send</span>
 <div class="row-body">
 <p class="decider"><span class="kind">DKIM keys</span>: s1 2048 bit, s2 1024 bit (by CNAME)</p>
 <ul class="claims">
@@ -368,11 +458,6 @@
 </details>
 </div>
 </article>
-</div>
-</section>
-<section class="view-section tier">
-<h3 class="section-title">Likely</h3>
-<div class="rows">
 <article class="row" id="service-customer-io">
 <h4>Customer.io</h4>
 <p class="meta">Marketing, at e.casper.com</p>
@@ -389,11 +474,6 @@
 </details>
 </div>
 </article>
-</div>
-</section>
-<section class="view-section tier">
-<h3 class="section-title">Account only</h3>
-<div class="rows">
 <article class="row" id="service-microsoft-365">
 <h4>Microsoft 365</h4>
 <p class="meta">Mailbox</p>
@@ -411,10 +491,6 @@
 </div>
 </article>
 </div>
-</section>
-<section class="view-section reporting">
-<h3 class="section-title">Reports go to</h3>
-<p>DMARCian</p>
 </section>
 <section class="view-section unknowns">
 <h3 class="section-title">Not recognised</h3>
@@ -436,8 +512,10 @@
 <li><span class="mono">DKIM keys at t.casper.com</span>: selectors exist but none of the 32 names asked is one<span class="ev mono">_domainkey.t.casper.com TXT no record of this type</span></li>
 </ul>
 </section>
-<section class="view-section not-checked">
-<h3 class="section-title">Not checked</h3>
+<section class="view-section how-checked">
+<h3 class="section-title">How this was checked</h3>
+<details class="how"><summary>729 lookups at 6 names · 6 things not checked</summary>
+<h4>Not checked</h4>
 <ul class="gaps">
 <li>DKIM selectors at <span class="mono">e</span> and <span class="mono">t.casper.com</span>: 77 of 109 not asked at each. The first 27 were asked, plus any the name&#x27;s own SPF, MX or delegation points to (cap 27).</li>
 <li>DKIM selectors at <span class="mono">email.casper.com</span>: 79 of 109 not asked. The first 27 were asked, plus any the name&#x27;s own SPF, MX or delegation points to (cap 27).</li>
@@ -446,9 +524,7 @@
 <li><span class="mono">the website</span>: web checks were turned off (--no-web)</li>
 <li><span class="mono">certificate transparency, crt.sh</span>: read only with --ct (it also holds expired certificates)</li>
 </ul>
-</section>
-<section class="view-section asked">
-<h3 class="section-title">What was asked</h3>
+<h4>What was asked</h4>
 <p class="asked-total">729 lookups at 6 names</p>
 <ul class="gaps">
 <li><span class="mono">casper.com</span>: 109 DKIM selectors, 25 CNAME labels, 1 page</li>
@@ -485,5 +561,6 @@
 <ul>
 <li>DKIM selectors (32): <span class="mono">acdkim1, acdkim2, ses, aweber_key_a, aweber_key_b, aweber_key_c, brevo, brevo1, brevo2, cm, cf2024-1, ctct1, ctct2, krs, e2ma-k1, e2ma-k2, e2ma-k3, everlytickey1, everlytickey2, fm2, fm1, fm3, mesmtp, secureserver1, secureserver2, google, gapps, mailgun, mg, mg1, pdk1, pdk2</span></li>
 </ul>
+</details>
 </details>
 </section>

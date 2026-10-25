@@ -390,7 +390,7 @@ def test_every_view_carries_the_story() -> None:
     paragraphs = [*(f"<p>{escape(s)}</p>" for s in said[:-1])]
     paragraphs.append(f'<p class="story-muted">{escape(said[-1])}</p>')
     assert "\n".join(['<div class="lead">', '<div class="story">', *paragraphs]) in page
-    assert page.index('class="lead"') < page.index("Needs attention")
+    assert page.index('class="lead"') < page.index("At a glance") < page.index("Fix these")
     # The page puts the ring map in the lead block, beside the story.
     js = (Path(text.__file__).parent.parent / "web" / "static" / "app.js").read_text()
     assert "lead.append(figure)" in js

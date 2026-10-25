@@ -18,7 +18,8 @@ services that receive its reports. Each one comes with:
 
 - **The evidence**, record by record: the SPF include, MX host, DKIM key, bounce or tracking
   CNAME, verification token or report address that gave it away.
-- **How sure we are**, in words, not a percentage:
+- **How sure we are**, in words, not a percentage (the terminal and the site show the first two
+  as Receives mail and Set up to send; the JSON keeps the tier names):
   - **In use**: mail for the domain is delivered there.
   - **Configured**: set up to send as the domain.
   - **Likely**: a signing key whose name points at the service.

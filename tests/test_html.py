@@ -29,18 +29,15 @@ from sendermap.render.html import html, slug
 DOMAIN = "acme.test"
 HOSTILE = '<script>alert(1)</script> "quoted"'
 SECTIONS = (
-    "Needs attention",
-    "In use",
-    "Configured",
-    "Likely",
-    "Account only",
-    "Reports go to",
+    "At a glance",
+    "Fix these",
+    "Notes",
+    "Evidence, service by service",
     "Claimed senders",
     "Not recognised",
     "Certificate transparency",
     "Checked and not there",
-    "Not checked",
-    "What was asked",
+    "How this was checked",
 )
 _DETAILS = re.compile(r"<details\b.*?</details>", re.S)
 _TITLES = re.compile(r'<h3 class="section-title">([^<]*)</h3>')
@@ -83,6 +80,15 @@ def test_every_string_from_dns_is_escaped() -> None:
         "li",
         "details",
         "summary",
+        "strong",
+        "table",
+        "thead",
+        "tbody",
+        "tr",
+        "th",
+        "td",
+        "a",
+        "ol",
     }
 
 
