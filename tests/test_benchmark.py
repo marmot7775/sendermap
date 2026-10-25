@@ -3,6 +3,7 @@ and what a comparison says. No map is made; every run here is written by hand.""
 
 import importlib.util
 import sys
+from collections.abc import Sequence
 from pathlib import Path
 from types import ModuleType
 from typing import Any
@@ -23,7 +24,7 @@ def load_tool() -> ModuleType:
 bench = load_tool()
 
 
-def result(senders: dict[str, str] | None = None, unknowns: list[tuple[str, str]] = ()) -> Any:
+def result(senders: dict[str, str] | None = None, unknowns: Sequence[tuple[str, str]] = ()) -> Any:
     return {
         "senders": senders or {},
         "reporting": [],
