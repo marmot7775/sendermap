@@ -80,7 +80,7 @@ async def test_the_terminal_shows_the_gaps_and_what_was_asked() -> None:
     shown = console.export_text()
     how = shown.split("HOW THIS WAS CHECKED")[1]
     assert "\n  Not checked: DMARC: TXT at _dmarc.acme.test: lookup failed" in how
-    assert "\n    acme.test: 109 DKIM selectors" in how
+    assert "\n    acme.test: 110 DKIM selectors" in how
     assert "DKIM selectors: " not in shown
     console = Console(record=True, width=400)
     text.render(await acme_map(), console, evidence=True)

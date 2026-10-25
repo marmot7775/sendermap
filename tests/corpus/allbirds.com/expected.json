@@ -4082,23 +4082,23 @@
   },
   {
    "asked": "DKIM selectors at alerts.allbirds.com",
-   "happened": "77 of 109 not asked. The first 27 were asked, plus any the name's own SPF, MX or delegation points to (cap 27).",
+   "happened": "78 of 110 not asked. The first 27 were asked, plus any the name's own SPF, MX or delegation points to (cap 27).",
    "kind": "dkim",
-   "count": 77,
+   "count": 78,
    "cap": 27
   },
   {
    "asked": "DKIM selectors at info.allbirds.com",
-   "happened": "82 of 109 not asked. The first 27 were asked, plus any the name's own SPF, MX or delegation points to (cap 27).",
+   "happened": "83 of 110 not asked. The first 27 were asked, plus any the name's own SPF, MX or delegation points to (cap 27).",
    "kind": "dkim",
-   "count": 82,
+   "count": 83,
    "cap": 27
   },
   {
    "asked": "DKIM selectors at mail.allbirds.com",
-   "happened": "77 of 109 not asked. The first 27 were asked, plus any the name's own SPF, MX or delegation points to (cap 27).",
+   "happened": "78 of 110 not asked. The first 27 were asked, plus any the name's own SPF, MX or delegation points to (cap 27).",
    "kind": "dkim",
-   "count": 77,
+   "count": 78,
    "cap": 27
   }
  ],
@@ -4203,6 +4203,8 @@
     "zendesk1",
     "zendesk2",
     "zoho",
+    "mail",
+    "mailru",
     "api",
     "default",
     "dk",
@@ -4214,7 +4216,6 @@
     "key",
     "key1",
     "key2",
-    "mail",
     "mta",
     "mx",
     "pm",

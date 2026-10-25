@@ -15,7 +15,15 @@ fails before anything is published.
   reports how much of what they publish Sendermap names, with the unnamed evidence ranked by how
   many domains publish it. Runs are kept in `benchmark/runs/`; `--compare` shows what changed
   between two. The 0.1.7 baseline is in `benchmark/README.md`.
-- A DKIM selector CNAMEd to `selector1._domainkey.outbound.protection.outlook.com` is credited to Microsoft 365. Microsoft signs for some of its own domains this way (live.com, msn.com, sharepoint.com), and the 0.1.7 benchmark listed it as unknown at four of them.
+- Two mailbox services join the catalog, from the 0.1.7 benchmark's work list: Yandex 360
+  (`mx.yandex.net`, `_spf.yandex.net`, the `mail` selector) and VK WorkMail, formerly Mail.ru
+  for business (`emx.mail.ru`, `_spf.mail.ru`, the `mailru` selector). Each pattern has a live
+  proof dated 2026-10-25 and each setup cites the vendor's own docs. `mail` stays a generic name:
+  it credits Yandex 360 only where the domain's SPF or MX already shows Yandex. Every map asks
+  one more DKIM name (`mailru`), so the sweep is 110 names.
+- A DKIM selector CNAMEd to `selector1._domainkey.outbound.protection.outlook.com` is credited
+  to Microsoft 365. Microsoft signs for some of its own domains this way (live.com, msn.com,
+  sharepoint.com), and the 0.1.7 benchmark listed it as unknown at four of them.
 
 ## 0.1.7 (2026-10-25)
 
