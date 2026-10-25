@@ -43,6 +43,10 @@ fails before anything is published.
 - A DKIM key CNAMEd into `outbound.protection.outlook.com` is Microsoft 365's. Microsoft's own
   domains (microsoft.com, live.com, msn.com, sharepoint.com) point `selector1` at the key
   Exchange Online Protection publishes there.
+- A CNAME at a label such as `mail` or `email` into a web host or CDN (`ghs.googlehosted.com`,
+  CloudFront, Akamai, Fastly) is a website and no longer listed under Not recognised. At a
+  tracking label (`click`, `go`, `link` and the rest) it still is, since sending services serve
+  click links through CDNs. The hosts are `rules.web_hosts` in the catalog.
 
 ## 0.1.7 (2026-10-25)
 

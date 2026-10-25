@@ -249,6 +249,9 @@ These live in `catalog.py` and the sources, and each has a test.
 - A wildcard answers every name, so DKIM probes and label CNAMEs first ask a fixed name nobody
   publishes (`sendermap-wildcard-check`). A wildcard DKIM key ends the DKIM scan at that name
   with a note; a label CNAME that matches the wildcard target is ignored.
+- A label CNAME into a web host or CDN (`rules.web_hosts`: `ghs.googlehosted.com`, CloudFront,
+  Akamai, Fastly) is a website, not an unknown sender, except at a tracking label, where a
+  sending service may serve its click links through the CDN.
 
 ### SPF evaluation
 
