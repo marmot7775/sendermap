@@ -7,7 +7,7 @@
 
 Type a domain, see every service that sends email as it, and the public evidence for each one.
 
-**Status: early release (0.1.6).** The command-line tool works, and the website runs at [sendermap.dev](https://sendermap.dev).
+**Status: early release (0.1.7).** The command-line tool works, and the website runs at [sendermap.dev](https://sendermap.dev).
 Needs Python 3.12 or later.
 
 ## What it shows
