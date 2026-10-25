@@ -11,6 +11,8 @@ fails before anything is published.
 
 ## Unreleased
 
+- The page links its stylesheet and script with the version as a query string (`/static/style.css?v=0.1.6`), so Cloudflare's cache of static files, kept for four hours, cannot serve the last release's stylesheet to this release's page. 0.1.5's page showed its new glance table unstyled until the cache expired.
+
 ## 0.1.5 (2026-10-25)
 
 - The terminal view is laid out to be read top down. A panel gives the domain, how many services send as it and how many things need fixing. The story follows, then AT A GLANCE: one row per service with a marker, its category, a plain status (Receives mail, Set up to send, Likely, Account only) and its setup in a word or two, or what a weak tier rests on. FIX THESE numbers the risks and warnings, NOTES lists the rest, then EVIDENCE, SERVICE BY SERVICE. What was asked, not checked and not run share one dimmed block, HOW THIS WAS CHECKED, and the story's Not checked sentence is no longer said twice.

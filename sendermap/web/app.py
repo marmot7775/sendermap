@@ -90,9 +90,17 @@ async def _limited(_: Request, e: LimitReachedError) -> JSONResponse:
     return JSONResponse({"detail": str(e)}, status_code=429)
 
 
+# The page's own assets, linked with the version as a query string so a cache in front of the
+# site (Cloudflare keeps static files for hours) fetches them afresh after every release.
+ASSETS = ("/static/style.css", "/static/app.js")
+
+
 @app.get("/", response_class=HTMLResponse)
-async def index() -> FileResponse:
-    return FileResponse(str(STATIC.joinpath("index.html")))
+async def index() -> HTMLResponse:
+    page = STATIC.joinpath("index.html").read_text(encoding="utf-8")
+    for asset in ASSETS:
+        page = page.replace(f'"{asset}"', f'"{asset}?v={__version__}"')
+    return HTMLResponse(page)
 
 
 @app.get("/llms.txt", response_class=PlainTextResponse)
