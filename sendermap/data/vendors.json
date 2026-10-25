@@ -3594,6 +3594,14 @@
             "record": "selector1._domainkey.cnn.com",
             "date": "2026-10-10"
           }
+        },
+        {
+          "value": "outbound.protection.outlook.com",
+          "proof": {
+            "domain": "live.com",
+            "record": "selector1._domainkey.live.com",
+            "date": "2026-10-25"
+          }
         }
       ],
       "verification_txt": [
