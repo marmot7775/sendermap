@@ -426,6 +426,7 @@
 {"chain": ["tl4f7d1jprr4q7jbtpq51qkw-2yq.image-sap.sfmc-content.com", "d1p8zvxtm7ihfm.cloudfront.net"], "name": "image.mail.casper.com", "records": [], "rtype": "MX", "status": "no record of this type"},
 {"chain": ["tl4f7d1jprr4q7jbtpq51qkw-2yq.image-sap.sfmc-content.com", "d1p8zvxtm7ihfm.cloudfront.net"], "name": "image.mail.casper.com", "records": ["ns-1248.awsdns-28.org", "ns-1670.awsdns-16.co.uk", "ns-428.awsdns-53.com", "ns-549.awsdns-04.net"], "rtype": "NS", "status": "ok"},
 {"chain": ["tl4f7d1jprr4q7jbtpq51qkw-2yq.image-sap.sfmc-content.com", "d1p8zvxtm7ihfm.cloudfront.net"], "name": "image.mail.casper.com", "records": [], "rtype": "TXT", "status": "no record of this type"},
+{"chain": [], "name": "incoming.bm23.com", "records": [], "rtype": "A", "status": "no such name"},
 {"chain": [], "name": "info.casper.com", "records": [], "rtype": "MX", "status": "no record of this type"},
 {"chain": [], "name": "info.casper.com", "records": [], "rtype": "NS", "status": "no record of this type"},
 {"chain": [], "name": "info.casper.com", "records": [], "rtype": "TXT", "status": "no record of this type"},

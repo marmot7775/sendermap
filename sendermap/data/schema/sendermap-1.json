@@ -151,6 +151,7 @@
         "DKIM CNAME to a missing key",
         "CNAME into its zone at a name from certificate logs",
         "address in its network at a name from certificate logs",
+        "mail server's address is in its network (MX)",
         "receives DMARC reports",
         "receives TLS reports"
       ]

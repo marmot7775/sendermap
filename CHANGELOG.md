@@ -14,6 +14,7 @@ fails before anything is published.
 - The terminal view is laid out to be read top down. A panel gives the domain, how many services send as it and how many things need fixing. The story follows, then AT A GLANCE: one row per service with a marker, its category, a plain status (Receives mail, Set up to send, Likely, Account only) and its setup in a word or two, or what a weak tier rests on. FIX THESE numbers the risks and warnings, NOTES lists the rest, then EVIDENCE, SERVICE BY SERVICE. What was asked, not checked and not run share one dimmed block, HOW THIS WAS CHECKED, and the story's Not checked sentence is no longer said twice.
 - Findings that differ only in the name they are at are said once in every view: "SPF at glossier.com and receipts.glossier.com is managed through Valimail".
 - A short DKIM key finding names the service each key belongs to: "mandrill (Mandrill) and s2 (SendGrid)".
+- An MX host no pattern names is looked up by address. When every network that announces it is one service's own, it is credited to that service with the new evidence kind "mail server's address is in its network (MX)" (Configured), and it leaves Not recognised. At the domain itself, an MX at the address of a service that sends but does not receive mail is a warning: investorpass.com's MX, o1.sendgrid.investorpass.com, is SendGrid's reverse DNS name for 167.89.106.132 in AS11377. A shared cloud is never credited.
 - Keys of mixed sizes give each its own size, "s1 2048 bit, s2 1024 bit", instead of "1024 and 2048 bit".
 
 ## 0.1.4 (2026-10-24)

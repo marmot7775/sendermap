@@ -1,7 +1,7 @@
 ╭──────────────────────────────────────────────────────────────────────────────────╮
 │  mills-reeve.com                                                                 │
 │  5 services send email as this domain   ·   2 things to fix                      │
-│  checked 2026-10-12 01:24 UTC · 629 lookups in 0.0 s over Google DNS over HTTPS  │
+│  checked 2026-10-12 01:24 UTC · 633 lookups in 0.0 s over Google DNS over HTTPS  │
 ╰──────────────────────────────────────────────────────────────────────────────────╯
 
   Mimecast stands in front of the domain's mail as a security gateway, so the mailbox provider is   
@@ -128,7 +128,7 @@ NOT RECOGNISED
     cecollect.com TXT ip4:62.73.162.74
 
 HOW THIS WAS CHECKED
-  Asked 629 lookups at 3 names:
+  Asked 633 lookups at 3 names:
     mills-reeve.com: 109 DKIM selectors, 25 CNAME labels, 1 page
     update.mills-reeve.com: 29 DKIM selectors
     updates.mills-reeve.com: 27 DKIM selectors

@@ -63,6 +63,11 @@ def mapped() -> Zone:
         .add("corp.mapped.test", "MX", "1 smtp.google.com")
         .add("*._domainkey.corp.mapped.test", "TXT", KEY)
         .add("mail.mapped.test", "TXT", "v=spf1 include:sendgrid.net -all", "v=spf1 -all")
+        # An MX host under the domain's own name at a SendGrid address (reverse DNS).
+        .add("mail.mapped.test", "MX", "10 o1.sendgrid.mapped.test")
+        .add("o1.sendgrid.mapped.test", "A", "167.89.106.132")
+        .add("132.106.89.167.origin.asn.cymru.com", "TXT", "11377 | 167.89.96.0/20 | US | arin")
+        .add("AS11377.asn.cymru.com", "TXT", "11377 | US | arin | 2005 | SENDGRID - SendGrid")
         .add("1.100.51.198.origin.asn.cymru.com", "TXT", "14782 | 198.51.100.0/24 | US | arin")
         .add("AS14782.asn.cymru.com", "TXT", "14782 | US | arin | 2005 | MAILCHIMP - Mailchimp")
         .add("www.mapped.test", "A", "198.51.100.1")

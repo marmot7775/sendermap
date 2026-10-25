@@ -402,7 +402,13 @@ def _findings(
                 single = FindingView(single.severity, title, single.detail, single.records)
             shown.append(single)
             continue
-        selectors = listed(_owned(selector, where, owners) for selector, _ in members)
+        names = [s for s, _ in members]
+        found = {owners.get(f"{s}._domainkey.{where}") for s in names}
+        if len(found) == 1 and (owner := found.pop()):
+            each = "both" if len(names) == 2 else "all"
+            selectors = f"{listed(names)} ({each} {owner})"
+        else:
+            selectors = listed(_owned(s, where, owners) for s in names)
         title = f"{_count_words(len(members))} DKIM keys at {where} are {bits}-bit: {selectors}"
         records = tuple(str(e) for _, f in members for e in f.evidence) if evidence else ()
         shown.append(FindingView(members[0][1].severity.value, title, detail, records))
@@ -494,10 +500,11 @@ _LABELS: dict[Kind, tuple[str, str]] = {
     Kind.AUTODISCOVER: ("Autodiscover CNAME", "Autodiscover CNAMEs"),
     Kind.CT_CNAME: ("CNAME from certificate logs", "CNAMEs from certificate logs"),
     Kind.CT_ADDRESS: ("Address from certificate logs", "Addresses from certificate logs"),
+    Kind.MX_ADDRESS: ("MX host in its network", "MX hosts in its network"),
     Kind.DMARC_REPORTS: ("DMARC reports", "DMARC reports"),
     Kind.TLSRPT_REPORTS: ("TLS reports", "TLS reports"),
 }
-_MX_KINDS = frozenset({Kind.MX, Kind.SUBDOMAIN_MAILBOX, Kind.SUBDOMAIN_MX})
+_MX_KINDS = frozenset({Kind.MX, Kind.SUBDOMAIN_MAILBOX, Kind.SUBDOMAIN_MX, Kind.MX_ADDRESS})
 _KEY_KINDS = frozenset({Kind.DKIM_CNAME, Kind.DKIM_NAME, Kind.DKIM_REVOKED, Kind.DKIM_DANGLING})
 # Kinds whose record is told by the name it sits at, not by its value.
 _NAMED_KINDS = frozenset(
