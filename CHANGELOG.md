@@ -11,6 +11,8 @@ fails before anything is published.
 
 ## Unreleased
 
+## 0.1.5 (2026-10-25)
+
 - The terminal view is laid out to be read top down. A panel gives the domain, how many services send as it and how many things need fixing. The story follows, then AT A GLANCE: one row per service with a marker, its category, a plain status (Receives mail, Set up to send, Likely, Account only) and its setup in a word or two, or what a weak tier rests on. FIX THESE numbers the risks and warnings, NOTES lists the rest, then EVIDENCE, SERVICE BY SERVICE. What was asked, not checked and not run share one dimmed block, HOW THIS WAS CHECKED, and the story's Not checked sentence is no longer said twice.
 - The site's result page follows the same order. Under the domain, the service count and the count of things to fix in colour, and how the map was made on its own line. The story and ring map stay side by side; then an At a glance table (a dot, the name linking to its evidence, category, status badge, setup), Fix these as numbered cards, Notes as a plain list, Evidence, service by service, and one closed How this was checked block holding what was not checked and what was asked. On a phone each glance row stacks into a small card. The map legend and How it works use Receives mail and Set up to send.
 - Findings that differ only in the name they are at are said once in every view: "SPF at glossier.com and receipts.glossier.com is managed through Valimail".
