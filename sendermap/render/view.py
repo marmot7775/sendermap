@@ -89,6 +89,7 @@ CLAIMED_PARTS = (
     ("unknown", "Claimed, no service Sendermap knows by that name"),
 )
 _SEVERITY_RANK = {s: i for i, s in enumerate(Severity)}
+_FIX = (Severity.RISK.value, Severity.WARNING.value)
 # Each tier as a status a reader takes in at a glance. In use comes only from the domain's MX.
 STATUS = {
     Tier.IN_USE.value: "Receives mail",
@@ -165,6 +166,22 @@ class ServiceView:
     def status(self) -> str:
         """The tier as a plain status: "Receives mail", "Set up to send", "Likely"."""
         return STATUS.get(self.tier, self.tier)
+
+    @property
+    def glance(self) -> tuple[str, str]:
+        """(words, state) for a one-line overview: what a Likely or Account only tier rests on
+        ("from: DKIM key", "basis"), else the setup in a few words, its state "complete",
+        "incomplete" or "unchecked"; ("", "") when there is nothing to say."""
+        if self.tier in (Tier.LIKELY.value, Tier.ACCOUNT_ONLY.value) and self.kinds:
+            return f"from: {self.kinds[0].label}", "basis"
+        said = self.brief.removeprefix("setup ")
+        if said == "complete":
+            return "setup complete", "complete"
+        if said.startswith("incomplete"):
+            return "setup incomplete", "incomplete"
+        if said.startswith("not fully checked"):
+            return "setup not fully checked", "unchecked"
+        return "", ""
 
 
 @dataclass(frozen=True, slots=True)
@@ -273,6 +290,20 @@ class View:
     off: tuple[OffView, ...] = ()
     # What was asked in all, as one line: "739 lookups at 4 names".
     asked_total: str = ""
+
+    @property
+    def fixes(self) -> tuple[FindingView, ...]:
+        """The risks and warnings, in order: what a reader should fix."""
+        return tuple(f for f in self.findings if f.severity in _FIX)
+
+    @property
+    def notes(self) -> tuple[FindingView, ...]:
+        return tuple(f for f in self.findings if f.severity not in _FIX)
+
+    @property
+    def services(self) -> tuple[ServiceView, ...]:
+        """Every service, strongest tier first."""
+        return tuple(s for tier in self.tiers for s in tier.services)
 
 
 def view(result: SenderMap, *, evidence: bool) -> View:

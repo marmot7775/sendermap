@@ -1,6 +1,7 @@
 <header class="view-head">
 <h2>allbirds.com</h2>
-<p class="summary">15 sending services found from public records checked 2026-10-12 01:24 UTC (753 lookups in 0.0 s over Google DNS over HTTPS).</p>
+<p class="summary"><strong>15 services</strong> send email as this domain <span class="sep">·</span> <span class="to-fix">3 things to fix</span></p>
+<p class="checked">Checked 2026-10-12 01:24 UTC · 753 lookups in 0.0 s over Google DNS over HTTPS</p>
 </header>
 <div class="lead">
 <div class="story">
@@ -9,9 +10,108 @@
 <p class="story-muted">Not checked: the website (turned off), DKIM selectors past the first 27 on three subdomains, six subdomains whose DNS failed to answer, 34 names from certificate logs left out by a limit, and the crt.sh certificate log (read only with --ct).</p>
 </div>
 </div>
+<section class="view-section glance">
+<h3 class="section-title">At a glance</h3>
+<table class="glance">
+<thead><tr><th>Service</th><th>Category</th><th>Status</th><th>Setup</th></tr></thead>
+<tbody>
+<tr>
+<td class="name"><span class="dot in-use"></span><a href="#service-microsoft-365">Microsoft 365</a></td>
+<td class="category">Mailbox</td>
+<td><span class="badge b-in-use">Receives mail</span></td>
+<td class="state complete">✓ setup complete</td>
+</tr>
+<tr>
+<td class="name"><span class="dot configured"></span><a href="#service-amazon-ses">Amazon SES</a></td>
+<td class="category">Transactional</td>
+<td><span class="badge b-configured">Set up to send</span></td>
+<td class="state "></td>
+</tr>
+<tr>
+<td class="name"><span class="dot configured"></span><a href="#service-freshdesk">Freshdesk</a></td>
+<td class="category">Support and CRM</td>
+<td><span class="badge b-configured">Set up to send</span></td>
+<td class="state "></td>
+</tr>
+<tr>
+<td class="name"><span class="dot configured"></span><a href="#service-google-workspace">Google Workspace</a></td>
+<td class="category">Mailbox</td>
+<td><span class="badge b-configured">Set up to send</span></td>
+<td class="state incomplete">⚠ setup incomplete</td>
+</tr>
+<tr>
+<td class="name"><span class="dot configured"></span><a href="#service-iterable">Iterable</a></td>
+<td class="category">Marketing</td>
+<td><span class="badge b-configured">Set up to send</span></td>
+<td class="state "></td>
+</tr>
+<tr>
+<td class="name"><span class="dot configured"></span><a href="#service-mailchimp">Mailchimp</a></td>
+<td class="category">Marketing</td>
+<td><span class="badge b-configured">Set up to send</span></td>
+<td class="state complete">✓ setup complete</td>
+</tr>
+<tr>
+<td class="name"><span class="dot configured"></span><a href="#service-mailgun">Mailgun</a></td>
+<td class="category">Transactional</td>
+<td><span class="badge b-configured">Set up to send</span></td>
+<td class="state complete">✓ setup complete</td>
+</tr>
+<tr>
+<td class="name"><span class="dot configured"></span><a href="#service-mailjet">Mailjet</a></td>
+<td class="category">Transactional</td>
+<td><span class="badge b-configured">Set up to send</span></td>
+<td class="state incomplete">⚠ setup incomplete</td>
+</tr>
+<tr>
+<td class="name"><span class="dot configured"></span><a href="#service-postmark">Postmark</a></td>
+<td class="category">Transactional</td>
+<td><span class="badge b-configured">Set up to send</span></td>
+<td class="state complete">✓ setup complete</td>
+</tr>
+<tr>
+<td class="name"><span class="dot configured"></span><a href="#service-sendgrid">SendGrid</a></td>
+<td class="category">Transactional</td>
+<td><span class="badge b-configured">Set up to send</span></td>
+<td class="state complete">✓ setup complete</td>
+</tr>
+<tr>
+<td class="name"><span class="dot configured"></span><a href="#service-shopify">Shopify</a></td>
+<td class="category">Commerce and apps</td>
+<td><span class="badge b-configured">Set up to send</span></td>
+<td class="state "></td>
+</tr>
+<tr>
+<td class="name"><span class="dot configured"></span><a href="#service-sparkpost">SparkPost</a></td>
+<td class="category">Transactional</td>
+<td><span class="badge b-configured">Set up to send</span></td>
+<td class="state complete">✓ setup complete</td>
+</tr>
+<tr>
+<td class="name"><span class="dot configured"></span><a href="#service-zendesk">Zendesk</a></td>
+<td class="category">Support and CRM</td>
+<td><span class="badge b-configured">Set up to send</span></td>
+<td class="state complete">✓ setup complete</td>
+</tr>
+<tr>
+<td class="name"><span class="dot likely"></span><a href="#service-customer-io">Customer.io</a></td>
+<td class="category">Marketing</td>
+<td><span class="badge b-likely">Likely</span></td>
+<td class="state basis">from: DKIM key</td>
+</tr>
+<tr>
+<td class="name"><span class="dot likely"></span><a href="#service-mandrill">Mandrill</a></td>
+<td class="category">Transactional</td>
+<td><span class="badge b-likely">Likely</span></td>
+<td class="state basis">from: DKIM key</td>
+</tr>
+</tbody>
+</table>
+</section>
 <section class="view-section attention">
-<h3 class="section-title">Needs attention</h3>
-<div class="finding warning">
+<h3 class="section-title">Fix these</h3>
+<ol class="fixes">
+<li class="finding warning">
 <h4>Two DKIM keys at allbirds.com are 1024-bit: k1 (Mailchimp) and mandrill (Mandrill)</h4>
 <p>Some receivers already treat 1024-bit RSA keys as weak. Rotate to 2048-bit.</p>
 <details class="records"><summary>Records</summary>
@@ -20,8 +120,8 @@
 <li class="ev mono">mandrill._domainkey.allbirds.com TXT v=DKIM1; k=rsa; p=MIGfMA0GCSqG..., 1024-bit, fp 9cee89b6f986543a</li>
 </ul>
 </details>
-</div>
-<div class="finding warning">
+</li>
+<li class="finding warning">
 <h4>Google Workspace at alerts.allbirds.com and mail.allbirds.com has no DKIM</h4>
 <p>Its documented setup needs it and the map shows it missing: no key at google._domainkey, a name that does not exist.</p>
 <details class="records"><summary>Records</summary>
@@ -32,8 +132,8 @@
 <li class="ev mono">_domainkey.mail.allbirds.com TXT no record of this type</li>
 </ul>
 </details>
-</div>
-<div class="finding warning">
+</li>
+<li class="finding warning">
 <h4>Mailjet at allbirds.com has no DKIM</h4>
 <p>Its documented setup needs it and the map shows it missing: no key at mailjet._domainkey, a name that does not exist.</p>
 <details class="records"><summary>Records</summary>
@@ -41,24 +141,28 @@
 <li class="ev mono">mailjet._domainkey.allbirds.com TXT no such name</li>
 </ul>
 </details>
-</div>
-<div class="finding note">
-<h4>SPF at allbirds.com is managed through EasyDMARC</h4>
-<p>EasyDMARC copies the domain&#x27;s senders into its own record. The walk read that record, so the services and ranges it lists are reported here as the domain&#x27;s.</p>
+</li>
+</ol>
+</section>
+<section class="view-section notes">
+<h3 class="section-title">Notes</h3>
+<ul class="notes">
+<li><strong>SPF at allbirds.com is managed through EasyDMARC</strong>. EasyDMARC copies the domain&#x27;s senders into its own record. The walk read that record, so the services and ranges it lists are reported here as the domain&#x27;s.
 <details class="records"><summary>Records</summary>
 <ul class="records">
 <li class="ev mono">allbirds.com TXT v=spf1 include:allbirds_com._es.easydmarc.com include:spf.protection.outlook.com ~all</li>
 </ul>
 </details>
-</div>
+</li>
+</ul>
 </section>
 <section class="view-section tier">
-<h3 class="section-title">In use</h3>
+<h3 class="section-title">Evidence, service by service</h3>
 <div class="rows">
 <article class="row" id="service-microsoft-365">
 <h4>Microsoft 365</h4>
 <p class="meta">Mailbox</p>
-<span class="badge b-in-use">In use</span>
+<span class="badge b-in-use">Receives mail</span>
 <div class="row-body">
 <p class="decider"><span class="kind">MX</span>: allbirds-com.mail.protection.outlook.com</p>
 <ul class="claims">
@@ -96,15 +200,10 @@
 </details>
 </div>
 </article>
-</div>
-</section>
-<section class="view-section tier">
-<h3 class="section-title">Configured</h3>
-<div class="rows">
 <article class="row" id="service-amazon-ses">
 <h4>Amazon SES</h4>
 <p class="meta">Transactional</p>
-<span class="badge b-configured">Configured</span>
+<span class="badge b-configured">Set up to send</span>
 <div class="row-body">
 <p class="decider"><span class="kind">SPF ranges</span>: ip4:199.255.192.0/22, ip4:199.127.232.0/22 and 11 more</p>
 <ul class="claims">
@@ -138,7 +237,7 @@
 <article class="row" id="service-freshdesk">
 <h4>Freshdesk</h4>
 <p class="meta">Support and CRM</p>
-<span class="badge b-configured">Configured</span>
+<span class="badge b-configured">Set up to send</span>
 <div class="row-body">
 <p class="decider"><span class="kind">SPF ranges</span>: ip4:3.7.25.40/29, ip4:13.127.153.86 and 6 more</p>
 <details class="records"><summary>All records</summary>
@@ -159,7 +258,7 @@
 <article class="row" id="service-google-workspace">
 <h4>Google Workspace</h4>
 <p class="meta">Mailbox</p>
-<span class="badge b-configured">Configured</span>
+<span class="badge b-configured">Set up to send</span>
 <div class="row-body">
 <p class="decider"><span class="kind">SPF ranges</span>: ip4:74.125.0.0/16, ip4:209.85.128.0/17 and 6 more</p>
 <ul class="claims">
@@ -202,7 +301,7 @@
 <article class="row" id="service-iterable">
 <h4>Iterable</h4>
 <p class="meta">Marketing</p>
-<span class="badge b-configured">Configured</span>
+<span class="badge b-configured">Set up to send</span>
 <div class="row-body">
 <p class="decider"><span class="kind">Tracking CNAME</span>: links.allbirds.com</p>
 <details class="records"><summary>All records</summary>
@@ -216,7 +315,7 @@
 <article class="row" id="service-mailchimp">
 <h4>Mailchimp</h4>
 <p class="meta">Marketing</p>
-<span class="badge b-configured">Configured</span>
+<span class="badge b-configured">Set up to send</span>
 <div class="row-body">
 <p class="decider"><span class="kind">DKIM key</span>: k1 (1024 bit, by CNAME)</p>
 <p class="setup">setup complete</p>
@@ -232,7 +331,7 @@
 <article class="row" id="service-mailgun">
 <h4>Mailgun</h4>
 <p class="meta">Transactional</p>
-<span class="badge b-configured">Configured</span>
+<span class="badge b-configured">Set up to send</span>
 <div class="row-body">
 <p class="decider"><span class="kind">SPF ranges</span>: ip4:141.193.32.0/23, ip4:159.135.140.80/29 and 16 more</p>
 <ul class="claims">
@@ -286,7 +385,7 @@
 <article class="row" id="service-mailjet">
 <h4>Mailjet</h4>
 <p class="meta">Transactional</p>
-<span class="badge b-configured">Configured</span>
+<span class="badge b-configured">Set up to send</span>
 <div class="row-body">
 <p class="decider"><span class="kind">SPF ranges</span>: ip4:87.253.232.0/21, ip4:185.189.236.0/22 and 2 more</p>
 <p class="setup">setup incomplete: DKIM missing</p>
@@ -305,7 +404,7 @@
 <article class="row" id="service-postmark">
 <h4>Postmark</h4>
 <p class="meta">Transactional</p>
-<span class="badge b-configured">Configured</span>
+<span class="badge b-configured">Set up to send</span>
 <div class="row-body">
 <p class="decider"><span class="kind">Bounce CNAME</span>: pm-bounces.allbirds.com</p>
 <p class="setup">setup complete</p>
@@ -321,7 +420,7 @@
 <article class="row" id="service-sendgrid">
 <h4>SendGrid</h4>
 <p class="meta">Transactional</p>
-<span class="badge b-configured">Configured</span>
+<span class="badge b-configured">Set up to send</span>
 <div class="row-body">
 <p class="decider"><span class="kind">SPF ranges</span>: ip4:208.117.48.0/20, ip4:50.31.32.0/19 and 16 more</p>
 <ul class="claims">
@@ -362,7 +461,7 @@
 <article class="row" id="service-shopify">
 <h4>Shopify</h4>
 <p class="meta">Commerce and apps</p>
-<span class="badge b-configured">Configured</span>
+<span class="badge b-configured">Set up to send</span>
 <div class="row-body">
 <p class="decider"><span class="kind">SPF</span>: include:shops.shopify.com at alerts.allbirds.com and mail.allbirds.com</p>
 <details class="records"><summary>All records</summary>
@@ -377,7 +476,7 @@
 <article class="row" id="service-sparkpost">
 <h4>SparkPost</h4>
 <p class="meta">Transactional</p>
-<span class="badge b-configured">Configured</span>
+<span class="badge b-configured">Set up to send</span>
 <div class="row-body">
 <p class="decider"><span class="kind">Bounce CNAME</span>: bounce.allbirds.com</p>
 <ul class="claims">
@@ -401,7 +500,7 @@
 <article class="row" id="service-zendesk">
 <h4>Zendesk</h4>
 <p class="meta">Support and CRM</p>
-<span class="badge b-configured">Configured</span>
+<span class="badge b-configured">Set up to send</span>
 <div class="row-body">
 <p class="decider"><span class="kind">SPF ranges</span>: ip4:103.151.192.0/23, ip4:185.12.80.0/22 and 3 more</p>
 <p class="setup">setup complete</p>
@@ -418,11 +517,6 @@
 </details>
 </div>
 </article>
-</div>
-</section>
-<section class="view-section tier">
-<h3 class="section-title">Likely</h3>
-<div class="rows">
 <article class="row" id="service-customer-io">
 <h4>Customer.io</h4>
 <p class="meta">Marketing</p>
@@ -492,8 +586,10 @@
 <li><span class="mono">DKIM keys at mail.allbirds.com</span>: selectors exist but none of the 32 names asked is one<span class="ev mono">_domainkey.mail.allbirds.com TXT no record of this type</span></li>
 </ul>
 </section>
-<section class="view-section not-checked">
-<h3 class="section-title">Not checked</h3>
+<section class="view-section how-checked">
+<h3 class="section-title">How this was checked</h3>
+<details class="how"><summary>753 lookups at 6 names · 6 things not checked</summary>
+<h4>Not checked</h4>
 <ul class="gaps">
 <li>certificate log names more than 2 labels deep: 34 not asked. Names up to 2 labels below the domain were asked (cap 2 labels).</li>
 <li>sending subdomains: TXT, MX and NS at apisdk.allbirds.com, community.allbirds.com, dataplane.allbirds.com, jssdk.allbirds.com, rerun.allbirds.com, www.jssdk.allbirds.com: the domain&#x27;s DNS servers failed to answer (SERVFAIL), so whether they send is not known</li>
@@ -502,9 +598,7 @@
 <li><span class="mono">the website</span>: web checks were turned off (--no-web)</li>
 <li><span class="mono">certificate transparency, crt.sh</span>: read only with --ct (it also holds expired certificates)</li>
 </ul>
-</section>
-<section class="view-section asked">
-<h3 class="section-title">What was asked</h3>
+<h4>What was asked</h4>
 <p class="asked-total">753 lookups at 6 names</p>
 <ul class="gaps">
 <li><span class="mono">allbirds.com</span>: 109 DKIM selectors, 25 CNAME labels, 1 page</li>
@@ -541,5 +635,6 @@
 <ul>
 <li>DKIM selectors (32): <span class="mono">google, gapps, acdkim1, acdkim2, ses, aweber_key_a, aweber_key_b, aweber_key_c, brevo, brevo1, brevo2, cm, cf2024-1, ctct1, ctct2, krs, e2ma-k1, e2ma-k2, e2ma-k3, everlytickey1, everlytickey2, fm2, fm1, fm3, mesmtp, secureserver1, secureserver2, mailgun, mg, mg1, pdk1, pdk2</span></li>
 </ul>
+</details>
 </details>
 </section>

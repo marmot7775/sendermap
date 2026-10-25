@@ -1,6 +1,7 @@
 <header class="view-head">
 <h2>mills-reeve.com</h2>
-<p class="summary">5 sending services found from public records checked 2026-10-12 01:24 UTC (633 lookups in 0.0 s over Google DNS over HTTPS).</p>
+<p class="summary"><strong>5 services</strong> send email as this domain <span class="sep">·</span> <span class="to-fix">2 things to fix</span></p>
+<p class="checked">Checked 2026-10-12 01:24 UTC · 633 lookups in 0.0 s over Google DNS over HTTPS</p>
 </header>
 <div class="lead">
 <div class="story">
@@ -10,9 +11,49 @@
 <p class="story-muted">Not checked: the website (turned off), DKIM selectors past the first 27 on two subdomains, and the crt.sh certificate log (read only with --ct).</p>
 </div>
 </div>
+<section class="view-section glance">
+<h3 class="section-title">At a glance</h3>
+<table class="glance">
+<thead><tr><th>Service</th><th>Category</th><th>Status</th><th>Setup</th></tr></thead>
+<tbody>
+<tr>
+<td class="name"><span class="dot in-use"></span><a href="#service-mimecast">Mimecast</a></td>
+<td class="category">Security gateway</td>
+<td><span class="badge b-in-use">Receives mail</span></td>
+<td class="state "></td>
+</tr>
+<tr>
+<td class="name"><span class="dot configured"></span><a href="#service-docebo">Docebo</a></td>
+<td class="category">Commerce and apps</td>
+<td><span class="badge b-configured">Set up to send</span></td>
+<td class="state "></td>
+</tr>
+<tr>
+<td class="name"><span class="dot configured"></span><a href="#service-freshdesk">Freshdesk</a></td>
+<td class="category">Support and CRM</td>
+<td><span class="badge b-configured">Set up to send</span></td>
+<td class="state "></td>
+</tr>
+<tr>
+<td class="name"><span class="dot configured"></span><a href="#service-microsoft-365">Microsoft 365</a></td>
+<td class="category">Mailbox</td>
+<td><span class="badge b-configured">Set up to send</span></td>
+<td class="state incomplete">⚠ setup incomplete</td>
+</tr>
+<tr>
+<td class="name"><span class="dot configured"></span><a href="#service-sendgrid">SendGrid</a></td>
+<td class="category">Transactional</td>
+<td><span class="badge b-configured">Set up to send</span></td>
+<td class="state complete">✓ setup complete</td>
+</tr>
+</tbody>
+</table>
+<p class="reports">Reports go to Mimecast DMARC Analyzer.</p>
+</section>
 <section class="view-section attention">
-<h3 class="section-title">Needs attention</h3>
-<div class="finding warning">
+<h3 class="section-title">Fix these</h3>
+<ol class="fixes">
+<li class="finding warning">
 <h4>The SendGrid key s2 at mills-reeve.com is 1024-bit</h4>
 <p>Some receivers already treat 1024-bit RSA keys as weak. Rotate to 2048-bit.</p>
 <details class="records"><summary>Records</summary>
@@ -20,8 +61,8 @@
 <li class="ev mono">s2._domainkey.mills-reeve.com TXT k=rsa; t=s (strict); p=MIGfMA0GCSqG..., 1024-bit, fp 1d0c1f3114d84753 via s2.domainkey.u10198980.wl231.sendgrid.net</li>
 </ul>
 </details>
-</div>
-<div class="finding warning">
+</li>
+<li class="finding warning">
 <h4>Microsoft 365 at mills-reeve.com has no DKIM</h4>
 <p>Its documented setup needs it and the map shows it missing: no key at selector1._domainkey or selector2._domainkey, names with no TXT record; this zone gives that answer for every name that does not exist.</p>
 <details class="records"><summary>Records</summary>
@@ -30,25 +71,29 @@
 <li class="ev mono">selector2._domainkey.mills-reeve.com TXT no record of this type</li>
 </ul>
 </details>
-</div>
-<div class="finding note">
-<h4>MX at mills-reeve.com points at Mimecast, a security gateway</h4>
-<p>Inferred from the MX records: a security gateway filters incoming mail and hands it on to the server that holds the mailboxes, and MX records do not say which server that is.</p>
+</li>
+</ol>
+</section>
+<section class="view-section notes">
+<h3 class="section-title">Notes</h3>
+<ul class="notes">
+<li><strong>MX at mills-reeve.com points at Mimecast, a security gateway</strong>. Inferred from the MX records: a security gateway filters incoming mail and hands it on to the server that holds the mailboxes, and MX records do not say which server that is.
 <details class="records"><summary>Records</summary>
 <ul class="records">
 <li class="ev mono">mills-reeve.com MX 10 eu-smtp-inbound-1.mimecast.com</li>
 <li class="ev mono">mills-reeve.com MX 10 eu-smtp-inbound-2.mimecast.com</li>
 </ul>
 </details>
-</div>
+</li>
+</ul>
 </section>
 <section class="view-section tier">
-<h3 class="section-title">In use</h3>
+<h3 class="section-title">Evidence, service by service</h3>
 <div class="rows">
 <article class="row" id="service-mimecast">
 <h4>Mimecast</h4>
 <p class="meta">Security gateway</p>
-<span class="badge b-in-use">In use</span>
+<span class="badge b-in-use">Receives mail</span>
 <div class="row-body">
 <p class="decider"><span class="kind">MX</span>: eu-smtp-inbound-1.mimecast.com, eu-smtp-inbound-2.mimecast.com</p>
 <ul class="claims">
@@ -68,15 +113,10 @@
 </details>
 </div>
 </article>
-</div>
-</section>
-<section class="view-section tier">
-<h3 class="section-title">Configured</h3>
-<div class="rows">
 <article class="row" id="service-docebo">
 <h4>Docebo</h4>
 <p class="meta">Commerce and apps</p>
-<span class="badge b-configured">Configured</span>
+<span class="badge b-configured">Set up to send</span>
 <div class="row-body">
 <p class="decider"><span class="kind">SPF</span>: include:docebosaas.com</p>
 <details class="records"><summary>All records</summary>
@@ -90,7 +130,7 @@
 <article class="row" id="service-freshdesk">
 <h4>Freshdesk</h4>
 <p class="meta">Support and CRM</p>
-<span class="badge b-configured">Configured</span>
+<span class="badge b-configured">Set up to send</span>
 <div class="row-body">
 <p class="decider"><span class="kind">SPF range</span>: ip4:3.120.181.200/29</p>
 <details class="records"><summary>All records</summary>
@@ -104,7 +144,7 @@
 <article class="row" id="service-microsoft-365">
 <h4>Microsoft 365</h4>
 <p class="meta">Mailbox</p>
-<span class="badge b-configured">Configured</span>
+<span class="badge b-configured">Set up to send</span>
 <div class="row-body">
 <p class="decider"><span class="kind">SPF</span>: include:spf.protection.outlook.com</p>
 <ul class="claims">
@@ -132,7 +172,7 @@
 <article class="row" id="service-sendgrid">
 <h4>SendGrid</h4>
 <p class="meta">Transactional</p>
-<span class="badge b-configured">Configured</span>
+<span class="badge b-configured">Set up to send</span>
 <div class="row-body">
 <p class="decider"><span class="kind">DKIM keys</span>: s1 2048 bit, s2 1024 bit (by CNAME)</p>
 <p class="setup">setup complete</p>
@@ -147,10 +187,6 @@
 </div>
 </article>
 </div>
-</section>
-<section class="view-section reporting">
-<h3 class="section-title">Reports go to</h3>
-<p>Mimecast DMARC Analyzer</p>
 </section>
 <section class="view-section unknowns">
 <h3 class="section-title">Not recognised</h3>
@@ -226,17 +262,17 @@
 </li>
 </ul>
 </section>
-<section class="view-section not-checked">
-<h3 class="section-title">Not checked</h3>
+<section class="view-section how-checked">
+<h3 class="section-title">How this was checked</h3>
+<details class="how"><summary>633 lookups at 3 names · 4 things not checked</summary>
+<h4>Not checked</h4>
 <ul class="gaps">
 <li>DKIM selectors at <span class="mono">update.mills-reeve.com</span>: 80 of 109 not asked. The first 27 were asked, plus any the name&#x27;s own SPF, MX or delegation points to (cap 27).</li>
 <li>DKIM selectors at <span class="mono">updates.mills-reeve.com</span>: 82 of 109 not asked. The first 27 were asked, plus any the name&#x27;s own SPF, MX or delegation points to (cap 27).</li>
 <li><span class="mono">the website</span>: web checks were turned off (--no-web)</li>
 <li><span class="mono">certificate transparency, crt.sh</span>: read only with --ct (it also holds expired certificates)</li>
 </ul>
-</section>
-<section class="view-section asked">
-<h3 class="section-title">What was asked</h3>
+<h4>What was asked</h4>
 <p class="asked-total">633 lookups at 3 names</p>
 <ul class="gaps">
 <li><span class="mono">mills-reeve.com</span>: 109 DKIM selectors, 25 CNAME labels, 1 page</li>
@@ -258,5 +294,6 @@
 <ul>
 <li>DKIM selectors (27): <span class="mono">acdkim1, acdkim2, ses, aweber_key_a, aweber_key_b, aweber_key_c, brevo, brevo1, brevo2, cm, cf2024-1, ctct1, ctct2, krs, e2ma-k1, e2ma-k2, e2ma-k3, everlytickey1, everlytickey2, fm2, fm1, fm3, mesmtp, secureserver1, secureserver2, google, gapps</span></li>
 </ul>
+</details>
 </details>
 </section>

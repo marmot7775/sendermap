@@ -1,6 +1,7 @@
 <header class="view-head">
 <h2>example.com</h2>
-<p class="summary">0 sending services found from public records checked 2026-10-12 01:25 UTC (210 lookups in 0.0 s over Google DNS over HTTPS).</p>
+<p class="summary"><strong>No sending service</strong> found</p>
+<p class="checked">Checked 2026-10-12 01:25 UTC · 210 lookups in 0.0 s over Google DNS over HTTPS</p>
 </header>
 <div class="lead">
 <div class="story">
@@ -8,35 +9,33 @@
 <p class="story-muted">Not checked: the crt.sh certificate log (read only with --ct).</p>
 </div>
 </div>
-<section class="view-section attention">
-<h3 class="section-title">Needs attention</h3>
-<div class="finding note">
-<h4>The domain accepts no mail</h4>
-<p>It publishes a null MX record, which tells senders it receives no email.</p>
+<section class="view-section notes">
+<h3 class="section-title">Notes</h3>
+<ul class="notes">
+<li><strong>The domain accepts no mail</strong>. It publishes a null MX record, which tells senders it receives no email.
 <details class="records"><summary>Records</summary>
 <ul class="records">
 <li class="ev mono">example.com MX 0 </li>
 </ul>
 </details>
-</div>
-<div class="finding note">
-<h4>Every name under _domainkey.example.com answers with a key</h4>
-<p>A wildcard record makes every selector look published, so keys there say nothing about which services sign for the domain.</p>
+</li>
+<li><strong>Every name under _domainkey.example.com answers with a key</strong>. A wildcard record makes every selector look published, so keys there say nothing about which services sign for the domain.
 <details class="records"><summary>Records</summary>
 <ul class="records">
 <li class="ev mono">*._domainkey.example.com TXT v=DKIM1; p=</li>
 </ul>
 </details>
-</div>
+</li>
+</ul>
 </section>
-<section class="view-section not-checked">
-<h3 class="section-title">Not checked</h3>
+<section class="view-section how-checked">
+<h3 class="section-title">How this was checked</h3>
+<details class="how"><summary>210 lookups at 1 name · 1 thing not checked</summary>
+<h4>Not checked</h4>
 <ul class="gaps">
 <li><span class="mono">certificate transparency, crt.sh</span>: read only with --ct (it also holds expired certificates)</li>
 </ul>
-</section>
-<section class="view-section asked">
-<h3 class="section-title">What was asked</h3>
+<h4>What was asked</h4>
 <p class="asked-total">210 lookups at 1 name</p>
 <ul class="gaps">
 <li><span class="mono">example.com</span>: 25 CNAME labels, 2 pages</li>
@@ -47,5 +46,6 @@
 <li>Pages (2): <span class="mono">https://example.com/, https://api.certspotter.com/v1/issuances?domain=example.com&amp;include_subdomains=true&amp;expand=dns_names</span></li>
 <li>CNAME labels (25): <span class="mono">bounce, bounces, em, email, mail, send, mta, rp, pm-bounces, links, link, click, track, tracking, url, go, autodiscover, cf-bounce, eversrv, fwdkim1, bnc3, bounces.cloud.em, bounces.cloud2.em, outbound.intercom, atlassian-bounces</span></li>
 </ul>
+</details>
 </details>
 </section>

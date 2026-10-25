@@ -1,6 +1,7 @@
 <header class="view-head">
 <h2>glossier.com</h2>
-<p class="summary">9 sending services found from public records checked 2026-10-12 01:25 UTC (739 lookups in 0.0 s over Google DNS over HTTPS).</p>
+<p class="summary"><strong>9 services</strong> send email as this domain <span class="sep">·</span> <span class="to-fix">3 things to fix</span></p>
+<p class="checked">Checked 2026-10-12 01:25 UTC · 739 lookups in 0.0 s over Google DNS over HTTPS</p>
 </header>
 <div class="lead">
 <div class="story">
@@ -10,9 +11,73 @@
 <p class="story-muted">Not checked: the website (turned off), DKIM selectors past the first 27 on three subdomains, and the crt.sh certificate log (read only with --ct).</p>
 </div>
 </div>
+<section class="view-section glance">
+<h3 class="section-title">At a glance</h3>
+<table class="glance">
+<thead><tr><th>Service</th><th>Category</th><th>Status</th><th>Setup</th></tr></thead>
+<tbody>
+<tr>
+<td class="name"><span class="dot in-use"></span><a href="#service-google-workspace">Google Workspace</a></td>
+<td class="category">Mailbox</td>
+<td><span class="badge b-in-use">Receives mail</span></td>
+<td class="state incomplete">⚠ setup incomplete</td>
+</tr>
+<tr>
+<td class="name"><span class="dot configured"></span><a href="#service-help-scout">Help Scout</a></td>
+<td class="category">Support and CRM</td>
+<td><span class="badge b-configured">Set up to send</span></td>
+<td class="state "></td>
+</tr>
+<tr>
+<td class="name"><span class="dot configured"></span><a href="#service-klaviyo">Klaviyo</a></td>
+<td class="category">Marketing</td>
+<td><span class="badge b-configured">Set up to send</span></td>
+<td class="state complete">✓ setup complete</td>
+</tr>
+<tr>
+<td class="name"><span class="dot configured"></span><a href="#service-postmark">Postmark</a></td>
+<td class="category">Transactional</td>
+<td><span class="badge b-configured">Set up to send</span></td>
+<td class="state complete">✓ setup complete</td>
+</tr>
+<tr>
+<td class="name"><span class="dot configured"></span><a href="#service-salesforce">Salesforce</a></td>
+<td class="category">Support and CRM</td>
+<td><span class="badge b-configured">Set up to send</span></td>
+<td class="state "></td>
+</tr>
+<tr>
+<td class="name"><span class="dot configured"></span><a href="#service-sendgrid">SendGrid</a></td>
+<td class="category">Transactional</td>
+<td><span class="badge b-configured">Set up to send</span></td>
+<td class="state complete">✓ setup complete</td>
+</tr>
+<tr>
+<td class="name"><span class="dot configured"></span><a href="#service-zendesk">Zendesk</a></td>
+<td class="category">Support and CRM</td>
+<td><span class="badge b-configured">Set up to send</span></td>
+<td class="state complete">✓ setup complete</td>
+</tr>
+<tr>
+<td class="name"><span class="dot likely"></span><a href="#service-mandrill">Mandrill</a></td>
+<td class="category">Transactional</td>
+<td><span class="badge b-likely">Likely</span></td>
+<td class="state basis">from: DKIM key</td>
+</tr>
+<tr>
+<td class="name"><span class="dot account-only"></span><a href="#service-amazon-ses">Amazon SES</a></td>
+<td class="category">Transactional</td>
+<td><span class="badge b-account-only">Account only</span></td>
+<td class="state basis">from: Verification token</td>
+</tr>
+</tbody>
+</table>
+<p class="reports">Reports go to Valimail.</p>
+</section>
 <section class="view-section attention">
-<h3 class="section-title">Needs attention</h3>
-<div class="finding warning">
+<h3 class="section-title">Fix these</h3>
+<ol class="fixes">
+<li class="finding warning">
 <h4>Two DKIM keys at glossier.com are 1024-bit: mandrill (Mandrill) and s2 (SendGrid)</h4>
 <p>Some receivers already treat 1024-bit RSA keys as weak. Rotate to 2048-bit.</p>
 <details class="records"><summary>Records</summary>
@@ -21,8 +86,8 @@
 <li class="ev mono">s2._domainkey.glossier.com TXT k=rsa; t=s (strict); p=MIGfMA0GCSqG..., 1024-bit, fp 493ef754cca287c6 via s2.domainkey.u246655.wl156.sendgrid.net</li>
 </ul>
 </details>
-</div>
-<div class="finding warning">
+</li>
+<li class="finding warning">
 <h4>Google Workspace at receipts.glossier.com has no SPF</h4>
 <p>Its documented setup needs it and the map shows it missing: 209.85.220.41, one of Google Workspace&#x27;s addresses, gets softfail at ~all.</p>
 <details class="records"><summary>Records</summary>
@@ -30,8 +95,8 @@
 <li class="ev mono">receipts.glossier.com TXT ~all</li>
 </ul>
 </details>
-</div>
-<div class="finding warning">
+</li>
+<li class="finding warning">
 <h4>Google Workspace at receipts.glossier.com has no DKIM</h4>
 <p>Its documented setup needs it and the map shows it missing: no key at google._domainkey, a name with no TXT record; this zone gives that answer for every name that does not exist.</p>
 <details class="records"><summary>Records</summary>
@@ -39,25 +104,29 @@
 <li class="ev mono">google._domainkey.receipts.glossier.com TXT no record of this type</li>
 </ul>
 </details>
-</div>
-<div class="finding note">
-<h4>SPF at glossier.com and receipts.glossier.com is managed through Valimail</h4>
-<p>A hosted or macro record can authorize services without naming them, so the services it covers do not show in the record itself.</p>
+</li>
+</ol>
+</section>
+<section class="view-section notes">
+<h3 class="section-title">Notes</h3>
+<ul class="notes">
+<li><strong>SPF at glossier.com and receipts.glossier.com is managed through Valimail</strong>. A hosted or macro record can authorize services without naming them, so the services it covers do not show in the record itself.
 <details class="records"><summary>Records</summary>
 <ul class="records">
 <li class="ev mono">glossier.com TXT v=spf1 include:%{i}._ip.%{h}._ehlo.%{d}._spf.vali.email ~all</li>
 <li class="ev mono">receipts.glossier.com TXT v=spf1 include:receipts.glossier.com._nspf.vali.email include:%{i}._ip.%{h}._ehlo.%{d}._spf.vali.email ~all</li>
 </ul>
 </details>
-</div>
+</li>
+</ul>
 </section>
 <section class="view-section tier">
-<h3 class="section-title">In use</h3>
+<h3 class="section-title">Evidence, service by service</h3>
 <div class="rows">
 <article class="row" id="service-google-workspace">
 <h4>Google Workspace</h4>
 <p class="meta">Mailbox</p>
-<span class="badge b-in-use">In use</span>
+<span class="badge b-in-use">Receives mail</span>
 <div class="row-body">
 <p class="decider"><span class="kind">MX</span>: aspmx.l.google.com, alt1.aspmx.l.google.com and 3 more</p>
 <ul class="claims">
@@ -95,15 +164,10 @@
 </details>
 </div>
 </article>
-</div>
-</section>
-<section class="view-section tier">
-<h3 class="section-title">Configured</h3>
-<div class="rows">
 <article class="row" id="service-help-scout">
 <h4>Help Scout</h4>
 <p class="meta">Support and CRM</p>
-<span class="badge b-configured">Configured</span>
+<span class="badge b-configured">Set up to send</span>
 <div class="row-body">
 <p class="decider"><span class="kind">SPF passes its address</span>: ip4:52.0.20.102</p>
 <ul class="claims">
@@ -125,7 +189,7 @@
 <article class="row" id="service-klaviyo">
 <h4>Klaviyo</h4>
 <p class="meta">Marketing</p>
-<span class="badge b-configured">Configured</span>
+<span class="badge b-configured">Set up to send</span>
 <div class="row-body">
 <p class="decider"><span class="kind">DKIM keys</span>: kl, kl2 (both 2048 bit, by CNAME)</p>
 <ul class="claims">
@@ -154,7 +218,7 @@
 <article class="row" id="service-postmark">
 <h4>Postmark</h4>
 <p class="meta">Transactional</p>
-<span class="badge b-configured">Configured</span>
+<span class="badge b-configured">Set up to send</span>
 <div class="row-body">
 <p class="decider"><span class="kind">Bounce CNAME</span>: pm-bounces.glossier.com</p>
 <p class="setup">setup complete</p>
@@ -170,7 +234,7 @@
 <article class="row" id="service-salesforce">
 <h4>Salesforce</h4>
 <p class="meta">Support and CRM</p>
-<span class="badge b-configured">Configured</span>
+<span class="badge b-configured">Set up to send</span>
 <div class="row-body">
 <p class="decider"><span class="kind">DKIM keys</span>: salesforce2, salesforce1 (both 2048 bit, by CNAME)</p>
 <details class="records"><summary>All records</summary>
@@ -185,7 +249,7 @@
 <article class="row" id="service-sendgrid">
 <h4>SendGrid</h4>
 <p class="meta">Transactional</p>
-<span class="badge b-configured">Configured</span>
+<span class="badge b-configured">Set up to send</span>
 <div class="row-body">
 <p class="decider"><span class="kind">DKIM keys</span>: s1 2048 bit, s2 1024 bit (by CNAME)</p>
 <ul class="claims">
@@ -237,7 +301,7 @@
 <article class="row" id="service-zendesk">
 <h4>Zendesk</h4>
 <p class="meta">Support and CRM</p>
-<span class="badge b-configured">Configured</span>
+<span class="badge b-configured">Set up to send</span>
 <div class="row-body">
 <p class="decider"><span class="kind">SPF passes its address</span>: ip4:103.151.192.0/23</p>
 <ul class="claims">
@@ -258,11 +322,6 @@
 </details>
 </div>
 </article>
-</div>
-</section>
-<section class="view-section tier">
-<h3 class="section-title">Likely</h3>
-<div class="rows">
 <article class="row" id="service-mandrill">
 <h4>Mandrill</h4>
 <p class="meta">Transactional</p>
@@ -279,11 +338,6 @@
 </details>
 </div>
 </article>
-</div>
-</section>
-<section class="view-section tier">
-<h3 class="section-title">Account only</h3>
-<div class="rows">
 <article class="row" id="service-amazon-ses">
 <h4>Amazon SES</h4>
 <p class="meta">Transactional</p>
@@ -300,10 +354,6 @@
 </article>
 </div>
 </section>
-<section class="view-section reporting">
-<h3 class="section-title">Reports go to</h3>
-<p>Valimail</p>
-</section>
 <section class="view-section unknowns">
 <h3 class="section-title">Not recognised</h3>
 <ul class="unknowns">
@@ -315,16 +365,16 @@
 </li>
 </ul>
 </section>
-<section class="view-section not-checked">
-<h3 class="section-title">Not checked</h3>
+<section class="view-section how-checked">
+<h3 class="section-title">How this was checked</h3>
+<details class="how"><summary>739 lookups at 4 names · 3 things not checked</summary>
+<h4>Not checked</h4>
 <ul class="gaps">
 <li>DKIM selectors at <span class="mono">marketing</span>, <span class="mono">receipts</span> and <span class="mono">send.glossier.com</span>: 82 of 109 not asked at each. The first 27 were asked, plus any the name&#x27;s own SPF, MX or delegation points to (cap 27).</li>
 <li><span class="mono">the website</span>: web checks were turned off (--no-web)</li>
 <li><span class="mono">certificate transparency, crt.sh</span>: read only with --ct (it also holds expired certificates)</li>
 </ul>
-</section>
-<section class="view-section asked">
-<h3 class="section-title">What was asked</h3>
+<h4>What was asked</h4>
 <p class="asked-total">739 lookups at 4 names</p>
 <ul class="gaps">
 <li><span class="mono">glossier.com</span>: 109 DKIM selectors, 25 CNAME labels, 1 page</li>
@@ -351,5 +401,6 @@
 <ul>
 <li>DKIM selectors (27): <span class="mono">s1, s2, smtpapi, acdkim1, acdkim2, ses, aweber_key_a, aweber_key_b, aweber_key_c, brevo, brevo1, brevo2, cm, cf2024-1, ctct1, ctct2, krs, e2ma-k1, e2ma-k2, e2ma-k3, everlytickey1, everlytickey2, fm2, fm1, fm3, mesmtp, secureserver1</span></li>
 </ul>
+</details>
 </details>
 </section>

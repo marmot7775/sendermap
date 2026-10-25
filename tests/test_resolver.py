@@ -66,7 +66,7 @@ async def test_the_views_name_the_resolver(offline: httpx.AsyncClient) -> None:
     console = Console(record=True, width=200)
     text.render(result, console)
     assert "638 lookups in 11.2 s over Cloudflare DNS over HTTPS" in console.export_text()
-    assert "(638 lookups in 11.2 s over Cloudflare DNS over HTTPS)." in html.html(result)
+    assert "638 lookups in 11.2 s over Cloudflare DNS over HTTPS</p>" in html.html(result)
 
 
 def test_the_schema_gains_resolver_as_an_optional_string() -> None:
