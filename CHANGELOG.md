@@ -40,6 +40,9 @@ fails before anything is published.
   federal domains).
 - SPF ranges in Proofpoint's own networks, AS22843 and AS26211, are credited to Proofpoint.
   instagram.com, dropbox.com, oracle.com, ibm.com, stanford.edu and whatsapp.com publish them.
+- A DKIM key CNAMEd into `outbound.protection.outlook.com` is Microsoft 365's. Microsoft's own
+  domains (microsoft.com, live.com, msn.com, sharepoint.com) point `selector1` at the key
+  Exchange Online Protection publishes there.
 
 ## 0.1.7 (2026-10-25)
 
