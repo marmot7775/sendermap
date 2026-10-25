@@ -634,7 +634,9 @@ def _item(claim: Claim) -> str:
     or report address sits at, or the record's value."""
     found = claim.evidence
     if claim.kind in _MX_KINDS:
-        return found.value.split()[-1] if found.value.split() else found.value
+        # A certificate log's value is "MX 10 host; named in a certificate valid ...".
+        record = found.value.split(";", 1)[0].split()
+        return record[-1] if record else found.value
     if claim.kind in _KEY_KINDS:
         return found.name.split("._domainkey.", 1)[0]
     if claim.kind in _NAMED_KINDS:
