@@ -1030,16 +1030,16 @@
   },
   {
    "asked": "DKIM selectors at update.mills-reeve.com",
-   "happened": "80 of 109 not asked. The first 27 were asked, plus any the name's own SPF, MX or delegation points to (cap 27).",
+   "happened": "81 of 110 not asked. The first 27 were asked, plus any the name's own SPF, MX or delegation points to (cap 27).",
    "kind": "dkim",
-   "count": 80,
+   "count": 81,
    "cap": 27
   },
   {
    "asked": "DKIM selectors at updates.mills-reeve.com",
-   "happened": "82 of 109 not asked. The first 27 were asked, plus any the name's own SPF, MX or delegation points to (cap 27).",
+   "happened": "83 of 110 not asked. The first 27 were asked, plus any the name's own SPF, MX or delegation points to (cap 27).",
    "kind": "dkim",
-   "count": 82,
+   "count": 83,
    "cap": 27
   }
  ],
@@ -1141,6 +1141,8 @@
     "zendesk1",
     "zendesk2",
     "zoho",
+    "mail",
+    "mailru",
     "api",
     "default",
     "dk",
@@ -1152,7 +1154,6 @@
     "key",
     "key1",
     "key2",
-    "mail",
     "mta",
     "mx",
     "pm",
