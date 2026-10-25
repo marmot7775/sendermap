@@ -47,7 +47,7 @@ Leads a catalog pass should look at, from the run's ranked tables:
   bare ranges and is not yet tied to a named mailbox product.
 - Report receivers with no entry: done. `emailanalyst.com` is eDataSource and
   `dmarc.cyber.dhs.gov` is CISA.
-- Proofpoint's own networks (AS22843, AS26211) in SPF at 6 domains, not credited.
+- Proofpoint's own networks (AS22843, AS26211) in SPF at 6 domains: done, credited to Proofpoint.
 - `selector1` CNAMEd into `outbound.protection.outlook.com` at 7 domains, which the catalog does
   not match: either a Microsoft 365 shape to add or a common misconfiguration to name.
 - Not senders: CNAMEs to web hosting and CDNs (`ghs.googlehosted.com`, `cloudfront.net`,

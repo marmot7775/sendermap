@@ -33,6 +33,8 @@ fails before anything is published.
   addresses take mail at eDataSource's MX hosts; twitter.com, linkedin.com and four more in the
   benchmark publish it) and CISA (`dmarc.cyber.dhs.gov`, the address BOD 18-01 requires of US
   federal domains).
+- SPF ranges in Proofpoint's own networks, AS22843 and AS26211, are credited to Proofpoint.
+  instagram.com, dropbox.com, oracle.com, ibm.com, stanford.edu and whatsapp.com publish them.
 
 ## 0.1.7 (2026-10-25)
 
