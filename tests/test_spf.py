@@ -39,6 +39,9 @@ async def test_a_redirect_counts_unless_the_record_has_all() -> None:
     ignored = Zone().add("example.com", "TXT", "v=spf1 -all redirect=_spf.google.com")
     observed, _ = await walk(ignored)
     assert services(observed) == set()
+    before_all = Zone().add("example.com", "TXT", "v=spf1 redirect=_spf.google.com -all")
+    observed, _ = await walk(before_all)
+    assert services(observed) == set()
 
 
 async def test_a_wrapper_of_the_domains_own_is_followed() -> None:

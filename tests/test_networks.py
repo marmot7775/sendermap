@@ -207,3 +207,27 @@ async def test_a_mixed_range_is_a_line_of_its_own_in_every_view() -> None:
     (group,) = grouped[2:]
     assert isinstance(group, NetworkGroup)
     assert group.heading() == "2 addresses in AS14618 and AS16509 (Amazon Web Services)"
+
+
+async def test_an_unnamed_network_is_no_owner() -> None:
+    zone = owner(Zone(), "167.89.1.1", "AS11377", "SENDGRID - SendGrid, Inc., US")
+    zone.timeouts.add(("as11377.asn.cymru.com", "TXT"))
+    assert await networks.owner(context(zone), ipaddress.ip_address("167.89.1.1")) is None
+
+
+async def test_a_published_range_that_does_not_parse_is_skipped() -> None:
+    zone = Zone().add("amazonses.com", "TXT", "v=spf1 ip4:999.1.1.0/24 ip4:54.240.0.0/18 -all")
+    published, gaps = await networks.published_ranges(context(zone))
+    assert {str(n) for n, owners in published.items() if "Amazon SES" in owners} == {
+        "54.240.0.0/18"
+    }
+    assert gaps == ()
+
+
+async def test_a_service_record_nested_too_deep_is_a_gap() -> None:
+    zone = Zone().add("amazonses.com", "TXT", "v=spf1 include:l1.example.net -all")
+    for depth in range(1, networks.MAX_PUBLISHED_DEPTH + 2):
+        zone.add(f"l{depth}.example.net", "TXT", f"v=spf1 include:l{depth + 1}.example.net -all")
+    _, gaps = await networks.published_ranges(context(zone))
+    (gap,) = [g for g in gaps if g.asked.endswith("Amazon SES")]
+    assert (gap.happened, gap.cap) == (networks.TOO_DEEP, networks.MAX_PUBLISHED_DEPTH)

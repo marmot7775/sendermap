@@ -7,7 +7,7 @@ from collections.abc import Callable
 
 import httpx
 import pytest
-from conftest import Zone, context
+from conftest import PUBLIC, Zone, context
 
 from sendermap.model import Observed
 from sendermap.sources import Context, mta_sts, web
@@ -94,10 +94,16 @@ async def test_the_addresses_are_asked_through_the_maps_dns() -> None:
         ("https://169.254.169.254/latest/meta-data/", "resolves to a private address"),
         ("https://inside.example.net/", "resolves to a private address (10.1.2.3)"),
         ("https://gone.example.net/", "no address"),
+        ("https://junk.example.net/", "address lookup failed"),
     ],
 )
 async def test_every_redirect_is_checked_before_it_is_followed(location: str, reason: str) -> None:
-    zone = Zone().public("example.com").add("inside.example.net", "A", "10.1.2.3")
+    zone = (
+        Zone()
+        .public("example.com")
+        .add("inside.example.net", "A", "10.1.2.3")
+        .add("junk.example.net", "A", "not an address")
+    )
     observed, sent = await fetch(zone, lambda request: moved(location))
     assert sent == ["https://example.com/"]
     assert gaps(observed)[HOME].startswith(f"not fetched: {reason}")
@@ -130,6 +136,54 @@ async def test_a_redirect_to_a_public_host_is_followed() -> None:
     assert sent == ["https://example.com/", "https://www.example.com/"]
     (claim,) = observed.claims
     assert claim.evidence.name == "https://www.example.com/"
+
+
+@pytest.mark.parametrize(
+    ("url", "reason"),
+    [("https://example.com:https/", "the port is not a number"), ("https:///no-host", "no host")],
+)
+async def test_a_url_the_guard_cannot_read_is_refused(url: str, reason: str) -> None:
+    assert await web.refusal(context(Zone()).dns, url) == reason
+
+
+async def test_a_redirect_to_a_public_address_is_followed_without_a_lookup() -> None:
+    def handler(request: httpx.Request) -> httpx.Response:
+        return moved(f"https://{PUBLIC}/") if request.url.host == "example.com" else page()
+
+    zone = Zone().public("example.com")
+    observed, sent = await fetch(zone, handler)
+    assert sent == ["https://example.com/", f"https://{PUBLIC}/"]
+    assert gaps(observed) == {}
+    assert (PUBLIC, "A") not in zone.asked
+
+
+@pytest.mark.parametrize(
+    ("answer", "happened"),
+    [
+        (
+            httpx.Response(200, text="{}", headers={"content-type": "application/json"}),
+            "not a web page (application/json)",
+        ),
+        (httpx.Response(200, content=b"<p>hi</p>"), "not a web page (no content type)"),
+        (httpx.Response(503), "HTTP 503"),
+    ],
+)
+async def test_an_answer_that_is_not_a_page_is_a_gap(answer: httpx.Response, happened: str) -> None:
+    observed, _ = await fetch(Zone().public("example.com"), lambda request: answer)
+    assert gaps(observed) == {HOME: happened}
+
+
+async def test_a_request_that_fails_is_a_gap_naming_the_failure() -> None:
+    def handler(request: httpx.Request) -> httpx.Response:
+        raise httpx.ConnectError("refused", request=request)
+
+    observed, _ = await fetch(Zone().public("example.com"), handler)
+    assert gaps(observed) == {HOME: "failed: ConnectError"}
+
+
+async def test_without_a_web_client_the_website_is_not_read() -> None:
+    ctx = context(Zone().public("example.com"))
+    assert await web.collect(ctx) == Observed()
 
 
 async def test_the_subprocessor_link_goes_through_the_guard() -> None:

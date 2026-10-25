@@ -364,7 +364,10 @@ async def test_a_cached_answer_dated_without_a_zone_is_fetched_again(tmp_path: P
     ("answer", "said"),
     [
         (httpx.Response(200, text="<html>busy</html>"), "the answer was not JSON"),
-        (httpx.Response(200, json={"error": "rate limited"}), "the answer was not a list of certificates"),
+        (
+            httpx.Response(200, json={"error": "rate limited"}),
+            "the answer was not a list of certificates",
+        ),
     ],
 )
 async def test_an_answer_that_is_not_a_list_of_certificates_is_a_gap(
@@ -387,11 +390,15 @@ async def test_a_logged_name_in_a_range_one_service_publishes_is_credited_to_it(
     dns = (
         Zone()
         .add("amazonses.com", "TXT", "v=spf1 ip4:198.51.100.0/24 -all")
-        .add("ses.allbirds.com", "A", "not an address", "198.51.100.9")
+        .add("ses.allbirds.com", "A", "198.51.100.9", "0.bogus")  # sorted first
     )
     observed, _ = await run(logged("ses.allbirds.com"), None, dns=dns)
     (claim,) = observed.claims
-    assert (claim.service, claim.kind, claim.where) == ("Amazon SES", Kind.CT_ADDRESS, "ses.allbirds.com")
+    assert (claim.service, claim.kind, claim.where) == (
+        "Amazon SES",
+        Kind.CT_ADDRESS,
+        "ses.allbirds.com",
+    )
     assert claim.evidence.value.startswith("A 198.51.100.9; named in a certificate")
     assert [s.value for s in claim.supporting] == ["ip4:198.51.100.0/24"]
 
@@ -411,3 +418,11 @@ async def test_the_map_names_the_mx_host_a_logged_name_points_at(tmp_path: Path)
     mailgun = next(s for s in view(result, evidence=False).services if s.name == "Mailgun")
     # The summary was the certificate's last date, "2027-01-01", the last word of its value.
     assert [k.summary for k in mailgun.kinds] == ["mxa.mailgun.org"]
+
+
+async def test_a_cache_that_cannot_be_written_is_skipped(tmp_path: Path) -> None:
+    blocked = tmp_path / "cache"
+    blocked.write_text("a file where the directory would go")
+    logs = Logs()
+    _, summary = await run(logs, blocked)
+    assert [p.status for p in summary.providers] == [CtStatus.READ, CtStatus.READ]
