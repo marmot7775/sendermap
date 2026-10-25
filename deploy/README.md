@@ -7,6 +7,7 @@ today. Edit the live file, then copy it back here.
 | File | Goes to |
 | --- | --- |
 | `sendermap.service` | `/etc/systemd/system/sendermap.service` |
+| `sendermap-upgrade` | `/home/marmot7/bin/sendermap-upgrade` |
 | `nginx-sendermap` | `/etc/nginx/sites-available/sendermap`, enabled by a symlink from `/etc/nginx/sites-enabled/sendermap` |
 
 The app runs from the virtualenv at `/home/marmot7/sendermap-venv` as
@@ -21,6 +22,12 @@ user `marmot7`, on 127.0.0.1:8001. nginx terminates TLS and proxies to it.
   `log_format` added before this site loads.
 
 ## Install or upgrade
+
+A release upgrades the site by itself: the publish workflow's deploy job
+connects with a key whose `authorized_keys` line is
+`command="/home/marmot7/bin/sendermap-upgrade",restrict`, so it can run
+that script and nothing else, and passes the tag's version. To upgrade
+by hand, run the script with a version, or:
 
 ```sh
 /home/marmot7/sendermap-venv/bin/pip install --no-cache-dir --upgrade 'sendermap[web]==X.Y.Z'
