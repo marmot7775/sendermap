@@ -11,6 +11,11 @@ fails before anything is published.
 
 ## Unreleased
 
+- `tools/benchmark.py` maps a fixed list of 300 domains (`data/benchmark_domains.txt`) and
+  reports how much of what they publish Sendermap names, with the unnamed evidence ranked by how
+  many domains publish it. Runs are kept in `benchmark/runs/`; `--compare` shows what changed
+  between two. The 0.1.7 baseline is in `benchmark/README.md`.
+
 ## 0.1.7 (2026-10-25)
 
 - The Markdown export follows the terminal layout. It opens with the domain, the count of services and of things to fix, and how the map was made, then the story a sentence a paragraph. At a glance gives one line per service, Fix these numbers the risks and warnings with Notes after them, Evidence, service by service gives each service a heading with one line per kind of record, and How this was checked comes last with what was asked, not checked and not run. The senders table is gone, so the export has no line a mail client wraps mid-row, and every record sits in a code span. 0.1.6's export still used the old section names (Needs attention, Senders, What was asked).
