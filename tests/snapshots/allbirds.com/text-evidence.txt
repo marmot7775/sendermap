@@ -421,11 +421,41 @@ CHECKED AND NOT THERE
 HOW THIS WAS CHECKED
   Asked 763 lookups at 6 names:
     allbirds.com: 110 DKIM selectors, 25 CNAME labels, 1 page
+      Pages:                                                                                        
+      https://api.certspotter.com/v1/issuances?domain=allbirds.com&include_subdomains=true&expand=dn
+      s_names                                                                                       
+      CNAME labels: bounce, bounces, em, email, mail, send, mta, rp, pm-bounces, links, link, click,
+      track, tracking, url, go, autodiscover, cf-bounce, eversrv, fwdkim1, bnc3, bounces.cloud.em,  
+      bounces.cloud2.em, outbound.intercom, atlassian-bounces                                       
+      DKIM selectors: selector1, selector2, acdkim1, acdkim2, ses, aweber_key_a, aweber_key_b,      
+      aweber_key_c, brevo, brevo1, brevo2, cm, cf2024-1, ctct1, ctct2, krs, e2ma-k1, e2ma-k2,       
+      e2ma-k3, everlytickey1, everlytickey2, fm2, fm1, fm3, mesmtp, secureserver1, secureserver2,   
+      google, gapps, gor, strong1, strong2, hs1, hs2, intercom, s1-ionos, s42582890, s2-ionos, cka, 
+      kl, kl1, kl2, km1, km2, k2, k1, k3, litesrv, mg, mailgun, mg1, pdk1, pdk2, mailjet, mailpoet2,
+      mailpoet1, mandrill, mte1, mte2, marketo, mkto, mkto1, mimecast, mimecast20190719, pepipost,  
+      pp1, protonmail, protonmail2, protonmail3, resend, sailthru, salesforce, salesforce2,         
+      salesforce1, sf, sf1, sf2, sfdc, 200608, pardot, sfmc, s1, s2, smtpapi, scph0819, sparkpost,  
+      squarespace, zendesk1, zendesk2, zoho, mail, mailru, api, default, dk, dkim, dkim1, dkim2,    
+      email, k, key, key1, key2, mta, mx, pm, s, selector, smtp, sp                                 
     alerts.allbirds.com: 32 DKIM selectors
+      DKIM selectors: google, gapps, acdkim1, acdkim2, ses, aweber_key_a, aweber_key_b,             
+      aweber_key_c, brevo, brevo1, brevo2, cm, cf2024-1, ctct1, ctct2, krs, e2ma-k1, e2ma-k2,       
+      e2ma-k3, everlytickey1, everlytickey2, fm2, fm1, fm3, mesmtp, secureserver1, secureserver2,   
+      mailgun, mg, mg1, pdk1, pdk2                                                                  
     bounce.allbirds.com: 8 DKIM selectors
+      DKIM selectors: acdkim1, acdkim2, ses, aweber_key_a, aweber_key_b, aweber_key_c, brevo, brevo1
     email.allbirds.com: 13 DKIM selectors
+      DKIM selectors: acdkim1, acdkim2, ses, aweber_key_a, aweber_key_b, aweber_key_c, brevo,       
+      brevo1, mailgun, mg, mg1, pdk1, pdk2                                                          
     info.allbirds.com: 27 DKIM selectors
+      DKIM selectors: acdkim1, acdkim2, ses, aweber_key_a, aweber_key_b, aweber_key_c, brevo,       
+      brevo1, brevo2, cm, cf2024-1, ctct1, ctct2, krs, e2ma-k1, e2ma-k2, e2ma-k3, everlytickey1,    
+      everlytickey2, fm2, fm1, fm3, mesmtp, secureserver1, secureserver2, google, gapps             
     mail.allbirds.com: 32 DKIM selectors
+      DKIM selectors: google, gapps, acdkim1, acdkim2, ses, aweber_key_a, aweber_key_b,             
+      aweber_key_c, brevo, brevo1, brevo2, cm, cf2024-1, ctct1, ctct2, krs, e2ma-k1, e2ma-k2,       
+      e2ma-k3, everlytickey1, everlytickey2, fm2, fm1, fm3, mesmtp, secureserver1, secureserver2,   
+      mailgun, mg, mg1, pdk1, pdk2                                                                  
   Not checked: certificate log names more than 2 labels deep: 34 not asked. Names up to 2 labels    
   below the domain were asked (cap 2 labels).                                                       
   Not checked: sending subdomains: TXT, MX and NS at apisdk.allbirds.com, community.allbirds.com,   
@@ -438,34 +468,3 @@ HOW THIS WAS CHECKED
   Not run: the website: web checks were turned off (--no-web)
   Not run: certificate transparency, crt.sh: read only with --ct (it also holds expired             
   certificates)                                                                                     
-    allbirds.com, Pages:                                                                            
-    https://api.certspotter.com/v1/issuances?domain=allbirds.com&include_subdomains=true&expand=dns_
-    names                                                                                           
-    allbirds.com, CNAME labels: bounce, bounces, em, email, mail, send, mta, rp, pm-bounces, links, 
-    link, click, track, tracking, url, go, autodiscover, cf-bounce, eversrv, fwdkim1, bnc3,         
-    bounces.cloud.em, bounces.cloud2.em, outbound.intercom, atlassian-bounces                       
-    allbirds.com, DKIM selectors: selector1, selector2, acdkim1, acdkim2, ses, aweber_key_a,        
-    aweber_key_b, aweber_key_c, brevo, brevo1, brevo2, cm, cf2024-1, ctct1, ctct2, krs, e2ma-k1,    
-    e2ma-k2, e2ma-k3, everlytickey1, everlytickey2, fm2, fm1, fm3, mesmtp, secureserver1,           
-    secureserver2, google, gapps, gor, strong1, strong2, hs1, hs2, intercom, s1-ionos, s42582890,   
-    s2-ionos, cka, kl, kl1, kl2, km1, km2, k2, k1, k3, litesrv, mg, mailgun, mg1, pdk1, pdk2,       
-    mailjet, mailpoet2, mailpoet1, mandrill, mte1, mte2, marketo, mkto, mkto1, mimecast,            
-    mimecast20190719, pepipost, pp1, protonmail, protonmail2, protonmail3, resend, sailthru,        
-    salesforce, salesforce2, salesforce1, sf, sf1, sf2, sfdc, 200608, pardot, sfmc, s1, s2, smtpapi,
-    scph0819, sparkpost, squarespace, zendesk1, zendesk2, zoho, mail, mailru, api, default, dk,     
-    dkim, dkim1, dkim2, email, k, key, key1, key2, mta, mx, pm, s, selector, smtp, sp               
-    alerts.allbirds.com, DKIM selectors: google, gapps, acdkim1, acdkim2, ses, aweber_key_a,        
-    aweber_key_b, aweber_key_c, brevo, brevo1, brevo2, cm, cf2024-1, ctct1, ctct2, krs, e2ma-k1,    
-    e2ma-k2, e2ma-k3, everlytickey1, everlytickey2, fm2, fm1, fm3, mesmtp, secureserver1,           
-    secureserver2, mailgun, mg, mg1, pdk1, pdk2                                                     
-    bounce.allbirds.com, DKIM selectors: acdkim1, acdkim2, ses, aweber_key_a, aweber_key_b,         
-    aweber_key_c, brevo, brevo1                                                                     
-    email.allbirds.com, DKIM selectors: acdkim1, acdkim2, ses, aweber_key_a, aweber_key_b,          
-    aweber_key_c, brevo, brevo1, mailgun, mg, mg1, pdk1, pdk2                                       
-    info.allbirds.com, DKIM selectors: acdkim1, acdkim2, ses, aweber_key_a, aweber_key_b,           
-    aweber_key_c, brevo, brevo1, brevo2, cm, cf2024-1, ctct1, ctct2, krs, e2ma-k1, e2ma-k2, e2ma-k3,
-    everlytickey1, everlytickey2, fm2, fm1, fm3, mesmtp, secureserver1, secureserver2, google, gapps
-    mail.allbirds.com, DKIM selectors: google, gapps, acdkim1, acdkim2, ses, aweber_key_a,          
-    aweber_key_b, aweber_key_c, brevo, brevo1, brevo2, cm, cf2024-1, ctct1, ctct2, krs, e2ma-k1,    
-    e2ma-k2, e2ma-k3, everlytickey1, everlytickey2, fm2, fm1, fm3, mesmtp, secureserver1,           
-    secureserver2, mailgun, mg, mg1, pdk1, pdk2                                                     

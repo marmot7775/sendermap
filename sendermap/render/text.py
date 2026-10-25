@@ -84,7 +84,7 @@ def _glance(shown: View, title: str, console: Console) -> None:
     _heading(title, console)
     grid = Table.grid(padding=(0, 2))
     grid.add_column(no_wrap=True)
-    grid.add_column(style="bold", no_wrap=True)
+    grid.add_column(style="bold", overflow="fold")
     grid.add_column(style=_DIM, no_wrap=True)
     grid.add_column(no_wrap=True)
     grid.add_column()
@@ -250,23 +250,23 @@ def _absences(shown: View, title: str, console: Console) -> None:
 
 
 def _how(shown: View, title: str, console: Console) -> None:
-    """What was asked, what was not checked and what did not run, in one dimmed block."""
-    lines: list[str] = []
+    """What was asked, what was not checked and what did not run, in one dimmed block. The
+    names asked at each name sit under its count, not after the block."""
+    lines: list[tuple[str, int]] = []
     if shown.asked:
-        lines.append(f"Asked {shown.asked_total}:")
-        lines += [f"  {record.where}: {record.counts}" for record in shown.asked]
-    lines += [f"Not checked: {g}" for g in shown.gaps]
-    lines += [f"Not run: {off.check}: {off.how}" for off in shown.off]
+        lines.append((f"Asked {shown.asked_total}:", 2))
+    for record in shown.asked:
+        lines.append((f"{record.where}: {record.counts}", 4))
+        lines += [(f"{heading}: {', '.join(names)}", 6) for heading, names in record.names]
+    lines += [(f"Not checked: {g}", 2) for g in shown.gaps]
+    lines += [(f"Not run: {off.check}: {off.how}", 2) for off in shown.off]
     if not shown.evidence:
-        lines.append("Add --evidence to see every record behind each line.")
+        lines.append(("Add --evidence to see every record behind each line.", 2))
     if not lines:
         return
     _heading(title, console)
-    for line in lines:
-        _line(line.lstrip(), console, 4 if line.startswith("  ") else 2, _DIM)
-    for record in shown.asked:
-        for heading, names in record.names:
-            _line(f"{record.where}, {heading}: {', '.join(names)}", console, 4, _DIM)
+    for line, indent in lines:
+        _line(line, console, indent, _DIM)
 
 
 _SECTIONS = {
