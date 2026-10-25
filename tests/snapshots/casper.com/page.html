@@ -13,7 +13,7 @@
 <section class="view-section attention">
 <h3 class="section-title">Needs attention</h3>
 <div class="finding warning">
-<h4>Eight DKIM keys at casper.com are 1024-bit: google, cm, k1, mandrill, salesforce, s2, smtpapi and mx</h4>
+<h4>Eight DKIM keys at casper.com are 1024-bit: google (Google Workspace), cm (Campaign Monitor), k1 (Mailchimp), mandrill (Mandrill), salesforce (Salesforce), s2 (SendGrid), smtpapi (SendGrid) and mx</h4>
 <p>Some receivers already treat 1024-bit RSA keys as weak. Rotate to 2048-bit.</p>
 <details class="records"><summary>Records</summary>
 <ul class="records">
@@ -29,37 +29,21 @@
 </details>
 </div>
 <div class="finding warning">
-<h4>Google Workspace at e.casper.com has no SPF</h4>
+<h4>Google Workspace at e.casper.com and mail.casper.com has no SPF</h4>
 <p>Its documented setup needs it and the map shows it missing: the record does not authorize _spf.google.com.</p>
 <details class="records"><summary>Records</summary>
 <ul class="records">
 <li class="ev mono">e.casper.com TXT v=spf1 include:mailgun.org ~all</li>
-</ul>
-</details>
-</div>
-<div class="finding warning">
-<h4>Google Workspace at e.casper.com has no DKIM</h4>
-<p>Its documented setup needs it and the map shows it missing: no key at google._domainkey, a name that does not exist.</p>
-<details class="records"><summary>Records</summary>
-<ul class="records">
-<li class="ev mono">google._domainkey.e.casper.com TXT no such name</li>
-</ul>
-</details>
-</div>
-<div class="finding warning">
-<h4>Google Workspace at mail.casper.com has no SPF</h4>
-<p>Its documented setup needs it and the map shows it missing: the record does not authorize _spf.google.com.</p>
-<details class="records"><summary>Records</summary>
-<ul class="records">
 <li class="ev mono">mail.casper.com TXT v=spf1 include:cust-spf.exacttarget.com -all</li>
 </ul>
 </details>
 </div>
 <div class="finding warning">
-<h4>Google Workspace at mail.casper.com has no DKIM</h4>
+<h4>Google Workspace at e.casper.com and mail.casper.com has no DKIM</h4>
 <p>Its documented setup needs it and the map shows it missing: no key at google._domainkey, a name that does not exist.</p>
 <details class="records"><summary>Records</summary>
 <ul class="records">
+<li class="ev mono">google._domainkey.e.casper.com TXT no such name</li>
 <li class="ev mono">google._domainkey.mail.casper.com TXT no such name</li>
 </ul>
 </details>
@@ -365,7 +349,7 @@
 <p class="meta">Transactional</p>
 <span class="badge b-configured">Configured</span>
 <div class="row-body">
-<p class="decider"><span class="kind">DKIM keys</span>: s1, s2 (1024 and 2048 bit, by CNAME)</p>
+<p class="decider"><span class="kind">DKIM keys</span>: s1 2048 bit, s2 1024 bit (by CNAME)</p>
 <ul class="claims">
 <li><span class="kind">DKIM key</span>: smtpapi (1024 bit, named for it)</li>
 </ul>

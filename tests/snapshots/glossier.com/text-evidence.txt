@@ -1,198 +1,214 @@
-╭───────────────────────────────────────────────────────────────────────────────╮
-│ glossier.com   9 sending services                                             │
-│ 739 lookups in 0.0 s over Google DNS over HTTPS, checked 2026-10-12 01:25 UTC │
-╰───────────────────────────────────────────────────────────────────────────────╯
-Google Workspace receives the domain's mail and has a DKIM key in place to sign it.
-Six other services are set up to send as the domain: three support and CRM (Help Scout, Salesforce, 
-Zendesk), one marketing (Klaviyo), two transactional (Postmark, SendGrid); one more is likely from a
-DKIM key name alone (Mandrill).
-One service shows an account and nothing set up to send (Amazon SES); DMARC reports go to Valimail.
-Not checked: the website (turned off), DKIM selectors past the first 27 on three subdomains, and the
-crt.sh certificate log (read only with --ct).
+╭──────────────────────────────────────────────────────────────────────────────────╮
+│  glossier.com                                                                    │
+│  9 services send email as this domain   ·   3 things to fix                      │
+│  checked 2026-10-12 01:25 UTC · 739 lookups in 0.0 s over Google DNS over HTTPS  │
+╰──────────────────────────────────────────────────────────────────────────────────╯
 
-NEEDS ATTENTION
-  ● Two DKIM keys at glossier.com are 1024-bit: mandrill and s2
-    Some receivers already treat 1024-bit RSA keys as weak. Rotate to 2048-bit.
-      mandrill._domainkey.glossier.com TXT v=DKIM1; k=rsa; p=MIGfMA0GCSqG..., 1024-bit, fp          
-      9cee89b6f986543a                                                                              
-      s2._domainkey.glossier.com TXT k=rsa; t=s (strict); p=MIGfMA0GCSqG..., 1024-bit, fp           
-      493ef754cca287c6 via s2.domainkey.u246655.wl156.sendgrid.net                                  
-  ● Google Workspace at receipts.glossier.com has no SPF
-    Its documented setup needs it and the map shows it missing: 209.85.220.41, one of Google        
-    Workspace's addresses, gets softfail at ~all.                                                   
-      receipts.glossier.com TXT ~all
-  ● Google Workspace at receipts.glossier.com has no DKIM
-    Its documented setup needs it and the map shows it missing: no key at google._domainkey, a name 
-    with no TXT record; this zone gives that answer for every name that does not exist.             
-      google._domainkey.receipts.glossier.com TXT no record of this type
-  ● SPF at glossier.com is managed through Valimail
-    A hosted or macro record can authorize services without naming them, so the services it covers  
-    do not show in the record itself.                                                               
-      glossier.com TXT v=spf1 include:%{i}._ip.%{h}._ehlo.%{d}._spf.vali.email ~all
-  ● SPF at receipts.glossier.com is managed through Valimail
-    A hosted or macro record can authorize services without naming them, so the services it covers  
-    do not show in the record itself.                                                               
-      receipts.glossier.com TXT v=spf1 include:receipts.glossier.com._nspf.vali.email               
-      include:%{i}._ip.%{h}._ehlo.%{d}._spf.vali.email ~all                                         
+  Google Workspace receives the domain's mail and has a DKIM key in place to sign it.
+  Six other services are set up to send as the domain: three support and CRM (Help Scout,           
+  Salesforce, Zendesk), one marketing (Klaviyo), two transactional (Postmark, SendGrid); one more is
+  likely from a DKIM key name alone (Mandrill).                                                     
+  One service shows an account and nothing set up to send (Amazon SES); DMARC reports go to         
+  Valimail.                                                                                         
 
-IN USE
-  Google Workspace  Mailbox
-    MX                         aspmx.l.google.com, alt1.aspmx.l.google.com and 3 more               
-                               glossier.com MX 10 aspmx.l.google.com                                
-                               glossier.com MX 20 alt1.aspmx.l.google.com                           
-                               glossier.com MX 20 alt2.aspmx.l.google.com                           
-                               glossier.com MX 30 aspmx2.googlemail.com                             
-                               glossier.com MX 30 aspmx3.googlemail.com                             
-    SPF passes its address     ip4:209.85.128.0/17                                                  
-                               _spf.google.com TXT ip4:209.85.128.0/17 via                          
-                               209.85.220.41._ip.mail-sor-f41.google.com._ehlo.glossier.com._spf.val
-                               i.email TXT v=spf1 include:_spf.google.com -all via _spf.google.com  
-                               TXT v=spf1 ip4:74.125.0.0/16 ip4:209.85.128.0/17                     
-                               ip6:2001:4860:4864::/56 ip6:2404:6800:4864::/56                      
-                               ip6:2607:f8b0:4864::/56 ip6:2800:3f0:4864::/56                       
-                               ip6:2a00:1450:4864::/56 ip6:2c0f:fb50:4864::/56 ~all                 
-    MX for a subdomain's mail  aspmx.l.google.com, alt1.aspmx.l.google.com and 3 more at            
-                               receipts.glossier.com                                                
-                               receipts.glossier.com MX 1 aspmx.l.google.com                        
-                               receipts.glossier.com MX 5 alt1.aspmx.l.google.com                   
-                               receipts.glossier.com MX 5 alt2.aspmx.l.google.com                   
-                               receipts.glossier.com MX 10 alt3.aspmx.l.google.com                  
-                               receipts.glossier.com MX 10 alt4.aspmx.l.google.com                  
-    DKIM key                   google (2048 bit, named for it)                                      
-                               google._domainkey.glossier.com TXT v=DKIM1; k=rsa; p=MIIBIjANBgkq...,
-                               2048-bit, fp 40785b4787f0f30f via glossier.com MX 10                 
-                               aspmx.l.google.com                                                   
-    Setup                      incomplete: SPF present at glossier.com, DKIM present at             
-                               glossier.com, MX present at glossier.com and receipts.glossier.com,  
-                               bounce CNAME not needed at glossier.com and receipts.glossier.com,   
-                               SPF missing at receipts.glossier.com, DKIM missing at                
-                               receipts.glossier.com                                                
+AT A GLANCE
+  ●  Google Workspace  Mailbox          Receives mail   ⚠ setup incomplete      
+  ●  Help Scout        Support and CRM  Set up to send                          
+  ●  Klaviyo           Marketing        Set up to send  ✓ setup complete        
+  ●  Postmark          Transactional    Set up to send  ✓ setup complete        
+  ●  Salesforce        Support and CRM  Set up to send                          
+  ●  SendGrid          Transactional    Set up to send  ✓ setup complete        
+  ●  Zendesk           Support and CRM  Set up to send  ✓ setup complete        
+  ◐  Mandrill          Transactional    Likely          from: DKIM key          
+  ○  Amazon SES        Transactional    Account only    from: Verification token
+  Reports go to Valimail.
 
-CONFIGURED
-  Help Scout  Support and CRM
-    SPF passes its address  ip4:52.0.20.102                                                         
-                            helpscoutemail.com TXT ip4:52.0.20.102 via                              
-                            52.0.20.102._ip.mail4.helpscout.net._ehlo.glossier.com._spf.vali.email  
-                            TXT v=spf1 include:helpscoutemail.com -all via helpscoutemail.com TXT   
-                            v=spf1 ip4:54.173.229.38 ip4:52.0.20.102 ip4:54.174.116.32              
-                            ip4:52.2.238.96 ip4:52.20.146.34 ip4:34.198.122.65 ~all                 
-    DKIM keys               strong1, strong2 (both 2048 bit, by CNAME)                              
-                            strong1._domainkey.glossier.com TXT v=DKIM1; k=rsa; p=MIIBIjANBgkq...,  
-                            2048-bit, fp bdaef67ee0bd9b30 via strong1._domainkey.helpscout.net      
-                            strong2._domainkey.glossier.com TXT v=DKIM1; k=rsa; p=MIIBIjANBgkq...,  
-                            2048-bit, fp 6d999cc9f7fe9631 via strong2._domainkey.helpscout.net      
-  Klaviyo  Marketing
-    DKIM keys               kl, kl2 (both 2048 bit, by CNAME)                                       
-                            kl._domainkey.glossier.com TXT k=rsa; t=s (strict); p=MIIBIjANBgkq...,  
-                            2048-bit, fp 8f7c4abc32a3149e via                                       
-                            kl.domainkey.u161779.wl030.sendgrid.net                                 
-                            kl2._domainkey.glossier.com TXT k=rsa; t=s (strict); p=MIIBIjANBgkq..., 
-                            2048-bit, fp a8e9604b93b01972 via                                       
-                            kl2.domainkey.u161779.wl030.sendgrid.net                                
-    Bounce CNAME            send.glossier.com                                                       
-                            send.glossier.com CNAME u161779.wl030.sendgrid.net                      
-    Verification token      klaviyo-site-verification=Sn6eFZ                                        
-                            glossier.com TXT klaviyo-site-verification=Sn6eFZ                       
-    Setup                   complete: DKIM present, bounce CNAME present, SPF not needed            
-  Postmark  Transactional
-    Bounce CNAME            pm-bounces.glossier.com                       
-                            pm-bounces.glossier.com CNAME pm.mtasv.net    
-    Setup                   complete: SPF not needed, bounce CNAME present
-  Salesforce  Support and CRM
-    DKIM keys               salesforce2, salesforce1 (both 2048 bit, by CNAME)                      
-                            salesforce2._domainkey.glossier.com TXT v=DKIM1; p=MIIBIjANBgkq...,     
-                            2048-bit, fp 487730d4106fc223 via                                       
-                            salesforce2.h8cv4t.custdkim.salesforce.com                              
-                            salesforce1._domainkey.glossier.com TXT v=DKIM1; p=MIIBIjANBgkq...,     
-                            2048-bit, fp b89c6f4a80bb10de via                                       
-                            salesforce1.6nkqhl.custdkim.salesforce.com                              
-  SendGrid  Transactional
-    DKIM keys               s1, s2 (1024 and 2048 bit, by CNAME)                                    
-                            s1._domainkey.glossier.com TXT k=rsa; t=s (strict); p=MIIBIjANBgkq...,  
-                            2048-bit, fp 3d0654c2b22f63e6 via                                       
-                            s1.domainkey.u246655.wl156.sendgrid.net                                 
-                            s2._domainkey.glossier.com TXT k=rsa; t=s (strict); p=MIGfMA0GCSqG...,  
-                            1024-bit, fp 493ef754cca287c6 via                                       
-                            s2.domainkey.u246655.wl156.sendgrid.net                                 
-    Tracking CNAME          link.glossier.com                                                       
-                            link.glossier.com CNAME sendgrid.net                                    
-    MX for bounces          mx.sendgrid.net, mx2.sendgrid.net at marketing.glossier.com and         
-                            send.glossier.com                                                       
-                            marketing.glossier.com MX 10 mx.sendgrid.net                            
-                            marketing.glossier.com MX 20 mx2.sendgrid.net                           
-                            send.glossier.com MX 20 mx.sendgrid.net                                 
-    SPF                     include:ab.sendgrid.net, include:sendgrid.net at marketing.glossier.com 
-                            and send.glossier.com                                                   
-                            marketing.glossier.com TXT include:ab.sendgrid.net                      
-                            send.glossier.com TXT include:sendgrid.net                              
-    SPF ranges              ip4:208.117.48.0/20, ip4:50.31.32.0/19 and 9 more at                    
-                            marketing.glossier.com                                                  
-                            marketing.glossier.com TXT ip4:208.117.48.0/20 via sendgrid.net TXT     
-                            ip4:208.117.48.0/20                                                     
-                            marketing.glossier.com TXT ip4:50.31.32.0/19 via sendgrid.net TXT       
-                            ip4:50.31.32.0/19                                                       
-                            marketing.glossier.com TXT ip4:198.37.144.0/20 via sendgrid.net TXT     
-                            ip4:198.37.144.0/20                                                     
-                            marketing.glossier.com TXT ip4:198.21.0.0/21 via sendgrid.net TXT       
-                            ip4:198.21.0.0/21                                                       
-                            marketing.glossier.com TXT ip4:192.254.112.0/20 via sendgrid.net TXT    
-                            ip4:192.254.112.0/20                                                    
-                            marketing.glossier.com TXT ip4:149.72.0.0/16 via sendgrid.net TXT       
-                            ip4:149.72.0.0/16                                                       
-                            marketing.glossier.com TXT ip4:159.183.0.0/16 via sendgrid.net TXT      
-                            ip4:159.183.0.0/16                                                      
-                            marketing.glossier.com TXT ip4:134.128.64.0/18 via sendgrid.net TXT     
-                            ip4:134.128.64.0/18                                                     
-                            marketing.glossier.com TXT ip4:159.26.176.0/20 via sendgrid.net TXT     
-                            ip4:159.26.176.0/20                                                     
-                            marketing.glossier.com TXT ip4:167.89.0.0/17 via                        
-                            1.0.89.167.origin.asn.cymru.com TXT 11377 | 167.89.0.0/18 | US | arin | 
-                            2013-10-31 via as11377.asn.cymru.com TXT 11377 | US | arin | 2012-06-28 
-                            | SENDGRID - SendGrid, Inc., US via 1.64.89.167.origin.asn.cymru.com TXT
-                            11377 | 167.89.64.0/19 | US | arin | 2013-10-31 via                     
-                            1.96.89.167.origin.asn.cymru.com TXT 11377 | 167.89.96.0/20 | US | arin 
-                            | 2013-10-31                                                            
-                            marketing.glossier.com TXT ip4:168.245.0.0/17 via                       
-                            1.0.245.168.origin.asn.cymru.com TXT 11377 | 168.245.0.0/18 | US | arin 
-                            | 2016-11-10 via as11377.asn.cymru.com TXT 11377 | US | arin |          
-                            2012-06-28 | SENDGRID - SendGrid, Inc., US via                          
-                            1.64.245.168.origin.asn.cymru.com TXT 11377 | 168.245.64.0/20 | US |    
-                            arin | 2016-11-10 via 1.96.245.168.origin.asn.cymru.com TXT 11377 |     
-                            168.245.96.0/19 | US | arin | 2016-11-10                                
-    Setup                   complete: DKIM present, bounce CNAME present, SPF not needed, tracking  
-                            CNAME present                                                           
-  Zendesk  Support and CRM
-    SPF passes its address  ip4:103.151.192.0/23                                                    
-                            mail.zendesk.com TXT ip4:103.151.192.0/23 via                           
-                            103.151.192.1._ip.mta-out1.pod25.apne1.zdsys.com._ehlo.glossier.com._spf
-                            .vali.email TXT v=spf1 include:mail.zendesk.com -all via                
-                            mail.zendesk.com TXT v=spf1 ip4:103.151.192.0/23 ip4:185.12.80.0/22     
-                            ip4:188.172.128.0/20 ip4:192.161.144.0/20 ip4:216.198.0.0/18 ~all       
-    DKIM keys               zendesk1, zendesk2 (both 2048 bit, by CNAME)                            
-                            zendesk1._domainkey.glossier.com TXT v=DKIM1; t=s (strict); n=core;     
-                            k=rsa; p=MIIBIjANBgkq..., 2048-bit, fp 45ce096f162d5ec4 via             
-                            zendesk1._domainkey.zendesk.com                                         
-                            zendesk2._domainkey.glossier.com TXT v=DKIM1; t=s (strict); n=core;     
-                            k=rsa; p=MIIBIjANBgkq..., 2048-bit, fp c5fa8a017cd8c5a5 via             
-                            zendesk2._domainkey.zendesk.com                                         
-    Setup                   complete: SPF present, DKIM present                                     
+FIX THESE
+  1 ▲ Two DKIM keys at glossier.com are 1024-bit: mandrill (Mandrill) and s2 (SendGrid)             
+      Some receivers already treat 1024-bit RSA keys as weak. Rotate to 2048-bit.                   
+        mandrill._domainkey.glossier.com TXT v=DKIM1; k=rsa; p=MIGfMA0GCSqG..., 1024-bit, fp        
+        9cee89b6f986543a                                                                            
+        s2._domainkey.glossier.com TXT k=rsa; t=s (strict); p=MIGfMA0GCSqG..., 1024-bit, fp         
+        493ef754cca287c6 via s2.domainkey.u246655.wl156.sendgrid.net                                
+  2 ▲ Google Workspace at receipts.glossier.com has no SPF                                          
+      Its documented setup needs it and the map shows it missing: 209.85.220.41, one of Google      
+      Workspace's addresses, gets softfail at ~all.                                                 
+        receipts.glossier.com TXT ~all                                                              
+  3 ▲ Google Workspace at receipts.glossier.com has no DKIM                                         
+      Its documented setup needs it and the map shows it missing: no key at google._domainkey, a    
+      name with no TXT record; this zone gives that answer for every name that does not exist.      
+        google._domainkey.receipts.glossier.com TXT no record of this type                          
 
-LIKELY
-  Mandrill  Transactional
-    DKIM key  mandrill (1024 bit, named for it)                                                     
-              mandrill._domainkey.glossier.com TXT v=DKIM1; k=rsa; p=MIGfMA0GCSqG..., 1024-bit, fp  
-              9cee89b6f986543a                                                                      
-    Setup     complete: DKIM present (older setup: a key at mandrill; the current setup names mte1  
-              and mte2), bounce CNAME not used (optional, CNAME at 25 labels under glossier.com),   
-              tracking CNAME not used (optional, CNAME at 25 labels under glossier.com)             
+NOTES
+  ·   SPF at glossier.com and receipts.glossier.com is managed through Valimail                     
+      A hosted or macro record can authorize services without naming them, so the services it covers
+      do not show in the record itself.                                                             
+        glossier.com TXT v=spf1 include:%{i}._ip.%{h}._ehlo.%{d}._spf.vali.email ~all               
+        receipts.glossier.com TXT v=spf1 include:receipts.glossier.com._nspf.vali.email             
+        include:%{i}._ip.%{h}._ehlo.%{d}._spf.vali.email ~all                                       
 
-ACCOUNT ONLY
-  Amazon SES  Transactional
-    Verification token  amazonses:awBV5EM6W53p2/Xbg80uJ29zurZnGsMMJcLLLp6vUcY=                 
-                        glossier.com TXT amazonses:awBV5EM6W53p2/Xbg80uJ29zurZnGsMMJcLLLp6vUcY=
+EVIDENCE, SERVICE BY SERVICE
 
-REPORTS GO TO
-  Valimail
+  Google Workspace  ·  Mailbox  ·  receives mail
+    MX                          aspmx.l.google.com, alt1.aspmx.l.google.com and 3 more              
+                                glossier.com MX 10 aspmx.l.google.com                               
+                                glossier.com MX 20 alt1.aspmx.l.google.com                          
+                                glossier.com MX 20 alt2.aspmx.l.google.com                          
+                                glossier.com MX 30 aspmx2.googlemail.com                            
+                                glossier.com MX 30 aspmx3.googlemail.com                            
+    SPF passes its address      ip4:209.85.128.0/17                                                 
+                                _spf.google.com TXT ip4:209.85.128.0/17 via                         
+                                209.85.220.41._ip.mail-sor-f41.google.com._ehlo.glossier.com._spf.va
+                                li.email TXT v=spf1 include:_spf.google.com -all via _spf.google.com
+                                TXT v=spf1 ip4:74.125.0.0/16 ip4:209.85.128.0/17                    
+                                ip6:2001:4860:4864::/56 ip6:2404:6800:4864::/56                     
+                                ip6:2607:f8b0:4864::/56 ip6:2800:3f0:4864::/56                      
+                                ip6:2a00:1450:4864::/56 ip6:2c0f:fb50:4864::/56 ~all                
+    MX for a subdomain's mail   aspmx.l.google.com, alt1.aspmx.l.google.com and 3 more at           
+                                receipts.glossier.com                                               
+                                receipts.glossier.com MX 1 aspmx.l.google.com                       
+                                receipts.glossier.com MX 5 alt1.aspmx.l.google.com                  
+                                receipts.glossier.com MX 5 alt2.aspmx.l.google.com                  
+                                receipts.glossier.com MX 10 alt3.aspmx.l.google.com                 
+                                receipts.glossier.com MX 10 alt4.aspmx.l.google.com                 
+    DKIM key                    google (2048 bit, named for it)                                     
+                                google._domainkey.glossier.com TXT v=DKIM1; k=rsa;                  
+                                p=MIIBIjANBgkq..., 2048-bit, fp 40785b4787f0f30f via glossier.com MX
+                                10 aspmx.l.google.com                                               
+    Setup                       incomplete: SPF present at glossier.com, DKIM present at            
+                                glossier.com, MX present at glossier.com and receipts.glossier.com, 
+                                bounce CNAME not needed at glossier.com and receipts.glossier.com,  
+                                SPF missing at receipts.glossier.com, DKIM missing at               
+                                receipts.glossier.com                                               
+
+  Help Scout  ·  Support and CRM  ·  set up to send
+    SPF passes its address      ip4:52.0.20.102                                                     
+                                helpscoutemail.com TXT ip4:52.0.20.102 via                          
+                                52.0.20.102._ip.mail4.helpscout.net._ehlo.glossier.com._spf.vali.ema
+                                il TXT v=spf1 include:helpscoutemail.com -all via helpscoutemail.com
+                                TXT v=spf1 ip4:54.173.229.38 ip4:52.0.20.102 ip4:54.174.116.32      
+                                ip4:52.2.238.96 ip4:52.20.146.34 ip4:34.198.122.65 ~all             
+    DKIM keys                   strong1, strong2 (both 2048 bit, by CNAME)                          
+                                strong1._domainkey.glossier.com TXT v=DKIM1; k=rsa;                 
+                                p=MIIBIjANBgkq..., 2048-bit, fp bdaef67ee0bd9b30 via                
+                                strong1._domainkey.helpscout.net                                    
+                                strong2._domainkey.glossier.com TXT v=DKIM1; k=rsa;                 
+                                p=MIIBIjANBgkq..., 2048-bit, fp 6d999cc9f7fe9631 via                
+                                strong2._domainkey.helpscout.net                                    
+
+  Klaviyo  ·  Marketing  ·  set up to send
+    DKIM keys                   kl, kl2 (both 2048 bit, by CNAME)                                   
+                                kl._domainkey.glossier.com TXT k=rsa; t=s (strict);                 
+                                p=MIIBIjANBgkq..., 2048-bit, fp 8f7c4abc32a3149e via                
+                                kl.domainkey.u161779.wl030.sendgrid.net                             
+                                kl2._domainkey.glossier.com TXT k=rsa; t=s (strict);                
+                                p=MIIBIjANBgkq..., 2048-bit, fp a8e9604b93b01972 via                
+                                kl2.domainkey.u161779.wl030.sendgrid.net                            
+    Bounce CNAME                send.glossier.com                                                   
+                                send.glossier.com CNAME u161779.wl030.sendgrid.net                  
+    Verification token          klaviyo-site-verification=Sn6eFZ                                    
+                                glossier.com TXT klaviyo-site-verification=Sn6eFZ                   
+    Setup                       complete: DKIM present, bounce CNAME present, SPF not needed        
+
+  Postmark  ·  Transactional  ·  set up to send
+    Bounce CNAME                pm-bounces.glossier.com                       
+                                pm-bounces.glossier.com CNAME pm.mtasv.net    
+    Setup                       complete: SPF not needed, bounce CNAME present
+
+  Salesforce  ·  Support and CRM  ·  set up to send
+    DKIM keys                   salesforce2, salesforce1 (both 2048 bit, by CNAME)                  
+                                salesforce2._domainkey.glossier.com TXT v=DKIM1; p=MIIBIjANBgkq..., 
+                                2048-bit, fp 487730d4106fc223 via                                   
+                                salesforce2.h8cv4t.custdkim.salesforce.com                          
+                                salesforce1._domainkey.glossier.com TXT v=DKIM1; p=MIIBIjANBgkq..., 
+                                2048-bit, fp b89c6f4a80bb10de via                                   
+                                salesforce1.6nkqhl.custdkim.salesforce.com                          
+
+  SendGrid  ·  Transactional  ·  set up to send
+    DKIM keys                   s1 2048 bit, s2 1024 bit (by CNAME)                                 
+                                s1._domainkey.glossier.com TXT k=rsa; t=s (strict);                 
+                                p=MIIBIjANBgkq..., 2048-bit, fp 3d0654c2b22f63e6 via                
+                                s1.domainkey.u246655.wl156.sendgrid.net                             
+                                s2._domainkey.glossier.com TXT k=rsa; t=s (strict);                 
+                                p=MIGfMA0GCSqG..., 1024-bit, fp 493ef754cca287c6 via                
+                                s2.domainkey.u246655.wl156.sendgrid.net                             
+    Tracking CNAME              link.glossier.com                                                   
+                                link.glossier.com CNAME sendgrid.net                                
+    MX for bounces              mx.sendgrid.net, mx2.sendgrid.net at marketing.glossier.com and     
+                                send.glossier.com                                                   
+                                marketing.glossier.com MX 10 mx.sendgrid.net                        
+                                marketing.glossier.com MX 20 mx2.sendgrid.net                       
+                                send.glossier.com MX 20 mx.sendgrid.net                             
+    SPF                         include:ab.sendgrid.net, include:sendgrid.net at                    
+                                marketing.glossier.com and send.glossier.com                        
+                                marketing.glossier.com TXT include:ab.sendgrid.net                  
+                                send.glossier.com TXT include:sendgrid.net                          
+    SPF ranges                  ip4:208.117.48.0/20, ip4:50.31.32.0/19 and 9 more at                
+                                marketing.glossier.com                                              
+                                marketing.glossier.com TXT ip4:208.117.48.0/20 via sendgrid.net TXT 
+                                ip4:208.117.48.0/20                                                 
+                                marketing.glossier.com TXT ip4:50.31.32.0/19 via sendgrid.net TXT   
+                                ip4:50.31.32.0/19                                                   
+                                marketing.glossier.com TXT ip4:198.37.144.0/20 via sendgrid.net TXT 
+                                ip4:198.37.144.0/20                                                 
+                                marketing.glossier.com TXT ip4:198.21.0.0/21 via sendgrid.net TXT   
+                                ip4:198.21.0.0/21                                                   
+                                marketing.glossier.com TXT ip4:192.254.112.0/20 via sendgrid.net TXT
+                                ip4:192.254.112.0/20                                                
+                                marketing.glossier.com TXT ip4:149.72.0.0/16 via sendgrid.net TXT   
+                                ip4:149.72.0.0/16                                                   
+                                marketing.glossier.com TXT ip4:159.183.0.0/16 via sendgrid.net TXT  
+                                ip4:159.183.0.0/16                                                  
+                                marketing.glossier.com TXT ip4:134.128.64.0/18 via sendgrid.net TXT 
+                                ip4:134.128.64.0/18                                                 
+                                marketing.glossier.com TXT ip4:159.26.176.0/20 via sendgrid.net TXT 
+                                ip4:159.26.176.0/20                                                 
+                                marketing.glossier.com TXT ip4:167.89.0.0/17 via                    
+                                1.0.89.167.origin.asn.cymru.com TXT 11377 | 167.89.0.0/18 | US |    
+                                arin | 2013-10-31 via as11377.asn.cymru.com TXT 11377 | US | arin | 
+                                2012-06-28 | SENDGRID - SendGrid, Inc., US via                      
+                                1.64.89.167.origin.asn.cymru.com TXT 11377 | 167.89.64.0/19 | US |  
+                                arin | 2013-10-31 via 1.96.89.167.origin.asn.cymru.com TXT 11377 |  
+                                167.89.96.0/20 | US | arin | 2013-10-31                             
+                                marketing.glossier.com TXT ip4:168.245.0.0/17 via                   
+                                1.0.245.168.origin.asn.cymru.com TXT 11377 | 168.245.0.0/18 | US |  
+                                arin | 2016-11-10 via as11377.asn.cymru.com TXT 11377 | US | arin | 
+                                2012-06-28 | SENDGRID - SendGrid, Inc., US via                      
+                                1.64.245.168.origin.asn.cymru.com TXT 11377 | 168.245.64.0/20 | US |
+                                arin | 2016-11-10 via 1.96.245.168.origin.asn.cymru.com TXT 11377 | 
+                                168.245.96.0/19 | US | arin | 2016-11-10                            
+    Setup                       complete: DKIM present, bounce CNAME present, SPF not needed,       
+                                tracking CNAME present                                              
+
+  Zendesk  ·  Support and CRM  ·  set up to send
+    SPF passes its address      ip4:103.151.192.0/23                                                
+                                mail.zendesk.com TXT ip4:103.151.192.0/23 via                       
+                                103.151.192.1._ip.mta-out1.pod25.apne1.zdsys.com._ehlo.glossier.com.
+                                _spf.vali.email TXT v=spf1 include:mail.zendesk.com -all via        
+                                mail.zendesk.com TXT v=spf1 ip4:103.151.192.0/23 ip4:185.12.80.0/22 
+                                ip4:188.172.128.0/20 ip4:192.161.144.0/20 ip4:216.198.0.0/18 ~all   
+    DKIM keys                   zendesk1, zendesk2 (both 2048 bit, by CNAME)                        
+                                zendesk1._domainkey.glossier.com TXT v=DKIM1; t=s (strict); n=core; 
+                                k=rsa; p=MIIBIjANBgkq..., 2048-bit, fp 45ce096f162d5ec4 via         
+                                zendesk1._domainkey.zendesk.com                                     
+                                zendesk2._domainkey.glossier.com TXT v=DKIM1; t=s (strict); n=core; 
+                                k=rsa; p=MIIBIjANBgkq..., 2048-bit, fp c5fa8a017cd8c5a5 via         
+                                zendesk2._domainkey.zendesk.com                                     
+    Setup                       complete: SPF present, DKIM present                                 
+
+  Mandrill  ·  Transactional  ·  likely
+    DKIM key                    mandrill (1024 bit, named for it)                                   
+                                mandrill._domainkey.glossier.com TXT v=DKIM1; k=rsa;                
+                                p=MIGfMA0GCSqG..., 1024-bit, fp 9cee89b6f986543a                    
+    Setup                       complete: DKIM present (older setup: a key at mandrill; the current 
+                                setup names mte1 and mte2), bounce CNAME not used (optional, CNAME  
+                                at 25 labels under glossier.com), tracking CNAME not used (optional,
+                                CNAME at 25 labels under glossier.com)                              
+
+  Amazon SES  ·  Transactional  ·  account only
+    Verification token          amazonses:awBV5EM6W53p2/Xbg80uJ29zurZnGsMMJcLLLp6vUcY=              
+                                glossier.com TXT                                                    
+                                amazonses:awBV5EM6W53p2/Xbg80uJ29zurZnGsMMJcLLLp6vUcY=              
 
 NOT RECOGNISED
   CNAME at mail: ghs.googlehosted.com
@@ -200,42 +216,39 @@ NOT RECOGNISED
   CNAME at go: cname.short.io
     go.glossier.com CNAME cname.short.io
 
-NOT CHECKED
-  DKIM selectors at marketing, receipts and send.glossier.com: 82 of 109 not asked at each. The     
-  first 27 were asked, plus any the name's own SPF, MX or delegation points to (cap 27).            
-
-WHAT WAS ASKED
-  739 lookups at 4 names
-  glossier.com: 109 DKIM selectors, 25 CNAME labels, 1 page
-    Pages:                                                                                          
+HOW THIS WAS CHECKED
+  Asked 739 lookups at 4 names:
+    glossier.com: 109 DKIM selectors, 25 CNAME labels, 1 page
+    marketing.glossier.com: 27 DKIM selectors
+    receipts.glossier.com: 27 DKIM selectors
+    send.glossier.com: 27 DKIM selectors
+  Not checked: DKIM selectors at marketing, receipts and send.glossier.com: 82 of 109 not asked at  
+  each. The first 27 were asked, plus any the name's own SPF, MX or delegation points to (cap 27).  
+  Not run: the website: web checks were turned off (--no-web)
+  Not run: certificate transparency, crt.sh: read only with --ct (it also holds expired             
+  certificates)                                                                                     
+    glossier.com, Pages:                                                                            
     https://api.certspotter.com/v1/issuances?domain=glossier.com&include_subdomains=true&expand=dns_
     names                                                                                           
-    CNAME labels: bounce, bounces, em, email, mail, send, mta, rp, pm-bounces, links, link, click,  
-    track, tracking, url, go, autodiscover, cf-bounce, eversrv, fwdkim1, bnc3, bounces.cloud.em,    
-    bounces.cloud2.em, outbound.intercom, atlassian-bounces                                         
-    DKIM selectors: acdkim1, acdkim2, ses, aweber_key_a, aweber_key_b, aweber_key_c, brevo, brevo1, 
-    brevo2, cm, cf2024-1, ctct1, ctct2, krs, e2ma-k1, e2ma-k2, e2ma-k3, everlytickey1,              
-    everlytickey2, fm2, fm1, fm3, mesmtp, secureserver1, secureserver2, google, gapps, gor, strong1,
-    strong2, hs1, hs2, intercom, s1-ionos, s42582890, s2-ionos, cka, kl, kl1, kl2, km1, km2, k2, k1,
-    k3, litesrv, mg, mailgun, mg1, pdk1, pdk2, mailjet, mailpoet2, mailpoet1, mandrill, mte1, mte2, 
-    marketo, mkto, mkto1, selector1, selector2, mimecast, mimecast20190719, pepipost, pp1,          
-    protonmail, protonmail2, protonmail3, resend, sailthru, salesforce, salesforce2, salesforce1,   
-    sf, sf1, sf2, sfdc, 200608, pardot, sfmc, s1, s2, smtpapi, scph0819, sparkpost, squarespace,    
-    zendesk1, zendesk2, zoho, api, default, dk, dkim, dkim1, dkim2, email, k, key, key1, key2, mail,
-    mta, mx, pm, s, selector, smtp, sp                                                              
-  marketing.glossier.com: 27 DKIM selectors
-    DKIM selectors: s1, s2, smtpapi, acdkim1, acdkim2, ses, aweber_key_a, aweber_key_b,             
+    glossier.com, CNAME labels: bounce, bounces, em, email, mail, send, mta, rp, pm-bounces, links, 
+    link, click, track, tracking, url, go, autodiscover, cf-bounce, eversrv, fwdkim1, bnc3,         
+    bounces.cloud.em, bounces.cloud2.em, outbound.intercom, atlassian-bounces                       
+    glossier.com, DKIM selectors: acdkim1, acdkim2, ses, aweber_key_a, aweber_key_b, aweber_key_c,  
+    brevo, brevo1, brevo2, cm, cf2024-1, ctct1, ctct2, krs, e2ma-k1, e2ma-k2, e2ma-k3,              
+    everlytickey1, everlytickey2, fm2, fm1, fm3, mesmtp, secureserver1, secureserver2, google,      
+    gapps, gor, strong1, strong2, hs1, hs2, intercom, s1-ionos, s42582890, s2-ionos, cka, kl, kl1,  
+    kl2, km1, km2, k2, k1, k3, litesrv, mg, mailgun, mg1, pdk1, pdk2, mailjet, mailpoet2, mailpoet1,
+    mandrill, mte1, mte2, marketo, mkto, mkto1, selector1, selector2, mimecast, mimecast20190719,   
+    pepipost, pp1, protonmail, protonmail2, protonmail3, resend, sailthru, salesforce, salesforce2, 
+    salesforce1, sf, sf1, sf2, sfdc, 200608, pardot, sfmc, s1, s2, smtpapi, scph0819, sparkpost,    
+    squarespace, zendesk1, zendesk2, zoho, api, default, dk, dkim, dkim1, dkim2, email, k, key,     
+    key1, key2, mail, mta, mx, pm, s, selector, smtp, sp                                            
+    marketing.glossier.com, DKIM selectors: s1, s2, smtpapi, acdkim1, acdkim2, ses, aweber_key_a,   
+    aweber_key_b, aweber_key_c, brevo, brevo1, brevo2, cm, cf2024-1, ctct1, ctct2, krs, e2ma-k1,    
+    e2ma-k2, e2ma-k3, everlytickey1, everlytickey2, fm2, fm1, fm3, mesmtp, secureserver1            
+    receipts.glossier.com, DKIM selectors: acdkim1, acdkim2, ses, aweber_key_a, aweber_key_b,       
     aweber_key_c, brevo, brevo1, brevo2, cm, cf2024-1, ctct1, ctct2, krs, e2ma-k1, e2ma-k2, e2ma-k3,
-    everlytickey1, everlytickey2, fm2, fm1, fm3, mesmtp, secureserver1                              
-  receipts.glossier.com: 27 DKIM selectors
-    DKIM selectors: acdkim1, acdkim2, ses, aweber_key_a, aweber_key_b, aweber_key_c, brevo, brevo1, 
-    brevo2, cm, cf2024-1, ctct1, ctct2, krs, e2ma-k1, e2ma-k2, e2ma-k3, everlytickey1,              
-    everlytickey2, fm2, fm1, fm3, mesmtp, secureserver1, secureserver2, google, gapps               
-  send.glossier.com: 27 DKIM selectors
-    DKIM selectors: s1, s2, smtpapi, acdkim1, acdkim2, ses, aweber_key_a, aweber_key_b,             
-    aweber_key_c, brevo, brevo1, brevo2, cm, cf2024-1, ctct1, ctct2, krs, e2ma-k1, e2ma-k2, e2ma-k3,
-    everlytickey1, everlytickey2, fm2, fm1, fm3, mesmtp, secureserver1                              
-
-NOT RUN
-  the website: web checks were turned off (--no-web)
-  certificate transparency, crt.sh: read only with --ct (it also holds expired certificates)
+    everlytickey1, everlytickey2, fm2, fm1, fm3, mesmtp, secureserver1, secureserver2, google, gapps
+    send.glossier.com, DKIM selectors: s1, s2, smtpapi, acdkim1, acdkim2, ses, aweber_key_a,        
+    aweber_key_b, aweber_key_c, brevo, brevo1, brevo2, cm, cf2024-1, ctct1, ctct2, krs, e2ma-k1,    
+    e2ma-k2, e2ma-k3, everlytickey1, everlytickey2, fm2, fm1, fm3, mesmtp, secureserver1            

@@ -1,80 +1,79 @@
-╭───────────────────────────────────────────────────────────────────────────────╮
-│ mills-reeve.com   5 sending services                                          │
-│ 629 lookups in 0.0 s over Google DNS over HTTPS, checked 2026-10-12 01:24 UTC │
-╰───────────────────────────────────────────────────────────────────────────────╯
-Mimecast stands in front of the domain's mail as a security gateway, so the mailbox provider is not 
-visible from MX.
-Four other services are set up to send as the domain: one commerce and apps (Docebo), one support 
-and CRM (Freshdesk), one mailbox (Microsoft 365), one transactional (SendGrid).
-DMARC reports go to Mimecast DMARC Analyzer.
-Not checked: the website (turned off), DKIM selectors past the first 27 on two subdomains, and the 
-crt.sh certificate log (read only with --ct).
+╭──────────────────────────────────────────────────────────────────────────────────╮
+│  mills-reeve.com                                                                 │
+│  5 services send email as this domain   ·   2 things to fix                      │
+│  checked 2026-10-12 01:24 UTC · 629 lookups in 0.0 s over Google DNS over HTTPS  │
+╰──────────────────────────────────────────────────────────────────────────────────╯
 
-NEEDS ATTENTION
-  ● The s2 key at mills-reeve.com is 1024-bit
-    Some receivers already treat 1024-bit RSA keys as weak. Rotate to 2048-bit.
-  ● Microsoft 365 at mills-reeve.com has no DKIM
-    Its documented setup needs it and the map shows it missing: no key at selector1._domainkey or   
-    selector2._domainkey, names with no TXT record; this zone gives that answer for every name that 
-    does not exist.                                                                                 
-  ● MX at mills-reeve.com points at Mimecast, a security gateway
-    Inferred from the MX records: a security gateway filters incoming mail and hands it on to the   
-    server that holds the mailboxes, and MX records do not say which server that is.                
+  Mimecast stands in front of the domain's mail as a security gateway, so the mailbox provider is   
+  not visible from MX.                                                                              
+  Four other services are set up to send as the domain: one commerce and apps (Docebo), one support 
+  and CRM (Freshdesk), one mailbox (Microsoft 365), one transactional (SendGrid).                   
+  DMARC reports go to Mimecast DMARC Analyzer.
 
-IN USE
-  Mimecast  Security gateway
-    MX     eu-smtp-inbound-1.mimecast.com, eu-smtp-inbound-2.mimecast.com                           
-    SPF    include:eu._netblocks.mimecast.com, include:_netblocks.mimecast.com at mills-reeve.com   
-           and update.mills-reeve.com                                                               
+AT A GLANCE
+  ●  Mimecast       Security gateway   Receives mail                     
+  ●  Docebo         Commerce and apps  Set up to send                    
+  ●  Freshdesk      Support and CRM    Set up to send                    
+  ●  Microsoft 365  Mailbox            Set up to send  ⚠ setup incomplete
+  ●  SendGrid       Transactional      Set up to send  ✓ setup complete  
+  Reports go to Mimecast DMARC Analyzer.
 
-CONFIGURED
-  Docebo  Commerce and apps
-    SPF                 include:docebosaas.com
-  Freshdesk  Support and CRM
-    SPF range           ip4:3.120.181.200/29
-  Microsoft 365  Mailbox
-    SPF                 include:spf.protection.outlook.com
-    Verification token  MS=ms75548982                     
-    Autodiscover CNAME  autodiscover.mills-reeve.com      
-    Setup               incomplete: DKIM missing          
-  SendGrid  Transactional
-    DKIM keys           s1, s2 (1024 and 2048 bit, by CNAME)
-    Setup               complete                            
+FIX THESE
+  1 ▲ The SendGrid key s2 at mills-reeve.com is 1024-bit                         
+      Some receivers already treat 1024-bit RSA keys as weak. Rotate to 2048-bit.
+  2 ▲ Microsoft 365 at mills-reeve.com has no DKIM                                                  
+      Its documented setup needs it and the map shows it missing: no key at selector1._domainkey or 
+      selector2._domainkey, names with no TXT record; this zone gives that answer for every name    
+      that does not exist.                                                                          
 
-REPORTS GO TO
-  Mimecast DMARC Analyzer
+NOTES
+  ·   MX at mills-reeve.com points at Mimecast, a security gateway                                  
+      Inferred from the MX records: a security gateway filters incoming mail and hands it on to the 
+      server that holds the mailboxes, and MX records do not say which server that is.              
+
+EVIDENCE, SERVICE BY SERVICE
+
+  Mimecast  ·  Security gateway  ·  receives mail
+    MX                   eu-smtp-inbound-1.mimecast.com, eu-smtp-inbound-2.mimecast.com             
+    SPF                  include:eu._netblocks.mimecast.com, include:_netblocks.mimecast.com at     
+                         mills-reeve.com and update.mills-reeve.com                                 
+
+  Docebo  ·  Commerce and apps  ·  set up to send
+    SPF                  include:docebosaas.com
+
+  Freshdesk  ·  Support and CRM  ·  set up to send
+    SPF range            ip4:3.120.181.200/29
+
+  Microsoft 365  ·  Mailbox  ·  set up to send
+    SPF                  include:spf.protection.outlook.com
+    Verification token   MS=ms75548982                     
+    Autodiscover CNAME   autodiscover.mills-reeve.com      
+    Setup                incomplete: DKIM missing          
+
+  SendGrid  ·  Transactional  ·  set up to send
+    DKIM keys            s1 2048 bit, s2 1024 bit (by CNAME)
+    Setup                complete                           
 
 NOT RECOGNISED
   SPF include: emaileuc.freshservice.com
-    mills-reeve.com TXT include:emaileuc.freshservice.com
   SPF include: fsspfeuc.freshemail.io
-    emaileuc.freshservice.com TXT include:fsspfeuc.freshemail.io
   SPF include: spf-uk.vx-email.com
-    mills-reeve.com TXT include:spf-uk.vx-email.com
   IP address in SPF: 51.145.78.124 (AS8075, Microsoft)
-    mills-reeve.com TXT ip4:51.145.78.124
   2 ranges in AS16509 (Amazon Web Services)
     35.159.219.224/28, 18.199.180.160/27
     fsspfeuc.freshemail.io TXT ip4:35.159.219.224/28
     + 1 more
   IP range in SPF: 193.5.144.0/24 (AS14618, Amazon Web Services)
-    spf-uk.vx-email.com TXT ip4:193.5.144.0/24
   4 addresses in AS2110 (AS-BTIRE - Enet Communications LIMITED, IE)
     193.120.143.138, 193.120.143.134, 193.120.143.70, 193.120.142.176
     mills-reeve.com TXT ip4:193.120.143.138
     + 3 more
   SPF include: spf-uk.vx-email.com  at update.mills-reeve.com
-    update.mills-reeve.com TXT include:spf-uk.vx-email.com
   mail server: mx01.mail.vx-email.com  at update.mills-reeve.com
-    update.mills-reeve.com MX 10 mx01.mail.vx-email.com
   mail server: mx02.mail.vx-email.com  at update.mills-reeve.com
-    update.mills-reeve.com MX 20 mx02.mail.vx-email.com
   IP range in SPF: 193.5.144.0/24 (AS14618, Amazon Web Services)  at update.mills-reeve.com
-    spf-uk.vx-email.com TXT ip4:193.5.144.0/24
   SPF include: cecollect.com  at updates.mills-reeve.com
-    updates.mills-reeve.com TXT include:cecollect.com
   mail server: mail.cecollect.com  at updates.mills-reeve.com
-    updates.mills-reeve.com MX 10 mail.cecollect.com
   1 range and 11 addresses in AS2914 (NTT-DATA-2914 - NTT America, Inc., US)  at                    
   updates.mills-reeve.com                                                                           
     62.73.189.146, 83.231.138.176/28, 62.73.162.65, 62.73.162.66, 62.73.162.67, 62.73.162.68,       
@@ -82,18 +81,16 @@ NOT RECOGNISED
     cecollect.com TXT ip4:62.73.189.146
     + 11 more
 
-NOT CHECKED
-  DKIM selectors at update.mills-reeve.com: 80 of 109 not asked. The first 27 were asked, plus any  
-  the name's own SPF, MX or delegation points to (cap 27).                                          
-  DKIM selectors at updates.mills-reeve.com: 82 of 109 not asked. The first 27 were asked, plus any 
-  the name's own SPF, MX or delegation points to (cap 27).                                          
-
-WHAT WAS ASKED
-  629 lookups at 3 names
-  mills-reeve.com: 109 DKIM selectors, 25 CNAME labels, 1 page
-  update.mills-reeve.com: 29 DKIM selectors
-  updates.mills-reeve.com: 27 DKIM selectors
-
-NOT RUN
-  the website: web checks were turned off (--no-web)
-  certificate transparency, crt.sh: read only with --ct (it also holds expired certificates)
+HOW THIS WAS CHECKED
+  Asked 629 lookups at 3 names:
+    mills-reeve.com: 109 DKIM selectors, 25 CNAME labels, 1 page
+    update.mills-reeve.com: 29 DKIM selectors
+    updates.mills-reeve.com: 27 DKIM selectors
+  Not checked: DKIM selectors at update.mills-reeve.com: 80 of 109 not asked. The first 27 were     
+  asked, plus any the name's own SPF, MX or delegation points to (cap 27).                          
+  Not checked: DKIM selectors at updates.mills-reeve.com: 82 of 109 not asked. The first 27 were    
+  asked, plus any the name's own SPF, MX or delegation points to (cap 27).                          
+  Not run: the website: web checks were turned off (--no-web)
+  Not run: certificate transparency, crt.sh: read only with --ct (it also holds expired             
+  certificates)                                                                                     
+  Add --evidence to see every record behind each line.

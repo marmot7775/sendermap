@@ -6,7 +6,7 @@ Google Workspace receives the domain's mail and has a DKIM key in place to sign 
 
 ## Needs attention
 
-- **Eight DKIM keys at casper.com are 1024-bit: google, cm, k1, mandrill, salesforce, s2, smtpapi and mx** (warning). Some receivers already treat 1024-bit RSA keys as weak. Rotate to 2048-bit.
+- **Eight DKIM keys at casper.com are 1024-bit: google (Google Workspace), cm (Campaign Monitor), k1 (Mailchimp), mandrill (Mandrill), salesforce (Salesforce), s2 (SendGrid), smtpapi (SendGrid) and mx** (warning). Some receivers already treat 1024-bit RSA keys as weak. Rotate to 2048-bit.
   - `google._domainkey.casper.com TXT v=DKIM1; k=rsa; p=MIGfMA0GCSqG..., 1024-bit, fp e6d74f2ed99fdbb5`
   - `cm._domainkey.casper.com TXT k=rsa; p=MIGfMA0GCSqG..., 1024-bit, fp 9347c624a5a8cd6f`
   - `k1._domainkey.casper.com TXT k=rsa; p=MIGfMA0GCSqG..., 1024-bit, fp 53d7bb0466c8346d via dkim.mcsv.net`
@@ -15,13 +15,11 @@ Google Workspace receives the domain's mail and has a DKIM key in place to sign 
   - `s2._domainkey.casper.com TXT k=rsa; t=s (strict); p=MIGfMA0GCSqG..., 1024-bit, fp ea13ef38e66c6769 via s2.domainkey.u895984.wl235.sendgrid.net`
   - `smtpapi._domainkey.casper.com TXT k=rsa; t=s (strict); p=MIGfMA0GCSqG..., 1024-bit, fp 303963420cfee1c6`
   - `mx._domainkey.casper.com TXT v=DKIM1; k=rsa; p=MIGfMA0GCSqG..., 1024-bit, fp 273e0630e2eb6478`
-- **Google Workspace at e.casper.com has no SPF** (warning). Its documented setup needs it and the map shows it missing: the record does not authorize _spf.google.com.
+- **Google Workspace at e.casper.com and mail.casper.com has no SPF** (warning). Its documented setup needs it and the map shows it missing: the record does not authorize _spf.google.com.
   - `e.casper.com TXT v=spf1 include:mailgun.org ~all`
-- **Google Workspace at e.casper.com has no DKIM** (warning). Its documented setup needs it and the map shows it missing: no key at google._domainkey, a name that does not exist.
-  - `google._domainkey.e.casper.com TXT no such name`
-- **Google Workspace at mail.casper.com has no SPF** (warning). Its documented setup needs it and the map shows it missing: the record does not authorize _spf.google.com.
   - `mail.casper.com TXT v=spf1 include:cust-spf.exacttarget.com -all`
-- **Google Workspace at mail.casper.com has no DKIM** (warning). Its documented setup needs it and the map shows it missing: no key at google._domainkey, a name that does not exist.
+- **Google Workspace at e.casper.com and mail.casper.com has no DKIM** (warning). Its documented setup needs it and the map shows it missing: no key at google._domainkey, a name that does not exist.
+  - `google._domainkey.e.casper.com TXT no such name`
   - `google._domainkey.mail.casper.com TXT no such name`
 - **Google Workspace at orders.casper.com has no SPF** (warning). Its documented setup needs it and the map shows it missing: no SPF record.
   - `orders.casper.com TXT no record of this type`
@@ -49,7 +47,7 @@ Google Workspace receives the domain's mail and has a DKIM key in place to sign 
 | Q4 | Commerce and apps | Configured | SPF: include:_spf.q4press.com |  |
 | Salesforce | Support and CRM | Configured | SPF: include:_spf.salesforce.com; DKIM key: salesforce (1024 bit, named for it) |  |
 | Salesforce Marketing Cloud Engagement (mail.casper.com) | Marketing | Configured | SPF: include:cust-spf.exacttarget.com; Delegated by NS: mail.casper.com |  |
-| SendGrid | Transactional | Configured | DKIM keys: s1, s2 (1024 and 2048 bit, by CNAME); DKIM key: smtpapi (1024 bit, named for it) | setup complete: DKIM present, bounce CNAME not used (optional, CNAME at 25 labels under casper.com), SPF not needed, tracking CNAME not used (optional, CNAME at 25 labels under casper.com) |
+| SendGrid | Transactional | Configured | DKIM keys: s1 2048 bit, s2 1024 bit (by CNAME); DKIM key: smtpapi (1024 bit, named for it) | setup complete: DKIM present, bounce CNAME not used (optional, CNAME at 25 labels under casper.com), SPF not needed, tracking CNAME not used (optional, CNAME at 25 labels under casper.com) |
 | Customer.io (e.casper.com) | Marketing | Likely | DKIM key: krs (2048 bit, named for it) | setup complete: tracking CNAME not checked (no label was asked at e.casper.com) |
 | Microsoft 365 | Mailbox | Account only | Verification token: MS=ms55520198 | setup incomplete: SPF missing (the record does not authorize spf.protection.outlook.com), DKIM missing (no key at selector1._domainkey or selector2._domainkey, names with no TXT record; this zone gives that answer for every name that does not exist), MX not used (optional, MX at casper.com), bounce CNAME not needed |
 

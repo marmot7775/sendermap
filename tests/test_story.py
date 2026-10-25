@@ -378,7 +378,10 @@ def test_every_view_carries_the_story() -> None:
     text.render(mapped, console)
     shown = console.export_text().splitlines()
     said = story.sentences(mapped)
-    assert len(said) > 1 and shown[4 : 4 + len(said)] == said  # under the panel, one per line
+    # Under the panel and a blank line, one per line, without what was not checked, which the
+    # terminal says in full under HOW THIS WAS CHECKED.
+    assert said[-1].startswith("Not checked")
+    assert len(said) > 2 and [s.strip() for s in shown[6 : 6 + len(said) - 1]] == said[:-1]
     md = markdown.render(mapped).split("\n")
     assert md[0] == f"# Sendermap: {DOMAIN}" and md[4] == mapped.story  # under the counts
     assert mapped.to_dict()["story"] == mapped.story

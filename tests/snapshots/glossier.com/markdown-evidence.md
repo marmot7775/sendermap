@@ -6,16 +6,15 @@ Google Workspace receives the domain's mail and has a DKIM key in place to sign 
 
 ## Needs attention
 
-- **Two DKIM keys at glossier.com are 1024-bit: mandrill and s2** (warning). Some receivers already treat 1024-bit RSA keys as weak. Rotate to 2048-bit.
+- **Two DKIM keys at glossier.com are 1024-bit: mandrill (Mandrill) and s2 (SendGrid)** (warning). Some receivers already treat 1024-bit RSA keys as weak. Rotate to 2048-bit.
   - `mandrill._domainkey.glossier.com TXT v=DKIM1; k=rsa; p=MIGfMA0GCSqG..., 1024-bit, fp 9cee89b6f986543a`
   - `s2._domainkey.glossier.com TXT k=rsa; t=s (strict); p=MIGfMA0GCSqG..., 1024-bit, fp 493ef754cca287c6 via s2.domainkey.u246655.wl156.sendgrid.net`
 - **Google Workspace at receipts.glossier.com has no SPF** (warning). Its documented setup needs it and the map shows it missing: 209.85.220.41, one of Google Workspace's addresses, gets softfail at ~all.
   - `receipts.glossier.com TXT ~all`
 - **Google Workspace at receipts.glossier.com has no DKIM** (warning). Its documented setup needs it and the map shows it missing: no key at google._domainkey, a name with no TXT record; this zone gives that answer for every name that does not exist.
   - `google._domainkey.receipts.glossier.com TXT no record of this type`
-- **SPF at glossier.com is managed through Valimail** (note). A hosted or macro record can authorize services without naming them, so the services it covers do not show in the record itself.
+- **SPF at glossier.com and receipts.glossier.com is managed through Valimail** (note). A hosted or macro record can authorize services without naming them, so the services it covers do not show in the record itself.
   - `glossier.com TXT v=spf1 include:%{i}._ip.%{h}._ehlo.%{d}._spf.vali.email ~all`
-- **SPF at receipts.glossier.com is managed through Valimail** (note). A hosted or macro record can authorize services without naming them, so the services it covers do not show in the record itself.
   - `receipts.glossier.com TXT v=spf1 include:receipts.glossier.com._nspf.vali.email include:%{i}._ip.%{h}._ehlo.%{d}._spf.vali.email ~all`
 
 ## Senders
@@ -27,7 +26,7 @@ Google Workspace receives the domain's mail and has a DKIM key in place to sign 
 | Klaviyo | Marketing | Configured | DKIM keys: kl, kl2 (both 2048 bit, by CNAME); Bounce CNAME: send.glossier.com; Verification token: klaviyo-site-verification=Sn6eFZ | setup complete: DKIM present, bounce CNAME present, SPF not needed |
 | Postmark | Transactional | Configured | Bounce CNAME: pm-bounces.glossier.com | setup complete: SPF not needed, bounce CNAME present |
 | Salesforce | Support and CRM | Configured | DKIM keys: salesforce2, salesforce1 (both 2048 bit, by CNAME) |  |
-| SendGrid | Transactional | Configured | DKIM keys: s1, s2 (1024 and 2048 bit, by CNAME); Tracking CNAME: link.glossier.com; MX for bounces: mx.sendgrid.net, mx2.sendgrid.net at marketing.glossier.com and send.glossier.com; SPF: include:ab.sendgrid.net, include:sendgrid.net at marketing.glossier.com and send.glossier.com; SPF ranges: ip4:208.117.48.0/20, ip4:50.31.32.0/19 and 9 more at marketing.glossier.com | setup complete: DKIM present, bounce CNAME present, SPF not needed, tracking CNAME present |
+| SendGrid | Transactional | Configured | DKIM keys: s1 2048 bit, s2 1024 bit (by CNAME); Tracking CNAME: link.glossier.com; MX for bounces: mx.sendgrid.net, mx2.sendgrid.net at marketing.glossier.com and send.glossier.com; SPF: include:ab.sendgrid.net, include:sendgrid.net at marketing.glossier.com and send.glossier.com; SPF ranges: ip4:208.117.48.0/20, ip4:50.31.32.0/19 and 9 more at marketing.glossier.com | setup complete: DKIM present, bounce CNAME present, SPF not needed, tracking CNAME present |
 | Zendesk | Support and CRM | Configured | SPF passes its address: ip4:103.151.192.0/23; DKIM keys: zendesk1, zendesk2 (both 2048 bit, by CNAME) | setup complete: SPF present, DKIM present |
 | Mandrill | Transactional | Likely | DKIM key: mandrill (1024 bit, named for it) | setup complete: DKIM present (older setup: a key at mandrill; the current setup names mte1 and mte2), bounce CNAME not used (optional, CNAME at 25 labels under glossier.com), tracking CNAME not used (optional, CNAME at 25 labels under glossier.com) |
 | Amazon SES | Transactional | Account only | Verification token: amazonses:awBV5EM6W53p2/Xbg80uJ29zurZnGsMMJcLLLp6vUcY= |  |

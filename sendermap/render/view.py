@@ -42,6 +42,7 @@ __all__ = [
     "CLAIMED_PARTS",
     "NETWORK_VALUE",
     "RESOLVERS",
+    "STATUS",
     "AbsenceView",
     "AskedView",
     "ClaimedPart",
@@ -88,6 +89,13 @@ CLAIMED_PARTS = (
     ("unknown", "Claimed, no service Sendermap knows by that name"),
 )
 _SEVERITY_RANK = {s: i for i, s in enumerate(Severity)}
+# Each tier as a status a reader takes in at a glance. In use comes only from the domain's MX.
+STATUS = {
+    Tier.IN_USE.value: "Receives mail",
+    Tier.CONFIGURED.value: "Set up to send",
+    Tier.LIKELY.value: "Likely",
+    Tier.ACCOUNT_ONLY.value: "Account only",
+}
 
 # ---------------------------------------------------------------- the View
 
@@ -152,6 +160,11 @@ class ServiceView:
     kinds: tuple[KindLine, ...]
     setup: str
     brief: str = ""
+
+    @property
+    def status(self) -> str:
+        """The tier as a plain status: "Receives mail", "Set up to send", "Likely"."""
+        return STATUS.get(self.tier, self.tier)
 
 
 @dataclass(frozen=True, slots=True)
@@ -275,7 +288,9 @@ def view(result: SenderMap, *, evidence: bool) -> View:
             )
     return View(
         head=_head(result),
-        findings=tuple(_findings(_by_severity(result.findings), evidence)),
+        findings=tuple(
+            _merged(_findings(_by_severity(result.findings), evidence, _key_owners(result)))
+        ),
         tiers=tuple(TierView(tier, tuple(services)) for tier, services in tiers.items()),
         reporting=tuple(s.name for s in result.reporting),
         claimed=tuple(
@@ -337,9 +352,27 @@ def _finding(finding: Finding, evidence: bool) -> FindingView:
     return FindingView(finding.severity.value, finding.title, finding.detail, records)
 
 
-def _findings(findings: list[Finding], evidence: bool) -> list[FindingView]:
+def _key_owners(result: SenderMap) -> dict[str, str]:
+    """{the name a DKIM key sits at: the service it is credited to}."""
+    return {
+        c.evidence.name: s.name for s in result.services for c in s.claims if c.kind in _KEY_KINDS
+    }
+
+
+def _owned(selector: str, where: str, owners: dict[str, str]) -> str:
+    """The selector with the service its key belongs to: "s2 (SendGrid)", or the selector alone
+    when no service is credited with it."""
+    owner = owners.get(f"{selector}._domainkey.{where}")
+    return f"{selector} ({owner})" if owner else selector
+
+
+def _findings(
+    findings: list[Finding], evidence: bool, owners: dict[str, str] | None = None
+) -> list[FindingView]:
     """Each finding in order, with the short-key findings at one name and of one size said once,
-    where the first of them stood: "Three DKIM keys at goop.com are 1024-bit: s1, s2 and k1"."""
+    where the first of them stood: "Three DKIM keys at goop.com are 1024-bit: s1, s2 and k1",
+    each key followed by the service it belongs to when one is credited with it."""
+    owners = owners or {}
     groups: dict[tuple[str, str, str], list[tuple[str, Finding]]] = {}
     order: list[Finding | tuple[str, str, str]] = []
     for f in findings:
@@ -359,14 +392,55 @@ def _findings(findings: list[Finding], evidence: bool) -> list[FindingView]:
             shown.append(_finding(item, evidence))
             continue
         members = groups[item]
-        if len(members) == 1:
-            shown.append(_finding(members[0][1], evidence))
-            continue
         where, bits, detail = item
-        selectors = listed(selector for selector, _ in members)
+        if len(members) == 1:
+            selector, only = members[0]
+            owner = owners.get(f"{selector}._domainkey.{where}")
+            single = _finding(only, evidence)
+            if owner:
+                title = f"The {owner} key {selector} at {where} is {bits}-bit"
+                single = FindingView(single.severity, title, single.detail, single.records)
+            shown.append(single)
+            continue
+        selectors = listed(_owned(selector, where, owners) for selector, _ in members)
         title = f"{_count_words(len(members))} DKIM keys at {where} are {bits}-bit: {selectors}"
         records = tuple(str(e) for _, f in members for e in f.evidence) if evidence else ()
         shown.append(FindingView(members[0][1].severity.value, title, detail, records))
+    return shown
+
+
+# A finding's title that holds one name, as in "SPF at glossier.com is managed through Valimail".
+_TITLE_NAME = re.compile(r"^(.*? at )([A-Za-z0-9_-]+(?:\.[A-Za-z0-9_-]+)+)( .*)?$")
+
+
+def _merged(findings: list[FindingView]) -> list[FindingView]:
+    """Findings of one severity and detail whose titles differ only in the name they are at, said
+    once where the first stood: "SPF at glossier.com and receipts.glossier.com is managed
+    through Valimail"."""
+    groups: dict[tuple[str, str, str, str], list[tuple[str, FindingView]]] = {}
+    order: list[FindingView | tuple[str, str, str, str]] = []
+    for f in findings:
+        match = _TITLE_NAME.match(f.title)
+        if match is None:
+            order.append(f)
+            continue
+        before, name, after = match.groups()
+        key = (f.severity, f.detail, before, after or "")
+        if key not in groups:
+            groups[key] = []
+            order.append(key)
+        groups[key].append((name, f))
+    shown: list[FindingView] = []
+    for item in order:
+        if isinstance(item, FindingView):
+            shown.append(item)
+            continue
+        members = groups[item]
+        severity, detail, before, after = item
+        names = listed(dict.fromkeys(name for name, _ in members))
+        records = tuple(r for _, f in members for r in f.records)
+        title = members[0][1].title if len(members) == 1 else f"{before}{names}{after}"
+        shown.append(FindingView(severity, title, detail, records))
     return shown
 
 
@@ -460,11 +534,16 @@ def _strength(kind: Kind, deciding: Kind) -> tuple[int, int]:
 
 def _kind_line(kind: Kind, claims: list[Claim], base: str, evidence: bool) -> KindLine:
     items = list(dict.fromkeys(map(_item, claims)))
+    sizes = _sizes(claims) if kind in _HOW else {}
+    mixed = len(set(sizes.values())) > 1
+    if mixed:
+        items = [f"{item} {sizes[item]} bit" if item in sizes else item for item in items]
     one, several = _LABELS[kind]
     summary = ", ".join(items[:_SHOWN])
     if len(items) > _SHOWN:
         summary = f"{', '.join(items[: _SHOWN - 1])} and {len(items) - _SHOWN + 1} more"
-    notes = [n for n in (_bits(claims) if kind in _HOW else "", _HOW.get(kind, "")) if n]
+    bits = _bits(claims) if kind in _HOW and not mixed else ""
+    notes = [n for n in (bits, _HOW.get(kind, "")) if n]
     if notes:
         summary += f" ({', '.join(notes)})"
     names = list(dict.fromkeys(c.where for c in claims))
@@ -486,6 +565,11 @@ def _item(claim: Claim) -> str:
     if claim.kind in _NAMED_KINDS:
         return found.name
     return found.value
+
+
+def _sizes(claims: list[Claim]) -> dict[str, int]:
+    """{selector: its key size} for each key whose record says its size."""
+    return {_item(c): int(m.group(1)) for c in claims if (m := _BITS.search(c.evidence.value))}
 
 
 def _bits(claims: list[Claim]) -> str:
