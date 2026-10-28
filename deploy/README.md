@@ -1,6 +1,6 @@
 # Deploy
 
-The sendermap.dev website runs on one droplet behind Cloudflare. These
+The sendermap.dns-audit.com website runs on one droplet behind Cloudflare. These
 files are copies of the live ones, so a rebuild starts from what runs
 today. Edit the live file, then copy it back here.
 
@@ -15,8 +15,11 @@ user `marmot7`, on 127.0.0.1:8001. nginx terminates TLS and proxies to it.
 
 ## Not in the repo
 
-- The Cloudflare origin certificate and key. nginx reads them from
-  `/etc/ssl/sendermap-cert.pem` and `/etc/ssl/sendermap-key.pem`.
+- The Cloudflare origin certificates and keys. The site uses the
+  `*.dns-audit.com` one shared with dns-audit, at
+  `/etc/ssl/cloudflare-cert.pem` and `/etc/ssl/cloudflare-key.pem`. The
+  old name, sendermap.dev, keeps its own at `/etc/ssl/sendermap-cert.pem`
+  and `/etc/ssl/sendermap-key.pem` and only redirects (308) to the new one.
 - The `noip` access log format. It is defined in the dns-audit site
   file, which nginx reads first. A server without dns-audit needs that
   `log_format` added before this site loads.

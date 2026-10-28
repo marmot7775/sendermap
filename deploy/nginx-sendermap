@@ -1,15 +1,15 @@
-# sendermap.dev. Same shape as the dns-audit block: Cloudflare in front,
-# TLS terminated here with a Cloudflare origin certificate, app on
-# loopback, access log without the visitor address (the noip format is
+# sendermap.dns-audit.com. Same shape as the dns-audit block: Cloudflare in
+# front, TLS terminated here with the *.dns-audit.com origin certificate, app
+# on loopback, access log without the visitor address (the noip format is
 # defined in sites-enabled/dns-audit, which nginx reads first).
 server {
     listen 443 ssl;
-    server_name sendermap.dev www.sendermap.dev;
+    server_name sendermap.dns-audit.com;
 
     access_log /var/log/nginx/sendermap.access.log noip;
 
-    ssl_certificate /etc/ssl/sendermap-cert.pem;
-    ssl_certificate_key /etc/ssl/sendermap-key.pem;
+    ssl_certificate /etc/ssl/cloudflare-cert.pem;
+    ssl_certificate_key /etc/ssl/cloudflare-key.pem;
 
     add_header X-Content-Type-Options nosniff always;
     add_header X-Frame-Options DENY always;
@@ -54,9 +54,19 @@ server {
     }
 }
 
+# The old name. 308, not 301, so an MCP client's POST stays a POST.
 server {
-    listen 80;
+    listen 443 ssl;
     server_name sendermap.dev www.sendermap.dev;
     access_log /var/log/nginx/sendermap.access.log noip;
-    return 301 https://$host$request_uri;
+    ssl_certificate /etc/ssl/sendermap-cert.pem;
+    ssl_certificate_key /etc/ssl/sendermap-key.pem;
+    return 308 https://sendermap.dns-audit.com$request_uri;
+}
+
+server {
+    listen 80;
+    server_name sendermap.dns-audit.com sendermap.dev www.sendermap.dev;
+    access_log /var/log/nginx/sendermap.access.log noip;
+    return 301 https://sendermap.dns-audit.com$request_uri;
 }
