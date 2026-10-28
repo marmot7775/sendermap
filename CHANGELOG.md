@@ -11,6 +11,8 @@ fails before anything is published.
 
 ## Unreleased
 
+## 0.1.11 (2026-10-28)
+
 - An SPF include or redirect whose target publishes no SPF record, or more than one, is a
   risk: receivers return an error when they reach it (RFC 7208, sections 4.5, 5.2 and 6.1).
   Before, the map said nothing. Proven on cognifit.com, which includes ses.amazonaws.com.
