@@ -11,6 +11,8 @@ fails before anything is published.
 
 ## Unreleased
 
+## 0.1.9 (2026-10-28)
+
 - Google's dated DKIM names (20161025, 20210112, 20221208, 20230601, the keys google.com and
   gmail.com publish) are Google Workspace's backed only names: they credit Google only where the
   domain's MX, SPF or a delegation already shows Google, and a domain that shows Google asks them.
