@@ -4082,7 +4082,7 @@
   },
   {
    "asked": "DKIM selectors at alerts.allbirds.com",
-   "happened": "78 of 110 not asked. The first 27 were asked, plus any the name's own SPF, MX or delegation points to (cap 27).",
+   "happened": "78 of 114 not asked. The first 27 were asked, plus any the name's own SPF, MX or delegation points to (cap 27).",
    "kind": "dkim",
    "count": 78,
    "cap": 27
@@ -4096,7 +4096,7 @@
   },
   {
    "asked": "DKIM selectors at mail.allbirds.com",
-   "happened": "78 of 110 not asked. The first 27 were asked, plus any the name's own SPF, MX or delegation points to (cap 27).",
+   "happened": "78 of 114 not asked. The first 27 were asked, plus any the name's own SPF, MX or delegation points to (cap 27).",
    "kind": "dkim",
    "count": 78,
    "cap": 27
@@ -4286,6 +4286,10 @@
     "mesmtp",
     "secureserver1",
     "secureserver2",
+    "20161025",
+    "20210112",
+    "20221208",
+    "20230601",
     "mailgun",
     "mg",
     "mg1",
@@ -4398,6 +4402,10 @@
     "mesmtp",
     "secureserver1",
     "secureserver2",
+    "20161025",
+    "20210112",
+    "20221208",
+    "20230601",
     "mailgun",
     "mg",
     "mg1",
@@ -4433,7 +4441,7 @@
  "absences": [
   {
    "asked": "DKIM keys at alerts.allbirds.com",
-   "happened": "selectors exist but none of the 32 names asked is one",
+   "happened": "selectors exist but none of the 36 names asked is one",
    "evidence": [
     {
      "name": "_domainkey.alerts.allbirds.com",
@@ -4493,7 +4501,7 @@
   },
   {
    "asked": "DKIM keys at mail.allbirds.com",
-   "happened": "selectors exist but none of the 32 names asked is one",
+   "happened": "selectors exist but none of the 36 names asked is one",
    "evidence": [
     {
      "name": "_domainkey.mail.allbirds.com",

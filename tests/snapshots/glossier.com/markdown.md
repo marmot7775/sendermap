@@ -147,16 +147,17 @@ These records point somewhere Sendermap does not recognise: a service it does no
 
 ## How this was checked
 
-Checked 2026-10-12 01:25 UTC: 750 DNS lookups in 0.0 s over Google DNS over HTTPS.
+Checked 2026-10-12 01:25 UTC: 758 DNS lookups in 0.0 s over Google DNS over HTTPS.
 
-- At glossier.com: 110 possible DKIM key names, 25 service record names, 1 web page.
+- At glossier.com: 114 possible DKIM key names, 25 service record names, 1 web page.
 - At marketing.glossier.com: 27 possible DKIM key names.
-- At receipts.glossier.com: 27 possible DKIM key names.
+- At receipts.glossier.com: 31 possible DKIM key names.
 - At send.glossier.com: 27 possible DKIM key names.
 
 Not checked:
 
-- DKIM selectors at marketing, receipts and send.glossier.com: 83 of 110 not asked at each. The first 27 were asked, plus any the name's own SPF, MX or delegation points to (cap 27).
+- DKIM selectors at marketing and send.glossier.com: 83 of 110 not asked at each. The first 27 were asked, plus any the name's own SPF, MX or delegation points to (cap 27).
+- DKIM selectors at receipts.glossier.com: 83 of 114 not asked. The first 27 were asked, plus any the name's own SPF, MX or delegation points to (cap 27).
 
 Not run:
 

@@ -20,6 +20,7 @@ SHIPPED: dict[str, Any] = json.loads(
 )
 KLAVIYO_NS = ("ns1.klaviyo.com", "ns2.klaviyo.com", "ns3.klaviyo.com", "ns4.klaviyo.com")
 C = catalog.load()
+GOOGLE_DATED = ("20161025", "20210112", "20221208", "20230601")
 
 
 def test_s1_and_s2_are_klaviyos_backed_only_names_with_a_proof() -> None:
@@ -27,6 +28,7 @@ def test_s1_and_s2_are_klaviyos_backed_only_names_with_a_proof() -> None:
         "s1": "Klaviyo",
         "s2": "Klaviyo",
         "mailing": "Optimizely Campaign",
+        **dict.fromkeys(GOOGLE_DATED, "Google Workspace"),
     }
     assert C.backed_only_proofs["s2"].record == "s2._domainkey.klaviyo.com"
     assert C.backs("Klaviyo") >= {"s1", "s2", "kl", "kl1", "kl2"}
@@ -38,6 +40,14 @@ def test_mailing_is_optimizely_campaigns_backed_only_name() -> None:
     assert C.backed_only_proofs["mailing"].record == "mailing._domainkey.galeria.de"
     assert "mailing" in C.backs("Optimizely Campaign")
     assert "mailing" not in C.probe_selectors  # asked only where Optimizely is shown
+
+
+def test_googles_dated_names_credit_google_only_where_google_is_shown() -> None:
+    # Gmail's own keys, published on google.com and gmail.com. A date is a name anyone can pick.
+    assert set(GOOGLE_DATED) <= C.backs("Google Workspace")
+    assert C.dkim_key("20230601", (), backed="Google Workspace") == "Google Workspace"
+    assert C.dkim_key("20230601", (), backed=None) is None
+    assert "20230601" not in C.probe_selectors
 
 
 def test_the_proofs_tool_rechecks_each_backed_only_proof() -> None:

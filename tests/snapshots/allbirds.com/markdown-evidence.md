@@ -322,7 +322,7 @@ These records point somewhere Sendermap does not recognise: a service it does no
 
 Records Sendermap looked for and did not find.
 
-- DKIM keys at alerts.allbirds.com: selectors exist but none of the 32 names asked is one
+- DKIM keys at alerts.allbirds.com: selectors exist but none of the 36 names asked is one
   - `_domainkey.alerts.allbirds.com TXT no record of this type`
 - DKIM keys at bounce.allbirds.com: no selectors exist: _domainkey.bounce.allbirds.com does not exist, so the 27-name sweep was skipped; the 8 names its MX, SPF and delegations point to were asked as a check, and none exists (RFC 8020 section 5)
   - `_domainkey.bounce.allbirds.com TXT no such name`
@@ -332,25 +332,25 @@ Records Sendermap looked for and did not find.
   - `sendermap-wildcard-check._domainkey.email.allbirds.com TXT no such name`
 - DKIM keys at info.allbirds.com: selectors exist but none of the 27 names asked is one
   - `_domainkey.info.allbirds.com TXT no record of this type`
-- DKIM keys at mail.allbirds.com: selectors exist but none of the 32 names asked is one
+- DKIM keys at mail.allbirds.com: selectors exist but none of the 36 names asked is one
   - `_domainkey.mail.allbirds.com TXT no record of this type`
 
 ## How this was checked
 
-Checked 2026-10-12 01:24 UTC: 764 DNS lookups in 0.0 s over Google DNS over HTTPS.
+Checked 2026-10-12 01:24 UTC: 772 DNS lookups in 0.0 s over Google DNS over HTTPS.
 
 - At allbirds.com: 110 possible DKIM key names, 25 service record names, 1 web page.
-- At alerts.allbirds.com: 32 possible DKIM key names.
+- At alerts.allbirds.com: 36 possible DKIM key names.
 - At bounce.allbirds.com: 8 possible DKIM key names.
 - At email.allbirds.com: 13 possible DKIM key names.
 - At info.allbirds.com: 27 possible DKIM key names.
-- At mail.allbirds.com: 32 possible DKIM key names.
+- At mail.allbirds.com: 36 possible DKIM key names.
 
 Not checked:
 
 - certificate log names more than 2 labels deep: 34 not asked. Names up to 2 labels below the domain were asked (cap 2 labels).
 - sending subdomains: TXT, MX and NS at apisdk.allbirds.com, community.allbirds.com, dataplane.allbirds.com, jssdk.allbirds.com, rerun.allbirds.com, www.jssdk.allbirds.com: the domain's DNS servers failed to answer (SERVFAIL), so whether they send is not known
-- DKIM selectors at alerts and mail.allbirds.com: 78 of 110 not asked at each. The first 27 were asked, plus any the name's own SPF, MX or delegation points to (cap 27).
+- DKIM selectors at alerts and mail.allbirds.com: 78 of 114 not asked at each. The first 27 were asked, plus any the name's own SPF, MX or delegation points to (cap 27).
 - DKIM selectors at info.allbirds.com: 83 of 110 not asked. The first 27 were asked, plus any the name's own SPF, MX or delegation points to (cap 27).
 
 Not run:
@@ -363,8 +363,8 @@ Names asked:
 - allbirds.com, Pages: `https://api.certspotter.com/v1/issuances?domain=allbirds.com&include_subdomains=true&expand=dns_names`
 - allbirds.com, CNAME labels: `bounce`, `bounces`, `em`, `email`, `mail`, `send`, `mta`, `rp`, `pm-bounces`, `links`, `link`, `click`, `track`, `tracking`, `url`, `go`, `autodiscover`, `cf-bounce`, `eversrv`, `fwdkim1`, `bnc3`, `bounces.cloud.em`, `bounces.cloud2.em`, `outbound.intercom`, `atlassian-bounces`
 - allbirds.com, DKIM selectors: `selector1`, `selector2`, `acdkim1`, `acdkim2`, `ses`, `aweber_key_a`, `aweber_key_b`, `aweber_key_c`, `brevo`, `brevo1`, `brevo2`, `cm`, `cf2024-1`, `ctct1`, `ctct2`, `krs`, `e2ma-k1`, `e2ma-k2`, `e2ma-k3`, `everlytickey1`, `everlytickey2`, `fm2`, `fm1`, `fm3`, `mesmtp`, `secureserver1`, `secureserver2`, `google`, `gapps`, `gor`, `strong1`, `strong2`, `hs1`, `hs2`, `intercom`, `s1-ionos`, `s42582890`, `s2-ionos`, `cka`, `kl`, `kl1`, `kl2`, `km1`, `km2`, `k2`, `k1`, `k3`, `litesrv`, `mg`, `mailgun`, `mg1`, `pdk1`, `pdk2`, `mailjet`, `mailpoet2`, `mailpoet1`, `mandrill`, `mte1`, `mte2`, `marketo`, `mkto`, `mkto1`, `mimecast`, `mimecast20190719`, `pepipost`, `pp1`, `protonmail`, `protonmail2`, `protonmail3`, `resend`, `sailthru`, `salesforce`, `salesforce2`, `salesforce1`, `sf`, `sf1`, `sf2`, `sfdc`, `200608`, `pardot`, `sfmc`, `s1`, `s2`, `smtpapi`, `scph0819`, `sparkpost`, `squarespace`, `zendesk1`, `zendesk2`, `zoho`, `mail`, `mailru`, `api`, `default`, `dk`, `dkim`, `dkim1`, `dkim2`, `email`, `k`, `key`, `key1`, `key2`, `mta`, `mx`, `pm`, `s`, `selector`, `smtp`, `sp`
-- alerts.allbirds.com, DKIM selectors: `google`, `gapps`, `acdkim1`, `acdkim2`, `ses`, `aweber_key_a`, `aweber_key_b`, `aweber_key_c`, `brevo`, `brevo1`, `brevo2`, `cm`, `cf2024-1`, `ctct1`, `ctct2`, `krs`, `e2ma-k1`, `e2ma-k2`, `e2ma-k3`, `everlytickey1`, `everlytickey2`, `fm2`, `fm1`, `fm3`, `mesmtp`, `secureserver1`, `secureserver2`, `mailgun`, `mg`, `mg1`, `pdk1`, `pdk2`
+- alerts.allbirds.com, DKIM selectors: `google`, `gapps`, `acdkim1`, `acdkim2`, `ses`, `aweber_key_a`, `aweber_key_b`, `aweber_key_c`, `brevo`, `brevo1`, `brevo2`, `cm`, `cf2024-1`, `ctct1`, `ctct2`, `krs`, `e2ma-k1`, `e2ma-k2`, `e2ma-k3`, `everlytickey1`, `everlytickey2`, `fm2`, `fm1`, `fm3`, `mesmtp`, `secureserver1`, `secureserver2`, `20161025`, `20210112`, `20221208`, `20230601`, `mailgun`, `mg`, `mg1`, `pdk1`, `pdk2`
 - bounce.allbirds.com, DKIM selectors: `acdkim1`, `acdkim2`, `ses`, `aweber_key_a`, `aweber_key_b`, `aweber_key_c`, `brevo`, `brevo1`
 - email.allbirds.com, DKIM selectors: `acdkim1`, `acdkim2`, `ses`, `aweber_key_a`, `aweber_key_b`, `aweber_key_c`, `brevo`, `brevo1`, `mailgun`, `mg`, `mg1`, `pdk1`, `pdk2`
 - info.allbirds.com, DKIM selectors: `acdkim1`, `acdkim2`, `ses`, `aweber_key_a`, `aweber_key_b`, `aweber_key_c`, `brevo`, `brevo1`, `brevo2`, `cm`, `cf2024-1`, `ctct1`, `ctct2`, `krs`, `e2ma-k1`, `e2ma-k2`, `e2ma-k3`, `everlytickey1`, `everlytickey2`, `fm2`, `fm1`, `fm3`, `mesmtp`, `secureserver1`, `secureserver2`, `google`, `gapps`
-- mail.allbirds.com, DKIM selectors: `google`, `gapps`, `acdkim1`, `acdkim2`, `ses`, `aweber_key_a`, `aweber_key_b`, `aweber_key_c`, `brevo`, `brevo1`, `brevo2`, `cm`, `cf2024-1`, `ctct1`, `ctct2`, `krs`, `e2ma-k1`, `e2ma-k2`, `e2ma-k3`, `everlytickey1`, `everlytickey2`, `fm2`, `fm1`, `fm3`, `mesmtp`, `secureserver1`, `secureserver2`, `mailgun`, `mg`, `mg1`, `pdk1`, `pdk2`
+- mail.allbirds.com, DKIM selectors: `google`, `gapps`, `acdkim1`, `acdkim2`, `ses`, `aweber_key_a`, `aweber_key_b`, `aweber_key_c`, `brevo`, `brevo1`, `brevo2`, `cm`, `cf2024-1`, `ctct1`, `ctct2`, `krs`, `e2ma-k1`, `e2ma-k2`, `e2ma-k3`, `everlytickey1`, `everlytickey2`, `fm2`, `fm1`, `fm3`, `mesmtp`, `secureserver1`, `secureserver2`, `20161025`, `20210112`, `20221208`, `20230601`, `mailgun`, `mg`, `mg1`, `pdk1`, `pdk2`

@@ -45,7 +45,8 @@ async def test_each_name_records_the_dkim_names_labels_and_pages_asked() -> None
     )
     assert "bounce" in apex.labels and "links" in apex.labels
     sweep = catalog.load().probe_selectors
-    assert "google" in apex.dkim_selectors and set(apex.dkim_selectors) == set(sweep)
+    google = catalog.load().backs("Google Workspace")  # acme.test's MX shows Google
+    assert "google" in apex.dkim_selectors and set(apex.dkim_selectors) == set(sweep) | google
     assert len(sub.dkim_selectors) >= engine.SUBDOMAIN_PROBES and sub.labels == ()
 
 
@@ -80,7 +81,7 @@ async def test_the_terminal_shows_the_gaps_and_what_was_asked() -> None:
     shown = console.export_text()
     how = shown.split("How this was checked")[1]
     assert "\n  Not checked: DMARC: TXT at _dmarc.acme.test: lookup failed" in how
-    assert "\n  At acme.test: 110 possible DKIM key names" in how
+    assert "\n  At acme.test: 114 possible DKIM key names" in how
     assert "DKIM selectors: " not in shown
     console = Console(record=True, width=400)
     text.render(await acme_map(), console, evidence=True)

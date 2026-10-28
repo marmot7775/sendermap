@@ -200,7 +200,7 @@ These records point somewhere Sendermap does not recognise: a service it does no
 
 Records Sendermap looked for and did not find.
 
-- DKIM keys at alerts.allbirds.com: selectors exist but none of the 32 names asked is one
+- DKIM keys at alerts.allbirds.com: selectors exist but none of the 36 names asked is one
   - `_domainkey.alerts.allbirds.com TXT no record of this type`
 - DKIM keys at bounce.allbirds.com: no selectors exist: _domainkey.bounce.allbirds.com does not exist, so the 27-name sweep was skipped; the 8 names its MX, SPF and delegations point to were asked as a check, and none exists (RFC 8020 section 5)
   - `_domainkey.bounce.allbirds.com TXT no such name`
@@ -210,25 +210,25 @@ Records Sendermap looked for and did not find.
   - `sendermap-wildcard-check._domainkey.email.allbirds.com TXT no such name`
 - DKIM keys at info.allbirds.com: selectors exist but none of the 27 names asked is one
   - `_domainkey.info.allbirds.com TXT no record of this type`
-- DKIM keys at mail.allbirds.com: selectors exist but none of the 32 names asked is one
+- DKIM keys at mail.allbirds.com: selectors exist but none of the 36 names asked is one
   - `_domainkey.mail.allbirds.com TXT no record of this type`
 
 ## How this was checked
 
-Checked 2026-10-12 01:24 UTC: 764 DNS lookups in 0.0 s over Google DNS over HTTPS.
+Checked 2026-10-12 01:24 UTC: 772 DNS lookups in 0.0 s over Google DNS over HTTPS.
 
 - At allbirds.com: 110 possible DKIM key names, 25 service record names, 1 web page.
-- At alerts.allbirds.com: 32 possible DKIM key names.
+- At alerts.allbirds.com: 36 possible DKIM key names.
 - At bounce.allbirds.com: 8 possible DKIM key names.
 - At email.allbirds.com: 13 possible DKIM key names.
 - At info.allbirds.com: 27 possible DKIM key names.
-- At mail.allbirds.com: 32 possible DKIM key names.
+- At mail.allbirds.com: 36 possible DKIM key names.
 
 Not checked:
 
 - certificate log names more than 2 labels deep: 34 not asked. Names up to 2 labels below the domain were asked (cap 2 labels).
 - sending subdomains: TXT, MX and NS at apisdk.allbirds.com, community.allbirds.com, dataplane.allbirds.com, jssdk.allbirds.com, rerun.allbirds.com, www.jssdk.allbirds.com: the domain's DNS servers failed to answer (SERVFAIL), so whether they send is not known
-- DKIM selectors at alerts and mail.allbirds.com: 78 of 110 not asked at each. The first 27 were asked, plus any the name's own SPF, MX or delegation points to (cap 27).
+- DKIM selectors at alerts and mail.allbirds.com: 78 of 114 not asked at each. The first 27 were asked, plus any the name's own SPF, MX or delegation points to (cap 27).
 - DKIM selectors at info.allbirds.com: 83 of 110 not asked. The first 27 were asked, plus any the name's own SPF, MX or delegation points to (cap 27).
 
 Not run:

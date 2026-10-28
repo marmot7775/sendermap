@@ -108,8 +108,10 @@ async def test_mx_and_spf_hints_put_google_and_microsoft_selectors_first(
         if rtype == "TXT" and name.endswith("._domainkey.hinted.test")
     ][1:]  # the first is the wildcard canary
     assert set(probed[:4]) == {"gapps", "google", "selector1", "selector2"}
-    # The full sweep, each name once.
-    assert len(probed) == len(set(probed)) == len(catalog.load().probe_selectors)
+    # The full sweep and the names Google's MX backs, each name once.
+    cat = catalog.load()
+    expected = set(cat.probe_selectors) | cat.backs("Google Workspace")
+    assert len(probed) == len(set(probed)) == len(expected)
 
 
 @pytest.mark.parametrize(
@@ -167,8 +169,9 @@ async def test_a_subdomain_whose_mx_is_google_probes_google_before_any_other_rul
         if rtype == "TXT" and name.endswith("._domainkey.mail.subhint.test")
     ][1:]  # the first is the wildcard canary
     assert set(probed[:2]) == {"gapps", "google"}
-    # The budget, then the names the HubSpot include backs that the budget left out.
-    assert set(probed[engine.SUBDOMAIN_PROBES :]) == {"hs1", "hs2"}
+    # The budget, then the names the MX and the HubSpot include back that the budget left out.
+    google = catalog.load().backs("Google Workspace") - {"gapps", "google"}
+    assert set(probed[engine.SUBDOMAIN_PROBES :]) == {"hs1", "hs2"} | google
 
 
 async def test_every_piece_of_evidence_carries_the_runs_date(offline: httpx.AsyncClient) -> None:

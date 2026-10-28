@@ -1,7 +1,7 @@
 <header class="view-head">
 <h2>Who handles email for glossier.com?</h2>
 <p class="summary"><strong class="to-fix">9 services handle email for glossier.com. 3 things need fixing.</strong></p>
-<p class="checked">Checked 2026-10-12 01:25 UTC: 750 DNS lookups in 0.0 s over Google DNS over HTTPS.</p>
+<p class="checked">Checked 2026-10-12 01:25 UTC: 758 DNS lookups in 0.0 s over Google DNS over HTTPS.</p>
 </header>
 <div class="lead">
 <div class="story">
@@ -382,19 +382,20 @@
 </section>
 <section class="view-section how-checked">
 <h3 class="section-title">How this was checked</h3>
-<details class="how"><summary>750 lookups at 4 names · 3 things not checked</summary>
+<details class="how"><summary>758 lookups at 4 names · 4 things not checked</summary>
 <h4>Not checked</h4>
 <ul class="gaps">
-<li>DKIM selectors at <span class="mono">marketing</span>, <span class="mono">receipts</span> and <span class="mono">send.glossier.com</span>: 83 of 110 not asked at each. The first 27 were asked, plus any the name&#x27;s own SPF, MX or delegation points to (cap 27).</li>
+<li>DKIM selectors at <span class="mono">marketing</span> and <span class="mono">send.glossier.com</span>: 83 of 110 not asked at each. The first 27 were asked, plus any the name&#x27;s own SPF, MX or delegation points to (cap 27).</li>
+<li>DKIM selectors at <span class="mono">receipts.glossier.com</span>: 83 of 114 not asked. The first 27 were asked, plus any the name&#x27;s own SPF, MX or delegation points to (cap 27).</li>
 <li>the website. Web checks were turned off (--no-web).</li>
 <li>certificate transparency, crt.sh. Read only with --ct (it also holds expired certificates).</li>
 </ul>
 <h4>What was asked</h4>
-<p class="asked-total">750 lookups at 4 names</p>
+<p class="asked-total">758 lookups at 4 names</p>
 <ul class="gaps">
-<li>At <span class="mono">glossier.com</span>: 110 possible DKIM key names, 25 service record names, 1 web page.</li>
+<li>At <span class="mono">glossier.com</span>: 114 possible DKIM key names, 25 service record names, 1 web page.</li>
 <li>At <span class="mono">marketing.glossier.com</span>: 27 possible DKIM key names.</li>
-<li>At <span class="mono">receipts.glossier.com</span>: 27 possible DKIM key names.</li>
+<li>At <span class="mono">receipts.glossier.com</span>: 31 possible DKIM key names.</li>
 <li>At <span class="mono">send.glossier.com</span>: 27 possible DKIM key names.</li>
 </ul>
 <details class="asked"><summary>Names asked</summary>
@@ -402,7 +403,7 @@
 <ul>
 <li>Pages (1): <span class="mono">https://api.certspotter.com/v1/issuances?domain=glossier.com&amp;include_subdomains=true&amp;expand=dns_names</span></li>
 <li>CNAME labels (25): <span class="mono">bounce, bounces, em, email, mail, send, mta, rp, pm-bounces, links, link, click, track, tracking, url, go, autodiscover, cf-bounce, eversrv, fwdkim1, bnc3, bounces.cloud.em, bounces.cloud2.em, outbound.intercom, atlassian-bounces</span></li>
-<li>DKIM selectors (110): <span class="mono">acdkim1, acdkim2, ses, aweber_key_a, aweber_key_b, aweber_key_c, brevo, brevo1, brevo2, cm, cf2024-1, ctct1, ctct2, krs, e2ma-k1, e2ma-k2, e2ma-k3, everlytickey1, everlytickey2, fm2, fm1, fm3, mesmtp, secureserver1, secureserver2, google, gapps, gor, strong1, strong2, hs1, hs2, intercom, s1-ionos, s42582890, s2-ionos, cka, kl, kl1, kl2, km1, km2, k2, k1, k3, litesrv, mg, mailgun, mg1, pdk1, pdk2, mailjet, mailpoet2, mailpoet1, mandrill, mte1, mte2, marketo, mkto, mkto1, selector1, selector2, mimecast, mimecast20190719, pepipost, pp1, protonmail, protonmail2, protonmail3, resend, sailthru, salesforce, salesforce2, salesforce1, sf, sf1, sf2, sfdc, 200608, pardot, sfmc, s1, s2, smtpapi, scph0819, sparkpost, squarespace, zendesk1, zendesk2, zoho, mail, mailru, api, default, dk, dkim, dkim1, dkim2, email, k, key, key1, key2, mta, mx, pm, s, selector, smtp, sp</span></li>
+<li>DKIM selectors (114): <span class="mono">acdkim1, acdkim2, ses, aweber_key_a, aweber_key_b, aweber_key_c, brevo, brevo1, brevo2, cm, cf2024-1, ctct1, ctct2, krs, e2ma-k1, e2ma-k2, e2ma-k3, everlytickey1, everlytickey2, fm2, fm1, fm3, mesmtp, secureserver1, secureserver2, google, gapps, gor, strong1, strong2, hs1, hs2, intercom, s1-ionos, s42582890, s2-ionos, cka, kl, kl1, kl2, km1, km2, k2, k1, k3, litesrv, mg, mailgun, mg1, pdk1, pdk2, mailjet, mailpoet2, mailpoet1, mandrill, mte1, mte2, marketo, mkto, mkto1, selector1, selector2, mimecast, mimecast20190719, pepipost, pp1, protonmail, protonmail2, protonmail3, resend, sailthru, salesforce, salesforce2, salesforce1, sf, sf1, sf2, sfdc, 200608, pardot, sfmc, s1, s2, smtpapi, scph0819, sparkpost, squarespace, zendesk1, zendesk2, zoho, mail, mailru, api, default, dk, dkim, dkim1, dkim2, email, k, key, key1, key2, mta, mx, pm, s, selector, smtp, sp, 20161025, 20210112, 20221208, 20230601</span></li>
 </ul>
 <h4 class="mono">marketing.glossier.com</h4>
 <ul>
@@ -410,7 +411,7 @@
 </ul>
 <h4 class="mono">receipts.glossier.com</h4>
 <ul>
-<li>DKIM selectors (27): <span class="mono">acdkim1, acdkim2, ses, aweber_key_a, aweber_key_b, aweber_key_c, brevo, brevo1, brevo2, cm, cf2024-1, ctct1, ctct2, krs, e2ma-k1, e2ma-k2, e2ma-k3, everlytickey1, everlytickey2, fm2, fm1, fm3, mesmtp, secureserver1, secureserver2, google, gapps</span></li>
+<li>DKIM selectors (31): <span class="mono">acdkim1, acdkim2, ses, aweber_key_a, aweber_key_b, aweber_key_c, brevo, brevo1, brevo2, cm, cf2024-1, ctct1, ctct2, krs, e2ma-k1, e2ma-k2, e2ma-k3, everlytickey1, everlytickey2, fm2, fm1, fm3, mesmtp, secureserver1, secureserver2, google, gapps, 20161025, 20210112, 20221208, 20230601</span></li>
 </ul>
 <h4 class="mono">send.glossier.com</h4>
 <ul>

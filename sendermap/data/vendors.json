@@ -68,6 +68,38 @@
           "record": "mailing._domainkey.galeria.de",
           "date": "2026-10-22"
         }
+      },
+      "20161025": {
+        "vendor": "Google Workspace",
+        "proof": {
+          "domain": "google.com",
+          "record": "20161025._domainkey.google.com",
+          "date": "2026-10-28"
+        }
+      },
+      "20210112": {
+        "vendor": "Google Workspace",
+        "proof": {
+          "domain": "google.com",
+          "record": "20210112._domainkey.google.com",
+          "date": "2026-10-28"
+        }
+      },
+      "20221208": {
+        "vendor": "Google Workspace",
+        "proof": {
+          "domain": "google.com",
+          "record": "20221208._domainkey.google.com",
+          "date": "2026-10-28"
+        }
+      },
+      "20230601": {
+        "vendor": "Google Workspace",
+        "proof": {
+          "domain": "google.com",
+          "record": "20230601._domainkey.google.com",
+          "date": "2026-10-28"
+        }
       }
     },
     "hosted_spf": [
