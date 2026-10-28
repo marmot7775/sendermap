@@ -28,6 +28,7 @@ mcp = ["fastmcp>=4.1.2,<5", "jsonschema>=4.23"]
 [dependency-groups]
 dev = [
     "pytest>=8",
+    "pytest-cov>=5",
     "pytest-asyncio>=0.24",
     "pytest-socket>=0.7",
     "mypy>=1.13",

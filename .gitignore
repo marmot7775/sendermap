@@ -3,3 +3,5 @@ _site/
 .DS_Store
 *.log
 __pycache__/
+.coverage
+coverage.xml
