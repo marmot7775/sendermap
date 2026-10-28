@@ -65,6 +65,7 @@ def test_tracking_labels_prefer_the_tracking_table() -> None:
 def test_a_web_host_is_a_website_except_at_a_tracking_label() -> None:
     assert C.is_website("mail", "ghs.googlehosted.com")
     assert C.is_website("EM", "em.dell.com.edgekey.net")
+    assert C.is_website("mail", "8185675.group25.sites.hubspot.net")  # HubSpot CMS pages
     assert not C.is_website("link", "d15y5qe1i4b8ob.cloudfront.net")  # a CDN can serve clicks
     assert not C.is_website("mail", "mailrelay.us-west-2.elb.amazonaws.com")
     assert not C.is_website("mail", "googlehosted.com.evil.example")
