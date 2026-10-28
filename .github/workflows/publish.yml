@@ -15,7 +15,7 @@
 #   GitHub identity (OIDC, no secret), once PyPI serves the version: the registry checks the
 #   PyPI package's description for the README's mcp-name line. server.json must name the tag's
 #   version, so a tag whose server.json was not bumped fails here, after PyPI.
-# deploy: upgrades sendermap.dev to the tag's version over SSH. The key in DEPLOY_SSH_KEY may run
+# deploy: upgrades sendermap.dns-audit.com to the tag's version over SSH. The key in DEPLOY_SSH_KEY may run
 #   only deploy/sendermap-upgrade on the droplet, which installs the version from PyPI (retrying
 #   while the index lags), restarts the app and checks it serves that version. DEPLOY_HOST,
 #   DEPLOY_USER and DEPLOY_KNOWN_HOSTS are repository secrets too.
@@ -139,7 +139,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
-      - name: Upgrade sendermap.dev
+      - name: Upgrade sendermap.dns-audit.com
         env:
           KEY: ${{ secrets.DEPLOY_SSH_KEY }}
           KNOWN_HOSTS: ${{ secrets.DEPLOY_KNOWN_HOSTS }}

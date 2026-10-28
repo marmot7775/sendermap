@@ -8,7 +8,7 @@ User=marmot7
 WorkingDirectory=/home/marmot7
 Environment="PATH=/home/marmot7/sendermap-venv/bin"
 # Hosts /mcp answers for besides localhost. Any other Host header is refused.
-Environment="SENDERMAP_MCP_HOSTS=sendermap.dev,www.sendermap.dev"
+Environment="SENDERMAP_MCP_HOSTS=sendermap.dns-audit.com"
 # One worker: the cache, rate limits and in-flight map live in process
 # memory. nginx terminates TLS and proxies to loopback; only 127.0.0.1 is
 # trusted for forwarded headers. The app turns uvicorn's access log off
