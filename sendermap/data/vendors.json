@@ -7450,6 +7450,22 @@
         }
       ],
       "category": "Support and CRM"
+    },
+    "Cheetah Digital": {
+      "category": "Marketing",
+      "delegation_ns": [
+        {
+          "value": "cheetahmail.com",
+          "proof": {
+            "domain": "disneyplus.com",
+            "record": "em.disneyplus.com",
+            "date": "2026-10-28"
+          }
+        }
+      ],
+      "aliases": [
+        "CheetahMail"
+      ]
     }
   }
 }
