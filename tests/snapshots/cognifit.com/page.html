@@ -1,0 +1,323 @@
+<header class="view-head">
+<h2>Who handles email for cognifit.com?</h2>
+<p class="summary"><strong class="to-fix">7 services handle email for cognifit.com. 2 things need fixing.</strong></p>
+<p class="checked">Checked 2026-10-28 12:11 UTC: 414 DNS lookups in 0.0 s over Google DNS over HTTPS.</p>
+</header>
+<div class="lead">
+<div class="story">
+<p>The map shows one risk: SPF at cognifit.com includes ses.amazonaws.com, which publishes no SPF record.</p>
+<p>Google Workspace receives the domain&#x27;s mail and has a DKIM key in place to sign it.</p>
+<p>Four other services are set up to send as the domain: two transactional (Amazon SES, SendGrid), one marketing (Mailchimp), one support and CRM (Salesforce); one more is likely from a DKIM key name alone (Resend).</p>
+<p>One service shows an account and nothing set up to send (Microsoft 365).</p>
+<p class="story-muted">Not checked: the website (turned off) and the crt.sh certificate log (read only with --ct).</p>
+</div>
+</div>
+<section class="view-section glance">
+<h3 class="section-title">Who handles your email</h3>
+<p class="section-intro">Each service below receives or sends email for cognifit.com.</p>
+<ul class="section-key">
+<li>Receives your mail: your MX records deliver the domain&#x27;s mail there.</li>
+<li>Set up to send: its records for sending are in your DNS.</li>
+<li>Likely sends: one clue points to it, such as a key named for it.</li>
+<li>Account only: an account exists, with nothing set up to send.</li>
+</ul>
+<table class="glance">
+<thead><tr><th>Service</th><th>Category</th><th>Status</th><th>Setup</th></tr></thead>
+<tbody>
+<tr>
+<td class="name"><span class="dot in-use"></span><a href="#service-google-workspace">Google Workspace</a></td>
+<td class="category">Mailbox</td>
+<td><span class="badge b-in-use">Receives your mail</span></td>
+<td class="state complete">✓ setup complete</td>
+</tr>
+<tr>
+<td class="name"><span class="dot configured"></span><a href="#service-amazon-ses">Amazon SES</a></td>
+<td class="category">Transactional</td>
+<td><span class="badge b-configured">Set up to send</span></td>
+<td class="state "></td>
+</tr>
+<tr>
+<td class="name"><span class="dot configured"></span><a href="#service-mailchimp">Mailchimp</a></td>
+<td class="category">Marketing</td>
+<td><span class="badge b-configured">Set up to send</span></td>
+<td class="state complete">✓ setup complete</td>
+</tr>
+<tr>
+<td class="name"><span class="dot configured"></span><a href="#service-salesforce">Salesforce</a></td>
+<td class="category">Support and CRM</td>
+<td><span class="badge b-configured">Set up to send</span></td>
+<td class="state "></td>
+</tr>
+<tr>
+<td class="name"><span class="dot configured"></span><a href="#service-sendgrid">SendGrid</a></td>
+<td class="category">Transactional</td>
+<td><span class="badge b-configured">Set up to send</span></td>
+<td class="state complete">✓ setup complete</td>
+</tr>
+<tr>
+<td class="name"><span class="dot likely"></span><a href="#service-resend">Resend</a></td>
+<td class="category">Transactional</td>
+<td><span class="badge b-likely">Likely sends</span></td>
+<td class="state basis">from: DKIM key</td>
+</tr>
+<tr>
+<td class="name"><span class="dot account-only"></span><a href="#service-microsoft-365">Microsoft 365</a></td>
+<td class="category">Mailbox</td>
+<td><span class="badge b-account-only">Account only</span></td>
+<td class="state basis">from: Verification token</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section class="view-section attention">
+<h3 class="section-title">What to fix</h3>
+<p class="section-intro">Problems found in the setup, most serious first.</p>
+<ol class="fixes">
+<li class="finding risk">
+<h4>SPF at cognifit.com includes ses.amazonaws.com, which publishes no SPF record</h4>
+<p>cognifit.com names ses.amazonaws.com, which publishes no SPF record. A receiver that reaches it returns an error (RFC 7208, section 5.2), so SPF fails for every message no term before it matches.</p>
+<details class="records"><summary>Records</summary>
+<ul class="records">
+<li class="ev mono">cognifit.com TXT include:ses.amazonaws.com</li>
+<li class="ev mono">ses.amazonaws.com TXT no such name</li>
+</ul>
+</details>
+</li>
+<li class="finding warning">
+<h4>Four DKIM keys at cognifit.com are 1024-bit: google (Google Workspace), smtpapi (SendGrid), k1 (Mailchimp) and resend (Resend)</h4>
+<p>Some receivers already treat 1024-bit RSA keys as weak. Rotate to 2048-bit.</p>
+<details class="records"><summary>Records</summary>
+<ul class="records">
+<li class="ev mono">google._domainkey.cognifit.com TXT v=DKIM1; k=rsa; p=MIGfMA0GCSqG..., 1024-bit, fp 4e8ac6498dd9c824</li>
+<li class="ev mono">smtpapi._domainkey.cognifit.com TXT k=rsa; t=s (strict); p=MIGfMA0GCSqG..., 1024-bit, fp 303963420cfee1c6</li>
+<li class="ev mono">k1._domainkey.cognifit.com TXT k=rsa; p=MIGfMA0GCSqG..., 1024-bit, fp 53d7bb0466c8346d via dkim.mcsv.net</li>
+<li class="ev mono">resend._domainkey.cognifit.com TXT p=MIGfMA0GCSqG..., 1024-bit, fp 79fdb68489379af3</li>
+</ul>
+</details>
+</li>
+</ol>
+</section>
+<section class="view-section notes">
+<h3 class="section-title">Good to know</h3>
+<p class="section-intro">Nothing to change here. These explain what the map shows.</p>
+<ul class="notes">
+<li><strong>DNS says _domainkey.cognifit.com does not exist, but a key sits under it</strong>. The domain&#x27;s DNS servers answer no such name for _domainkey.cognifit.com, yet google._domainkey.cognifit.com has a key. Under RFC 8020 a no-such-name answer covers every name below it, so a resolver that applies the rule can fail to find the domain&#x27;s DKIM keys. Most resolvers still look them up; the fault is in the DNS host and is theirs to fix. Every selector was asked.
+<details class="records"><summary>Records</summary>
+<ul class="records">
+<li class="ev mono">_domainkey.cognifit.com TXT no such name</li>
+<li class="ev mono">google._domainkey.cognifit.com TXT v=DKIM1; k=rsa; p=MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCSK9vG9EwIOraIciyPJQmF+WQuM3ukHleazmVT6akMyGgYj/QMcQGBe2bbPkdNuQSloTvwGGDg3sTQnzsENpMYfflvfeg0XNk5jV3K0o3AuRQqiRM7UeOlIHGVJHGpTeQMJng22JWPs/ND6fbUZhZuv+FjwA9LgahKzVR8APnaQQIDAQAB</li>
+</ul>
+</details>
+</li>
+<li><strong>Microsoft 365 shows only an account at cognifit.com</strong>. The records name an account (a verification token, an autodiscover CNAME, or a revoked or dangling key) and nothing that sends or receives mail. Is the account still used? If not, remove its records.
+<details class="records"><summary>Records</summary>
+<ul class="records">
+<li class="ev mono">cognifit.com TXT MS=ms53236047</li>
+</ul>
+</details>
+</li>
+</ul>
+</section>
+<section class="view-section tier">
+<h3 class="section-title">The proof, service by service</h3>
+<p class="section-intro">The DNS records behind each service above, for anyone who wants to check them.</p>
+<ul class="section-key">
+<li>MX: where the domain&#x27;s mail is delivered.</li>
+<li>SPF: the list of servers allowed to send as the domain.</li>
+<li>DKIM: a signature key that proves mail really came from the domain.</li>
+<li>Verification token: proves the domain owner set up an account with the service.</li>
+</ul>
+<div class="rows">
+<article class="row" id="service-google-workspace">
+<h4>Google Workspace</h4>
+<p class="meta">Mailbox</p>
+<span class="badge b-in-use">Receives your mail</span>
+<div class="row-body">
+<p class="decider"><span class="kind">MX</span>: aspmx.l.google.com, alt1.aspmx.l.google.com and 5 more</p>
+<ul class="claims">
+<li><span class="kind">SPF</span>: include:_spf.google.com</li>
+<li><span class="kind">DKIM key</span>: google (1024 bit, named for it)</li>
+</ul>
+<p class="setup">setup complete</p>
+<details class="records"><summary>All records</summary>
+<p class="kind">MX</p>
+<ul class="records">
+<li class="ev mono">cognifit.com MX 1 aspmx.l.google.com</li>
+<li class="ev mono">cognifit.com MX 5 alt1.aspmx.l.google.com</li>
+<li class="ev mono">cognifit.com MX 5 alt2.aspmx.l.google.com</li>
+<li class="ev mono">cognifit.com MX 10 aspmx2.googlemail.com</li>
+<li class="ev mono">cognifit.com MX 10 aspmx3.googlemail.com</li>
+<li class="ev mono">cognifit.com MX 10 aspmx4.googlemail.com</li>
+<li class="ev mono">cognifit.com MX 10 aspmx5.googlemail.com</li>
+</ul>
+<p class="kind">SPF</p>
+<ul class="records">
+<li class="ev mono">cognifit.com TXT include:_spf.google.com</li>
+</ul>
+<p class="kind">DKIM key</p>
+<ul class="records">
+<li class="ev mono">google._domainkey.cognifit.com TXT v=DKIM1; k=rsa; p=MIGfMA0GCSqG..., 1024-bit, fp 4e8ac6498dd9c824 via cognifit.com TXT include:_spf.google.com</li>
+</ul>
+<p class="setup">setup complete: SPF present, DKIM present, MX present, bounce CNAME not needed</p>
+</details>
+</div>
+</article>
+<article class="row" id="service-amazon-ses">
+<h4>Amazon SES</h4>
+<p class="meta">Transactional</p>
+<span class="badge b-configured">Set up to send</span>
+<div class="row-body">
+<p class="decider"><span class="kind">SPF</span>: include:amazonses.com at cognifit.com, messages.cognifit.com and send.cognifit.com</p>
+<ul class="claims">
+<li><span class="kind">MX for bounces</span>: feedback-smtp.us-east-1.amazonses.com at messages.cognifit.com and send.cognifit.com</li>
+</ul>
+<details class="records"><summary>All records</summary>
+<p class="kind">SPF</p>
+<ul class="records">
+<li class="ev mono">cognifit.com TXT include:amazonses.com</li>
+<li class="ev mono">messages.cognifit.com TXT include:amazonses.com</li>
+<li class="ev mono">send.cognifit.com TXT include:amazonses.com</li>
+</ul>
+<p class="kind">MX for bounces</p>
+<ul class="records">
+<li class="ev mono">messages.cognifit.com MX 10 feedback-smtp.us-east-1.amazonses.com</li>
+<li class="ev mono">send.cognifit.com MX 10 feedback-smtp.us-east-1.amazonses.com</li>
+</ul>
+</details>
+</div>
+</article>
+<article class="row" id="service-mailchimp">
+<h4>Mailchimp</h4>
+<p class="meta">Marketing</p>
+<span class="badge b-configured">Set up to send</span>
+<div class="row-body">
+<p class="decider"><span class="kind">DKIM key</span>: k1 (1024 bit, by CNAME)</p>
+<p class="setup">setup complete</p>
+<details class="records"><summary>All records</summary>
+<p class="kind">DKIM key</p>
+<ul class="records">
+<li class="ev mono">k1._domainkey.cognifit.com TXT k=rsa; p=MIGfMA0GCSqG..., 1024-bit, fp 53d7bb0466c8346d via dkim.mcsv.net</li>
+</ul>
+<p class="setup">setup complete: DKIM present (older setup: a key at k1; the current setup names k2), SPF not needed, bounce CNAME not needed</p>
+</details>
+</div>
+</article>
+<article class="row" id="service-salesforce">
+<h4>Salesforce</h4>
+<p class="meta">Support and CRM</p>
+<span class="badge b-configured">Set up to send</span>
+<div class="row-body">
+<p class="decider"><span class="kind">SPF</span>: include:_spf.salesforce.com</p>
+<details class="records"><summary>All records</summary>
+<p class="kind">SPF</p>
+<ul class="records">
+<li class="ev mono">cognifit.com TXT include:_spf.salesforce.com</li>
+</ul>
+</details>
+</div>
+</article>
+<article class="row" id="service-sendgrid">
+<h4>SendGrid</h4>
+<p class="meta">Transactional</p>
+<span class="badge b-configured">Set up to send</span>
+<div class="row-body">
+<p class="decider"><span class="kind">SPF</span>: include:sendgrid.net</p>
+<ul class="claims">
+<li><span class="kind">DKIM key</span>: smtpapi (1024 bit, named for it)</li>
+</ul>
+<p class="setup">setup complete</p>
+<details class="records"><summary>All records</summary>
+<p class="kind">SPF</p>
+<ul class="records">
+<li class="ev mono">cognifit.com TXT include:sendgrid.net</li>
+</ul>
+<p class="kind">DKIM key</p>
+<ul class="records">
+<li class="ev mono">smtpapi._domainkey.cognifit.com TXT k=rsa; t=s (strict); p=MIGfMA0GCSqG..., 1024-bit, fp 303963420cfee1c6 via cognifit.com TXT include:sendgrid.net</li>
+</ul>
+<p class="setup">setup complete: DKIM present (older setup: a key at smtpapi; the current setup names s1 and s2), bounce CNAME not used (optional, CNAME at 25 labels under cognifit.com), SPF not needed, tracking CNAME not used (optional, CNAME at 25 labels under cognifit.com)</p>
+</details>
+</div>
+</article>
+<article class="row" id="service-resend">
+<h4>Resend</h4>
+<p class="meta">Transactional</p>
+<span class="badge b-likely">Likely sends</span>
+<div class="row-body">
+<p class="decider"><span class="kind">DKIM key</span>: resend (1024 bit, named for it)</p>
+<details class="records"><summary>All records</summary>
+<p class="kind">DKIM key</p>
+<ul class="records">
+<li class="ev mono">resend._domainkey.cognifit.com TXT p=MIGfMA0GCSqG..., 1024-bit, fp 79fdb68489379af3</li>
+</ul>
+</details>
+</div>
+</article>
+<article class="row" id="service-microsoft-365">
+<h4>Microsoft 365</h4>
+<p class="meta">Mailbox</p>
+<span class="badge b-account-only">Account only</span>
+<div class="row-body">
+<p class="decider"><span class="kind">Verification token</span>: MS=ms53236047</p>
+<p class="setup">setup incomplete: SPF missing (the record does not authorize spf.protection.outlook.com), DKIM missing (no key at selector1._domainkey or selector2._domainkey, names that do not exist)</p>
+<details class="records"><summary>All records</summary>
+<p class="kind">Verification token</p>
+<ul class="records">
+<li class="ev mono">cognifit.com TXT MS=ms53236047</li>
+</ul>
+<p class="setup">setup incomplete: SPF missing (the record does not authorize spf.protection.outlook.com), DKIM missing (no key at selector1._domainkey or selector2._domainkey, names that do not exist), MX not used (optional, MX at cognifit.com), bounce CNAME not needed</p>
+</details>
+</div>
+</article>
+</div>
+</section>
+<section class="view-section unknowns">
+<h3 class="section-title">Not matched to a service</h3>
+<p class="section-intro">These records point somewhere Sendermap does not recognise: a service it does not know yet, or your own servers.</p>
+<ul class="unknowns">
+<li>SPF include: <span class="mono">ses.amazonaws.com</span>
+<span class="ev mono">cognifit.com TXT include:ses.amazonaws.com</span>
+</li>
+</ul>
+</section>
+<section class="view-section absences">
+<h3 class="section-title">Looked for and not found</h3>
+<p class="section-intro">Records Sendermap looked for and did not find.</p>
+<ul class="gaps absences">
+<li><span class="mono">DKIM keys at messages.cognifit.com</span>: no selectors exist: _domainkey.messages.cognifit.com does not exist, so the 27-name sweep was skipped; the 8 names its MX, SPF and delegations point to were asked as a check, and none exists (RFC 8020 section 5)<span class="ev mono">_domainkey.messages.cognifit.com TXT no such name</span><span class="ev mono">sendermap-wildcard-check._domainkey.messages.cognifit.com TXT no such name</span></li>
+<li><span class="mono">DKIM keys at send.cognifit.com</span>: no selectors exist: _domainkey.send.cognifit.com does not exist, so the 27-name sweep was skipped; the 8 names its MX, SPF and delegations point to were asked as a check, and none exists (RFC 8020 section 5)<span class="ev mono">_domainkey.send.cognifit.com TXT no such name</span><span class="ev mono">sendermap-wildcard-check._domainkey.send.cognifit.com TXT no such name</span></li>
+</ul>
+</section>
+<section class="view-section how-checked">
+<h3 class="section-title">How this was checked</h3>
+<details class="how"><summary>414 lookups at 3 names · 2 things not checked</summary>
+<h4>Not checked</h4>
+<ul class="gaps">
+<li>the website. Web checks were turned off (--no-web).</li>
+<li>certificate transparency, crt.sh. Read only with --ct (it also holds expired certificates).</li>
+</ul>
+<h4>What was asked</h4>
+<p class="asked-total">414 lookups at 3 names</p>
+<ul class="gaps">
+<li>At <span class="mono">cognifit.com</span>: 114 possible DKIM key names, 25 service record names, 1 web page.</li>
+<li>At <span class="mono">messages.cognifit.com</span>: 8 possible DKIM key names.</li>
+<li>At <span class="mono">send.cognifit.com</span>: 8 possible DKIM key names.</li>
+</ul>
+<details class="asked"><summary>Names asked</summary>
+<h4 class="mono">cognifit.com</h4>
+<ul>
+<li>Pages (1): <span class="mono">https://api.certspotter.com/v1/issuances?domain=cognifit.com&amp;include_subdomains=true&amp;expand=dns_names</span></li>
+<li>CNAME labels (25): <span class="mono">bounce, bounces, em, email, mail, send, mta, rp, pm-bounces, links, link, click, track, tracking, url, go, autodiscover, cf-bounce, eversrv, fwdkim1, bnc3, bounces.cloud.em, bounces.cloud2.em, outbound.intercom, atlassian-bounces</span></li>
+<li>DKIM selectors (114): <span class="mono">google, gapps, s1, s2, smtpapi, acdkim1, acdkim2, ses, aweber_key_a, aweber_key_b, aweber_key_c, brevo, brevo1, brevo2, cm, cf2024-1, ctct1, ctct2, krs, e2ma-k1, e2ma-k2, e2ma-k3, everlytickey1, everlytickey2, fm2, fm1, fm3, mesmtp, secureserver1, secureserver2, gor, strong1, strong2, hs1, hs2, intercom, s1-ionos, s42582890, s2-ionos, cka, kl, kl1, kl2, km1, km2, k2, k1, k3, litesrv, mg, mailgun, mg1, pdk1, pdk2, mailjet, mailpoet2, mailpoet1, mandrill, mte1, mte2, marketo, mkto, mkto1, selector1, selector2, mimecast, mimecast20190719, pepipost, pp1, protonmail, protonmail2, protonmail3, resend, sailthru, salesforce, salesforce2, salesforce1, sf, sf1, sf2, sfdc, 200608, pardot, sfmc, scph0819, sparkpost, squarespace, zendesk1, zendesk2, zoho, mail, mailru, api, default, dk, dkim, dkim1, dkim2, email, k, key, key1, key2, mta, mx, pm, s, selector, smtp, sp, 20161025, 20210112, 20221208, 20230601</span></li>
+</ul>
+<h4 class="mono">messages.cognifit.com</h4>
+<ul>
+<li>DKIM selectors (8): <span class="mono">acdkim1, acdkim2, ses, aweber_key_a, aweber_key_b, aweber_key_c, brevo, brevo1</span></li>
+</ul>
+<h4 class="mono">send.cognifit.com</h4>
+<ul>
+<li>DKIM selectors (8): <span class="mono">acdkim1, acdkim2, ses, aweber_key_a, aweber_key_b, aweber_key_c, brevo, brevo1</span></li>
+</ul>
+</details>
+</details>
+</section>

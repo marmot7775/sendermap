@@ -30,3 +30,8 @@ website off except for example.com:
 - `glossier.com`: SPF hosted through a Valimail macro include, the only term in the record.
 - `example.com`: no mail footprint (a null MX, SPF `-all`, a revoked wildcard DKIM key), with its
   homepage recorded.
+
+Recorded 2026-10-28 through Google's DNS over HTTPS, `--ct` and the website off:
+
+- `cognifit.com`: an SPF include of `ses.amazonaws.com`, a name that does not exist (Amazon
+  SES's include is `amazonses.com`), so the record errors where a receiver reaches it.

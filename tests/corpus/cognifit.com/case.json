@@ -1,0 +1,8 @@
+{
+ "domain": "cognifit.com",
+ "checked_at": "2026-10-28T12:11:02+00:00",
+ "use_web": false,
+ "use_subdomains": true,
+ "use_ct": false,
+ "resolver": "doh google"
+}

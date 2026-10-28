@@ -310,7 +310,7 @@ class _Walk:
             return _Walked(observed=Observed(gaps=(gap,)))
         records = spf_records(answer)
         if len(records) != 1:
-            return _Walked()
+            return _Walked(observed=Observed(findings=(self._dead(link, answer, records),)))
         # A flattening service (EasyDMARC) copies the domain's own senders into its record,
         # so what is inside still speaks for the domain. Any other service's record is its own.
         flattened = service in self.ctx.catalog.flattening_spf
@@ -326,6 +326,31 @@ class _Walk:
             f"receiver following it loops until it passes {LOOKUP_LIMIT} lookups and returns an "
             "error (RFC 7208, section 4.6.4), so SPF fails.",
             (link.evidence(self.ctx.checked_at),),
+        )
+
+    def _dead(self, link: _Link, answer: Answer, records: list[str]) -> Finding:
+        """An include or redirect whose target publishes no SPF record, or more than one."""
+        at = self.ctx.checked_at
+        verb = "includes" if link.how == "include" else "redirects to"
+        if records:
+            what = f"{len(records)} SPF records"
+            target = tuple(Evidence(link.target, "TXT", r, at) for r in records)
+            rule = "section 4.5"
+        else:
+            what = "no SPF record"
+            target = (
+                Evidence(link.target, "TXT", "no SPF record (v=spf1)", at)
+                if answer.ok
+                else negative(answer, at),
+            )
+            rule = "section 5.2" if link.how == "include" else "section 6.1"
+        return Finding(
+            Severity.RISK,
+            f"SPF at {self.where} {verb} {link.target}, which publishes {what}",
+            f"{link.parent} names {link.target}, which publishes {what}. A receiver that reaches "
+            f"it returns an error (RFC 7208, {rule}), so SPF fails for every message no term "
+            "before it matches.",
+            (link.evidence(at), *target),
         )
 
     def _credit(self, link: _Link, service: str | None) -> _Walked:

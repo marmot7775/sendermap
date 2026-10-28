@@ -1,0 +1,1296 @@
+{
+ "domain": "cognifit.com",
+ "services": [
+  {
+   "name": "Google Workspace",
+   "category": "Mailbox",
+   "tier": "In use",
+   "role": "sender",
+   "claims": [
+    {
+     "service": "Google Workspace",
+     "kind": "receives the domain's mail (MX)",
+     "where": "cognifit.com",
+     "evidence": {
+      "name": "cognifit.com",
+      "rtype": "MX",
+      "value": "1 aspmx.l.google.com",
+      "checked_at": "2026-10-28T12:11:02+00:00"
+     },
+     "supporting": []
+    },
+    {
+     "service": "Google Workspace",
+     "kind": "receives the domain's mail (MX)",
+     "where": "cognifit.com",
+     "evidence": {
+      "name": "cognifit.com",
+      "rtype": "MX",
+      "value": "5 alt1.aspmx.l.google.com",
+      "checked_at": "2026-10-28T12:11:02+00:00"
+     },
+     "supporting": []
+    },
+    {
+     "service": "Google Workspace",
+     "kind": "receives the domain's mail (MX)",
+     "where": "cognifit.com",
+     "evidence": {
+      "name": "cognifit.com",
+      "rtype": "MX",
+      "value": "5 alt2.aspmx.l.google.com",
+      "checked_at": "2026-10-28T12:11:02+00:00"
+     },
+     "supporting": []
+    },
+    {
+     "service": "Google Workspace",
+     "kind": "receives the domain's mail (MX)",
+     "where": "cognifit.com",
+     "evidence": {
+      "name": "cognifit.com",
+      "rtype": "MX",
+      "value": "10 aspmx2.googlemail.com",
+      "checked_at": "2026-10-28T12:11:02+00:00"
+     },
+     "supporting": []
+    },
+    {
+     "service": "Google Workspace",
+     "kind": "receives the domain's mail (MX)",
+     "where": "cognifit.com",
+     "evidence": {
+      "name": "cognifit.com",
+      "rtype": "MX",
+      "value": "10 aspmx3.googlemail.com",
+      "checked_at": "2026-10-28T12:11:02+00:00"
+     },
+     "supporting": []
+    },
+    {
+     "service": "Google Workspace",
+     "kind": "receives the domain's mail (MX)",
+     "where": "cognifit.com",
+     "evidence": {
+      "name": "cognifit.com",
+      "rtype": "MX",
+      "value": "10 aspmx4.googlemail.com",
+      "checked_at": "2026-10-28T12:11:02+00:00"
+     },
+     "supporting": []
+    },
+    {
+     "service": "Google Workspace",
+     "kind": "receives the domain's mail (MX)",
+     "where": "cognifit.com",
+     "evidence": {
+      "name": "cognifit.com",
+      "rtype": "MX",
+      "value": "10 aspmx5.googlemail.com",
+      "checked_at": "2026-10-28T12:11:02+00:00"
+     },
+     "supporting": []
+    },
+    {
+     "service": "Google Workspace",
+     "kind": "included in SPF",
+     "where": "cognifit.com",
+     "evidence": {
+      "name": "cognifit.com",
+      "rtype": "TXT",
+      "value": "include:_spf.google.com",
+      "checked_at": "2026-10-28T12:11:02+00:00"
+     },
+     "supporting": []
+    },
+    {
+     "service": "Google Workspace",
+     "kind": "DKIM key named for it",
+     "where": "cognifit.com",
+     "evidence": {
+      "name": "google._domainkey.cognifit.com",
+      "rtype": "TXT",
+      "value": "v=DKIM1; k=rsa; p=MIGfMA0GCSqG..., 1024-bit, fp 4e8ac6498dd9c824",
+      "checked_at": "2026-10-28T12:11:02+00:00"
+     },
+     "supporting": [
+      {
+       "name": "cognifit.com",
+       "rtype": "TXT",
+       "value": "include:_spf.google.com",
+       "checked_at": "2026-10-28T12:11:02+00:00"
+      }
+     ]
+    }
+   ],
+   "setups": [
+    {
+     "service": "Google Workspace",
+     "where": "cognifit.com",
+     "items": [
+      {
+       "record": "spf",
+       "need": "required",
+       "state": "present",
+       "evidence": [
+        {
+         "name": "cognifit.com",
+         "rtype": "TXT",
+         "value": "include:_spf.google.com",
+         "checked_at": "2026-10-28T12:11:02+00:00"
+        }
+       ],
+       "asked": "TXT at cognifit.com",
+       "detail": ""
+      },
+      {
+       "record": "dkim",
+       "need": "required",
+       "state": "present",
+       "evidence": [
+        {
+         "name": "google._domainkey.cognifit.com",
+         "rtype": "TXT",
+         "value": "v=DKIM1; k=rsa; p=MIGfMA0GCSqG..., 1024-bit, fp 4e8ac6498dd9c824",
+         "checked_at": "2026-10-28T12:11:02+00:00"
+        }
+       ],
+       "asked": "TXT at google._domainkey.cognifit.com",
+       "detail": ""
+      },
+      {
+       "record": "mx",
+       "need": "optional",
+       "state": "present",
+       "evidence": [
+        {
+         "name": "cognifit.com",
+         "rtype": "MX",
+         "value": "1 aspmx.l.google.com",
+         "checked_at": "2026-10-28T12:11:02+00:00"
+        },
+        {
+         "name": "cognifit.com",
+         "rtype": "MX",
+         "value": "5 alt1.aspmx.l.google.com",
+         "checked_at": "2026-10-28T12:11:02+00:00"
+        },
+        {
+         "name": "cognifit.com",
+         "rtype": "MX",
+         "value": "5 alt2.aspmx.l.google.com",
+         "checked_at": "2026-10-28T12:11:02+00:00"
+        },
+        {
+         "name": "cognifit.com",
+         "rtype": "MX",
+         "value": "10 aspmx2.googlemail.com",
+         "checked_at": "2026-10-28T12:11:02+00:00"
+        },
+        {
+         "name": "cognifit.com",
+         "rtype": "MX",
+         "value": "10 aspmx3.googlemail.com",
+         "checked_at": "2026-10-28T12:11:02+00:00"
+        },
+        {
+         "name": "cognifit.com",
+         "rtype": "MX",
+         "value": "10 aspmx4.googlemail.com",
+         "checked_at": "2026-10-28T12:11:02+00:00"
+        },
+        {
+         "name": "cognifit.com",
+         "rtype": "MX",
+         "value": "10 aspmx5.googlemail.com",
+         "checked_at": "2026-10-28T12:11:02+00:00"
+        }
+       ],
+       "asked": "MX at cognifit.com",
+       "detail": ""
+      },
+      {
+       "record": "return_path",
+       "need": "none",
+       "state": "not needed",
+       "evidence": [],
+       "asked": "",
+       "detail": ""
+      }
+     ],
+     "complete": true
+    }
+   ]
+  },
+  {
+   "name": "Amazon SES",
+   "category": "Transactional",
+   "tier": "Configured",
+   "role": "sender",
+   "claims": [
+    {
+     "service": "Amazon SES",
+     "kind": "included in SPF",
+     "where": "cognifit.com",
+     "evidence": {
+      "name": "cognifit.com",
+      "rtype": "TXT",
+      "value": "include:amazonses.com",
+      "checked_at": "2026-10-28T12:11:02+00:00"
+     },
+     "supporting": []
+    },
+    {
+     "service": "Amazon SES",
+     "kind": "receives replies and bounces for a sending subdomain (MX)",
+     "where": "messages.cognifit.com",
+     "evidence": {
+      "name": "messages.cognifit.com",
+      "rtype": "MX",
+      "value": "10 feedback-smtp.us-east-1.amazonses.com",
+      "checked_at": "2026-10-28T12:11:02+00:00"
+     },
+     "supporting": []
+    },
+    {
+     "service": "Amazon SES",
+     "kind": "receives replies and bounces for a sending subdomain (MX)",
+     "where": "send.cognifit.com",
+     "evidence": {
+      "name": "send.cognifit.com",
+      "rtype": "MX",
+      "value": "10 feedback-smtp.us-east-1.amazonses.com",
+      "checked_at": "2026-10-28T12:11:02+00:00"
+     },
+     "supporting": []
+    },
+    {
+     "service": "Amazon SES",
+     "kind": "included in SPF",
+     "where": "messages.cognifit.com",
+     "evidence": {
+      "name": "messages.cognifit.com",
+      "rtype": "TXT",
+      "value": "include:amazonses.com",
+      "checked_at": "2026-10-28T12:11:02+00:00"
+     },
+     "supporting": []
+    },
+    {
+     "service": "Amazon SES",
+     "kind": "included in SPF",
+     "where": "send.cognifit.com",
+     "evidence": {
+      "name": "send.cognifit.com",
+      "rtype": "TXT",
+      "value": "include:amazonses.com",
+      "checked_at": "2026-10-28T12:11:02+00:00"
+     },
+     "supporting": []
+    }
+   ],
+   "setups": []
+  },
+  {
+   "name": "Mailchimp",
+   "category": "Marketing",
+   "tier": "Configured",
+   "role": "sender",
+   "claims": [
+    {
+     "service": "Mailchimp",
+     "kind": "hosts a DKIM key (CNAME)",
+     "where": "cognifit.com",
+     "evidence": {
+      "name": "k1._domainkey.cognifit.com",
+      "rtype": "TXT",
+      "value": "k=rsa; p=MIGfMA0GCSqG..., 1024-bit, fp 53d7bb0466c8346d via dkim.mcsv.net",
+      "checked_at": "2026-10-28T12:11:02+00:00"
+     },
+     "supporting": []
+    }
+   ],
+   "setups": [
+    {
+     "service": "Mailchimp",
+     "where": "cognifit.com",
+     "items": [
+      {
+       "record": "dkim",
+       "need": "required",
+       "state": "present",
+       "evidence": [
+        {
+         "name": "k1._domainkey.cognifit.com",
+         "rtype": "TXT",
+         "value": "k=rsa; p=MIGfMA0GCSqG..., 1024-bit, fp 53d7bb0466c8346d via dkim.mcsv.net",
+         "checked_at": "2026-10-28T12:11:02+00:00"
+        }
+       ],
+       "asked": "TXT at k1._domainkey.cognifit.com",
+       "detail": "older setup: a key at k1; the current setup names k2"
+      },
+      {
+       "record": "spf",
+       "need": "none",
+       "state": "not needed",
+       "evidence": [],
+       "asked": "",
+       "detail": ""
+      },
+      {
+       "record": "return_path",
+       "need": "none",
+       "state": "not needed",
+       "evidence": [],
+       "asked": "",
+       "detail": ""
+      }
+     ],
+     "complete": true
+    }
+   ]
+  },
+  {
+   "name": "Salesforce",
+   "category": "Support and CRM",
+   "tier": "Configured",
+   "role": "sender",
+   "claims": [
+    {
+     "service": "Salesforce",
+     "kind": "included in SPF",
+     "where": "cognifit.com",
+     "evidence": {
+      "name": "cognifit.com",
+      "rtype": "TXT",
+      "value": "include:_spf.salesforce.com",
+      "checked_at": "2026-10-28T12:11:02+00:00"
+     },
+     "supporting": []
+    }
+   ],
+   "setups": []
+  },
+  {
+   "name": "SendGrid",
+   "category": "Transactional",
+   "tier": "Configured",
+   "role": "sender",
+   "claims": [
+    {
+     "service": "SendGrid",
+     "kind": "included in SPF",
+     "where": "cognifit.com",
+     "evidence": {
+      "name": "cognifit.com",
+      "rtype": "TXT",
+      "value": "include:sendgrid.net",
+      "checked_at": "2026-10-28T12:11:02+00:00"
+     },
+     "supporting": []
+    },
+    {
+     "service": "SendGrid",
+     "kind": "DKIM key named for it",
+     "where": "cognifit.com",
+     "evidence": {
+      "name": "smtpapi._domainkey.cognifit.com",
+      "rtype": "TXT",
+      "value": "k=rsa; t=s (strict); p=MIGfMA0GCSqG..., 1024-bit, fp 303963420cfee1c6",
+      "checked_at": "2026-10-28T12:11:02+00:00"
+     },
+     "supporting": [
+      {
+       "name": "cognifit.com",
+       "rtype": "TXT",
+       "value": "include:sendgrid.net",
+       "checked_at": "2026-10-28T12:11:02+00:00"
+      }
+     ]
+    }
+   ],
+   "setups": [
+    {
+     "service": "SendGrid",
+     "where": "cognifit.com",
+     "items": [
+      {
+       "record": "dkim",
+       "need": "required",
+       "state": "present",
+       "evidence": [
+        {
+         "name": "smtpapi._domainkey.cognifit.com",
+         "rtype": "TXT",
+         "value": "k=rsa; t=s (strict); p=MIGfMA0GCSqG..., 1024-bit, fp 303963420cfee1c6",
+         "checked_at": "2026-10-28T12:11:02+00:00"
+        }
+       ],
+       "asked": "TXT at smtpapi._domainkey.cognifit.com",
+       "detail": "older setup: a key at smtpapi; the current setup names s1 and s2"
+      },
+      {
+       "record": "return_path",
+       "need": "optional",
+       "state": "missing",
+       "evidence": [
+        {
+         "name": "bounce.cognifit.com",
+         "rtype": "CNAME",
+         "value": "no such name",
+         "checked_at": "2026-10-28T12:11:02+00:00"
+        },
+        {
+         "name": "bounces.cognifit.com",
+         "rtype": "CNAME",
+         "value": "no such name",
+         "checked_at": "2026-10-28T12:11:02+00:00"
+        },
+        {
+         "name": "em.cognifit.com",
+         "rtype": "CNAME",
+         "value": "no such name",
+         "checked_at": "2026-10-28T12:11:02+00:00"
+        },
+        {
+         "name": "email.cognifit.com",
+         "rtype": "CNAME",
+         "value": "no such name",
+         "checked_at": "2026-10-28T12:11:02+00:00"
+        },
+        {
+         "name": "mail.cognifit.com",
+         "rtype": "CNAME",
+         "value": "ghs.google.com",
+         "checked_at": "2026-10-28T12:11:02+00:00"
+        },
+        {
+         "name": "send.cognifit.com",
+         "rtype": "CNAME",
+         "value": "no record of this type",
+         "checked_at": "2026-10-28T12:11:02+00:00"
+        },
+        {
+         "name": "mta.cognifit.com",
+         "rtype": "CNAME",
+         "value": "no such name",
+         "checked_at": "2026-10-28T12:11:02+00:00"
+        },
+        {
+         "name": "rp.cognifit.com",
+         "rtype": "CNAME",
+         "value": "no such name",
+         "checked_at": "2026-10-28T12:11:02+00:00"
+        },
+        {
+         "name": "pm-bounces.cognifit.com",
+         "rtype": "CNAME",
+         "value": "no such name",
+         "checked_at": "2026-10-28T12:11:02+00:00"
+        },
+        {
+         "name": "links.cognifit.com",
+         "rtype": "CNAME",
+         "value": "no such name",
+         "checked_at": "2026-10-28T12:11:02+00:00"
+        },
+        {
+         "name": "link.cognifit.com",
+         "rtype": "CNAME",
+         "value": "no such name",
+         "checked_at": "2026-10-28T12:11:02+00:00"
+        },
+        {
+         "name": "click.cognifit.com",
+         "rtype": "CNAME",
+         "value": "no such name",
+         "checked_at": "2026-10-28T12:11:02+00:00"
+        },
+        {
+         "name": "track.cognifit.com",
+         "rtype": "CNAME",
+         "value": "no such name",
+         "checked_at": "2026-10-28T12:11:02+00:00"
+        },
+        {
+         "name": "tracking.cognifit.com",
+         "rtype": "CNAME",
+         "value": "no such name",
+         "checked_at": "2026-10-28T12:11:02+00:00"
+        },
+        {
+         "name": "url.cognifit.com",
+         "rtype": "CNAME",
+         "value": "no such name",
+         "checked_at": "2026-10-28T12:11:02+00:00"
+        },
+        {
+         "name": "go.cognifit.com",
+         "rtype": "CNAME",
+         "value": "no record of this type",
+         "checked_at": "2026-10-28T12:11:02+00:00"
+        },
+        {
+         "name": "autodiscover.cognifit.com",
+         "rtype": "CNAME",
+         "value": "no such name",
+         "checked_at": "2026-10-28T12:11:02+00:00"
+        },
+        {
+         "name": "cf-bounce.cognifit.com",
+         "rtype": "CNAME",
+         "value": "no such name",
+         "checked_at": "2026-10-28T12:11:02+00:00"
+        },
+        {
+         "name": "eversrv.cognifit.com",
+         "rtype": "CNAME",
+         "value": "no such name",
+         "checked_at": "2026-10-28T12:11:02+00:00"
+        },
+        {
+         "name": "fwdkim1.cognifit.com",
+         "rtype": "CNAME",
+         "value": "no such name",
+         "checked_at": "2026-10-28T12:11:02+00:00"
+        },
+        {
+         "name": "bnc3.cognifit.com",
+         "rtype": "CNAME",
+         "value": "no such name",
+         "checked_at": "2026-10-28T12:11:02+00:00"
+        },
+        {
+         "name": "bounces.cloud.em.cognifit.com",
+         "rtype": "CNAME",
+         "value": "no such name",
+         "checked_at": "2026-10-28T12:11:02+00:00"
+        },
+        {
+         "name": "bounces.cloud2.em.cognifit.com",
+         "rtype": "CNAME",
+         "value": "no such name",
+         "checked_at": "2026-10-28T12:11:02+00:00"
+        },
+        {
+         "name": "outbound.intercom.cognifit.com",
+         "rtype": "CNAME",
+         "value": "no such name",
+         "checked_at": "2026-10-28T12:11:02+00:00"
+        },
+        {
+         "name": "atlassian-bounces.cognifit.com",
+         "rtype": "CNAME",
+         "value": "no such name",
+         "checked_at": "2026-10-28T12:11:02+00:00"
+        }
+       ],
+       "asked": "CNAME at 25 labels under cognifit.com",
+       "detail": "no CNAME into sendgrid.net at the 25 labels asked"
+      },
+      {
+       "record": "spf",
+       "need": "none",
+       "state": "not needed",
+       "evidence": [],
+       "asked": "",
+       "detail": ""
+      },
+      {
+       "record": "tracking",
+       "need": "optional",
+       "state": "missing",
+       "evidence": [
+        {
+         "name": "bounce.cognifit.com",
+         "rtype": "CNAME",
+         "value": "no such name",
+         "checked_at": "2026-10-28T12:11:02+00:00"
+        },
+        {
+         "name": "bounces.cognifit.com",
+         "rtype": "CNAME",
+         "value": "no such name",
+         "checked_at": "2026-10-28T12:11:02+00:00"
+        },
+        {
+         "name": "em.cognifit.com",
+         "rtype": "CNAME",
+         "value": "no such name",
+         "checked_at": "2026-10-28T12:11:02+00:00"
+        },
+        {
+         "name": "email.cognifit.com",
+         "rtype": "CNAME",
+         "value": "no such name",
+         "checked_at": "2026-10-28T12:11:02+00:00"
+        },
+        {
+         "name": "mail.cognifit.com",
+         "rtype": "CNAME",
+         "value": "ghs.google.com",
+         "checked_at": "2026-10-28T12:11:02+00:00"
+        },
+        {
+         "name": "send.cognifit.com",
+         "rtype": "CNAME",
+         "value": "no record of this type",
+         "checked_at": "2026-10-28T12:11:02+00:00"
+        },
+        {
+         "name": "mta.cognifit.com",
+         "rtype": "CNAME",
+         "value": "no such name",
+         "checked_at": "2026-10-28T12:11:02+00:00"
+        },
+        {
+         "name": "rp.cognifit.com",
+         "rtype": "CNAME",
+         "value": "no such name",
+         "checked_at": "2026-10-28T12:11:02+00:00"
+        },
+        {
+         "name": "pm-bounces.cognifit.com",
+         "rtype": "CNAME",
+         "value": "no such name",
+         "checked_at": "2026-10-28T12:11:02+00:00"
+        },
+        {
+         "name": "links.cognifit.com",
+         "rtype": "CNAME",
+         "value": "no such name",
+         "checked_at": "2026-10-28T12:11:02+00:00"
+        },
+        {
+         "name": "link.cognifit.com",
+         "rtype": "CNAME",
+         "value": "no such name",
+         "checked_at": "2026-10-28T12:11:02+00:00"
+        },
+        {
+         "name": "click.cognifit.com",
+         "rtype": "CNAME",
+         "value": "no such name",
+         "checked_at": "2026-10-28T12:11:02+00:00"
+        },
+        {
+         "name": "track.cognifit.com",
+         "rtype": "CNAME",
+         "value": "no such name",
+         "checked_at": "2026-10-28T12:11:02+00:00"
+        },
+        {
+         "name": "tracking.cognifit.com",
+         "rtype": "CNAME",
+         "value": "no such name",
+         "checked_at": "2026-10-28T12:11:02+00:00"
+        },
+        {
+         "name": "url.cognifit.com",
+         "rtype": "CNAME",
+         "value": "no such name",
+         "checked_at": "2026-10-28T12:11:02+00:00"
+        },
+        {
+         "name": "go.cognifit.com",
+         "rtype": "CNAME",
+         "value": "no record of this type",
+         "checked_at": "2026-10-28T12:11:02+00:00"
+        },
+        {
+         "name": "autodiscover.cognifit.com",
+         "rtype": "CNAME",
+         "value": "no such name",
+         "checked_at": "2026-10-28T12:11:02+00:00"
+        },
+        {
+         "name": "cf-bounce.cognifit.com",
+         "rtype": "CNAME",
+         "value": "no such name",
+         "checked_at": "2026-10-28T12:11:02+00:00"
+        },
+        {
+         "name": "eversrv.cognifit.com",
+         "rtype": "CNAME",
+         "value": "no such name",
+         "checked_at": "2026-10-28T12:11:02+00:00"
+        },
+        {
+         "name": "fwdkim1.cognifit.com",
+         "rtype": "CNAME",
+         "value": "no such name",
+         "checked_at": "2026-10-28T12:11:02+00:00"
+        },
+        {
+         "name": "bnc3.cognifit.com",
+         "rtype": "CNAME",
+         "value": "no such name",
+         "checked_at": "2026-10-28T12:11:02+00:00"
+        },
+        {
+         "name": "bounces.cloud.em.cognifit.com",
+         "rtype": "CNAME",
+         "value": "no such name",
+         "checked_at": "2026-10-28T12:11:02+00:00"
+        },
+        {
+         "name": "bounces.cloud2.em.cognifit.com",
+         "rtype": "CNAME",
+         "value": "no such name",
+         "checked_at": "2026-10-28T12:11:02+00:00"
+        },
+        {
+         "name": "outbound.intercom.cognifit.com",
+         "rtype": "CNAME",
+         "value": "no such name",
+         "checked_at": "2026-10-28T12:11:02+00:00"
+        },
+        {
+         "name": "atlassian-bounces.cognifit.com",
+         "rtype": "CNAME",
+         "value": "no such name",
+         "checked_at": "2026-10-28T12:11:02+00:00"
+        }
+       ],
+       "asked": "CNAME at 25 labels under cognifit.com",
+       "detail": "no CNAME into sendgrid.net at the 25 labels asked"
+      }
+     ],
+     "complete": true
+    }
+   ]
+  },
+  {
+   "name": "Resend",
+   "category": "Transactional",
+   "tier": "Likely",
+   "role": "sender",
+   "claims": [
+    {
+     "service": "Resend",
+     "kind": "DKIM key named for it",
+     "where": "cognifit.com",
+     "evidence": {
+      "name": "resend._domainkey.cognifit.com",
+      "rtype": "TXT",
+      "value": "p=MIGfMA0GCSqG..., 1024-bit, fp 79fdb68489379af3",
+      "checked_at": "2026-10-28T12:11:02+00:00"
+     },
+     "supporting": []
+    }
+   ],
+   "setups": []
+  },
+  {
+   "name": "Microsoft 365",
+   "category": "Mailbox",
+   "tier": "Account only",
+   "role": "sender",
+   "claims": [
+    {
+     "service": "Microsoft 365",
+     "kind": "verification token",
+     "where": "cognifit.com",
+     "evidence": {
+      "name": "cognifit.com",
+      "rtype": "TXT",
+      "value": "MS=ms53236047",
+      "checked_at": "2026-10-28T12:11:02+00:00"
+     },
+     "supporting": []
+    }
+   ],
+   "setups": [
+    {
+     "service": "Microsoft 365",
+     "where": "cognifit.com",
+     "items": [
+      {
+       "record": "spf",
+       "need": "required",
+       "state": "missing",
+       "evidence": [
+        {
+         "name": "cognifit.com",
+         "rtype": "TXT",
+         "value": "v=spf1 include:sendgrid.net include:_spf.salesforce.com include:_spf.google.com  include:amazonses.com include:ses.amazonaws.com -all",
+         "checked_at": "2026-10-28T12:11:02+00:00"
+        }
+       ],
+       "asked": "TXT at cognifit.com",
+       "detail": "the record does not authorize spf.protection.outlook.com"
+      },
+      {
+       "record": "dkim",
+       "need": "required",
+       "state": "missing",
+       "evidence": [
+        {
+         "name": "selector1._domainkey.cognifit.com",
+         "rtype": "TXT",
+         "value": "no such name",
+         "checked_at": "2026-10-28T12:11:02+00:00"
+        },
+        {
+         "name": "selector2._domainkey.cognifit.com",
+         "rtype": "TXT",
+         "value": "no such name",
+         "checked_at": "2026-10-28T12:11:02+00:00"
+        }
+       ],
+       "asked": "TXT at selector1._domainkey.cognifit.com and TXT at selector2._domainkey.cognifit.com",
+       "detail": "no key at selector1._domainkey or selector2._domainkey, names that do not exist"
+      },
+      {
+       "record": "mx",
+       "need": "optional",
+       "state": "missing",
+       "evidence": [
+        {
+         "name": "cognifit.com",
+         "rtype": "MX",
+         "value": "1 aspmx.l.google.com",
+         "checked_at": "2026-10-28T12:11:02+00:00"
+        },
+        {
+         "name": "cognifit.com",
+         "rtype": "MX",
+         "value": "5 alt1.aspmx.l.google.com",
+         "checked_at": "2026-10-28T12:11:02+00:00"
+        },
+        {
+         "name": "cognifit.com",
+         "rtype": "MX",
+         "value": "5 alt2.aspmx.l.google.com",
+         "checked_at": "2026-10-28T12:11:02+00:00"
+        },
+        {
+         "name": "cognifit.com",
+         "rtype": "MX",
+         "value": "10 aspmx2.googlemail.com",
+         "checked_at": "2026-10-28T12:11:02+00:00"
+        },
+        {
+         "name": "cognifit.com",
+         "rtype": "MX",
+         "value": "10 aspmx3.googlemail.com",
+         "checked_at": "2026-10-28T12:11:02+00:00"
+        },
+        {
+         "name": "cognifit.com",
+         "rtype": "MX",
+         "value": "10 aspmx4.googlemail.com",
+         "checked_at": "2026-10-28T12:11:02+00:00"
+        },
+        {
+         "name": "cognifit.com",
+         "rtype": "MX",
+         "value": "10 aspmx5.googlemail.com",
+         "checked_at": "2026-10-28T12:11:02+00:00"
+        }
+       ],
+       "asked": "MX at cognifit.com",
+       "detail": "no MX host under protection.outlook.com"
+      },
+      {
+       "record": "return_path",
+       "need": "none",
+       "state": "not needed",
+       "evidence": [],
+       "asked": "",
+       "detail": ""
+      }
+     ],
+     "complete": false
+    }
+   ]
+  }
+ ],
+ "run": {
+  "checked_at": "2026-10-28T12:11:02+00:00",
+  "resolver": "doh google"
+ },
+ "findings": [
+  {
+   "severity": "risk",
+   "title": "SPF at cognifit.com includes ses.amazonaws.com, which publishes no SPF record",
+   "detail": "cognifit.com names ses.amazonaws.com, which publishes no SPF record. A receiver that reaches it returns an error (RFC 7208, section 5.2), so SPF fails for every message no term before it matches.",
+   "evidence": [
+    {
+     "name": "cognifit.com",
+     "rtype": "TXT",
+     "value": "include:ses.amazonaws.com",
+     "checked_at": "2026-10-28T12:11:02+00:00"
+    },
+    {
+     "name": "ses.amazonaws.com",
+     "rtype": "TXT",
+     "value": "no such name",
+     "checked_at": "2026-10-28T12:11:02+00:00"
+    }
+   ]
+  },
+  {
+   "severity": "warning",
+   "title": "The google key at cognifit.com is 1024-bit",
+   "detail": "Some receivers already treat 1024-bit RSA keys as weak. Rotate to 2048-bit.",
+   "evidence": [
+    {
+     "name": "google._domainkey.cognifit.com",
+     "rtype": "TXT",
+     "value": "v=DKIM1; k=rsa; p=MIGfMA0GCSqG..., 1024-bit, fp 4e8ac6498dd9c824",
+     "checked_at": "2026-10-28T12:11:02+00:00"
+    }
+   ]
+  },
+  {
+   "severity": "warning",
+   "title": "The smtpapi key at cognifit.com is 1024-bit",
+   "detail": "Some receivers already treat 1024-bit RSA keys as weak. Rotate to 2048-bit.",
+   "evidence": [
+    {
+     "name": "smtpapi._domainkey.cognifit.com",
+     "rtype": "TXT",
+     "value": "k=rsa; t=s (strict); p=MIGfMA0GCSqG..., 1024-bit, fp 303963420cfee1c6",
+     "checked_at": "2026-10-28T12:11:02+00:00"
+    }
+   ]
+  },
+  {
+   "severity": "warning",
+   "title": "The k1 key at cognifit.com is 1024-bit",
+   "detail": "Some receivers already treat 1024-bit RSA keys as weak. Rotate to 2048-bit.",
+   "evidence": [
+    {
+     "name": "k1._domainkey.cognifit.com",
+     "rtype": "TXT",
+     "value": "k=rsa; p=MIGfMA0GCSqG..., 1024-bit, fp 53d7bb0466c8346d via dkim.mcsv.net",
+     "checked_at": "2026-10-28T12:11:02+00:00"
+    }
+   ]
+  },
+  {
+   "severity": "warning",
+   "title": "The resend key at cognifit.com is 1024-bit",
+   "detail": "Some receivers already treat 1024-bit RSA keys as weak. Rotate to 2048-bit.",
+   "evidence": [
+    {
+     "name": "resend._domainkey.cognifit.com",
+     "rtype": "TXT",
+     "value": "p=MIGfMA0GCSqG..., 1024-bit, fp 79fdb68489379af3",
+     "checked_at": "2026-10-28T12:11:02+00:00"
+    }
+   ]
+  },
+  {
+   "severity": "note",
+   "title": "DNS says _domainkey.cognifit.com does not exist, but a key sits under it",
+   "detail": "The domain's DNS servers answer no such name for _domainkey.cognifit.com, yet google._domainkey.cognifit.com has a key. Under RFC 8020 a no-such-name answer covers every name below it, so a resolver that applies the rule can fail to find the domain's DKIM keys. Most resolvers still look them up; the fault is in the DNS host and is theirs to fix. Every selector was asked.",
+   "evidence": [
+    {
+     "name": "_domainkey.cognifit.com",
+     "rtype": "TXT",
+     "value": "no such name",
+     "checked_at": "2026-10-28T12:11:02+00:00"
+    },
+    {
+     "name": "google._domainkey.cognifit.com",
+     "rtype": "TXT",
+     "value": "v=DKIM1; k=rsa; p=MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCSK9vG9EwIOraIciyPJQmF+WQuM3ukHleazmVT6akMyGgYj/QMcQGBe2bbPkdNuQSloTvwGGDg3sTQnzsENpMYfflvfeg0XNk5jV3K0o3AuRQqiRM7UeOlIHGVJHGpTeQMJng22JWPs/ND6fbUZhZuv+FjwA9LgahKzVR8APnaQQIDAQAB",
+     "checked_at": "2026-10-28T12:11:02+00:00"
+    }
+   ]
+  },
+  {
+   "severity": "note",
+   "title": "Microsoft 365 shows only an account at cognifit.com",
+   "detail": "The records name an account (a verification token, an autodiscover CNAME, or a revoked or dangling key) and nothing that sends or receives mail. Is the account still used? If not, remove its records.",
+   "evidence": [
+    {
+     "name": "cognifit.com",
+     "rtype": "TXT",
+     "value": "MS=ms53236047",
+     "checked_at": "2026-10-28T12:11:02+00:00"
+    }
+   ]
+  }
+ ],
+ "unknowns": [
+  {
+   "what": "SPF include",
+   "value": "ses.amazonaws.com",
+   "where": "cognifit.com",
+   "evidence": {
+    "name": "cognifit.com",
+    "rtype": "TXT",
+    "value": "include:ses.amazonaws.com",
+    "checked_at": "2026-10-28T12:11:02+00:00"
+   }
+  }
+ ],
+ "gaps": [
+  {
+   "asked": "the website",
+   "happened": "not read: web checks were turned off (--no-web)",
+   "kind": "off",
+   "count": 0,
+   "cap": 0
+  },
+  {
+   "asked": "certificate transparency, crt.sh: GET https://crt.sh/?q=%25.cognifit.com&output=json",
+   "happened": "not asked: read only with --ct (it also holds expired certificates)",
+   "kind": "off",
+   "count": 0,
+   "cap": 0
+  }
+ ],
+ "subdomains_checked": [
+  "messages.cognifit.com",
+  "send.cognifit.com"
+ ],
+ "checked": [
+  {
+   "where": "cognifit.com",
+   "dkim_selectors": [
+    "google",
+    "gapps",
+    "s1",
+    "s2",
+    "smtpapi",
+    "acdkim1",
+    "acdkim2",
+    "ses",
+    "aweber_key_a",
+    "aweber_key_b",
+    "aweber_key_c",
+    "brevo",
+    "brevo1",
+    "brevo2",
+    "cm",
+    "cf2024-1",
+    "ctct1",
+    "ctct2",
+    "krs",
+    "e2ma-k1",
+    "e2ma-k2",
+    "e2ma-k3",
+    "everlytickey1",
+    "everlytickey2",
+    "fm2",
+    "fm1",
+    "fm3",
+    "mesmtp",
+    "secureserver1",
+    "secureserver2",
+    "gor",
+    "strong1",
+    "strong2",
+    "hs1",
+    "hs2",
+    "intercom",
+    "s1-ionos",
+    "s42582890",
+    "s2-ionos",
+    "cka",
+    "kl",
+    "kl1",
+    "kl2",
+    "km1",
+    "km2",
+    "k2",
+    "k1",
+    "k3",
+    "litesrv",
+    "mg",
+    "mailgun",
+    "mg1",
+    "pdk1",
+    "pdk2",
+    "mailjet",
+    "mailpoet2",
+    "mailpoet1",
+    "mandrill",
+    "mte1",
+    "mte2",
+    "marketo",
+    "mkto",
+    "mkto1",
+    "selector1",
+    "selector2",
+    "mimecast",
+    "mimecast20190719",
+    "pepipost",
+    "pp1",
+    "protonmail",
+    "protonmail2",
+    "protonmail3",
+    "resend",
+    "sailthru",
+    "salesforce",
+    "salesforce2",
+    "salesforce1",
+    "sf",
+    "sf1",
+    "sf2",
+    "sfdc",
+    "200608",
+    "pardot",
+    "sfmc",
+    "scph0819",
+    "sparkpost",
+    "squarespace",
+    "zendesk1",
+    "zendesk2",
+    "zoho",
+    "mail",
+    "mailru",
+    "api",
+    "default",
+    "dk",
+    "dkim",
+    "dkim1",
+    "dkim2",
+    "email",
+    "k",
+    "key",
+    "key1",
+    "key2",
+    "mta",
+    "mx",
+    "pm",
+    "s",
+    "selector",
+    "smtp",
+    "sp",
+    "20161025",
+    "20210112",
+    "20221208",
+    "20230601"
+   ],
+   "labels": [
+    "bounce",
+    "bounces",
+    "em",
+    "email",
+    "mail",
+    "send",
+    "mta",
+    "rp",
+    "pm-bounces",
+    "links",
+    "link",
+    "click",
+    "track",
+    "tracking",
+    "url",
+    "go",
+    "autodiscover",
+    "cf-bounce",
+    "eversrv",
+    "fwdkim1",
+    "bnc3",
+    "bounces.cloud.em",
+    "bounces.cloud2.em",
+    "outbound.intercom",
+    "atlassian-bounces"
+   ],
+   "pages": [
+    "https://api.certspotter.com/v1/issuances?domain=cognifit.com&include_subdomains=true&expand=dns_names"
+   ],
+   "denial": "classic"
+  },
+  {
+   "where": "messages.cognifit.com",
+   "dkim_selectors": [
+    "acdkim1",
+    "acdkim2",
+    "ses",
+    "aweber_key_a",
+    "aweber_key_b",
+    "aweber_key_c",
+    "brevo",
+    "brevo1"
+   ],
+   "labels": [],
+   "pages": [],
+   "denial": "classic"
+  },
+  {
+   "where": "send.cognifit.com",
+   "dkim_selectors": [
+    "acdkim1",
+    "acdkim2",
+    "ses",
+    "aweber_key_a",
+    "aweber_key_b",
+    "aweber_key_c",
+    "brevo",
+    "brevo1"
+   ],
+   "labels": [],
+   "pages": [],
+   "denial": "classic"
+  }
+ ],
+ "ct": {
+  "status": "off",
+  "logged": 25,
+  "resolved": 0,
+  "gone_unnamed": 0,
+  "providers": [
+   {
+    "name": "Cert Spotter",
+    "status": "read",
+    "logged": 25
+   },
+   {
+    "name": "crt.sh",
+    "status": "off",
+    "logged": 0
+   }
+  ]
+ },
+ "historical": [],
+ "logo": null,
+ "schema": "sendermap/1",
+ "absences": [
+  {
+   "asked": "DKIM keys at messages.cognifit.com",
+   "happened": "no selectors exist: _domainkey.messages.cognifit.com does not exist, so the 27-name sweep was skipped; the 8 names its MX, SPF and delegations point to were asked as a check, and none exists (RFC 8020 section 5)",
+   "evidence": [
+    {
+     "name": "_domainkey.messages.cognifit.com",
+     "rtype": "TXT",
+     "value": "no such name",
+     "checked_at": "2026-10-28T12:11:02+00:00"
+    },
+    {
+     "name": "sendermap-wildcard-check._domainkey.messages.cognifit.com",
+     "rtype": "TXT",
+     "value": "no such name",
+     "checked_at": "2026-10-28T12:11:02+00:00"
+    }
+   ]
+  },
+  {
+   "asked": "DKIM keys at send.cognifit.com",
+   "happened": "no selectors exist: _domainkey.send.cognifit.com does not exist, so the 27-name sweep was skipped; the 8 names its MX, SPF and delegations point to were asked as a check, and none exists (RFC 8020 section 5)",
+   "evidence": [
+    {
+     "name": "_domainkey.send.cognifit.com",
+     "rtype": "TXT",
+     "value": "no such name",
+     "checked_at": "2026-10-28T12:11:02+00:00"
+    },
+    {
+     "name": "sendermap-wildcard-check._domainkey.send.cognifit.com",
+     "rtype": "TXT",
+     "value": "no such name",
+     "checked_at": "2026-10-28T12:11:02+00:00"
+    }
+   ]
+  }
+ ],
+ "story": "The map shows one risk: SPF at cognifit.com includes ses.amazonaws.com, which publishes no SPF record. Google Workspace receives the domain's mail and has a DKIM key in place to sign it. Four other services are set up to send as the domain: two transactional (Amazon SES, SendGrid), one marketing (Mailchimp), one support and CRM (Salesforce); one more is likely from a DKIM key name alone (Resend). One service shows an account and nothing set up to send (Microsoft 365). Not checked: the website (turned off) and the crt.sh certificate log (read only with --ct)."
+}
