@@ -397,14 +397,6 @@
           }
         },
         {
-          "value": "mail-manager-smtp.us-east-1.on.aws",
-          "proof": {
-            "domain": "asana.com",
-            "record": "go.asana.com",
-            "date": "2026-10-15"
-          }
-        },
-        {
           "value": "inbound-smtp.us-west-2.amazonaws.com",
           "proof": {
             "domain": "datadoghq.com",

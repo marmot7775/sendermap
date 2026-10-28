@@ -40,7 +40,7 @@
           "value": "amazonses.com"
         }
       ],
-      "checked": "2026-10-09, the vendor's own domains amazon.com, amazonses.com: the CNAMEs of 184 DKIM selectors; CNAMEs at the bounce labels; TXT at the apex; TXT at 184 DKIM selectors. None of the entries here was found. 2026-10-10, the 2,003 domains in data/hunt_domains.txt (tools/hunt_proofs.py): none of the entries left here was found there either.",
+      "checked": "2026-10-09, the vendor's own domains amazon.com, amazonses.com: the CNAMEs of 184 DKIM selectors; CNAMEs at the bounce labels; TXT at the apex; TXT at 184 DKIM selectors. None of the entries here was found. 2026-10-10, the 2,003 domains in data/hunt_domains.txt (tools/hunt_proofs.py): none of the entries left here was found there either. 2026-10-28: mx mail-manager-smtp.us-east-1.on.aws moved back here from vendors.json: its proof, go.asana.com (2026-10-15), no longer publishes that MX, and none of the 2,003 domains in data/hunt_domains.txt does.",
       "selectors": [
         {
           "shape": {
@@ -65,6 +65,11 @@
               "ses2"
             ]
           }
+        }
+      ],
+      "mx": [
+        {
+          "value": "mail-manager-smtp.us-east-1.on.aws"
         }
       ]
     },
