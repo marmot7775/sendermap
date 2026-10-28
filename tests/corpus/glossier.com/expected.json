@@ -1652,7 +1652,7 @@
   },
   {
    "asked": "DKIM selectors at receipts.glossier.com",
-   "happened": "83 of 110 not asked. The first 27 were asked, plus any the name's own SPF, MX or delegation points to (cap 27).",
+   "happened": "83 of 114 not asked. The first 27 were asked, plus any the name's own SPF, MX or delegation points to (cap 27).",
    "kind": "dkim",
    "count": 83,
    "cap": 27
@@ -1783,7 +1783,11 @@
     "s",
     "selector",
     "smtp",
-    "sp"
+    "sp",
+    "20161025",
+    "20210112",
+    "20221208",
+    "20230601"
    ],
    "labels": [
     "bounce",
@@ -1881,7 +1885,11 @@
     "secureserver1",
     "secureserver2",
     "google",
-    "gapps"
+    "gapps",
+    "20161025",
+    "20210112",
+    "20221208",
+    "20230601"
    ],
    "labels": [],
    "pages": [],

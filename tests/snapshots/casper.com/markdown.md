@@ -201,21 +201,22 @@ Records Sendermap looked for and did not find.
 
 ## How this was checked
 
-Checked 2026-10-12 01:25 UTC: 740 DNS lookups in 0.0 s over Google DNS over HTTPS.
+Checked 2026-10-12 01:25 UTC: 756 DNS lookups in 0.0 s over Google DNS over HTTPS.
 
-- At casper.com: 110 possible DKIM key names, 25 service record names, 1 web page.
-- At e.casper.com: 32 possible DKIM key names.
+- At casper.com: 114 possible DKIM key names, 25 service record names, 1 web page.
+- At e.casper.com: 36 possible DKIM key names.
 - At email.casper.com: 30 possible DKIM key names.
-- At mail.casper.com: 28 possible DKIM key names.
-- At orders.casper.com: 27 possible DKIM key names.
+- At mail.casper.com: 32 possible DKIM key names.
+- At orders.casper.com: 31 possible DKIM key names.
 - At t.casper.com: 32 possible DKIM key names.
 
 Not checked:
 
-- DKIM selectors at e and t.casper.com: 78 of 110 not asked at each. The first 27 were asked, plus any the name's own SPF, MX or delegation points to (cap 27).
+- DKIM selectors at e.casper.com: 78 of 114 not asked. The first 27 were asked, plus any the name's own SPF, MX or delegation points to (cap 27).
 - DKIM selectors at email.casper.com: 80 of 110 not asked. The first 27 were asked, plus any the name's own SPF, MX or delegation points to (cap 27).
-- DKIM selectors at mail.casper.com: 82 of 110 not asked. The first 27 were asked, plus any the name's own SPF, MX or delegation points to (cap 27).
-- DKIM selectors at orders.casper.com: 83 of 110 not asked. The first 27 were asked, plus any the name's own SPF, MX or delegation points to (cap 27).
+- DKIM selectors at mail.casper.com: 82 of 114 not asked. The first 27 were asked, plus any the name's own SPF, MX or delegation points to (cap 27).
+- DKIM selectors at orders.casper.com: 83 of 114 not asked. The first 27 were asked, plus any the name's own SPF, MX or delegation points to (cap 27).
+- DKIM selectors at t.casper.com: 78 of 110 not asked. The first 27 were asked, plus any the name's own SPF, MX or delegation points to (cap 27).
 
 Not run:
 

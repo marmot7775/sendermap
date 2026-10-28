@@ -2465,7 +2465,7 @@
   },
   {
    "asked": "DKIM selectors at e.casper.com",
-   "happened": "78 of 110 not asked. The first 27 were asked, plus any the name's own SPF, MX or delegation points to (cap 27).",
+   "happened": "78 of 114 not asked. The first 27 were asked, plus any the name's own SPF, MX or delegation points to (cap 27).",
    "kind": "dkim",
    "count": 78,
    "cap": 27
@@ -2479,14 +2479,14 @@
   },
   {
    "asked": "DKIM selectors at mail.casper.com",
-   "happened": "82 of 110 not asked. The first 27 were asked, plus any the name's own SPF, MX or delegation points to (cap 27).",
+   "happened": "82 of 114 not asked. The first 27 were asked, plus any the name's own SPF, MX or delegation points to (cap 27).",
    "kind": "dkim",
    "count": 82,
    "cap": 27
   },
   {
    "asked": "DKIM selectors at orders.casper.com",
-   "happened": "83 of 110 not asked. The first 27 were asked, plus any the name's own SPF, MX or delegation points to (cap 27).",
+   "happened": "83 of 114 not asked. The first 27 were asked, plus any the name's own SPF, MX or delegation points to (cap 27).",
    "kind": "dkim",
    "count": 83,
    "cap": 27
@@ -2619,7 +2619,11 @@
     "s",
     "selector",
     "smtp",
-    "sp"
+    "sp",
+    "20161025",
+    "20210112",
+    "20221208",
+    "20230601"
    ],
    "labels": [
     "bounce",
@@ -2687,7 +2691,11 @@
     "mg",
     "mg1",
     "pdk1",
-    "pdk2"
+    "pdk2",
+    "20161025",
+    "20210112",
+    "20221208",
+    "20230601"
    ],
    "labels": [],
    "pages": [],
@@ -2761,7 +2769,11 @@
     "secureserver2",
     "google",
     "gapps",
-    "sfmc"
+    "sfmc",
+    "20161025",
+    "20210112",
+    "20221208",
+    "20230601"
    ],
    "labels": [],
    "pages": [],
@@ -2796,7 +2808,11 @@
     "secureserver1",
     "secureserver2",
     "google",
-    "gapps"
+    "gapps",
+    "20161025",
+    "20210112",
+    "20221208",
+    "20230601"
    ],
    "labels": [],
    "pages": [],

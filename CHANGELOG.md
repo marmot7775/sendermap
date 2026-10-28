@@ -11,6 +11,11 @@ fails before anything is published.
 
 ## Unreleased
 
+- Google's dated DKIM names (20161025, 20210112, 20221208, 20230601, the keys google.com and
+  gmail.com publish) are Google Workspace's backed only names: they credit Google only where the
+  domain's MX, SPF or a delegation already shows Google, and a domain that shows Google asks them.
+  A date is a name any service could pick, so they credit nobody by name alone.
+
 ## 0.1.8 (2026-10-28)
 
 - The terminal, Markdown and web views read for someone who has never used Sendermap. The map
