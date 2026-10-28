@@ -11,6 +11,8 @@ fails before anything is published.
 
 ## Unreleased
 
+## 0.1.8 (2026-10-28)
+
 - The terminal, Markdown and web views read for someone who has never used Sendermap. The map
   opens with the question it answers ("Who handles email for glossier.com?") and the answer in
   plain words ("9 services handle email for glossier.com. 3 things need fixing."), in place of a

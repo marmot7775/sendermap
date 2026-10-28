@@ -3,7 +3,7 @@
   "name": "io.github.marmot7775/sendermap",
   "title": "Sendermap",
   "description": "Maps every service that sends email as a domain, with the public record behind each one.",
-  "version": "0.1.7",
+  "version": "0.1.8",
   "repository": {
     "url": "https://github.com/marmot7775/sendermap",
     "source": "github"
@@ -13,13 +13,13 @@
       "registryType": "pypi",
       "registryBaseUrl": "https://pypi.org",
       "identifier": "sendermap",
-      "version": "0.1.7",
+      "version": "0.1.8",
       "runtimeHint": "uvx",
       "runtimeArguments": [
         {
           "type": "named",
           "name": "--from",
-          "value": "sendermap[mcp]==0.1.7",
+          "value": "sendermap[mcp]==0.1.8",
           "description": "Install Sendermap with the mcp extra, which brings the MCP server."
         }
       ],
