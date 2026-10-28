@@ -11,6 +11,8 @@ fails before anything is published.
 
 ## Unreleased
 
+- Cheetah Digital (CheetahMail) is named where a sending subdomain delegates to cheetahmail.com's
+  name servers, proven on em.disneyplus.com.
 - Amazon SES no longer claims MX hosts under mail-manager-smtp.us-east-1.on.aws. Its proof,
   go.asana.com, stopped publishing that MX, and none of the 2,003 hunt domains publishes it, so the
   pattern waits in vendors_pending.json for a new one.

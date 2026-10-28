@@ -260,7 +260,7 @@
           "value": "track.customer.io"
         }
       ],
-      "checked": "2026-10-09, the vendor's own domains customer.io, customeriomail.com: the scripts and stylesheets the homepage loads; TXT at 184 DKIM selectors; homepage not readable at customeriomail.com. None of the entries here was found. 2026-10-10, the 2,003 domains in data/hunt_domains.txt (tools/hunt_proofs.py): none of the entries left here was found there either. 2026-10-22, the 2,003 domains of data/hunt_domains.txt and 50 more mapped that day, by DoH: no key at cio or customerio.",
+      "checked": "2026-10-09, the vendor's own domains customer.io, customeriomail.com: the scripts and stylesheets the homepage loads; TXT at 184 DKIM selectors; homepage not readable at customeriomail.com. None of the entries here was found. 2026-10-10, the 2,003 domains in data/hunt_domains.txt (tools/hunt_proofs.py): none of the entries left here was found there either. 2026-10-22, the 2,003 domains of data/hunt_domains.txt and 50 more mapped that day, by DoH: no key at cio or customerio. 2026-10-28, the same hunt: a key at cio._domainkey.updates.calendly.com, but nothing else at calendly.com shows Customer.io and its documentation names krs, not cio, so cio stays here.",
       "selectors": [
         {
           "shape": {
@@ -1245,13 +1245,10 @@
     },
     "Cheetah Digital": {
       "category": "Marketing",
-      "checked": "2026-10-11, the 2,049 domains of data/hunt_domains.txt plus 75 brands named in the E2 survey or likely customers (tools/hunt_proofs.py), NS asked by hand at every sending name whose SPF or MX names the vendor, and the vendor's documentation: none of chtah.com, cheetahmail.com or chtah.net was found in any SPF, MX, NS or CNAME, including at the US retail, travel and publishing brands added for this search; no customer setup page was readable. 2026-10-22, the 2,003 domains of data/hunt_domains.txt and 50 more mapped that day, by DoH: no SPF or MX at the apex or the common sending labels names chtah.com, chtah.net or cheetahmail.com.",
+      "checked": "2026-10-11, the 2,049 domains of data/hunt_domains.txt plus 75 brands named in the E2 survey or likely customers (tools/hunt_proofs.py), NS asked by hand at every sending name whose SPF or MX names the vendor, and the vendor's documentation: none of chtah.com, cheetahmail.com or chtah.net was found in any SPF, MX, NS or CNAME, including at the US retail, travel and publishing brands added for this search; no customer setup page was readable. 2026-10-22, the 2,003 domains of data/hunt_domains.txt and 50 more mapped that day, by DoH: no SPF or MX at the apex or the common sending labels names chtah.com, chtah.net or cheetahmail.com. 2026-10-28, the 2,003 domains of data/hunt_domains.txt by tools/hunt_proofs.py: em.disneyplus.com delegates to cheetahmail.com's name servers, so that delegation moved to vendors.json; none of the entries left here was found.",
       "delegation_ns": [
         {
           "value": "chtah.com"
-        },
-        {
-          "value": "cheetahmail.com"
         },
         {
           "value": "chtah.net"
@@ -1294,9 +1291,6 @@
         {
           "value": "chtah.net"
         }
-      ],
-      "aliases": [
-        "CheetahMail"
       ]
     },
     "Inxmail": {
