@@ -1,5 +1,5 @@
 #!/bin/sh
-# Upgrade sendermap.dev to one released version, named as the SSH command ("0.1.7").
+# Upgrade sendermap.dns-audit.com to one released version, named as the SSH command ("0.1.7").
 # The publish workflow's deploy key runs this and nothing else: its line in
 # ~/.ssh/authorized_keys forces command="/home/marmot7/bin/sendermap-upgrade",restrict.
 set -eu
@@ -19,7 +19,7 @@ sudo systemctl restart sendermap
 # The app takes a few seconds to listen; give it thirty.
 for _ in $(seq 30); do
   if curl -sf http://127.0.0.1:8001/ | grep -q "style.css?v=$version"; then
-    echo "sendermap.dev runs $version"
+    echo "sendermap.dns-audit.com runs $version"
     exit 0
   fi
   sleep 1
