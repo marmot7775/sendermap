@@ -11,6 +11,11 @@ fails before anything is published.
 
 ## Unreleased
 
+## 0.1.10 (2026-10-28)
+
+- The website moved to [sendermap.dns-audit.com](https://sendermap.dns-audit.com).
+- A CNAME into sites.hubspot.net is a HubSpot hosted page, so it is read as a website and no
+  longer shows under Not matched to a service.
 - Cheetah Digital (CheetahMail) is named where a sending subdomain delegates to cheetahmail.com's
   name servers, proven on em.disneyplus.com.
 - Amazon SES no longer claims MX hosts under mail-manager-smtp.us-east-1.on.aws. Its proof,
