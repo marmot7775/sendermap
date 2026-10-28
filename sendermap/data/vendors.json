@@ -154,7 +154,8 @@
       "edgesuite.net",
       "akamai.net",
       "fastly.net",
-      "cdn.cloudflare.net"
+      "cdn.cloudflare.net",
+      "sites.hubspot.net"
     ],
     "cloud_networks": {
       "AS16509": "Amazon Web Services",
