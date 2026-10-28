@@ -1,11 +1,10 @@
-# Sendermap: example.com
-
-No sending service found  
-Checked 2026-10-12 01:25 UTC · 210 lookups in 0.0 s over Google DNS over HTTPS
+# Who handles email for example.com?
 
 No sending service shows in DNS for example.com: a null MX that says it accepts no mail, no sender in SPF, and a wildcard that answers every DKIM name.
 
-## Notes
+## Good to know
+
+Nothing to change here. These explain what the map shows.
 
 - **The domain accepts no mail**. It publishes a null MX record, which tells senders it receives no email.
   - `example.com MX 0 `
@@ -14,13 +13,13 @@ No sending service shows in DNS for example.com: a null MX that says it accepts 
 
 ## How this was checked
 
-Asked 210 lookups at 1 name:
+Checked 2026-10-12 01:25 UTC: 210 DNS lookups in 0.0 s over Google DNS over HTTPS.
 
-- example.com: 25 CNAME labels, 2 pages
+- At example.com: 25 service record names, 2 web pages.
 
 Not run:
 
-- certificate transparency, crt.sh: read only with --ct (it also holds expired certificates)
+- certificate transparency, crt.sh. Read only with --ct (it also holds expired certificates).
 
 Names asked:
 

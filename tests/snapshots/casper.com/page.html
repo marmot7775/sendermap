@@ -1,7 +1,7 @@
 <header class="view-head">
-<h2>casper.com</h2>
-<p class="summary"><strong>14 services</strong> send email as this domain <span class="sep">·</span> <span class="to-fix">4 things to fix</span></p>
-<p class="checked">Checked 2026-10-12 01:25 UTC · 740 lookups in 0.0 s over Google DNS over HTTPS</p>
+<h2>Who handles email for casper.com?</h2>
+<p class="summary"><strong class="to-fix">14 services handle email for casper.com. 4 things need fixing.</strong></p>
+<p class="checked">Checked 2026-10-12 01:25 UTC: 740 DNS lookups in 0.0 s over Google DNS over HTTPS.</p>
 </header>
 <div class="lead">
 <div class="story">
@@ -12,14 +12,21 @@
 </div>
 </div>
 <section class="view-section glance">
-<h3 class="section-title">At a glance</h3>
+<h3 class="section-title">Who handles your email</h3>
+<p class="section-intro">Each service below receives or sends email for casper.com.</p>
+<ul class="section-key">
+<li>Receives your mail: your MX records deliver the domain&#x27;s mail there.</li>
+<li>Set up to send: its records for sending are in your DNS.</li>
+<li>Likely sends: one clue points to it, such as a key named for it.</li>
+<li>Account only: an account exists, with nothing set up to send.</li>
+</ul>
 <table class="glance">
 <thead><tr><th>Service</th><th>Category</th><th>Status</th><th>Setup</th></tr></thead>
 <tbody>
 <tr>
 <td class="name"><span class="dot in-use"></span><a href="#service-google-workspace">Google Workspace</a></td>
 <td class="category">Mailbox</td>
-<td><span class="badge b-in-use">Receives mail</span></td>
+<td><span class="badge b-in-use">Receives your mail</span></td>
 <td class="state incomplete">⚠ setup incomplete</td>
 </tr>
 <tr>
@@ -91,7 +98,7 @@
 <tr>
 <td class="name"><span class="dot likely"></span><a href="#service-customer-io">Customer.io (e.casper.com)</a></td>
 <td class="category">Marketing</td>
-<td><span class="badge b-likely">Likely</span></td>
+<td><span class="badge b-likely">Likely sends</span></td>
 <td class="state basis">from: DKIM key</td>
 </tr>
 <tr>
@@ -102,10 +109,10 @@
 </tr>
 </tbody>
 </table>
-<p class="reports">Reports go to DMARCian.</p>
 </section>
 <section class="view-section attention">
-<h3 class="section-title">Fix these</h3>
+<h3 class="section-title">What to fix</h3>
+<p class="section-intro">Problems found in the setup, most serious first.</p>
 <ol class="fixes">
 <li class="finding warning">
 <h4>Eight DKIM keys at casper.com are 1024-bit: google (Google Workspace), cm (Campaign Monitor), k1 (Mailchimp), mandrill (Mandrill), salesforce (Salesforce), s2 (SendGrid), smtpapi (SendGrid) and mx</h4>
@@ -155,7 +162,8 @@
 </ol>
 </section>
 <section class="view-section notes">
-<h3 class="section-title">Notes</h3>
+<h3 class="section-title">Good to know</h3>
+<p class="section-intro">Nothing to change here. These explain what the map shows.</p>
 <ul class="notes">
 <li><strong>The mte1 key at casper.com and the mte1 key at email.casper.com are the same key</strong>. They publish one public key, fp 402b5aebde0f1c9f, so one private key signs for all of them, and replacing the key at one selector leaves it live at the others.
 <details class="records"><summary>Records</summary>
@@ -183,12 +191,22 @@
 </ul>
 </section>
 <section class="view-section tier">
-<h3 class="section-title">Evidence, service by service</h3>
+<h3 class="section-title">The proof, service by service</h3>
+<p class="section-intro">The DNS records behind each service above, for anyone who wants to check them.</p>
+<ul class="section-key">
+<li>MX: where the domain&#x27;s mail is delivered.</li>
+<li>SPF: the list of servers allowed to send as the domain.</li>
+<li>DKIM: a signature key that proves mail really came from the domain.</li>
+<li>Tracking CNAME: links in a service&#x27;s emails point here.</li>
+<li>Bounce CNAME: lets a service handle bounced mail under the domain&#x27;s name.</li>
+<li>Delegated by NS: the service runs DNS for a sending subdomain.</li>
+<li>Verification token: proves the domain owner set up an account with the service.</li>
+</ul>
 <div class="rows">
 <article class="row" id="service-google-workspace">
 <h4>Google Workspace</h4>
 <p class="meta">Mailbox</p>
-<span class="badge b-in-use">Receives mail</span>
+<span class="badge b-in-use">Receives your mail</span>
 <div class="row-body">
 <p class="decider"><span class="kind">MX</span>: aspmx.l.google.com, alt1.aspmx.l.google.com and 3 more</p>
 <ul class="claims">
@@ -461,7 +479,7 @@
 <article class="row" id="service-customer-io">
 <h4>Customer.io</h4>
 <p class="meta">Marketing, at e.casper.com</p>
-<span class="badge b-likely">Likely</span>
+<span class="badge b-likely">Likely sends</span>
 <div class="row-body">
 <p class="decider"><span class="kind">DKIM key</span>: krs (2048 bit, named for it)</p>
 <p class="setup">setup complete</p>
@@ -493,7 +511,8 @@
 </div>
 </section>
 <section class="view-section unknowns">
-<h3 class="section-title">Not recognised</h3>
+<h3 class="section-title">Not matched to a service</h3>
+<p class="section-intro">These records point somewhere Sendermap does not recognise: a service it does not know yet, or your own servers.</p>
 <ul class="unknowns">
 <li>DKIM key: <span class="mono">mx</span>
 <span class="ev mono">mx._domainkey.casper.com TXT v=DKIM1; k=rsa; p=MIGfMA0GCSqG..., 1024-bit, fp 273e0630e2eb6478</span>
@@ -507,7 +526,8 @@
 </ul>
 </section>
 <section class="view-section absences">
-<h3 class="section-title">Checked and not there</h3>
+<h3 class="section-title">Looked for and not found</h3>
+<p class="section-intro">Records Sendermap looked for and did not find.</p>
 <ul class="gaps absences">
 <li><span class="mono">DKIM keys at t.casper.com</span>: selectors exist but none of the 32 names asked is one<span class="ev mono">_domainkey.t.casper.com TXT no record of this type</span></li>
 </ul>
@@ -521,18 +541,18 @@
 <li>DKIM selectors at <span class="mono">email.casper.com</span>: 80 of 110 not asked. The first 27 were asked, plus any the name&#x27;s own SPF, MX or delegation points to (cap 27).</li>
 <li>DKIM selectors at <span class="mono">mail.casper.com</span>: 82 of 110 not asked. The first 27 were asked, plus any the name&#x27;s own SPF, MX or delegation points to (cap 27).</li>
 <li>DKIM selectors at <span class="mono">orders.casper.com</span>: 83 of 110 not asked. The first 27 were asked, plus any the name&#x27;s own SPF, MX or delegation points to (cap 27).</li>
-<li><span class="mono">the website</span>: web checks were turned off (--no-web)</li>
-<li><span class="mono">certificate transparency, crt.sh</span>: read only with --ct (it also holds expired certificates)</li>
+<li>the website. Web checks were turned off (--no-web).</li>
+<li>certificate transparency, crt.sh. Read only with --ct (it also holds expired certificates).</li>
 </ul>
 <h4>What was asked</h4>
 <p class="asked-total">740 lookups at 6 names</p>
 <ul class="gaps">
-<li><span class="mono">casper.com</span>: 110 DKIM selectors, 25 CNAME labels, 1 page</li>
-<li><span class="mono">e.casper.com</span>: 32 DKIM selectors</li>
-<li><span class="mono">email.casper.com</span>: 30 DKIM selectors</li>
-<li><span class="mono">mail.casper.com</span>: 28 DKIM selectors</li>
-<li><span class="mono">orders.casper.com</span>: 27 DKIM selectors</li>
-<li><span class="mono">t.casper.com</span>: 32 DKIM selectors</li>
+<li>At <span class="mono">casper.com</span>: 110 possible DKIM key names, 25 service record names, 1 web page.</li>
+<li>At <span class="mono">e.casper.com</span>: 32 possible DKIM key names.</li>
+<li>At <span class="mono">email.casper.com</span>: 30 possible DKIM key names.</li>
+<li>At <span class="mono">mail.casper.com</span>: 28 possible DKIM key names.</li>
+<li>At <span class="mono">orders.casper.com</span>: 27 possible DKIM key names.</li>
+<li>At <span class="mono">t.casper.com</span>: 32 possible DKIM key names.</li>
 </ul>
 <details class="asked"><summary>Names asked</summary>
 <h4 class="mono">casper.com</h4>

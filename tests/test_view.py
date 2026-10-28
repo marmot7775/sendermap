@@ -45,11 +45,17 @@ async def test_findings_precede_services(case: Path) -> None:
     shown, md = both(result, evidence=False)
     if not (result.findings and result.senders):
         return
-    first = min(shown.index(h) for h in ("\nFIX THESE\n", "\nNOTES\n") if h in shown)
-    assert shown.index("\nAT A GLANCE\n") < first < shown.index("\nEVIDENCE, SERVICE BY SERVICE\n")
-    md_first = min(md.index(h) for h in ("\n## Fix these\n", "\n## Notes\n") if h in md)
+    first = min(shown.index(h) for h in ("\nWhat to fix\n", "\nGood to know\n") if h in shown)
     assert (
-        md.index("\n## At a glance\n") < md_first < md.index("\n## Evidence, service by service\n")
+        shown.index("\nWho handles your email\n")
+        < first
+        < shown.index("\nThe proof, service by service\n")
+    )
+    md_first = min(md.index(h) for h in ("\n## What to fix\n", "\n## Good to know\n") if h in md)
+    assert (
+        md.index("\n## Who handles your email\n")
+        < md_first
+        < md.index("\n## The proof, service by service\n")
     )
 
 

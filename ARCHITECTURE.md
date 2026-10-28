@@ -79,7 +79,7 @@ Everything Sendermap reports is built from a few frozen dataclasses in `senderma
   `confirmed`, claimed and found, with the tier; `unclaimed`, every sending service found that
   nobody claimed (a reporting service is never unclaimed); `unfound`, claimed and known but with
   no claim at any name checked; and `unknown`, the claimed names no service goes by, kept as the
-  client wrote them, so a client's words are never silently dropped. See "Claimed senders".
+  client wrote them, so a client's words are never silently dropped. See "Claimed senders" (every view shows it as "Your list against the map").
 - **Story**: one paragraph, a string, written by rules from the map for a reader who runs a
   company. See "The story".
 - **Run**: when and how one map was made: `checked_at`, `elapsed` seconds, DNS `lookups` and
@@ -337,7 +337,7 @@ asked is no such name the result is an Absence, "selectors exist but none of the
 is one", with the node's answer as evidence. A name that answers anything (a key, a revoked
 key, a malformed record, a dangling CNAME) is a selector, so then there is no Absence, and a
 failed lookup leaves the gap it has always left. Absences are shown in every view under
-"Checked and not there", each with its evidence; JSON carries them as `absences` and each
+"Looked for and not found", each with its evidence; JSON carries them as `absences` and each
 Checked's class as `denial`.
 - An IP range in SPF, IPv4 or IPv6, is named by the narrowest range a service publishes in its own SPF record
   that contains it, when exactly one service publishes that range. Otherwise the networks that

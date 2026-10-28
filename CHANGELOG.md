@@ -11,6 +11,17 @@ fails before anything is published.
 
 ## Unreleased
 
+- The terminal, Markdown and web views read for someone who has never used Sendermap. The map
+  opens with the question it answers ("Who handles email for glossier.com?") and the answer in
+  plain words ("9 services handle email for glossier.com. 3 things need fixing."), in place of a
+  boxed tally. Each section is named in plain words (Who handles your email, What to fix, Good to
+  know, The proof, service by service, How this was checked) and opens with a line saying what it
+  shows; the services section says what each status means, and the proof section says what each
+  kind of record present does (MX, SPF, DKIM, bounce and tracking CNAMEs, tokens). Statuses read
+  Receives your mail, Set up to send, Likely sends and Account only. Where reports go is said
+  once, in the story. How this was checked starts with when and how many DNS lookups, and counts
+  what was asked at each name in words ("110 possible DKIM key names, 25 service record names, 3
+  web pages"). The JSON is unchanged.
 - `tools/benchmark.py` maps a fixed list of 300 domains (`data/benchmark_domains.txt`) and
   reports how much of what they publish Sendermap names, with the unnamed evidence ranked by how
   many domains publish it. Runs are kept in `benchmark/runs/`; `--compare` shows what changed

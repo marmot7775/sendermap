@@ -1,7 +1,7 @@
 <header class="view-head">
-<h2>allbirds.com</h2>
-<p class="summary"><strong>15 services</strong> send email as this domain <span class="sep">·</span> <span class="to-fix">3 things to fix</span></p>
-<p class="checked">Checked 2026-10-12 01:24 UTC · 764 lookups in 0.0 s over Google DNS over HTTPS</p>
+<h2>Who handles email for allbirds.com?</h2>
+<p class="summary"><strong class="to-fix">15 services handle email for allbirds.com. 3 things need fixing.</strong></p>
+<p class="checked">Checked 2026-10-12 01:24 UTC: 764 DNS lookups in 0.0 s over Google DNS over HTTPS.</p>
 </header>
 <div class="lead">
 <div class="story">
@@ -11,14 +11,20 @@
 </div>
 </div>
 <section class="view-section glance">
-<h3 class="section-title">At a glance</h3>
+<h3 class="section-title">Who handles your email</h3>
+<p class="section-intro">Each service below receives or sends email for allbirds.com.</p>
+<ul class="section-key">
+<li>Receives your mail: your MX records deliver the domain&#x27;s mail there.</li>
+<li>Set up to send: its records for sending are in your DNS.</li>
+<li>Likely sends: one clue points to it, such as a key named for it.</li>
+</ul>
 <table class="glance">
 <thead><tr><th>Service</th><th>Category</th><th>Status</th><th>Setup</th></tr></thead>
 <tbody>
 <tr>
 <td class="name"><span class="dot in-use"></span><a href="#service-microsoft-365">Microsoft 365</a></td>
 <td class="category">Mailbox</td>
-<td><span class="badge b-in-use">Receives mail</span></td>
+<td><span class="badge b-in-use">Receives your mail</span></td>
 <td class="state complete">✓ setup complete</td>
 </tr>
 <tr>
@@ -96,20 +102,21 @@
 <tr>
 <td class="name"><span class="dot likely"></span><a href="#service-customer-io">Customer.io</a></td>
 <td class="category">Marketing</td>
-<td><span class="badge b-likely">Likely</span></td>
+<td><span class="badge b-likely">Likely sends</span></td>
 <td class="state basis">from: DKIM key</td>
 </tr>
 <tr>
 <td class="name"><span class="dot likely"></span><a href="#service-mandrill">Mandrill</a></td>
 <td class="category">Transactional</td>
-<td><span class="badge b-likely">Likely</span></td>
+<td><span class="badge b-likely">Likely sends</span></td>
 <td class="state basis">from: DKIM key</td>
 </tr>
 </tbody>
 </table>
 </section>
 <section class="view-section attention">
-<h3 class="section-title">Fix these</h3>
+<h3 class="section-title">What to fix</h3>
+<p class="section-intro">Problems found in the setup, most serious first.</p>
 <ol class="fixes">
 <li class="finding warning">
 <h4>Two DKIM keys at allbirds.com are 1024-bit: k1 (Mailchimp) and mandrill (Mandrill)</h4>
@@ -145,7 +152,8 @@
 </ol>
 </section>
 <section class="view-section notes">
-<h3 class="section-title">Notes</h3>
+<h3 class="section-title">Good to know</h3>
+<p class="section-intro">Nothing to change here. These explain what the map shows.</p>
 <ul class="notes">
 <li><strong>SPF at allbirds.com is managed through EasyDMARC</strong>. EasyDMARC copies the domain&#x27;s senders into its own record. The walk read that record, so the services and ranges it lists are reported here as the domain&#x27;s.
 <details class="records"><summary>Records</summary>
@@ -157,12 +165,22 @@
 </ul>
 </section>
 <section class="view-section tier">
-<h3 class="section-title">Evidence, service by service</h3>
+<h3 class="section-title">The proof, service by service</h3>
+<p class="section-intro">The DNS records behind each service above, for anyone who wants to check them.</p>
+<ul class="section-key">
+<li>MX: where the domain&#x27;s mail is delivered.</li>
+<li>SPF: the list of servers allowed to send as the domain.</li>
+<li>DKIM: a signature key that proves mail really came from the domain.</li>
+<li>Verification token: proves the domain owner set up an account with the service.</li>
+<li>Autodiscover: lets mail apps find their settings.</li>
+<li>Tracking CNAME: links in a service&#x27;s emails point here.</li>
+<li>Bounce CNAME: lets a service handle bounced mail under the domain&#x27;s name.</li>
+</ul>
 <div class="rows">
 <article class="row" id="service-microsoft-365">
 <h4>Microsoft 365</h4>
 <p class="meta">Mailbox</p>
-<span class="badge b-in-use">Receives mail</span>
+<span class="badge b-in-use">Receives your mail</span>
 <div class="row-body">
 <p class="decider"><span class="kind">MX</span>: allbirds-com.mail.protection.outlook.com</p>
 <ul class="claims">
@@ -520,7 +538,7 @@
 <article class="row" id="service-customer-io">
 <h4>Customer.io</h4>
 <p class="meta">Marketing</p>
-<span class="badge b-likely">Likely</span>
+<span class="badge b-likely">Likely sends</span>
 <div class="row-body">
 <p class="decider"><span class="kind">DKIM key</span>: krs (2048 bit, named for it)</p>
 <p class="setup">setup complete</p>
@@ -536,7 +554,7 @@
 <article class="row" id="service-mandrill">
 <h4>Mandrill</h4>
 <p class="meta">Transactional</p>
-<span class="badge b-likely">Likely</span>
+<span class="badge b-likely">Likely sends</span>
 <div class="row-body">
 <p class="decider"><span class="kind">DKIM key</span>: mandrill (1024 bit, named for it)</p>
 <p class="setup">setup complete</p>
@@ -552,7 +570,8 @@
 </div>
 </section>
 <section class="view-section unknowns">
-<h3 class="section-title">Not recognised</h3>
+<h3 class="section-title">Not matched to a service</h3>
+<p class="section-intro">These records point somewhere Sendermap does not recognise: a service it does not know yet, or your own servers.</p>
 <ul class="unknowns">
 <li>2 ranges in AS16509 (Amazon Web Services): <span class="mono">35.159.219.224/28, 18.199.180.160/27</span>
 <span class="ev mono">_spf1.allbirds_com._d.easydmarc.pro TXT ip4:35.159.219.224/28</span>
@@ -577,7 +596,8 @@
 </ul>
 </section>
 <section class="view-section absences">
-<h3 class="section-title">Checked and not there</h3>
+<h3 class="section-title">Looked for and not found</h3>
+<p class="section-intro">Records Sendermap looked for and did not find.</p>
 <ul class="gaps absences">
 <li><span class="mono">DKIM keys at alerts.allbirds.com</span>: selectors exist but none of the 32 names asked is one<span class="ev mono">_domainkey.alerts.allbirds.com TXT no record of this type</span></li>
 <li><span class="mono">DKIM keys at bounce.allbirds.com</span>: no selectors exist: _domainkey.bounce.allbirds.com does not exist, so the 27-name sweep was skipped; the 8 names its MX, SPF and delegations point to were asked as a check, and none exists (RFC 8020 section 5)<span class="ev mono">_domainkey.bounce.allbirds.com TXT no such name</span><span class="ev mono">sendermap-wildcard-check._domainkey.bounce.allbirds.com TXT no such name</span></li>
@@ -595,18 +615,18 @@
 <li>sending subdomains: TXT, MX and NS at apisdk.allbirds.com, community.allbirds.com, dataplane.allbirds.com, jssdk.allbirds.com, rerun.allbirds.com, www.jssdk.allbirds.com: the domain&#x27;s DNS servers failed to answer (SERVFAIL), so whether they send is not known</li>
 <li>DKIM selectors at <span class="mono">alerts</span> and <span class="mono">mail.allbirds.com</span>: 78 of 110 not asked at each. The first 27 were asked, plus any the name&#x27;s own SPF, MX or delegation points to (cap 27).</li>
 <li>DKIM selectors at <span class="mono">info.allbirds.com</span>: 83 of 110 not asked. The first 27 were asked, plus any the name&#x27;s own SPF, MX or delegation points to (cap 27).</li>
-<li><span class="mono">the website</span>: web checks were turned off (--no-web)</li>
-<li><span class="mono">certificate transparency, crt.sh</span>: read only with --ct (it also holds expired certificates)</li>
+<li>the website. Web checks were turned off (--no-web).</li>
+<li>certificate transparency, crt.sh. Read only with --ct (it also holds expired certificates).</li>
 </ul>
 <h4>What was asked</h4>
 <p class="asked-total">764 lookups at 6 names</p>
 <ul class="gaps">
-<li><span class="mono">allbirds.com</span>: 110 DKIM selectors, 25 CNAME labels, 1 page</li>
-<li><span class="mono">alerts.allbirds.com</span>: 32 DKIM selectors</li>
-<li><span class="mono">bounce.allbirds.com</span>: 8 DKIM selectors</li>
-<li><span class="mono">email.allbirds.com</span>: 13 DKIM selectors</li>
-<li><span class="mono">info.allbirds.com</span>: 27 DKIM selectors</li>
-<li><span class="mono">mail.allbirds.com</span>: 32 DKIM selectors</li>
+<li>At <span class="mono">allbirds.com</span>: 110 possible DKIM key names, 25 service record names, 1 web page.</li>
+<li>At <span class="mono">alerts.allbirds.com</span>: 32 possible DKIM key names.</li>
+<li>At <span class="mono">bounce.allbirds.com</span>: 8 possible DKIM key names.</li>
+<li>At <span class="mono">email.allbirds.com</span>: 13 possible DKIM key names.</li>
+<li>At <span class="mono">info.allbirds.com</span>: 27 possible DKIM key names.</li>
+<li>At <span class="mono">mail.allbirds.com</span>: 32 possible DKIM key names.</li>
 </ul>
 <details class="asked"><summary>Names asked</summary>
 <h4 class="mono">allbirds.com</h4>

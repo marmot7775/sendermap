@@ -67,8 +67,8 @@ async def test_markdown_shows_the_gaps_and_what_was_asked() -> None:
     page = markdown.render(await acme_map())
     how = page.split("\n## How this was checked\n")[1]
     assert "\nNot checked:\n\n- DMARC: TXT at _dmarc.acme.test: lookup failed\n" in how
-    assert how.startswith("\nAsked ")
-    assert "\n- email.acme.test: " in how and "`google`" not in page
+    assert how.startswith("\nChecked ")
+    assert "\n- At email.acme.test: " in how and "`google`" not in page
     full = markdown.render(await acme_map(), evidence=True)
     names = full.split("\n## How this was checked\n")[1].split("\nNames asked:\n")[1]
     assert "## " not in names and "`google`" in names
@@ -78,9 +78,9 @@ async def test_the_terminal_shows_the_gaps_and_what_was_asked() -> None:
     console = Console(record=True, width=200)
     text.render(await acme_map(), console)
     shown = console.export_text()
-    how = shown.split("HOW THIS WAS CHECKED")[1]
+    how = shown.split("How this was checked")[1]
     assert "\n  Not checked: DMARC: TXT at _dmarc.acme.test: lookup failed" in how
-    assert "\n    acme.test: 110 DKIM selectors" in how
+    assert "\n  At acme.test: 110 possible DKIM key names" in how
     assert "DKIM selectors: " not in shown
     console = Console(record=True, width=400)
     text.render(await acme_map(), console, evidence=True)

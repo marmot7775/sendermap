@@ -1,7 +1,7 @@
 <header class="view-head">
-<h2>mills-reeve.com</h2>
-<p class="summary"><strong>5 services</strong> send email as this domain <span class="sep">·</span> <span class="to-fix">2 things to fix</span></p>
-<p class="checked">Checked 2026-10-12 01:24 UTC · 644 lookups in 0.0 s over Google DNS over HTTPS</p>
+<h2>Who handles email for mills-reeve.com?</h2>
+<p class="summary"><strong class="to-fix">5 services handle email for mills-reeve.com. 2 things need fixing.</strong></p>
+<p class="checked">Checked 2026-10-12 01:24 UTC: 644 DNS lookups in 0.0 s over Google DNS over HTTPS.</p>
 </header>
 <div class="lead">
 <div class="story">
@@ -12,14 +12,19 @@
 </div>
 </div>
 <section class="view-section glance">
-<h3 class="section-title">At a glance</h3>
+<h3 class="section-title">Who handles your email</h3>
+<p class="section-intro">Each service below receives or sends email for mills-reeve.com.</p>
+<ul class="section-key">
+<li>Receives your mail: your MX records deliver the domain&#x27;s mail there.</li>
+<li>Set up to send: its records for sending are in your DNS.</li>
+</ul>
 <table class="glance">
 <thead><tr><th>Service</th><th>Category</th><th>Status</th><th>Setup</th></tr></thead>
 <tbody>
 <tr>
 <td class="name"><span class="dot in-use"></span><a href="#service-mimecast">Mimecast</a></td>
 <td class="category">Security gateway</td>
-<td><span class="badge b-in-use">Receives mail</span></td>
+<td><span class="badge b-in-use">Receives your mail</span></td>
 <td class="state "></td>
 </tr>
 <tr>
@@ -48,10 +53,10 @@
 </tr>
 </tbody>
 </table>
-<p class="reports">Reports go to Mimecast DMARC Analyzer.</p>
 </section>
 <section class="view-section attention">
-<h3 class="section-title">Fix these</h3>
+<h3 class="section-title">What to fix</h3>
+<p class="section-intro">Problems found in the setup, most serious first.</p>
 <ol class="fixes">
 <li class="finding warning">
 <h4>The SendGrid key s2 at mills-reeve.com is 1024-bit</h4>
@@ -75,7 +80,8 @@
 </ol>
 </section>
 <section class="view-section notes">
-<h3 class="section-title">Notes</h3>
+<h3 class="section-title">Good to know</h3>
+<p class="section-intro">Nothing to change here. These explain what the map shows.</p>
 <ul class="notes">
 <li><strong>MX at mills-reeve.com points at Mimecast, a security gateway</strong>. Inferred from the MX records: a security gateway filters incoming mail and hands it on to the server that holds the mailboxes, and MX records do not say which server that is.
 <details class="records"><summary>Records</summary>
@@ -88,12 +94,20 @@
 </ul>
 </section>
 <section class="view-section tier">
-<h3 class="section-title">Evidence, service by service</h3>
+<h3 class="section-title">The proof, service by service</h3>
+<p class="section-intro">The DNS records behind each service above, for anyone who wants to check them.</p>
+<ul class="section-key">
+<li>MX: where the domain&#x27;s mail is delivered.</li>
+<li>SPF: the list of servers allowed to send as the domain.</li>
+<li>Verification token: proves the domain owner set up an account with the service.</li>
+<li>Autodiscover: lets mail apps find their settings.</li>
+<li>DKIM: a signature key that proves mail really came from the domain.</li>
+</ul>
 <div class="rows">
 <article class="row" id="service-mimecast">
 <h4>Mimecast</h4>
 <p class="meta">Security gateway</p>
-<span class="badge b-in-use">Receives mail</span>
+<span class="badge b-in-use">Receives your mail</span>
 <div class="row-body">
 <p class="decider"><span class="kind">MX</span>: eu-smtp-inbound-1.mimecast.com, eu-smtp-inbound-2.mimecast.com</p>
 <ul class="claims">
@@ -189,7 +203,8 @@
 </div>
 </section>
 <section class="view-section unknowns">
-<h3 class="section-title">Not recognised</h3>
+<h3 class="section-title">Not matched to a service</h3>
+<p class="section-intro">These records point somewhere Sendermap does not recognise: a service it does not know yet, or your own servers.</p>
 <ul class="unknowns">
 <li>SPF include: <span class="mono">emaileuc.freshservice.com</span>
 <span class="ev mono">mills-reeve.com TXT include:emaileuc.freshservice.com</span>
@@ -269,15 +284,15 @@
 <ul class="gaps">
 <li>DKIM selectors at <span class="mono">update.mills-reeve.com</span>: 81 of 110 not asked. The first 27 were asked, plus any the name&#x27;s own SPF, MX or delegation points to (cap 27).</li>
 <li>DKIM selectors at <span class="mono">updates.mills-reeve.com</span>: 83 of 110 not asked. The first 27 were asked, plus any the name&#x27;s own SPF, MX or delegation points to (cap 27).</li>
-<li><span class="mono">the website</span>: web checks were turned off (--no-web)</li>
-<li><span class="mono">certificate transparency, crt.sh</span>: read only with --ct (it also holds expired certificates)</li>
+<li>the website. Web checks were turned off (--no-web).</li>
+<li>certificate transparency, crt.sh. Read only with --ct (it also holds expired certificates).</li>
 </ul>
 <h4>What was asked</h4>
 <p class="asked-total">644 lookups at 3 names</p>
 <ul class="gaps">
-<li><span class="mono">mills-reeve.com</span>: 110 DKIM selectors, 25 CNAME labels, 1 page</li>
-<li><span class="mono">update.mills-reeve.com</span>: 29 DKIM selectors</li>
-<li><span class="mono">updates.mills-reeve.com</span>: 27 DKIM selectors</li>
+<li>At <span class="mono">mills-reeve.com</span>: 110 possible DKIM key names, 25 service record names, 1 web page.</li>
+<li>At <span class="mono">update.mills-reeve.com</span>: 29 possible DKIM key names.</li>
+<li>At <span class="mono">updates.mills-reeve.com</span>: 27 possible DKIM key names.</li>
 </ul>
 <details class="asked"><summary>Names asked</summary>
 <h4 class="mono">mills-reeve.com</h4>

@@ -18,8 +18,9 @@ services that receive its reports. Each one comes with:
 
 - **The evidence**, record by record: the SPF include, MX host, DKIM key, bounce or tracking
   CNAME, verification token or report address that gave it away.
-- **How sure we are**, in words, not a percentage (the terminal and the site show the first two
-  as Receives mail and Set up to send; the JSON keeps the tier names):
+- **How sure we are**, in words, not a percentage (the terminal and the site show these as
+  Receives your mail, Set up to send, Likely sends and Account only; the JSON keeps the tier
+  names):
   - **In use**: mail for the domain is delivered there.
   - **Configured**: set up to send as the domain.
   - **Likely**: a signing key whose name points at the service.
@@ -37,7 +38,7 @@ types) and `k=` (key type). A tag that weakens the key, such as testing mode or 
 raised as a finding. Each key also gets a fingerprint, `fp` and 16 hex characters, so the same
 key published at two selectors is easy to spot, and the map points it out when it is.
 
-## Checked and not there
+## Looked for and not found
 
 The map also lists what it looked for and did not find, with the DNS answers that show it. Today
 that covers DKIM keys. Whether "not there" can be trusted depends on how the domain's DNS answers

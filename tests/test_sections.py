@@ -15,7 +15,8 @@ from sendermap.render import html, markdown, text
 from sendermap.render.view import SECTIONS
 
 NAMES = [name for _, name in SECTIONS]
-_TEXT = re.compile(r"^([A-Z][A-Z ,]+)$", re.M)
+# A section name is the only unindented line in the terminal view but the question on top.
+_TEXT = re.compile(r"^([A-Z][^?\n]*?) *$", re.M)
 _MARKDOWN = re.compile(r"^## (.+)$", re.M)
 _HTML = re.compile(r'<h3 class="section-title">([^<]*)</h3>')
 _TABLE_WIDTH = 70
@@ -48,9 +49,9 @@ async def test_the_three_renderers_show_the_same_sections_in_order(case: Path) -
     full = markdown_names(result, evidence=True)
     assert page == [name for name in NAMES if name in page]
     assert full == page
-    assert text_names(result, evidence=True) == [name.upper() for name in page]
+    assert text_names(result, evidence=True) == page
     brief = markdown_names(result, evidence=False)
-    assert text_names(result, evidence=False) == [name.upper() for name in brief]
+    assert text_names(result, evidence=False) == brief
 
 
 async def test_the_corpus_shows_most_sections() -> None:

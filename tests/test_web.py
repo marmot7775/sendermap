@@ -127,7 +127,7 @@ async def test_the_fragment_is_served_as_html_with_the_apis_limits(cached: Sende
         assert reply.headers["content-type"].startswith("text/html")
         assert reply.text == html.html(cached)
         claimed = await c.get("/api/map.html", params={"d": DOMAIN, "claimed": "Klaviyo"})
-        assert "Claimed senders" in claimed.text
+        assert "Your list against the map" in claimed.text
         assert (await c.get("/api/map.html", params={"d": "not a domain"})).status_code == 422
         assert (await c.get("/api/map.html", params={"d": "a" * 254})).status_code == 422
         site.state.seen.clear()

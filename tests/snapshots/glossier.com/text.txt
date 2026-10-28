@@ -1,8 +1,5 @@
-╭──────────────────────────────────────────────────────────────────────────────────╮
-│  glossier.com                                                                    │
-│  9 services send email as this domain   ·   3 things to fix                      │
-│  checked 2026-10-12 01:25 UTC · 750 lookups in 0.0 s over Google DNS over HTTPS  │
-╰──────────────────────────────────────────────────────────────────────────────────╯
+Who handles email for glossier.com?
+  9 services handle email for glossier.com. 3 things need fixing.
 
   Google Workspace receives the domain's mail and has a DKIM key in place to sign it.
   Six other services are set up to send as the domain: three support and CRM (Help Scout,           
@@ -11,19 +8,26 @@
   One service shows an account and nothing set up to send (Amazon SES); DMARC reports go to         
   Valimail.                                                                                         
 
-AT A GLANCE
-  ●  Google Workspace  Mailbox          Receives mail   ⚠ setup incomplete      
-  ●  Help Scout        Support and CRM  Set up to send                          
-  ●  Klaviyo           Marketing        Set up to send  ✓ setup complete        
-  ●  Postmark          Transactional    Set up to send  ✓ setup complete        
-  ●  Salesforce        Support and CRM  Set up to send                          
-  ●  SendGrid          Transactional    Set up to send  ✓ setup complete        
-  ●  Zendesk           Support and CRM  Set up to send  ✓ setup complete        
-  ◐  Mandrill          Transactional    Likely          from: DKIM key          
-  ○  Amazon SES        Transactional    Account only    from: Verification token
-  Reports go to Valimail.
+Who handles your email
+  Each service below receives or sends email for glossier.com.
+  Receives your mail: your MX records deliver the domain's mail there.
+  Set up to send: its records for sending are in your DNS.
+  Likely sends: one clue points to it, such as a key named for it.
+  Account only: an account exists, with nothing set up to send.
 
-FIX THESE
+  ●  Google Workspace  Mailbox          Receives your mail  ⚠ setup incomplete      
+  ●  Help Scout        Support and CRM  Set up to send                              
+  ●  Klaviyo           Marketing        Set up to send      ✓ setup complete        
+  ●  Postmark          Transactional    Set up to send      ✓ setup complete        
+  ●  Salesforce        Support and CRM  Set up to send                              
+  ●  SendGrid          Transactional    Set up to send      ✓ setup complete        
+  ●  Zendesk           Support and CRM  Set up to send      ✓ setup complete        
+  ◐  Mandrill          Transactional    Likely sends        from: DKIM key          
+  ○  Amazon SES        Transactional    Account only        from: Verification token
+
+What to fix
+  Problems found in the setup, most serious first.
+
   1 ▲ Two DKIM keys at glossier.com are 1024-bit: mandrill (Mandrill) and s2 (SendGrid)
       Some receivers already treat 1024-bit RSA keys as weak. Rotate to 2048-bit.      
   2 ▲ Google Workspace at receipts.glossier.com has no SPF                                          
@@ -33,14 +37,23 @@ FIX THESE
       Its documented setup needs it and the map shows it missing: no key at google._domainkey, a    
       name with no TXT record; this zone gives that answer for every name that does not exist.      
 
-NOTES
+Good to know
+  Nothing to change here. These explain what the map shows.
+
   ·   SPF at glossier.com and receipts.glossier.com is managed through Valimail                     
       A hosted or macro record can authorize services without naming them, so the services it covers
       do not show in the record itself.                                                             
 
-EVIDENCE, SERVICE BY SERVICE
+The proof, service by service
+  The DNS records behind each service above, for anyone who wants to check them.
+  MX: where the domain's mail is delivered.
+  SPF: the list of servers allowed to send as the domain.
+  DKIM: a signature key that proves mail really came from the domain.
+  Bounce CNAME: lets a service handle bounced mail under the domain's name.
+  Verification token: proves the domain owner set up an account with the service.
+  Tracking CNAME: links in a service's emails point here.
 
-  Google Workspace  ·  Mailbox  ·  receives mail
+  Google Workspace  ·  Mailbox  ·  receives your mail
     MX                          aspmx.l.google.com, alt1.aspmx.l.google.com and 3 more              
     SPF passes its address      ip4:209.85.128.0/17                                                 
     MX for a subdomain's mail   aspmx.l.google.com, alt1.aspmx.l.google.com and 3 more at           
@@ -82,25 +95,28 @@ EVIDENCE, SERVICE BY SERVICE
     DKIM keys                   zendesk1, zendesk2 (both 2048 bit, by CNAME)
     Setup                       complete                                    
 
-  Mandrill  ·  Transactional  ·  likely
+  Mandrill  ·  Transactional  ·  likely sends
     DKIM key                    mandrill (1024 bit, named for it)
     Setup                       complete                         
 
   Amazon SES  ·  Transactional  ·  account only
     Verification token          amazonses:awBV5EM6W53p2/Xbg80uJ29zurZnGsMMJcLLLp6vUcY=
 
-NOT RECOGNISED
+Not matched to a service
+  These records point somewhere Sendermap does not recognise: a service it does not know yet, or    
+  your own servers.                                                                                 
+
   CNAME at go: cname.short.io
 
-HOW THIS WAS CHECKED
-  Asked 750 lookups at 4 names:
-    glossier.com: 110 DKIM selectors, 25 CNAME labels, 1 page
-    marketing.glossier.com: 27 DKIM selectors
-    receipts.glossier.com: 27 DKIM selectors
-    send.glossier.com: 27 DKIM selectors
+How this was checked
+  Checked 2026-10-12 01:25 UTC: 750 DNS lookups in 0.0 s over Google DNS over HTTPS.
+  At glossier.com: 110 possible DKIM key names, 25 service record names, 1 web page.
+  At marketing.glossier.com: 27 possible DKIM key names.
+  At receipts.glossier.com: 27 possible DKIM key names.
+  At send.glossier.com: 27 possible DKIM key names.
   Not checked: DKIM selectors at marketing, receipts and send.glossier.com: 83 of 110 not asked at  
   each. The first 27 were asked, plus any the name's own SPF, MX or delegation points to (cap 27).  
-  Not run: the website: web checks were turned off (--no-web)
-  Not run: certificate transparency, crt.sh: read only with --ct (it also holds expired             
-  certificates)                                                                                     
+  Not run: the website. Web checks were turned off (--no-web).
+  Not run: certificate transparency, crt.sh. Read only with --ct (it also holds expired             
+  certificates).                                                                                    
   Add --evidence to see every record behind each line.

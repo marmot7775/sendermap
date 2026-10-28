@@ -1,7 +1,6 @@
-# Sendermap: casper.com
+# Who handles email for casper.com?
 
-14 services send email as this domain · 4 things to fix  
-Checked 2026-10-12 01:25 UTC · 740 lookups in 0.0 s over Google DNS over HTTPS
+**14 services handle email for casper.com. 4 things need fixing.**
 
 Google Workspace receives the domain's mail and has a DKIM key in place to sign it.
 
@@ -9,9 +8,19 @@ Eleven other services are set up to send as the domain: four marketing (Campaign
 
 One service shows an account and nothing set up to send (Microsoft 365); DMARC reports go to DMARCian.
 
-## At a glance
+## Who handles your email
 
-- **Google Workspace** (Mailbox): receives mail; setup incomplete
+Each service below receives or sends email for casper.com.
+
+Receives your mail: your MX records deliver the domain's mail there.
+
+Set up to send: its records for sending are in your DNS.
+
+Likely sends: one clue points to it, such as a key named for it.
+
+Account only: an account exists, with nothing set up to send.
+
+- **Google Workspace** (Mailbox): receives your mail; setup incomplete
 - **Campaign Monitor** (Marketing): set up to send; setup complete
 - **Docebo** (Commerce and apps): set up to send
 - **Iterable** (Marketing): set up to send
@@ -23,12 +32,12 @@ One service shows an account and nothing set up to send (Microsoft 365); DMARC r
 - **Salesforce** (Support and CRM): set up to send
 - **Salesforce Marketing Cloud Engagement** (Marketing, at mail.casper.com): set up to send
 - **SendGrid** (Transactional): set up to send; setup complete
-- **Customer.io** (Marketing, at e.casper.com): likely; from: DKIM key
+- **Customer.io** (Marketing, at e.casper.com): likely sends; from: DKIM key
 - **Microsoft 365** (Mailbox): account only; from: Verification token
 
-Reports go to DMARCian.
+## What to fix
 
-## Fix these
+Problems found in the setup, most serious first.
 
 1. **Eight DKIM keys at casper.com are 1024-bit: google (Google Workspace), cm (Campaign Monitor), k1 (Mailchimp), mandrill (Mandrill), salesforce (Salesforce), s2 (SendGrid), smtpapi (SendGrid) and mx** (warning)
 
@@ -46,17 +55,35 @@ Reports go to DMARCian.
 
    Its documented setup needs it and the map shows it missing: no SPF record.
 
-## Notes
+## Good to know
+
+Nothing to change here. These explain what the map shows.
 
 - **The mte1 key at casper.com and the mte1 key at email.casper.com are the same key**. They publish one public key, fp 402b5aebde0f1c9f, so one private key signs for all of them, and replacing the key at one selector leaves it live at the others.
 - **The mte2 key at casper.com and the mte2 key at email.casper.com are the same key**. They publish one public key, fp bd970c8868f21f9b, so one private key signs for all of them, and replacing the key at one selector leaves it live at the others.
 - **Microsoft 365 shows only an account at casper.com**. The records name an account (a verification token, an autodiscover CNAME, or a revoked or dangling key) and nothing that sends or receives mail. Is the account still used? If not, remove its records.
 
-## Evidence, service by service
+## The proof, service by service
+
+The DNS records behind each service above, for anyone who wants to check them.
+
+MX: where the domain's mail is delivered.
+
+SPF: the list of servers allowed to send as the domain.
+
+DKIM: a signature key that proves mail really came from the domain.
+
+Tracking CNAME: links in a service's emails point here.
+
+Bounce CNAME: lets a service handle bounced mail under the domain's name.
+
+Delegated by NS: the service runs DNS for a sending subdomain.
+
+Verification token: proves the domain owner set up an account with the service.
 
 ### Google Workspace
 
-Mailbox · receives mail
+Mailbox · receives your mail
 
 - MX: aspmx.l.google.com, alt1.aspmx.l.google.com and 3 more
 - SPF: include:_spf.google.com
@@ -145,7 +172,7 @@ Transactional · set up to send
 
 ### Customer.io
 
-Marketing · likely · at e.casper.com
+Marketing · likely sends · at e.casper.com
 
 - DKIM key: krs (2048 bit, named for it)
 - Setup: complete
@@ -157,27 +184,31 @@ Mailbox · account only
 - Verification token: MS=ms55520198
 - Setup: incomplete: SPF missing (the record does not authorize spf.protection.outlook.com), DKIM missing (no key at selector1._domainkey or selector2._domainkey, names with no TXT record; this zone gives that answer for every name that does not exist)
 
-## Not recognised
+## Not matched to a service
+
+These records point somewhere Sendermap does not recognise: a service it does not know yet, or your own servers.
 
 - DKIM key: `mx`, from `mx._domainkey.casper.com TXT v=DKIM1; k=rsa; p=MIGfMA0GCSqG..., 1024-bit, fp 273e0630e2eb6478`
 - IP address in SPF: `208.89.14.209 (AS11054, LIVEPERSON - LivePerson, Inc., US)`, from `casper.com TXT ip4:208.89.14.209`
 - mail server: `incoming.bm23.com` at email.casper.com, from `email.casper.com MX 20 incoming.bm23.com`
 
-## Checked and not there
+## Looked for and not found
+
+Records Sendermap looked for and did not find.
 
 - DKIM keys at t.casper.com: selectors exist but none of the 32 names asked is one
   - `_domainkey.t.casper.com TXT no record of this type`
 
 ## How this was checked
 
-Asked 740 lookups at 6 names:
+Checked 2026-10-12 01:25 UTC: 740 DNS lookups in 0.0 s over Google DNS over HTTPS.
 
-- casper.com: 110 DKIM selectors, 25 CNAME labels, 1 page
-- e.casper.com: 32 DKIM selectors
-- email.casper.com: 30 DKIM selectors
-- mail.casper.com: 28 DKIM selectors
-- orders.casper.com: 27 DKIM selectors
-- t.casper.com: 32 DKIM selectors
+- At casper.com: 110 possible DKIM key names, 25 service record names, 1 web page.
+- At e.casper.com: 32 possible DKIM key names.
+- At email.casper.com: 30 possible DKIM key names.
+- At mail.casper.com: 28 possible DKIM key names.
+- At orders.casper.com: 27 possible DKIM key names.
+- At t.casper.com: 32 possible DKIM key names.
 
 Not checked:
 
@@ -188,5 +219,5 @@ Not checked:
 
 Not run:
 
-- the website: web checks were turned off (--no-web)
-- certificate transparency, crt.sh: read only with --ct (it also holds expired certificates)
+- the website. Web checks were turned off (--no-web).
+- certificate transparency, crt.sh. Read only with --ct (it also holds expired certificates).

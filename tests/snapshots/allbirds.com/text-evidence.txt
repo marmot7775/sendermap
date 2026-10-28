@@ -1,8 +1,5 @@
-╭──────────────────────────────────────────────────────────────────────────────────╮
-│  allbirds.com                                                                    │
-│  15 services send email as this domain   ·   3 things to fix                     │
-│  checked 2026-10-12 01:24 UTC · 764 lookups in 0.0 s over Google DNS over HTTPS  │
-╰──────────────────────────────────────────────────────────────────────────────────╯
+Who handles email for allbirds.com?
+  15 services handle email for allbirds.com. 3 things need fixing.
 
   Microsoft 365 receives the domain's mail and has a DKIM key in place to sign it.
   Twelve other services are set up to send as the domain: six transactional (Amazon SES, Mailgun,   
@@ -10,24 +7,31 @@
   (Google Workspace), two marketing (Iterable, Mailchimp), one commerce and apps (Shopify); two more
   are likely from a DKIM key name alone (Customer.io, Mandrill).                                    
 
-AT A GLANCE
-  ●  Microsoft 365     Mailbox            Receives mail   ✓ setup complete  
-  ●  Amazon SES        Transactional      Set up to send                    
-  ●  Freshdesk         Support and CRM    Set up to send                    
-  ●  Google Workspace  Mailbox            Set up to send  ⚠ setup incomplete
-  ●  Iterable          Marketing          Set up to send                    
-  ●  Mailchimp         Marketing          Set up to send  ✓ setup complete  
-  ●  Mailgun           Transactional      Set up to send  ✓ setup complete  
-  ●  Mailjet           Transactional      Set up to send  ⚠ setup incomplete
-  ●  Postmark          Transactional      Set up to send  ✓ setup complete  
-  ●  SendGrid          Transactional      Set up to send  ✓ setup complete  
-  ●  Shopify           Commerce and apps  Set up to send                    
-  ●  SparkPost         Transactional      Set up to send  ✓ setup complete  
-  ●  Zendesk           Support and CRM    Set up to send  ✓ setup complete  
-  ◐  Customer.io       Marketing          Likely          from: DKIM key    
-  ◐  Mandrill          Transactional      Likely          from: DKIM key    
+Who handles your email
+  Each service below receives or sends email for allbirds.com.
+  Receives your mail: your MX records deliver the domain's mail there.
+  Set up to send: its records for sending are in your DNS.
+  Likely sends: one clue points to it, such as a key named for it.
 
-FIX THESE
+  ●  Microsoft 365     Mailbox            Receives your mail  ✓ setup complete  
+  ●  Amazon SES        Transactional      Set up to send                        
+  ●  Freshdesk         Support and CRM    Set up to send                        
+  ●  Google Workspace  Mailbox            Set up to send      ⚠ setup incomplete
+  ●  Iterable          Marketing          Set up to send                        
+  ●  Mailchimp         Marketing          Set up to send      ✓ setup complete  
+  ●  Mailgun           Transactional      Set up to send      ✓ setup complete  
+  ●  Mailjet           Transactional      Set up to send      ⚠ setup incomplete
+  ●  Postmark          Transactional      Set up to send      ✓ setup complete  
+  ●  SendGrid          Transactional      Set up to send      ✓ setup complete  
+  ●  Shopify           Commerce and apps  Set up to send                        
+  ●  SparkPost         Transactional      Set up to send      ✓ setup complete  
+  ●  Zendesk           Support and CRM    Set up to send      ✓ setup complete  
+  ◐  Customer.io       Marketing          Likely sends        from: DKIM key    
+  ◐  Mandrill          Transactional      Likely sends        from: DKIM key    
+
+What to fix
+  Problems found in the setup, most serious first.
+
   1 ▲ Two DKIM keys at allbirds.com are 1024-bit: k1 (Mailchimp) and mandrill (Mandrill)            
       Some receivers already treat 1024-bit RSA keys as weak. Rotate to 2048-bit.                   
         k1._domainkey.allbirds.com TXT k=rsa; p=MIGfMA0GCSqG..., 1024-bit, fp 53d7bb0466c8346d via  
@@ -46,16 +50,26 @@ FIX THESE
       name that does not exist.                                                                     
         mailjet._domainkey.allbirds.com TXT no such name                                            
 
-NOTES
+Good to know
+  Nothing to change here. These explain what the map shows.
+
   ·   SPF at allbirds.com is managed through EasyDMARC                                              
       EasyDMARC copies the domain's senders into its own record. The walk read that record, so the  
       services and ranges it lists are reported here as the domain's.                               
         allbirds.com TXT v=spf1 include:allbirds_com._es.easydmarc.com                              
         include:spf.protection.outlook.com ~all                                                     
 
-EVIDENCE, SERVICE BY SERVICE
+The proof, service by service
+  The DNS records behind each service above, for anyone who wants to check them.
+  MX: where the domain's mail is delivered.
+  SPF: the list of servers allowed to send as the domain.
+  DKIM: a signature key that proves mail really came from the domain.
+  Verification token: proves the domain owner set up an account with the service.
+  Autodiscover: lets mail apps find their settings.
+  Tracking CNAME: links in a service's emails point here.
+  Bounce CNAME: lets a service handle bounced mail under the domain's name.
 
-  Microsoft 365  ·  Mailbox  ·  receives mail
+  Microsoft 365  ·  Mailbox  ·  receives your mail
     MX                          allbirds-com.mail.protection.outlook.com                            
                                 allbirds.com MX 0 allbirds-com.mail.protection.outlook.com          
     SPF                         include:spf.protection.outlook.com                                  
@@ -366,14 +380,14 @@ EVIDENCE, SERVICE BY SERVICE
                                 zendesk1._domainkey.allbirds.com and TXT at                         
                                 zendesk2._domainkey.allbirds.com)                                   
 
-  Customer.io  ·  Marketing  ·  likely
+  Customer.io  ·  Marketing  ·  likely sends
     DKIM key                    krs (2048 bit, named for it)                                        
                                 krs._domainkey.allbirds.com TXT k=rsa; p=MIIBIjANBgkq..., 2048-bit, 
                                 fp f65b843679924ff6                                                 
     Setup                       complete: tracking CNAME not used (optional, CNAME at 25 labels     
                                 under allbirds.com)                                                 
 
-  Mandrill  ·  Transactional  ·  likely
+  Mandrill  ·  Transactional  ·  likely sends
     DKIM key                    mandrill (1024 bit, named for it)                                   
                                 mandrill._domainkey.allbirds.com TXT v=DKIM1; k=rsa;                
                                 p=MIGfMA0GCSqG..., 1024-bit, fp 9cee89b6f986543a                    
@@ -382,7 +396,10 @@ EVIDENCE, SERVICE BY SERVICE
                                 at 25 labels under allbirds.com), tracking CNAME not used (optional,
                                 CNAME at 25 labels under allbirds.com)                              
 
-NOT RECOGNISED
+Not matched to a service
+  These records point somewhere Sendermap does not recognise: a service it does not know yet, or    
+  your own servers.                                                                                 
+
   2 ranges in AS16509 (Amazon Web Services)
     35.159.219.224/28, 18.199.180.160/27
     _spf1.allbirds_com._d.easydmarc.pro TXT ip4:35.159.219.224/28
@@ -400,7 +417,9 @@ NOT RECOGNISED
   mail.allbirds.com                                                                                 
     mail.allbirds.com TXT ip4:216.40.27.182
 
-CHECKED AND NOT THERE
+Looked for and not found
+  Records Sendermap looked for and did not find.
+
   DKIM keys at alerts.allbirds.com: selectors exist but none of the 32 names asked is one
     _domainkey.alerts.allbirds.com TXT no record of this type
   DKIM keys at bounce.allbirds.com: no selectors exist: _domainkey.bounce.allbirds.com does not     
@@ -418,44 +437,44 @@ CHECKED AND NOT THERE
   DKIM keys at mail.allbirds.com: selectors exist but none of the 32 names asked is one
     _domainkey.mail.allbirds.com TXT no record of this type
 
-HOW THIS WAS CHECKED
-  Asked 764 lookups at 6 names:
-    allbirds.com: 110 DKIM selectors, 25 CNAME labels, 1 page
-      Pages:                                                                                        
-      https://api.certspotter.com/v1/issuances?domain=allbirds.com&include_subdomains=true&expand=dn
-      s_names                                                                                       
-      CNAME labels: bounce, bounces, em, email, mail, send, mta, rp, pm-bounces, links, link, click,
-      track, tracking, url, go, autodiscover, cf-bounce, eversrv, fwdkim1, bnc3, bounces.cloud.em,  
-      bounces.cloud2.em, outbound.intercom, atlassian-bounces                                       
-      DKIM selectors: selector1, selector2, acdkim1, acdkim2, ses, aweber_key_a, aweber_key_b,      
-      aweber_key_c, brevo, brevo1, brevo2, cm, cf2024-1, ctct1, ctct2, krs, e2ma-k1, e2ma-k2,       
-      e2ma-k3, everlytickey1, everlytickey2, fm2, fm1, fm3, mesmtp, secureserver1, secureserver2,   
-      google, gapps, gor, strong1, strong2, hs1, hs2, intercom, s1-ionos, s42582890, s2-ionos, cka, 
-      kl, kl1, kl2, km1, km2, k2, k1, k3, litesrv, mg, mailgun, mg1, pdk1, pdk2, mailjet, mailpoet2,
-      mailpoet1, mandrill, mte1, mte2, marketo, mkto, mkto1, mimecast, mimecast20190719, pepipost,  
-      pp1, protonmail, protonmail2, protonmail3, resend, sailthru, salesforce, salesforce2,         
-      salesforce1, sf, sf1, sf2, sfdc, 200608, pardot, sfmc, s1, s2, smtpapi, scph0819, sparkpost,  
-      squarespace, zendesk1, zendesk2, zoho, mail, mailru, api, default, dk, dkim, dkim1, dkim2,    
-      email, k, key, key1, key2, mta, mx, pm, s, selector, smtp, sp                                 
-    alerts.allbirds.com: 32 DKIM selectors
-      DKIM selectors: google, gapps, acdkim1, acdkim2, ses, aweber_key_a, aweber_key_b,             
-      aweber_key_c, brevo, brevo1, brevo2, cm, cf2024-1, ctct1, ctct2, krs, e2ma-k1, e2ma-k2,       
-      e2ma-k3, everlytickey1, everlytickey2, fm2, fm1, fm3, mesmtp, secureserver1, secureserver2,   
-      mailgun, mg, mg1, pdk1, pdk2                                                                  
-    bounce.allbirds.com: 8 DKIM selectors
-      DKIM selectors: acdkim1, acdkim2, ses, aweber_key_a, aweber_key_b, aweber_key_c, brevo, brevo1
-    email.allbirds.com: 13 DKIM selectors
-      DKIM selectors: acdkim1, acdkim2, ses, aweber_key_a, aweber_key_b, aweber_key_c, brevo,       
-      brevo1, mailgun, mg, mg1, pdk1, pdk2                                                          
-    info.allbirds.com: 27 DKIM selectors
-      DKIM selectors: acdkim1, acdkim2, ses, aweber_key_a, aweber_key_b, aweber_key_c, brevo,       
-      brevo1, brevo2, cm, cf2024-1, ctct1, ctct2, krs, e2ma-k1, e2ma-k2, e2ma-k3, everlytickey1,    
-      everlytickey2, fm2, fm1, fm3, mesmtp, secureserver1, secureserver2, google, gapps             
-    mail.allbirds.com: 32 DKIM selectors
-      DKIM selectors: google, gapps, acdkim1, acdkim2, ses, aweber_key_a, aweber_key_b,             
-      aweber_key_c, brevo, brevo1, brevo2, cm, cf2024-1, ctct1, ctct2, krs, e2ma-k1, e2ma-k2,       
-      e2ma-k3, everlytickey1, everlytickey2, fm2, fm1, fm3, mesmtp, secureserver1, secureserver2,   
-      mailgun, mg, mg1, pdk1, pdk2                                                                  
+How this was checked
+  Checked 2026-10-12 01:24 UTC: 764 DNS lookups in 0.0 s over Google DNS over HTTPS.
+  At allbirds.com: 110 possible DKIM key names, 25 service record names, 1 web page.
+    Pages:                                                                                          
+    https://api.certspotter.com/v1/issuances?domain=allbirds.com&include_subdomains=true&expand=dns_
+    names                                                                                           
+    CNAME labels: bounce, bounces, em, email, mail, send, mta, rp, pm-bounces, links, link, click,  
+    track, tracking, url, go, autodiscover, cf-bounce, eversrv, fwdkim1, bnc3, bounces.cloud.em,    
+    bounces.cloud2.em, outbound.intercom, atlassian-bounces                                         
+    DKIM selectors: selector1, selector2, acdkim1, acdkim2, ses, aweber_key_a, aweber_key_b,        
+    aweber_key_c, brevo, brevo1, brevo2, cm, cf2024-1, ctct1, ctct2, krs, e2ma-k1, e2ma-k2, e2ma-k3,
+    everlytickey1, everlytickey2, fm2, fm1, fm3, mesmtp, secureserver1, secureserver2, google,      
+    gapps, gor, strong1, strong2, hs1, hs2, intercom, s1-ionos, s42582890, s2-ionos, cka, kl, kl1,  
+    kl2, km1, km2, k2, k1, k3, litesrv, mg, mailgun, mg1, pdk1, pdk2, mailjet, mailpoet2, mailpoet1,
+    mandrill, mte1, mte2, marketo, mkto, mkto1, mimecast, mimecast20190719, pepipost, pp1,          
+    protonmail, protonmail2, protonmail3, resend, sailthru, salesforce, salesforce2, salesforce1,   
+    sf, sf1, sf2, sfdc, 200608, pardot, sfmc, s1, s2, smtpapi, scph0819, sparkpost, squarespace,    
+    zendesk1, zendesk2, zoho, mail, mailru, api, default, dk, dkim, dkim1, dkim2, email, k, key,    
+    key1, key2, mta, mx, pm, s, selector, smtp, sp                                                  
+  At alerts.allbirds.com: 32 possible DKIM key names.
+    DKIM selectors: google, gapps, acdkim1, acdkim2, ses, aweber_key_a, aweber_key_b, aweber_key_c, 
+    brevo, brevo1, brevo2, cm, cf2024-1, ctct1, ctct2, krs, e2ma-k1, e2ma-k2, e2ma-k3,              
+    everlytickey1, everlytickey2, fm2, fm1, fm3, mesmtp, secureserver1, secureserver2, mailgun, mg, 
+    mg1, pdk1, pdk2                                                                                 
+  At bounce.allbirds.com: 8 possible DKIM key names.
+    DKIM selectors: acdkim1, acdkim2, ses, aweber_key_a, aweber_key_b, aweber_key_c, brevo, brevo1
+  At email.allbirds.com: 13 possible DKIM key names.
+    DKIM selectors: acdkim1, acdkim2, ses, aweber_key_a, aweber_key_b, aweber_key_c, brevo, brevo1, 
+    mailgun, mg, mg1, pdk1, pdk2                                                                    
+  At info.allbirds.com: 27 possible DKIM key names.
+    DKIM selectors: acdkim1, acdkim2, ses, aweber_key_a, aweber_key_b, aweber_key_c, brevo, brevo1, 
+    brevo2, cm, cf2024-1, ctct1, ctct2, krs, e2ma-k1, e2ma-k2, e2ma-k3, everlytickey1,              
+    everlytickey2, fm2, fm1, fm3, mesmtp, secureserver1, secureserver2, google, gapps               
+  At mail.allbirds.com: 32 possible DKIM key names.
+    DKIM selectors: google, gapps, acdkim1, acdkim2, ses, aweber_key_a, aweber_key_b, aweber_key_c, 
+    brevo, brevo1, brevo2, cm, cf2024-1, ctct1, ctct2, krs, e2ma-k1, e2ma-k2, e2ma-k3,              
+    everlytickey1, everlytickey2, fm2, fm1, fm3, mesmtp, secureserver1, secureserver2, mailgun, mg, 
+    mg1, pdk1, pdk2                                                                                 
   Not checked: certificate log names more than 2 labels deep: 34 not asked. Names up to 2 labels    
   below the domain were asked (cap 2 labels).                                                       
   Not checked: sending subdomains: TXT, MX and NS at apisdk.allbirds.com, community.allbirds.com,   
@@ -465,6 +484,6 @@ HOW THIS WAS CHECKED
   first 27 were asked, plus any the name's own SPF, MX or delegation points to (cap 27).            
   Not checked: DKIM selectors at info.allbirds.com: 83 of 110 not asked. The first 27 were asked,   
   plus any the name's own SPF, MX or delegation points to (cap 27).                                 
-  Not run: the website: web checks were turned off (--no-web)
-  Not run: certificate transparency, crt.sh: read only with --ct (it also holds expired             
-  certificates)                                                                                     
+  Not run: the website. Web checks were turned off (--no-web).
+  Not run: certificate transparency, crt.sh. Read only with --ct (it also holds expired             
+  certificates).                                                                                    

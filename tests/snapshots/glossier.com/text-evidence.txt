@@ -1,8 +1,5 @@
-╭──────────────────────────────────────────────────────────────────────────────────╮
-│  glossier.com                                                                    │
-│  9 services send email as this domain   ·   3 things to fix                      │
-│  checked 2026-10-12 01:25 UTC · 750 lookups in 0.0 s over Google DNS over HTTPS  │
-╰──────────────────────────────────────────────────────────────────────────────────╯
+Who handles email for glossier.com?
+  9 services handle email for glossier.com. 3 things need fixing.
 
   Google Workspace receives the domain's mail and has a DKIM key in place to sign it.
   Six other services are set up to send as the domain: three support and CRM (Help Scout,           
@@ -11,19 +8,26 @@
   One service shows an account and nothing set up to send (Amazon SES); DMARC reports go to         
   Valimail.                                                                                         
 
-AT A GLANCE
-  ●  Google Workspace  Mailbox          Receives mail   ⚠ setup incomplete      
-  ●  Help Scout        Support and CRM  Set up to send                          
-  ●  Klaviyo           Marketing        Set up to send  ✓ setup complete        
-  ●  Postmark          Transactional    Set up to send  ✓ setup complete        
-  ●  Salesforce        Support and CRM  Set up to send                          
-  ●  SendGrid          Transactional    Set up to send  ✓ setup complete        
-  ●  Zendesk           Support and CRM  Set up to send  ✓ setup complete        
-  ◐  Mandrill          Transactional    Likely          from: DKIM key          
-  ○  Amazon SES        Transactional    Account only    from: Verification token
-  Reports go to Valimail.
+Who handles your email
+  Each service below receives or sends email for glossier.com.
+  Receives your mail: your MX records deliver the domain's mail there.
+  Set up to send: its records for sending are in your DNS.
+  Likely sends: one clue points to it, such as a key named for it.
+  Account only: an account exists, with nothing set up to send.
 
-FIX THESE
+  ●  Google Workspace  Mailbox          Receives your mail  ⚠ setup incomplete      
+  ●  Help Scout        Support and CRM  Set up to send                              
+  ●  Klaviyo           Marketing        Set up to send      ✓ setup complete        
+  ●  Postmark          Transactional    Set up to send      ✓ setup complete        
+  ●  Salesforce        Support and CRM  Set up to send                              
+  ●  SendGrid          Transactional    Set up to send      ✓ setup complete        
+  ●  Zendesk           Support and CRM  Set up to send      ✓ setup complete        
+  ◐  Mandrill          Transactional    Likely sends        from: DKIM key          
+  ○  Amazon SES        Transactional    Account only        from: Verification token
+
+What to fix
+  Problems found in the setup, most serious first.
+
   1 ▲ Two DKIM keys at glossier.com are 1024-bit: mandrill (Mandrill) and s2 (SendGrid)             
       Some receivers already treat 1024-bit RSA keys as weak. Rotate to 2048-bit.                   
         mandrill._domainkey.glossier.com TXT v=DKIM1; k=rsa; p=MIGfMA0GCSqG..., 1024-bit, fp        
@@ -39,7 +43,9 @@ FIX THESE
       name with no TXT record; this zone gives that answer for every name that does not exist.      
         google._domainkey.receipts.glossier.com TXT no record of this type                          
 
-NOTES
+Good to know
+  Nothing to change here. These explain what the map shows.
+
   ·   SPF at glossier.com and receipts.glossier.com is managed through Valimail                     
       A hosted or macro record can authorize services without naming them, so the services it covers
       do not show in the record itself.                                                             
@@ -47,9 +53,16 @@ NOTES
         receipts.glossier.com TXT v=spf1 include:receipts.glossier.com._nspf.vali.email             
         include:%{i}._ip.%{h}._ehlo.%{d}._spf.vali.email ~all                                       
 
-EVIDENCE, SERVICE BY SERVICE
+The proof, service by service
+  The DNS records behind each service above, for anyone who wants to check them.
+  MX: where the domain's mail is delivered.
+  SPF: the list of servers allowed to send as the domain.
+  DKIM: a signature key that proves mail really came from the domain.
+  Bounce CNAME: lets a service handle bounced mail under the domain's name.
+  Verification token: proves the domain owner set up an account with the service.
+  Tracking CNAME: links in a service's emails point here.
 
-  Google Workspace  ·  Mailbox  ·  receives mail
+  Google Workspace  ·  Mailbox  ·  receives your mail
     MX                          aspmx.l.google.com, alt1.aspmx.l.google.com and 3 more              
                                 glossier.com MX 10 aspmx.l.google.com                               
                                 glossier.com MX 20 alt1.aspmx.l.google.com                          
@@ -196,7 +209,7 @@ EVIDENCE, SERVICE BY SERVICE
                                 zendesk2._domainkey.zendesk.com                                     
     Setup                       complete: SPF present, DKIM present                                 
 
-  Mandrill  ·  Transactional  ·  likely
+  Mandrill  ·  Transactional  ·  likely sends
     DKIM key                    mandrill (1024 bit, named for it)                                   
                                 mandrill._domainkey.glossier.com TXT v=DKIM1; k=rsa;                
                                 p=MIGfMA0GCSqG..., 1024-bit, fp 9cee89b6f986543a                    
@@ -210,43 +223,46 @@ EVIDENCE, SERVICE BY SERVICE
                                 glossier.com TXT                                                    
                                 amazonses:awBV5EM6W53p2/Xbg80uJ29zurZnGsMMJcLLLp6vUcY=              
 
-NOT RECOGNISED
+Not matched to a service
+  These records point somewhere Sendermap does not recognise: a service it does not know yet, or    
+  your own servers.                                                                                 
+
   CNAME at go: cname.short.io
     go.glossier.com CNAME cname.short.io
 
-HOW THIS WAS CHECKED
-  Asked 750 lookups at 4 names:
-    glossier.com: 110 DKIM selectors, 25 CNAME labels, 1 page
-      Pages:                                                                                        
-      https://api.certspotter.com/v1/issuances?domain=glossier.com&include_subdomains=true&expand=dn
-      s_names                                                                                       
-      CNAME labels: bounce, bounces, em, email, mail, send, mta, rp, pm-bounces, links, link, click,
-      track, tracking, url, go, autodiscover, cf-bounce, eversrv, fwdkim1, bnc3, bounces.cloud.em,  
-      bounces.cloud2.em, outbound.intercom, atlassian-bounces                                       
-      DKIM selectors: acdkim1, acdkim2, ses, aweber_key_a, aweber_key_b, aweber_key_c, brevo,       
-      brevo1, brevo2, cm, cf2024-1, ctct1, ctct2, krs, e2ma-k1, e2ma-k2, e2ma-k3, everlytickey1,    
-      everlytickey2, fm2, fm1, fm3, mesmtp, secureserver1, secureserver2, google, gapps, gor,       
-      strong1, strong2, hs1, hs2, intercom, s1-ionos, s42582890, s2-ionos, cka, kl, kl1, kl2, km1,  
-      km2, k2, k1, k3, litesrv, mg, mailgun, mg1, pdk1, pdk2, mailjet, mailpoet2, mailpoet1,        
-      mandrill, mte1, mte2, marketo, mkto, mkto1, selector1, selector2, mimecast, mimecast20190719, 
-      pepipost, pp1, protonmail, protonmail2, protonmail3, resend, sailthru, salesforce,            
-      salesforce2, salesforce1, sf, sf1, sf2, sfdc, 200608, pardot, sfmc, s1, s2, smtpapi, scph0819,
-      sparkpost, squarespace, zendesk1, zendesk2, zoho, mail, mailru, api, default, dk, dkim, dkim1,
-      dkim2, email, k, key, key1, key2, mta, mx, pm, s, selector, smtp, sp                          
-    marketing.glossier.com: 27 DKIM selectors
-      DKIM selectors: s1, s2, smtpapi, acdkim1, acdkim2, ses, aweber_key_a, aweber_key_b,           
-      aweber_key_c, brevo, brevo1, brevo2, cm, cf2024-1, ctct1, ctct2, krs, e2ma-k1, e2ma-k2,       
-      e2ma-k3, everlytickey1, everlytickey2, fm2, fm1, fm3, mesmtp, secureserver1                   
-    receipts.glossier.com: 27 DKIM selectors
-      DKIM selectors: acdkim1, acdkim2, ses, aweber_key_a, aweber_key_b, aweber_key_c, brevo,       
-      brevo1, brevo2, cm, cf2024-1, ctct1, ctct2, krs, e2ma-k1, e2ma-k2, e2ma-k3, everlytickey1,    
-      everlytickey2, fm2, fm1, fm3, mesmtp, secureserver1, secureserver2, google, gapps             
-    send.glossier.com: 27 DKIM selectors
-      DKIM selectors: s1, s2, smtpapi, acdkim1, acdkim2, ses, aweber_key_a, aweber_key_b,           
-      aweber_key_c, brevo, brevo1, brevo2, cm, cf2024-1, ctct1, ctct2, krs, e2ma-k1, e2ma-k2,       
-      e2ma-k3, everlytickey1, everlytickey2, fm2, fm1, fm3, mesmtp, secureserver1                   
+How this was checked
+  Checked 2026-10-12 01:25 UTC: 750 DNS lookups in 0.0 s over Google DNS over HTTPS.
+  At glossier.com: 110 possible DKIM key names, 25 service record names, 1 web page.
+    Pages:                                                                                          
+    https://api.certspotter.com/v1/issuances?domain=glossier.com&include_subdomains=true&expand=dns_
+    names                                                                                           
+    CNAME labels: bounce, bounces, em, email, mail, send, mta, rp, pm-bounces, links, link, click,  
+    track, tracking, url, go, autodiscover, cf-bounce, eversrv, fwdkim1, bnc3, bounces.cloud.em,    
+    bounces.cloud2.em, outbound.intercom, atlassian-bounces                                         
+    DKIM selectors: acdkim1, acdkim2, ses, aweber_key_a, aweber_key_b, aweber_key_c, brevo, brevo1, 
+    brevo2, cm, cf2024-1, ctct1, ctct2, krs, e2ma-k1, e2ma-k2, e2ma-k3, everlytickey1,              
+    everlytickey2, fm2, fm1, fm3, mesmtp, secureserver1, secureserver2, google, gapps, gor, strong1,
+    strong2, hs1, hs2, intercom, s1-ionos, s42582890, s2-ionos, cka, kl, kl1, kl2, km1, km2, k2, k1,
+    k3, litesrv, mg, mailgun, mg1, pdk1, pdk2, mailjet, mailpoet2, mailpoet1, mandrill, mte1, mte2, 
+    marketo, mkto, mkto1, selector1, selector2, mimecast, mimecast20190719, pepipost, pp1,          
+    protonmail, protonmail2, protonmail3, resend, sailthru, salesforce, salesforce2, salesforce1,   
+    sf, sf1, sf2, sfdc, 200608, pardot, sfmc, s1, s2, smtpapi, scph0819, sparkpost, squarespace,    
+    zendesk1, zendesk2, zoho, mail, mailru, api, default, dk, dkim, dkim1, dkim2, email, k, key,    
+    key1, key2, mta, mx, pm, s, selector, smtp, sp                                                  
+  At marketing.glossier.com: 27 possible DKIM key names.
+    DKIM selectors: s1, s2, smtpapi, acdkim1, acdkim2, ses, aweber_key_a, aweber_key_b,             
+    aweber_key_c, brevo, brevo1, brevo2, cm, cf2024-1, ctct1, ctct2, krs, e2ma-k1, e2ma-k2, e2ma-k3,
+    everlytickey1, everlytickey2, fm2, fm1, fm3, mesmtp, secureserver1                              
+  At receipts.glossier.com: 27 possible DKIM key names.
+    DKIM selectors: acdkim1, acdkim2, ses, aweber_key_a, aweber_key_b, aweber_key_c, brevo, brevo1, 
+    brevo2, cm, cf2024-1, ctct1, ctct2, krs, e2ma-k1, e2ma-k2, e2ma-k3, everlytickey1,              
+    everlytickey2, fm2, fm1, fm3, mesmtp, secureserver1, secureserver2, google, gapps               
+  At send.glossier.com: 27 possible DKIM key names.
+    DKIM selectors: s1, s2, smtpapi, acdkim1, acdkim2, ses, aweber_key_a, aweber_key_b,             
+    aweber_key_c, brevo, brevo1, brevo2, cm, cf2024-1, ctct1, ctct2, krs, e2ma-k1, e2ma-k2, e2ma-k3,
+    everlytickey1, everlytickey2, fm2, fm1, fm3, mesmtp, secureserver1                              
   Not checked: DKIM selectors at marketing, receipts and send.glossier.com: 83 of 110 not asked at  
   each. The first 27 were asked, plus any the name's own SPF, MX or delegation points to (cap 27).  
-  Not run: the website: web checks were turned off (--no-web)
-  Not run: certificate transparency, crt.sh: read only with --ct (it also holds expired             
-  certificates)                                                                                     
+  Not run: the website. Web checks were turned off (--no-web).
+  Not run: certificate transparency, crt.sh. Read only with --ct (it also holds expired             
+  certificates).                                                                                    

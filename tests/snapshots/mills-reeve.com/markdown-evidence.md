@@ -1,7 +1,6 @@
-# Sendermap: mills-reeve.com
+# Who handles email for mills-reeve.com?
 
-5 services send email as this domain · 2 things to fix  
-Checked 2026-10-12 01:24 UTC · 644 lookups in 0.0 s over Google DNS over HTTPS
+**5 services handle email for mills-reeve.com. 2 things need fixing.**
 
 Mimecast stands in front of the domain's mail as a security gateway, so the mailbox provider is not visible from MX.
 
@@ -9,17 +8,23 @@ Four other services are set up to send as the domain: one commerce and apps (Doc
 
 DMARC reports go to Mimecast DMARC Analyzer.
 
-## At a glance
+## Who handles your email
 
-- **Mimecast** (Security gateway): receives mail
+Each service below receives or sends email for mills-reeve.com.
+
+Receives your mail: your MX records deliver the domain's mail there.
+
+Set up to send: its records for sending are in your DNS.
+
+- **Mimecast** (Security gateway): receives your mail
 - **Docebo** (Commerce and apps): set up to send
 - **Freshdesk** (Support and CRM): set up to send
 - **Microsoft 365** (Mailbox): set up to send; setup incomplete
 - **SendGrid** (Transactional): set up to send; setup complete
 
-Reports go to Mimecast DMARC Analyzer.
+## What to fix
 
-## Fix these
+Problems found in the setup, most serious first.
 
 1. **The SendGrid key s2 at mills-reeve.com is 1024-bit** (warning)
 
@@ -34,17 +39,31 @@ Reports go to Mimecast DMARC Analyzer.
    - `selector1._domainkey.mills-reeve.com TXT no record of this type`
    - `selector2._domainkey.mills-reeve.com TXT no record of this type`
 
-## Notes
+## Good to know
+
+Nothing to change here. These explain what the map shows.
 
 - **MX at mills-reeve.com points at Mimecast, a security gateway**. Inferred from the MX records: a security gateway filters incoming mail and hands it on to the server that holds the mailboxes, and MX records do not say which server that is.
   - `mills-reeve.com MX 10 eu-smtp-inbound-1.mimecast.com`
   - `mills-reeve.com MX 10 eu-smtp-inbound-2.mimecast.com`
 
-## Evidence, service by service
+## The proof, service by service
+
+The DNS records behind each service above, for anyone who wants to check them.
+
+MX: where the domain's mail is delivered.
+
+SPF: the list of servers allowed to send as the domain.
+
+Verification token: proves the domain owner set up an account with the service.
+
+Autodiscover: lets mail apps find their settings.
+
+DKIM: a signature key that proves mail really came from the domain.
 
 ### Mimecast
 
-Security gateway · receives mail
+Security gateway · receives your mail
 
 - MX: eu-smtp-inbound-1.mimecast.com, eu-smtp-inbound-2.mimecast.com
   - `mills-reeve.com MX 10 eu-smtp-inbound-1.mimecast.com`
@@ -88,7 +107,9 @@ Transactional · set up to send
   - `s2._domainkey.mills-reeve.com TXT k=rsa; t=s (strict); p=MIGfMA0GCSqG..., 1024-bit, fp 1d0c1f3114d84753 via s2.domainkey.u10198980.wl231.sendgrid.net`
 - Setup: complete: DKIM present, bounce CNAME not used (optional, CNAME at 25 labels under mills-reeve.com), SPF not needed, tracking CNAME not used (optional, CNAME at 25 labels under mills-reeve.com)
 
-## Not recognised
+## Not matched to a service
+
+These records point somewhere Sendermap does not recognise: a service it does not know yet, or your own servers.
 
 - SPF include: `emaileuc.freshservice.com`, from `mills-reeve.com TXT include:emaileuc.freshservice.com`
 - SPF include: `fsspfeuc.freshemail.io`, from `emaileuc.freshservice.com TXT include:fsspfeuc.freshemail.io`
@@ -125,11 +146,11 @@ Transactional · set up to send
 
 ## How this was checked
 
-Asked 644 lookups at 3 names:
+Checked 2026-10-12 01:24 UTC: 644 DNS lookups in 0.0 s over Google DNS over HTTPS.
 
-- mills-reeve.com: 110 DKIM selectors, 25 CNAME labels, 1 page
-- update.mills-reeve.com: 29 DKIM selectors
-- updates.mills-reeve.com: 27 DKIM selectors
+- At mills-reeve.com: 110 possible DKIM key names, 25 service record names, 1 web page.
+- At update.mills-reeve.com: 29 possible DKIM key names.
+- At updates.mills-reeve.com: 27 possible DKIM key names.
 
 Not checked:
 
@@ -138,8 +159,8 @@ Not checked:
 
 Not run:
 
-- the website: web checks were turned off (--no-web)
-- certificate transparency, crt.sh: read only with --ct (it also holds expired certificates)
+- the website. Web checks were turned off (--no-web).
+- certificate transparency, crt.sh. Read only with --ct (it also holds expired certificates).
 
 Names asked:
 
