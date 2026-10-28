@@ -68,8 +68,8 @@ async def test_a_host_not_named_is_refused(served: str) -> None:
 
 
 def test_the_hosts_come_from_the_environment(monkeypatch: pytest.MonkeyPatch) -> None:
-    monkeypatch.setenv(site.MCP_HOSTS, " sendermap.dev, www.sendermap.dev ,")
-    assert site.mcp_hosts() == ["sendermap.dev", "www.sendermap.dev"]
+    monkeypatch.setenv(site.MCP_HOSTS, " sendermap.dns-audit.com, www.example.com ,")
+    assert site.mcp_hosts() == ["sendermap.dns-audit.com", "www.example.com"]
     monkeypatch.delenv(site.MCP_HOSTS)
     assert site.mcp_hosts() == []
 

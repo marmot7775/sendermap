@@ -54,19 +54,9 @@ server {
     }
 }
 
-# The old name. 308, not 301, so an MCP client's POST stays a POST.
-server {
-    listen 443 ssl;
-    server_name sendermap.dev www.sendermap.dev;
-    access_log /var/log/nginx/sendermap.access.log noip;
-    ssl_certificate /etc/ssl/sendermap-cert.pem;
-    ssl_certificate_key /etc/ssl/sendermap-key.pem;
-    return 308 https://sendermap.dns-audit.com$request_uri;
-}
-
 server {
     listen 80;
-    server_name sendermap.dns-audit.com sendermap.dev www.sendermap.dev;
+    server_name sendermap.dns-audit.com;
     access_log /var/log/nginx/sendermap.access.log noip;
     return 301 https://sendermap.dns-audit.com$request_uri;
 }
