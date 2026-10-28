@@ -15,6 +15,10 @@ fails before anything is published.
   reports how much of what they publish Sendermap names, with the unnamed evidence ranked by how
   many domains publish it. Runs are kept in `benchmark/runs/`; `--compare` shows what changed
   between two. The 0.1.7 baseline is in `benchmark/README.md`.
+- Three inbound mail servers are named. Amazon SES receiving in eu-central-1
+  (eu.wxpcollaboration.hp.com) and us-gov-west-1 (foundry.openai.com) join its other regions, and
+  Discourse joins the catalog (Support and CRM): a hosted forum's MX is `discoursemail.com`, as at
+  community.openai.com and community.f5.com. Each has a live proof dated 2026-10-25.
 - Four fixes. An MX found through certificate logs shows its host, not the last date of the
   certificate ("MX for bounces 2027-01-01"). A certificate log cache whose date has no timezone
   is read as no cache and the logs are asked again, where the certificate log check crashed and

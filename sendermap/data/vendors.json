@@ -379,6 +379,22 @@
             "record": "careers.datadoghq.com",
             "date": "2026-10-22"
           }
+        },
+        {
+          "value": "inbound-smtp.eu-central-1.amazonaws.com",
+          "proof": {
+            "domain": "hp.com",
+            "record": "eu.wxpcollaboration.hp.com",
+            "date": "2026-10-25"
+          }
+        },
+        {
+          "value": "inbound-smtp.us-gov-west-1.amazonaws.com",
+          "proof": {
+            "domain": "openai.com",
+            "record": "foundry.openai.com",
+            "date": "2026-10-25"
+          }
         }
       ]
     },
@@ -7396,6 +7412,19 @@
       "aliases": [
         "OrderBox"
       ]
+    },
+    "Discourse": {
+      "mx": [
+        {
+          "value": "discoursemail.com",
+          "proof": {
+            "domain": "openai.com",
+            "record": "community.openai.com",
+            "date": "2026-10-25"
+          }
+        }
+      ],
+      "category": "Support and CRM"
     }
   }
 }
