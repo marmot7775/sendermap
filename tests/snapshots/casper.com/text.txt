@@ -1,8 +1,5 @@
-╭──────────────────────────────────────────────────────────────────────────────────╮
-│  casper.com                                                                      │
-│  14 services send email as this domain   ·   4 things to fix                     │
-│  checked 2026-10-12 01:25 UTC · 740 lookups in 0.0 s over Google DNS over HTTPS  │
-╰──────────────────────────────────────────────────────────────────────────────────╯
+Who handles email for casper.com?
+  14 services handle email for casper.com. 4 things need fixing.
 
   Google Workspace receives the domain's mail and has a DKIM key in place to sign it.
   Eleven other services are set up to send as the domain: four marketing (Campaign Monitor,         
@@ -12,25 +9,32 @@
   One service shows an account and nothing set up to send (Microsoft 365); DMARC reports go to      
   DMARCian.                                                                                         
 
-AT A GLANCE
-  ●  Google Workspace                    Mailbox            Receives mail   ⚠ setup incomplete      
-  ●  Campaign Monitor                    Marketing          Set up to send  ✓ setup complete        
-  ●  Docebo                              Commerce and apps  Set up to send                          
-  ●  Iterable                            Marketing          Set up to send                          
-  ●  Mailchimp                           Marketing          Set up to send  ✓ setup complete        
-  ●  Mailgun                             Transactional      Set up to send  ✓ setup complete        
-  ●  Mandrill                            Transactional      Set up to send  ✓ setup complete        
-  ●  Postmark                            Transactional      Set up to send  ✓ setup complete        
-  ●  Q4                                  Commerce and apps  Set up to send                          
-  ●  Salesforce                          Support and CRM    Set up to send                          
-  ●  Salesforce Marketing Cloud          Marketing          Set up to send                          
-     Engagement (mail.casper.com)                                                                   
-  ●  SendGrid                            Transactional      Set up to send  ✓ setup complete        
-  ◐  Customer.io (e.casper.com)          Marketing          Likely          from: DKIM key          
-  ○  Microsoft 365                       Mailbox            Account only    from: Verification token
-  Reports go to DMARCian.
+Who handles your email
+  Each service below receives or sends email for casper.com.
+  Receives your mail: your MX records deliver the domain's mail there.
+  Set up to send: its records for sending are in your DNS.
+  Likely sends: one clue points to it, such as a key named for it.
+  Account only: an account exists, with nothing set up to send.
 
-FIX THESE
+  ●  Google Workspace                Mailbox            Receives your mail  ⚠ setup incomplete      
+  ●  Campaign Monitor                Marketing          Set up to send      ✓ setup complete        
+  ●  Docebo                          Commerce and apps  Set up to send                              
+  ●  Iterable                        Marketing          Set up to send                              
+  ●  Mailchimp                       Marketing          Set up to send      ✓ setup complete        
+  ●  Mailgun                         Transactional      Set up to send      ✓ setup complete        
+  ●  Mandrill                        Transactional      Set up to send      ✓ setup complete        
+  ●  Postmark                        Transactional      Set up to send      ✓ setup complete        
+  ●  Q4                              Commerce and apps  Set up to send                              
+  ●  Salesforce                      Support and CRM    Set up to send                              
+  ●  Salesforce Marketing Cloud      Marketing          Set up to send                              
+     Engagement (mail.casper.com)                                                                   
+  ●  SendGrid                        Transactional      Set up to send      ✓ setup complete        
+  ◐  Customer.io (e.casper.com)      Marketing          Likely sends        from: DKIM key          
+  ○  Microsoft 365                   Mailbox            Account only        from: Verification token
+
+What to fix
+  Problems found in the setup, most serious first.
+
   1 ▲ Eight DKIM keys at casper.com are 1024-bit: google (Google Workspace), cm (Campaign Monitor), 
       k1 (Mailchimp), mandrill (Mandrill), salesforce (Salesforce), s2 (SendGrid), smtpapi          
       (SendGrid) and mx                                                                             
@@ -44,7 +48,9 @@ FIX THESE
   4 ▲ Google Workspace at orders.casper.com has no SPF                          
       Its documented setup needs it and the map shows it missing: no SPF record.
 
-NOTES
+Good to know
+  Nothing to change here. These explain what the map shows.
+
   ·   The mte1 key at casper.com and the mte1 key at email.casper.com are the same key              
       They publish one public key, fp 402b5aebde0f1c9f, so one private key signs for all of them,   
       and replacing the key at one selector leaves it live at the others.                           
@@ -56,9 +62,17 @@ NOTES
       dangling key) and nothing that sends or receives mail. Is the account still used? If not,     
       remove its records.                                                                           
 
-EVIDENCE, SERVICE BY SERVICE
+The proof, service by service
+  The DNS records behind each service above, for anyone who wants to check them.
+  MX: where the domain's mail is delivered.
+  SPF: the list of servers allowed to send as the domain.
+  DKIM: a signature key that proves mail really came from the domain.
+  Tracking CNAME: links in a service's emails point here.
+  Bounce CNAME: lets a service handle bounced mail under the domain's name.
+  Delegated by NS: the service runs DNS for a sending subdomain.
+  Verification token: proves the domain owner set up an account with the service.
 
-  Google Workspace  ·  Mailbox  ·  receives mail
+  Google Workspace  ·  Mailbox  ·  receives your mail
     MX                          aspmx.l.google.com, alt1.aspmx.l.google.com and 3 more              
     SPF                         include:_spf.google.com                                             
     MX for a subdomain's mail   aspmx.l.google.com, alt1.aspmx.l.google.com and 5 more at           
@@ -115,7 +129,7 @@ EVIDENCE, SERVICE BY SERVICE
     DKIM key                    smtpapi (1024 bit, named for it)   
     Setup                       complete                           
 
-  Customer.io  ·  Marketing  ·  likely  at e.casper.com
+  Customer.io  ·  Marketing  ·  likely sends  at e.casper.com
     DKIM key                    krs (2048 bit, named for it)
     Setup                       complete                    
 
@@ -127,23 +141,28 @@ EVIDENCE, SERVICE BY SERVICE
                                 record; this zone gives that answer for every name that does not    
                                 exist)                                                              
 
-NOT RECOGNISED
+Not matched to a service
+  These records point somewhere Sendermap does not recognise: a service it does not know yet, or    
+  your own servers.                                                                                 
+
   DKIM key: mx
   IP address in SPF: 208.89.14.209 (AS11054, LIVEPERSON - LivePerson, Inc., US)
   mail server: incoming.bm23.com  at email.casper.com
 
-CHECKED AND NOT THERE
+Looked for and not found
+  Records Sendermap looked for and did not find.
+
   DKIM keys at t.casper.com: selectors exist but none of the 32 names asked is one
     _domainkey.t.casper.com TXT no record of this type
 
-HOW THIS WAS CHECKED
-  Asked 740 lookups at 6 names:
-    casper.com: 110 DKIM selectors, 25 CNAME labels, 1 page
-    e.casper.com: 32 DKIM selectors
-    email.casper.com: 30 DKIM selectors
-    mail.casper.com: 28 DKIM selectors
-    orders.casper.com: 27 DKIM selectors
-    t.casper.com: 32 DKIM selectors
+How this was checked
+  Checked 2026-10-12 01:25 UTC: 740 DNS lookups in 0.0 s over Google DNS over HTTPS.
+  At casper.com: 110 possible DKIM key names, 25 service record names, 1 web page.
+  At e.casper.com: 32 possible DKIM key names.
+  At email.casper.com: 30 possible DKIM key names.
+  At mail.casper.com: 28 possible DKIM key names.
+  At orders.casper.com: 27 possible DKIM key names.
+  At t.casper.com: 32 possible DKIM key names.
   Not checked: DKIM selectors at e and t.casper.com: 78 of 110 not asked at each. The first 27 were 
   asked, plus any the name's own SPF, MX or delegation points to (cap 27).                          
   Not checked: DKIM selectors at email.casper.com: 80 of 110 not asked. The first 27 were asked,    
@@ -152,7 +171,7 @@ HOW THIS WAS CHECKED
   any the name's own SPF, MX or delegation points to (cap 27).                                      
   Not checked: DKIM selectors at orders.casper.com: 83 of 110 not asked. The first 27 were asked,   
   plus any the name's own SPF, MX or delegation points to (cap 27).                                 
-  Not run: the website: web checks were turned off (--no-web)
-  Not run: certificate transparency, crt.sh: read only with --ct (it also holds expired             
-  certificates)                                                                                     
+  Not run: the website. Web checks were turned off (--no-web).
+  Not run: certificate transparency, crt.sh. Read only with --ct (it also holds expired             
+  certificates).                                                                                    
   Add --evidence to see every record behind each line.

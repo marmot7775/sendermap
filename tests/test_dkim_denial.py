@@ -159,11 +159,11 @@ async def test_text_and_markdown_show_checked_and_not_there(offline: httpx.Async
         use_web=False,
     )
     page = markdown.render(result)
-    assert "## Checked and not there" in page
+    assert "## Looked for and not found" in page
     assert "- DKIM keys at acme.test: no selectors exist" in page
     assert "  - `_domainkey.acme.test TXT no such name`" in page
     console = Console(record=True, width=400)
     text.render(result, console)
     shown = console.export_text()
-    assert "CHECKED AND NOT THERE" in shown
+    assert "Looked for and not found" in shown
     assert "    _domainkey.acme.test TXT no such name" in shown

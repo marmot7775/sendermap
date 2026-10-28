@@ -1,15 +1,22 @@
-# Sendermap: allbirds.com
+# Who handles email for allbirds.com?
 
-15 services send email as this domain · 3 things to fix  
-Checked 2026-10-12 01:24 UTC · 764 lookups in 0.0 s over Google DNS over HTTPS
+**15 services handle email for allbirds.com. 3 things need fixing.**
 
 Microsoft 365 receives the domain's mail and has a DKIM key in place to sign it.
 
 Twelve other services are set up to send as the domain: six transactional (Amazon SES, Mailgun, Mailjet, Postmark, SendGrid, SparkPost), two support and CRM (Freshdesk, Zendesk), one mailbox (Google Workspace), two marketing (Iterable, Mailchimp), one commerce and apps (Shopify); two more are likely from a DKIM key name alone (Customer.io, Mandrill).
 
-## At a glance
+## Who handles your email
 
-- **Microsoft 365** (Mailbox): receives mail; setup complete
+Each service below receives or sends email for allbirds.com.
+
+Receives your mail: your MX records deliver the domain's mail there.
+
+Set up to send: its records for sending are in your DNS.
+
+Likely sends: one clue points to it, such as a key named for it.
+
+- **Microsoft 365** (Mailbox): receives your mail; setup complete
 - **Amazon SES** (Transactional): set up to send
 - **Freshdesk** (Support and CRM): set up to send
 - **Google Workspace** (Mailbox): set up to send; setup incomplete
@@ -22,10 +29,12 @@ Twelve other services are set up to send as the domain: six transactional (Amazo
 - **Shopify** (Commerce and apps): set up to send
 - **SparkPost** (Transactional): set up to send; setup complete
 - **Zendesk** (Support and CRM): set up to send; setup complete
-- **Customer.io** (Marketing): likely; from: DKIM key
-- **Mandrill** (Transactional): likely; from: DKIM key
+- **Customer.io** (Marketing): likely sends; from: DKIM key
+- **Mandrill** (Transactional): likely sends; from: DKIM key
 
-## Fix these
+## What to fix
+
+Problems found in the setup, most serious first.
 
 1. **Two DKIM keys at allbirds.com are 1024-bit: k1 (Mailchimp) and mandrill (Mandrill)** (warning)
 
@@ -39,15 +48,33 @@ Twelve other services are set up to send as the domain: six transactional (Amazo
 
    Its documented setup needs it and the map shows it missing: no key at mailjet._domainkey, a name that does not exist.
 
-## Notes
+## Good to know
+
+Nothing to change here. These explain what the map shows.
 
 - **SPF at allbirds.com is managed through EasyDMARC**. EasyDMARC copies the domain's senders into its own record. The walk read that record, so the services and ranges it lists are reported here as the domain's.
 
-## Evidence, service by service
+## The proof, service by service
+
+The DNS records behind each service above, for anyone who wants to check them.
+
+MX: where the domain's mail is delivered.
+
+SPF: the list of servers allowed to send as the domain.
+
+DKIM: a signature key that proves mail really came from the domain.
+
+Verification token: proves the domain owner set up an account with the service.
+
+Autodiscover: lets mail apps find their settings.
+
+Tracking CNAME: links in a service's emails point here.
+
+Bounce CNAME: lets a service handle bounced mail under the domain's name.
 
 ### Microsoft 365
 
-Mailbox · receives mail
+Mailbox · receives your mail
 
 - MX: allbirds-com.mail.protection.outlook.com
 - SPF: include:spf.protection.outlook.com
@@ -147,19 +174,21 @@ Support and CRM · set up to send
 
 ### Customer.io
 
-Marketing · likely
+Marketing · likely sends
 
 - DKIM key: krs (2048 bit, named for it)
 - Setup: complete
 
 ### Mandrill
 
-Transactional · likely
+Transactional · likely sends
 
 - DKIM key: mandrill (1024 bit, named for it)
 - Setup: complete
 
-## Not recognised
+## Not matched to a service
+
+These records point somewhere Sendermap does not recognise: a service it does not know yet, or your own servers.
 
 - 2 ranges in AS16509 (Amazon Web Services): `35.159.219.224/28`, `18.199.180.160/27`, from `_spf1.allbirds_com._d.easydmarc.pro TXT ip4:35.159.219.224/28` + 1 more
 - IP address in SPF: `157.131.136.130 (AS46375, AS-SONICTELECOM - Sonic Telecom LLC, US)` at mail.allbirds.com, from `mail.allbirds.com TXT ip4:157.131.136.130`
@@ -167,7 +196,9 @@ Transactional · likely
 - IP address in SPF: `96.71.160.117 (AS7922, COMCAST-7922 - Comcast Cable Communications, LLC, US)` at mail.allbirds.com, from `mail.allbirds.com TXT ip4:96.71.160.117`
 - IP address in SPF: `216.40.27.182 (AS53828, NITEL - NETWORK INNOVATIONS, LLC, US)` at mail.allbirds.com, from `mail.allbirds.com TXT ip4:216.40.27.182`
 
-## Checked and not there
+## Looked for and not found
+
+Records Sendermap looked for and did not find.
 
 - DKIM keys at alerts.allbirds.com: selectors exist but none of the 32 names asked is one
   - `_domainkey.alerts.allbirds.com TXT no record of this type`
@@ -184,14 +215,14 @@ Transactional · likely
 
 ## How this was checked
 
-Asked 764 lookups at 6 names:
+Checked 2026-10-12 01:24 UTC: 764 DNS lookups in 0.0 s over Google DNS over HTTPS.
 
-- allbirds.com: 110 DKIM selectors, 25 CNAME labels, 1 page
-- alerts.allbirds.com: 32 DKIM selectors
-- bounce.allbirds.com: 8 DKIM selectors
-- email.allbirds.com: 13 DKIM selectors
-- info.allbirds.com: 27 DKIM selectors
-- mail.allbirds.com: 32 DKIM selectors
+- At allbirds.com: 110 possible DKIM key names, 25 service record names, 1 web page.
+- At alerts.allbirds.com: 32 possible DKIM key names.
+- At bounce.allbirds.com: 8 possible DKIM key names.
+- At email.allbirds.com: 13 possible DKIM key names.
+- At info.allbirds.com: 27 possible DKIM key names.
+- At mail.allbirds.com: 32 possible DKIM key names.
 
 Not checked:
 
@@ -202,5 +233,5 @@ Not checked:
 
 Not run:
 
-- the website: web checks were turned off (--no-web)
-- certificate transparency, crt.sh: read only with --ct (it also holds expired certificates)
+- the website. Web checks were turned off (--no-web).
+- certificate transparency, crt.sh. Read only with --ct (it also holds expired certificates).

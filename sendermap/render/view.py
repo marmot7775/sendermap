@@ -93,26 +93,77 @@ _SEVERITY_RANK = {s: i for i, s in enumerate(Severity)}
 _FIX = (Severity.RISK.value, Severity.WARNING.value)
 # Each tier as a status a reader takes in at a glance. In use comes only from the domain's MX.
 STATUS = {
-    Tier.IN_USE.value: "Receives mail",
+    Tier.IN_USE.value: "Receives your mail",
     Tier.CONFIGURED.value: "Set up to send",
-    Tier.LIKELY.value: "Likely",
+    Tier.LIKELY.value: "Likely sends",
     Tier.ACCOUNT_ONLY.value: "Account only",
+}
+# What each status means, for a reader who has not used Sendermap before.
+STATUS_MEANS = {
+    Tier.IN_USE.value: "your MX records deliver the domain's mail there",
+    Tier.CONFIGURED.value: "its records for sending are in your DNS",
+    Tier.LIKELY.value: "one clue points to it, such as a key named for it",
+    Tier.ACCOUNT_ONLY.value: "an account exists, with nothing set up to send",
 }
 
 # The sections under a map's head, as (key, name), in the order every view shows them. The text,
 # HTML and Markdown renderers each walk this tuple and take every name from it, so a section is
 # renamed, added or moved here and nowhere else.
 SECTIONS = (
-    ("glance", "At a glance"),
-    ("fixes", "Fix these"),
-    ("notes", "Notes"),
-    ("evidence", "Evidence, service by service"),
-    ("claimed", "Claimed senders"),
-    ("unknowns", "Not recognised"),
+    ("glance", "Who handles your email"),
+    ("fixes", "What to fix"),
+    ("notes", "Good to know"),
+    ("evidence", "The proof, service by service"),
+    ("claimed", "Your list against the map"),
+    ("unknowns", "Not matched to a service"),
     ("ct", "Certificate logs"),
-    ("absences", "Checked and not there"),
+    ("absences", "Looked for and not found"),
     ("how", "How this was checked"),
 )
+# The plain sentence under each section's name, for a reader who does not know the records.
+# The glance and evidence sections add lines of their own (View.intro).
+INTROS = {
+    "fixes": "Problems found in the setup, most serious first.",
+    "notes": "Nothing to change here. These explain what the map shows.",
+    "evidence": "The DNS records behind each service above, for anyone who wants to check them.",
+    "claimed": "The services you said you use, compared with what DNS shows.",
+    "unknowns": (
+        "These records point somewhere Sendermap does not recognise: a service it does not know "
+        "yet, or your own servers."
+    ),
+    "ct": "Names found in public certificate logs, checked against DNS today.",
+    "absences": "Records Sendermap looked for and did not find.",
+}
+# The term a glossary line leads with, where it is not the label's first word.
+_TERM = {
+    "Bounce": "Bounce CNAME",
+    "Tracking": "Tracking CNAME",
+    "Verification": "Verification token",
+    "Delegated": "Delegated by NS",
+    "Website": "Website",
+    "Subprocessor": "Subprocessor list",
+    "CNAME": "From certificate logs",
+    "Address": "From certificate logs",
+    "Revoked": "Revoked DKIM key",
+    "MTA-STS": "MTA-STS policy",
+}
+# What each kind of record does, in a few plain words, for the evidence section's key.
+_MEANS = {
+    "MX": "where the domain's mail is delivered",
+    "MTA-STS": "names the servers allowed to receive the domain's mail, over encryption",
+    "SPF": "the list of servers allowed to send as the domain",
+    "DKIM": "a signature key that proves mail really came from the domain",
+    "Bounce": "lets a service handle bounced mail under the domain's name",
+    "Tracking": "links in a service's emails point here",
+    "Verification": "proves the domain owner set up an account with the service",
+    "Autodiscover": "lets mail apps find their settings",
+    "Delegated": "the service runs DNS for a sending subdomain",
+    "Website": "the domain's website uses or names the service",
+    "Subprocessor": "the domain's own list of companies that handle its data",
+    "CNAME from": "names found in public certificate logs",
+    "Address from": "names found in public certificate logs",
+    "Revoked": "a key the domain has deliberately emptied",
+}
 
 # ---------------------------------------------------------------- the View
 
@@ -131,27 +182,30 @@ class Head:
     # The story's sentences, each a line of its own in the terminal view.
     sentences: tuple[str, ...] = ()
 
-    def tally(self, fixes: int) -> tuple[str, str]:
-        """How many services send as the domain and how many things to fix, in words:
-        ("15 services send email as this domain", "3 things to fix"). The second is "nothing to
-        fix" when services send and none needs fixing, and empty when none sends."""
+    @property
+    def question(self) -> str:
+        """The question the map answers: "Who handles email for glossier.com?"."""
+        return f"Who handles email for {self.domain}?"
+
+    def answer(self, fixes: int) -> str:
+        """The answer in plain words: how many services handle the domain's email and how many
+        things need fixing. "9 services handle email for glossier.com. 3 things need fixing."."""
         count = self.senders
-        senders = (
-            f"{count} service{'s' if count != 1 else ''} send{'s' if count == 1 else ''} "
-            "email as this domain"
-            if count
-            else "No sending service found"
-        )
+        if not count:
+            # The story says why nothing shows, so the answer would only repeat it.
+            return "" if self.lede else f"No service shows up as handling email for {self.domain}."
+        said = f"{count} service{'s' if count != 1 else ''} handle{'s' if count == 1 else ''}"
+        said += f" email for {self.domain}."
         if fixes:
-            return senders, f"{fixes} thing{'s' if fixes != 1 else ''} to fix"
-        return senders, "nothing to fix" if count else ""
+            return f"{said} {fixes} thing{'s need' if fixes != 1 else ' needs'} fixing."
+        return f"{said} Nothing needs fixing."
 
     def made(self) -> str:
-        """How the map was made in one line: "checked <when> · 724 lookups in 3.2 s over
-        <resolver>"."""
+        """How the map was made in one sentence: "Checked <when>: 724 DNS lookups in 3.2 s over
+        <resolver>."."""
         return (
-            f"checked {self.checked_at} · {self.lookups} lookups in {self.elapsed:.1f} s "
-            f"over {self.resolver}"
+            f"Checked {self.checked_at}: {self.lookups} DNS lookups in {self.elapsed:.1f} s "
+            f"over {self.resolver}."
         )
 
     @property
@@ -201,7 +255,7 @@ class ServiceView:
 
     @property
     def status(self) -> str:
-        """The tier as a plain status: "Receives mail", "Set up to send", "Likely"."""
+        """The tier as a plain status: "Receives your mail", "Set up to send", "Likely sends"."""
         return STATUS.get(self.tier, self.tier)
 
     @property
@@ -299,6 +353,11 @@ class OffView:
     check: str
     how: str
 
+    def __str__(self) -> str:
+        """ "certificate transparency, crt.sh. Read only with --ct (...)."": the check, then how
+        to run it as a sentence of its own."""
+        return f"{self.check}. {self.how[:1].upper()}{self.how[1:]}."
+
 
 @dataclass(frozen=True, slots=True)
 class AskedView:
@@ -341,6 +400,33 @@ class View:
     def services(self) -> tuple[ServiceView, ...]:
         """Every service, strongest tier first."""
         return tuple(s for tier in self.tiers for s in tier.services)
+
+    def intro(self, key: str) -> tuple[str, ...]:
+        """The plain lines under a section's name: what the section shows, and for the glance
+        what each status present means, for the evidence what each kind of record present
+        does."""
+        if key == "glance":
+            tiers = [t.tier for t in self.tiers]
+            means = tuple(f"{STATUS[t]}: {STATUS_MEANS[t]}." for t in tiers if t in STATUS_MEANS)
+            return (f"Each service below receives or sends email for {self.head.domain}.", *means)
+        lines: tuple[str, ...] = (INTROS[key],) if key in INTROS else ()
+        if key == "evidence":
+            lines += self.glossary
+        return lines
+
+    @property
+    def glossary(self) -> tuple[str, ...]:
+        """One line per kind of record the services show, in order of first appearance:
+        "DKIM: a signature key that proves mail really came from the domain."."""
+        said: dict[str, str] = {}
+        for service in self.services:
+            for kind in service.kinds:
+                for word, means in _MEANS.items():
+                    if kind.label.startswith(word):
+                        term = word.split()[0] if word in ("CNAME from", "Address from") else word
+                        said.setdefault(means, f"{_TERM.get(term, term)}: {means}.")
+                        break
+        return tuple(said.values())
 
 
 def view(result: SenderMap, *, evidence: bool) -> View:
@@ -882,11 +968,12 @@ def _asked_total(result: SenderMap) -> str:
 
 
 def asked(checked: Checked) -> str:
-    """What was asked at one name, counted: "172 DKIM selectors, 23 CNAME labels, 2 pages"."""
+    """What was asked at one name, counted: "172 possible DKIM key names, 23 service record
+    names, 2 web pages"."""
     counts = (
-        (len(checked.dkim_selectors), "DKIM selector"),
-        (len(checked.labels), "CNAME label"),
-        (len(checked.pages), "page"),
+        (len(checked.dkim_selectors), "possible DKIM key name"),
+        (len(checked.labels), "service record name"),
+        (len(checked.pages), "web page"),
     )
     return ", ".join(f"{n} {what}{'s' if n != 1 else ''}" for n, what in counts if n) or "none"
 

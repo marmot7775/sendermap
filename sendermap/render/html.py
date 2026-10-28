@@ -37,7 +37,21 @@ def html(result: SenderMap) -> str:
 def show(shown: View) -> str:
     """One View as an HTML fragment: the head, then each section in SECTIONS' order, left out
     when it is empty."""
-    return _head(shown) + "".join(_SECTIONS[key](shown, name) for key, name in SECTIONS)
+    return _head(shown) + "".join(
+        _with_intro(_SECTIONS[key](shown, name), shown.intro(key)) for key, name in SECTIONS
+    )
+
+
+def _with_intro(section: str, intro: tuple[str, ...]) -> str:
+    """A rendered section with its intro under the title: the first line as a paragraph, the
+    rest as a muted key."""
+    if not section or not intro:
+        return section
+    lines = [f'<p class="section-intro">{_e(intro[0])}</p>']
+    if intro[1:]:
+        lines += ['<ul class="section-key">', *(f"<li>{_e(i)}</li>" for i in intro[1:]), "</ul>"]
+    head, sep, rest = section.partition("</h3>\n")
+    return head + sep + "\n".join(lines) + "\n" + rest
 
 
 def slug(name: str) -> str:
@@ -86,31 +100,20 @@ def _list(title: str, kind: str, lines: Iterable[str]) -> str:
 
 
 def _head(shown: View) -> str:
-    """The domain, how many services send as it and how many things to fix, how the map was
-    made, then the story in the lead block."""
+    """The question the map answers, the answer, how the map was made, then the story in the
+    lead block."""
     head = shown.head
-    count = head.senders
-    senders = (
-        f"<strong>{count} service{'s' if count != 1 else ''}</strong> "
-        f"send{'s' if count == 1 else ''} email as this domain"
-        if count
-        else "<strong>No sending service</strong> found"
-    )
-    fixes = len(shown.fixes)
-    if fixes:
-        senders += f' <span class="sep">·</span> <span class="to-fix">{fixes} thing'
-        senders += f"{'s' if fixes != 1 else ''} to fix</span>"
-    elif count:
-        senders += ' <span class="sep">·</span> <span class="no-fix">nothing to fix</span>'
-    how = (
-        f"Checked {head.checked_at} · {head.lookups} lookups in {head.elapsed:.1f} s over "
-        f"{head.resolver}"
-    )
+    state = "to-fix" if shown.fixes else "no-fix" if head.senders else ""
+    answer = head.answer(len(shown.fixes))
     lines = [
         '<header class="view-head">',
-        f"<h2>{_e(head.domain)}</h2>",
-        f'<p class="summary">{senders}</p>',
-        f'<p class="checked">{_e(how)}</p>',
+        f"<h2>{_e(head.question)}</h2>",
+        *(
+            [f'<p class="summary"><strong class="{state}">{_e(answer)}</strong></p>']
+            if answer
+            else []
+        ),
+        f'<p class="checked">{_e(head.made())}</p>',
         "</header>",
     ]
     if head.story:
@@ -155,8 +158,6 @@ def _glance(shown: View, title: str) -> str:
             "</tr>",
         ]
     body += ["</tbody>", "</table>"]
-    if shown.reporting:
-        body.append(f'<p class="reports">Reports go to {_e(listed(shown.reporting))}.</p>')
     return _section(title, "glance", body)
 
 
@@ -302,7 +303,7 @@ def _gaps(gaps: tuple[GapGroup, ...], off: tuple[OffView, ...]) -> list[str]:
     if not gaps and not off:
         return []
     items = [f"<li>{_gap(g)}</li>" for g in gaps]
-    items += [f'<li><span class="mono">{_e(o.check)}</span>: {_e(o.how)}</li>' for o in off]
+    items += [f"<li>{_e(str(o))}</li>" for o in off]
     return ["<h4>Not checked</h4>", '<ul class="gaps">', *items, "</ul>"]
 
 
@@ -317,7 +318,9 @@ def _asked(asked: tuple[AskedView, ...], total: str) -> list[str]:
     """What was asked in all, then at each name, counted, with every name inside Names asked."""
     if not asked:
         return []
-    counts = [f'<li><span class="mono">{_e(a.where)}</span>: {_e(a.counts)}</li>' for a in asked]
+    counts = [
+        f'<li>At <span class="mono">{_e(a.where)}</span>: {_e(a.counts)}.</li>' for a in asked
+    ]
     body = ["<h4>What was asked</h4>", f'<p class="asked-total">{_e(total)}</p>']
     body += ['<ul class="gaps">', *counts, "</ul>"]
     names: list[str] = []

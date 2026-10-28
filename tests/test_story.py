@@ -378,21 +378,25 @@ def test_every_view_carries_the_story() -> None:
     text.render(mapped, console)
     shown = console.export_text().splitlines()
     said = story.sentences(mapped)
-    # Under the panel and a blank line, one per line, without what was not checked, which the
-    # terminal says in full under HOW THIS WAS CHECKED.
+    # Under the question, the answer and a blank line, one per line, without what was not
+    # checked, which the terminal says in full under How this was checked.
     assert said[-1].startswith("Not checked")
-    assert len(said) > 2 and [s.strip() for s in shown[6 : 6 + len(said) - 1]] == said[:-1]
+    assert len(said) > 2 and [s.strip() for s in shown[3 : 3 + len(said) - 1]] == said[:-1]
     # Under the counts, a sentence a paragraph, and the same sentence left out.
     md = markdown.render(mapped).split("\n")
-    assert md[0] == f"# Sendermap: {DOMAIN}"
-    assert md[5 : 5 + 2 * (len(said) - 1) : 2] == said[:-1] and said[-1] not in md
+    assert md[0] == f"# Who handles email for {DOMAIN}?"
+    assert md[4 : 4 + 2 * (len(said) - 1) : 2] == said[:-1] and said[-1] not in md
     assert mapped.to_dict()["story"] == mapped.story
     page = html.html(mapped)
     assert said[-1].startswith("Not checked")  # the one sentence the page mutes
     paragraphs = [*(f"<p>{escape(s)}</p>" for s in said[:-1])]
     paragraphs.append(f'<p class="story-muted">{escape(said[-1])}</p>')
     assert "\n".join(['<div class="lead">', '<div class="story">', *paragraphs]) in page
-    assert page.index('class="lead"') < page.index("At a glance") < page.index("Fix these")
+    assert (
+        page.index('class="lead"')
+        < page.index("Who handles your email")
+        < page.index("What to fix")
+    )
     # The page puts the ring map in the lead block, beside the story.
     js = (Path(text.__file__).parent.parent / "web" / "static" / "app.js").read_text()
     assert "lead.append(figure)" in js

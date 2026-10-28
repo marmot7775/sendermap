@@ -22,8 +22,10 @@ def terminal(result: SenderMap, *, width: int = 100, evidence: bool = False) -> 
 
 
 def section(lines: list[str], title: str) -> list[str]:
-    """The lines under one section heading, up to the next blank line."""
+    """The lines of one section's body: past its heading and the intro under it, up to the next
+    blank line."""
     start = lines.index(title) + 1
+    start = next(i for i in range(start, len(lines)) if not lines[i].strip()) + 1
     end = next((i for i in range(start, len(lines)) if not lines[i].strip()), len(lines))
     return lines[start:end]
 
@@ -33,7 +35,7 @@ async def test_the_glance_keeps_its_marker_and_setup_columns_at_80_columns() -> 
     # columns until they showed nothing.
     result = await mapped(CORPUS / "casper.com")
     services = view(result, evidence=False).services
-    glance = section(terminal(result, width=80), "AT A GLANCE")
+    glance = section(terminal(result, width=80), "Who handles your email")
     rows = [line for line in glance if line.lstrip()[:1] in "●◐○"]
     assert len(rows) == len(services)
     for service in services:
@@ -47,13 +49,13 @@ async def test_names_asked_sit_under_the_count_they_belong_to() -> None:
     result = await mapped(CORPUS / "glossier.com")
     asked = view(result, evidence=True).asked
     how = terminal(result, evidence=True)
-    how = how[how.index("HOW THIS WAS CHECKED") + 1 :]
+    how = how[how.index("How this was checked") + 1 :]
     record = next(r for r in asked if r.names)
-    count = how.index(f"    {record.where}: {record.counts}")
+    count = how.index(f"  At {record.where}: {record.counts}.")
     heading, _ = record.names[0]
-    assert how[count + 1].startswith(f"      {heading}:")
+    assert how[count + 1].startswith(f"    {heading}:")
     first_other = next(i for i, line in enumerate(how) if line.startswith("  Not "))
-    names = [i for i, line in enumerate(how) if line.startswith("      ")]
+    names = [i for i, line in enumerate(how) if line.startswith("    ")]
     assert names and max(names) < first_other
 
 
@@ -70,7 +72,7 @@ async def test_the_certificate_logs_print_when_ct_ran(tmp_path: Path) -> None:
             ct_cache=tmp_path,
         )
     shown = " ".join(" ".join(terminal(result, width=200)).split())
-    assert "CERTIFICATE LOGS" in shown
+    assert "Certificate logs" in shown
     for line in ct_lines(result):
         assert line in shown
     assert "MX for bounces mxa.mailgun.org" in shown

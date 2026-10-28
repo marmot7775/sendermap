@@ -318,8 +318,8 @@ def test_the_text_view_shows_claimed_senders_in_four_parts() -> None:
     console = Console(record=True, width=200)
     text.render(with_claimed(fake_map(), CLAIMED, catalog.load()), console)
     shown = console.export_text()
-    assert "CLAIMED SENDERS" in shown
-    section = shown.split("CLAIMED SENDERS")[1]
+    assert "Your list against the map" in shown
+    section = shown.split("Your list against the map")[1]
     for heading, line in PARTS:
         assert f"  {heading}\n" in section
         assert f"    {line}\n" in section
@@ -329,13 +329,13 @@ def test_the_text_view_shows_claimed_senders_in_four_parts() -> None:
 def test_the_text_view_says_none_for_an_empty_part() -> None:
     console = Console(record=True, width=200)
     text.render(with_claimed(fake_map(), ["Shopify"], catalog.load()), console)
-    section = console.export_text().split("CLAIMED SENDERS")[1]
+    section = console.export_text().split("Your list against the map")[1]
     assert "  Claimed, not found at any name checked\n    none\n" in section
 
 
 def test_the_markdown_view_shows_claimed_senders() -> None:
     shown = markdown.render(with_claimed(fake_map(), CLAIMED, catalog.load()))
-    section = shown.split("## Claimed senders\n")[1]
+    section = shown.split("## Your list against the map\n")[1]
     for heading, line in PARTS:
         assert f"- **{heading}**" in section
         assert f"  - {line}" in section
@@ -344,8 +344,8 @@ def test_the_markdown_view_shows_claimed_senders() -> None:
 def test_no_view_shows_the_section_when_nothing_was_claimed() -> None:
     console = Console(record=True, width=200)
     text.render(fake_map(), console)
-    assert "CLAIMED SENDERS" not in console.export_text()
-    assert "Claimed senders" not in markdown.render(fake_map())
+    assert "Your list against the map" not in console.export_text()
+    assert "Your list against the map" not in markdown.render(fake_map())
 
 
 def test_the_web_page_uses_the_same_words_and_passes_claimed_on() -> None:
@@ -377,4 +377,4 @@ async def test_the_api_takes_claimed_and_keeps_the_cached_map_clean() -> None:
         site.state.seen.clear()
     assert claimed["reconciliation"]["unfound"][0]["service"] == "Klaviyo"
     assert plain["reconciliation"] is None
-    assert "## Claimed senders" in md
+    assert "## Your list against the map" in md

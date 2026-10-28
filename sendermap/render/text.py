@@ -1,15 +1,14 @@
 """The terminal view: the View in rich, laid out to be read top down.
 
-A panel with the domain and the count of things to fix, then the services at a glance, then what
-to fix, then the evidence service by service, then what was not recognised, and last, dimmed, how
-the map was made.
+The question the map answers and its answer in plain words, then each section under a plain name
+with a line or two saying what it shows, then the records, dimmed, for a reader who wants them,
+and last how the map was made.
 """
 
 from __future__ import annotations
 
 from rich.console import Console
 from rich.padding import Padding
-from rich.panel import Panel
 from rich.table import Table
 from rich.text import Text
 
@@ -25,6 +24,8 @@ _TIER_MARK = {
 _SEVERITY_STYLE = {"risk": "bold red", "warning": "bold yellow", "note": "bright_black"}
 _DIM = "bright_black"
 _HEADING = "bold bright_white"
+# A section's name and the plain lines under it.
+Title = tuple[str, tuple[str, ...]]
 
 
 def render(result: SenderMap, console: Console, *, evidence: bool = False) -> None:
@@ -33,12 +34,12 @@ def render(result: SenderMap, console: Console, *, evidence: bool = False) -> No
 
 
 def show(shown: View, console: Console) -> None:
-    """Print one View: the head and story, then each section in SECTIONS' order, named in
-    capitals and left out when it is empty."""
+    """Print one View: the question and its answer, then each section in SECTIONS' order under
+    its name and intro, left out when it is empty."""
     _head(shown, console)
     _story(shown, console)
     for key, name in SECTIONS:
-        _SECTIONS[key](shown, name.upper(), console)
+        _SECTIONS[key](shown, (name, shown.intro(key)), console)
 
 
 def _line(text: str | Text, console: Console, indent: int, style: str = "") -> None:
@@ -47,24 +48,26 @@ def _line(text: str | Text, console: Console, indent: int, style: str = "") -> N
     console.print(Padding(body, (0, 0, 0, indent), expand=False))
 
 
-def _heading(title: str, console: Console) -> None:
-    console.print(Text(f"\n{title}", style=_HEADING))
+def _heading(title: Title, console: Console) -> None:
+    """The section's name, then its intro, the first line plain and the rest dimmed."""
+    name, intro = title
+    console.print(Text(f"\n{name}", style=_HEADING))
+    for i, line in enumerate(intro):
+        _line(line, console, 2, "" if i == 0 else _DIM)
+    if intro:
+        console.print()
 
 
 # ---------------------------------------------------------------- head and glance
 
 
 def _head(shown: View, console: Console) -> None:
-    """The domain, how many services send as it and how many things need fixing, and how the
-    map was made, in one panel."""
+    """The question the map answers, then the answer: how many services and what to fix."""
     head = shown.head
-    senders, fixes = head.tally(len(shown.fixes))
-    line = Text.assemble((head.domain, "bold"), "\n", senders)
-    if fixes:
-        line.append("   ·   ", style=_DIM)
-        line.append(fixes, style="bold yellow" if shown.fixes else "green")
-    line.append(f"\n{head.made()}", style=_DIM)
-    console.print(Panel(line, border_style="cyan", expand=False, padding=(0, 2)))
+    console.print(Text(head.question, style=_HEADING))
+    style = "bold yellow" if shown.fixes else "green" if head.senders else ""
+    if answer := head.answer(len(shown.fixes)):
+        _line(answer, console, 2, style)
 
 
 def _story(shown: View, console: Console) -> None:
@@ -76,8 +79,9 @@ def _story(shown: View, console: Console) -> None:
         _line(sentence, console, 2)
 
 
-def _glance(shown: View, title: str, console: Console) -> None:
-    """One row per service: marker, name, category, status and setup, then where reports go."""
+def _glance(shown: View, title: Title, console: Console) -> None:
+    """One row per service: marker, name, category, status and setup. Where reports go is in
+    the story above."""
     services = shown.services
     if not services:
         return
@@ -99,8 +103,6 @@ def _glance(shown: View, title: str, console: Console) -> None:
             _setup_glance(service),
         )
     console.print(Padding(grid, (0, 0, 0, 2), expand=False))
-    if shown.reporting:
-        _line(f"Reports go to {', '.join(shown.reporting)}.", console, 2, _DIM)
 
 
 _GLANCE = {
@@ -121,7 +123,7 @@ def _setup_glance(service: ServiceView) -> Text:
 # ---------------------------------------------------------------- findings
 
 
-def _fixes(shown: View, title: str, console: Console) -> None:
+def _fixes(shown: View, title: Title, console: Console) -> None:
     """The risks and warnings, numbered."""
     if shown.fixes:
         _heading(title, console)
@@ -129,7 +131,7 @@ def _fixes(shown: View, title: str, console: Console) -> None:
         _finding(f, f"{number:>2} ", console)
 
 
-def _notes(shown: View, title: str, console: Console) -> None:
+def _notes(shown: View, title: Title, console: Console) -> None:
     """The notes, unnumbered after what to fix."""
     if shown.notes:
         _heading(title, console)
@@ -156,7 +158,7 @@ def _finding(f: FindingView, lead: str, console: Console) -> None:
 # ---------------------------------------------------------------- evidence
 
 
-def _evidence(shown: View, title: str, console: Console) -> None:
+def _evidence(shown: View, title: Title, console: Console) -> None:
     """Each service as a block: name, category and status, one line per kind of record, then
     its setup."""
     services = shown.services
@@ -164,7 +166,7 @@ def _evidence(shown: View, title: str, console: Console) -> None:
         return
     _heading(title, console)
     width = max([len("Setup"), *(len(k.label) for s in services for k in s.kinds)]) + 2
-    for service in services:
+    for number, service in enumerate(services):
         _, style = _TIER_MARK.get(service.tier, ("●", ""))
         head = Text.assemble(
             (service.name, "bold"), ("  ·  ", _DIM), (service.category, _DIM), ("  ·  ", _DIM)
@@ -172,7 +174,8 @@ def _evidence(shown: View, title: str, console: Console) -> None:
         head.append(service.status.lower(), style=style)
         if service.where:
             head.append(f"  at {service.where}", style=_DIM)
-        console.print()
+        if number:
+            console.print()
         _line(head, console, 2)
         rows = Table.grid(padding=(0, 1))
         rows.add_column(width=width, style=_DIM, no_wrap=True)
@@ -197,7 +200,7 @@ def _setup(clause: str) -> Text:
     return text
 
 
-def _claimed(shown: View, title: str, console: Console) -> None:
+def _claimed(shown: View, title: Title, console: Console) -> None:
     if shown.claimed:
         _heading(title, console)
     for part in shown.claimed:
@@ -206,7 +209,7 @@ def _claimed(shown: View, title: str, console: Console) -> None:
             _line(item, console, 4, _DIM)
 
 
-def _unknowns(shown: View, title: str, console: Console) -> None:
+def _unknowns(shown: View, title: Title, console: Console) -> None:
     if shown.unknowns:
         _heading(title, console)
     for unknown in shown.unknowns:
@@ -230,14 +233,14 @@ def _unknown(item: UnknownView, console: Console, evidence: bool) -> None:
             _line(f"+ {item.more} more", console, 4, _DIM)
 
 
-def _ct(shown: View, title: str, console: Console) -> None:
+def _ct(shown: View, title: Title, console: Console) -> None:
     if shown.ct:
         _heading(title, console)
     for line in shown.ct:
         _line(line, console, 2, _DIM)
 
 
-def _absences(shown: View, title: str, console: Console) -> None:
+def _absences(shown: View, title: Title, console: Console) -> None:
     if shown.absences:
         _heading(title, console)
     for a in shown.absences:
@@ -249,21 +252,17 @@ def _absences(shown: View, title: str, console: Console) -> None:
 # ---------------------------------------------------------------- how the map was made
 
 
-def _how(shown: View, title: str, console: Console) -> None:
+def _how(shown: View, title: Title, console: Console) -> None:
     """What was asked, what was not checked and what did not run, in one dimmed block. The
     names asked at each name sit under its count, not after the block."""
-    lines: list[tuple[str, int]] = []
-    if shown.asked:
-        lines.append((f"Asked {shown.asked_total}:", 2))
+    lines: list[tuple[str, int]] = [(shown.head.made(), 2)]
     for record in shown.asked:
-        lines.append((f"{record.where}: {record.counts}", 4))
-        lines += [(f"{heading}: {', '.join(names)}", 6) for heading, names in record.names]
+        lines.append((f"At {record.where}: {record.counts}.", 2))
+        lines += [(f"{heading}: {', '.join(names)}", 4) for heading, names in record.names]
     lines += [(f"Not checked: {g}", 2) for g in shown.gaps]
-    lines += [(f"Not run: {off.check}: {off.how}", 2) for off in shown.off]
+    lines += [(f"Not run: {off}", 2) for off in shown.off]
     if not shown.evidence:
         lines.append(("Add --evidence to see every record behind each line.", 2))
-    if not lines:
-        return
     _heading(title, console)
     for line, indent in lines:
         _line(line, console, indent, _DIM)

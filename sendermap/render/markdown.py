@@ -25,7 +25,8 @@ def show(shown: View) -> str:
     for key, name in SECTIONS:
         body = _SECTIONS[key](shown)
         if body:
-            lines += ["", f"## {name}", "", *body]
+            intro = [line for said in shown.intro(key) for line in (said, "")]
+            lines += ["", f"## {name}", "", *intro, *body]
     return "\n".join(lines) + "\n"
 
 
@@ -49,12 +50,11 @@ def _records(records: tuple[str, ...], indent: str) -> list[str]:
 
 
 def _head(shown: View) -> list[str]:
-    """The domain, the tally, how the map was made, then the story a sentence a paragraph."""
+    """The question the map answers, the answer in bold, then the story a sentence a
+    paragraph."""
     head = shown.head
-    senders, fixes = head.tally(len(shown.fixes))
-    tally = f"{senders} · {fixes}" if fixes else senders
-    made = head.made()
-    lines = [f"# Sendermap: {head.domain}", "", f"{tally}  ", made[:1].upper() + made[1:]]
+    answer = head.answer(len(shown.fixes))
+    lines = [f"# {head.question}", *(["", f"**{answer}**"] if answer else [])]
     for sentence in head.lede:
         lines += ["", sentence]
     return lines
@@ -66,10 +66,7 @@ def _head(shown: View) -> list[str]:
 def _glance(shown: View) -> list[str]:
     """One line per service: name, category and where, status and setup, then where reports
     go."""
-    lines = [_glance_line(service) for service in shown.services]
-    if lines and shown.reporting:
-        lines += ["", f"Reports go to {', '.join(shown.reporting)}."]
-    return lines
+    return [_glance_line(service) for service in shown.services]
 
 
 def _glance_line(service: ServiceView) -> str:
@@ -162,14 +159,13 @@ def _absences(shown: View) -> list[str]:
 def _how(shown: View) -> list[str]:
     """What was asked, what was not checked and what did not run, each under a label of its
     own, then every name asked when evidence is set."""
-    lines: list[str] = []
+    lines = [shown.head.made()]
     if shown.asked:
-        lines += [f"Asked {shown.asked_total}:", ""]
-        lines += [f"- {record.where}: {record.counts}" for record in shown.asked]
+        lines += ["", *(f"- At {record.where}: {record.counts}." for record in shown.asked)]
     if shown.gaps:
         lines += _part("Not checked", [f"- {g}" for g in shown.gaps], lines)
     if shown.off:
-        lines += _part("Not run", [f"- {o.check}: {o.how}" for o in shown.off], lines)
+        lines += _part("Not run", [f"- {o}" for o in shown.off], lines)
     names = [
         f"- {record.where}, {heading}: {', '.join(_code(n) for n in shown_names)}"
         for record in shown.asked

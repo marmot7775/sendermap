@@ -1,13 +1,11 @@
-╭──────────────────────────────────────────────────────────────────────────────────╮
-│  example.com                                                                     │
-│  No sending service found                                                        │
-│  checked 2026-10-12 01:25 UTC · 210 lookups in 0.0 s over Google DNS over HTTPS  │
-╰──────────────────────────────────────────────────────────────────────────────────╯
+Who handles email for example.com?
 
   No sending service shows in DNS for example.com: a null MX that says it accepts no mail, no sender
   in SPF, and a wildcard that answers every DKIM name.                                              
 
-NOTES
+Good to know
+  Nothing to change here. These explain what the map shows.
+
   ·   The domain accepts no mail                                              
       It publishes a null MX record, which tells senders it receives no email.
         example.com MX 0                                                      
@@ -16,14 +14,14 @@ NOTES
       services sign for the domain.                                                                 
         *._domainkey.example.com TXT v=DKIM1; p=                                                    
 
-HOW THIS WAS CHECKED
-  Asked 210 lookups at 1 name:
-    example.com: 25 CNAME labels, 2 pages
-      Pages: https://example.com/,                                                                  
-      https://api.certspotter.com/v1/issuances?domain=example.com&include_subdomains=true&expand=dns
-      _names                                                                                        
-      CNAME labels: bounce, bounces, em, email, mail, send, mta, rp, pm-bounces, links, link, click,
-      track, tracking, url, go, autodiscover, cf-bounce, eversrv, fwdkim1, bnc3, bounces.cloud.em,  
-      bounces.cloud2.em, outbound.intercom, atlassian-bounces                                       
-  Not run: certificate transparency, crt.sh: read only with --ct (it also holds expired             
-  certificates)                                                                                     
+How this was checked
+  Checked 2026-10-12 01:25 UTC: 210 DNS lookups in 0.0 s over Google DNS over HTTPS.
+  At example.com: 25 service record names, 2 web pages.
+    Pages: https://example.com/,                                                                    
+    https://api.certspotter.com/v1/issuances?domain=example.com&include_subdomains=true&expand=dns_n
+    ames                                                                                            
+    CNAME labels: bounce, bounces, em, email, mail, send, mta, rp, pm-bounces, links, link, click,  
+    track, tracking, url, go, autodiscover, cf-bounce, eversrv, fwdkim1, bnc3, bounces.cloud.em,    
+    bounces.cloud2.em, outbound.intercom, atlassian-bounces                                         
+  Not run: certificate transparency, crt.sh. Read only with --ct (it also holds expired             
+  certificates).                                                                                    

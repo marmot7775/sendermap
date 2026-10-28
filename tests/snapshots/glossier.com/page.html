@@ -1,7 +1,7 @@
 <header class="view-head">
-<h2>glossier.com</h2>
-<p class="summary"><strong>9 services</strong> send email as this domain <span class="sep">·</span> <span class="to-fix">3 things to fix</span></p>
-<p class="checked">Checked 2026-10-12 01:25 UTC · 750 lookups in 0.0 s over Google DNS over HTTPS</p>
+<h2>Who handles email for glossier.com?</h2>
+<p class="summary"><strong class="to-fix">9 services handle email for glossier.com. 3 things need fixing.</strong></p>
+<p class="checked">Checked 2026-10-12 01:25 UTC: 750 DNS lookups in 0.0 s over Google DNS over HTTPS.</p>
 </header>
 <div class="lead">
 <div class="story">
@@ -12,14 +12,21 @@
 </div>
 </div>
 <section class="view-section glance">
-<h3 class="section-title">At a glance</h3>
+<h3 class="section-title">Who handles your email</h3>
+<p class="section-intro">Each service below receives or sends email for glossier.com.</p>
+<ul class="section-key">
+<li>Receives your mail: your MX records deliver the domain&#x27;s mail there.</li>
+<li>Set up to send: its records for sending are in your DNS.</li>
+<li>Likely sends: one clue points to it, such as a key named for it.</li>
+<li>Account only: an account exists, with nothing set up to send.</li>
+</ul>
 <table class="glance">
 <thead><tr><th>Service</th><th>Category</th><th>Status</th><th>Setup</th></tr></thead>
 <tbody>
 <tr>
 <td class="name"><span class="dot in-use"></span><a href="#service-google-workspace">Google Workspace</a></td>
 <td class="category">Mailbox</td>
-<td><span class="badge b-in-use">Receives mail</span></td>
+<td><span class="badge b-in-use">Receives your mail</span></td>
 <td class="state incomplete">⚠ setup incomplete</td>
 </tr>
 <tr>
@@ -61,7 +68,7 @@
 <tr>
 <td class="name"><span class="dot likely"></span><a href="#service-mandrill">Mandrill</a></td>
 <td class="category">Transactional</td>
-<td><span class="badge b-likely">Likely</span></td>
+<td><span class="badge b-likely">Likely sends</span></td>
 <td class="state basis">from: DKIM key</td>
 </tr>
 <tr>
@@ -72,10 +79,10 @@
 </tr>
 </tbody>
 </table>
-<p class="reports">Reports go to Valimail.</p>
 </section>
 <section class="view-section attention">
-<h3 class="section-title">Fix these</h3>
+<h3 class="section-title">What to fix</h3>
+<p class="section-intro">Problems found in the setup, most serious first.</p>
 <ol class="fixes">
 <li class="finding warning">
 <h4>Two DKIM keys at glossier.com are 1024-bit: mandrill (Mandrill) and s2 (SendGrid)</h4>
@@ -108,7 +115,8 @@
 </ol>
 </section>
 <section class="view-section notes">
-<h3 class="section-title">Notes</h3>
+<h3 class="section-title">Good to know</h3>
+<p class="section-intro">Nothing to change here. These explain what the map shows.</p>
 <ul class="notes">
 <li><strong>SPF at glossier.com and receipts.glossier.com is managed through Valimail</strong>. A hosted or macro record can authorize services without naming them, so the services it covers do not show in the record itself.
 <details class="records"><summary>Records</summary>
@@ -121,12 +129,21 @@
 </ul>
 </section>
 <section class="view-section tier">
-<h3 class="section-title">Evidence, service by service</h3>
+<h3 class="section-title">The proof, service by service</h3>
+<p class="section-intro">The DNS records behind each service above, for anyone who wants to check them.</p>
+<ul class="section-key">
+<li>MX: where the domain&#x27;s mail is delivered.</li>
+<li>SPF: the list of servers allowed to send as the domain.</li>
+<li>DKIM: a signature key that proves mail really came from the domain.</li>
+<li>Bounce CNAME: lets a service handle bounced mail under the domain&#x27;s name.</li>
+<li>Verification token: proves the domain owner set up an account with the service.</li>
+<li>Tracking CNAME: links in a service&#x27;s emails point here.</li>
+</ul>
 <div class="rows">
 <article class="row" id="service-google-workspace">
 <h4>Google Workspace</h4>
 <p class="meta">Mailbox</p>
-<span class="badge b-in-use">Receives mail</span>
+<span class="badge b-in-use">Receives your mail</span>
 <div class="row-body">
 <p class="decider"><span class="kind">MX</span>: aspmx.l.google.com, alt1.aspmx.l.google.com and 3 more</p>
 <ul class="claims">
@@ -325,7 +342,7 @@
 <article class="row" id="service-mandrill">
 <h4>Mandrill</h4>
 <p class="meta">Transactional</p>
-<span class="badge b-likely">Likely</span>
+<span class="badge b-likely">Likely sends</span>
 <div class="row-body">
 <p class="decider"><span class="kind">DKIM key</span>: mandrill (1024 bit, named for it)</p>
 <p class="setup">setup complete</p>
@@ -355,7 +372,8 @@
 </div>
 </section>
 <section class="view-section unknowns">
-<h3 class="section-title">Not recognised</h3>
+<h3 class="section-title">Not matched to a service</h3>
+<p class="section-intro">These records point somewhere Sendermap does not recognise: a service it does not know yet, or your own servers.</p>
 <ul class="unknowns">
 <li>CNAME at go: <span class="mono">cname.short.io</span>
 <span class="ev mono">go.glossier.com CNAME cname.short.io</span>
@@ -368,16 +386,16 @@
 <h4>Not checked</h4>
 <ul class="gaps">
 <li>DKIM selectors at <span class="mono">marketing</span>, <span class="mono">receipts</span> and <span class="mono">send.glossier.com</span>: 83 of 110 not asked at each. The first 27 were asked, plus any the name&#x27;s own SPF, MX or delegation points to (cap 27).</li>
-<li><span class="mono">the website</span>: web checks were turned off (--no-web)</li>
-<li><span class="mono">certificate transparency, crt.sh</span>: read only with --ct (it also holds expired certificates)</li>
+<li>the website. Web checks were turned off (--no-web).</li>
+<li>certificate transparency, crt.sh. Read only with --ct (it also holds expired certificates).</li>
 </ul>
 <h4>What was asked</h4>
 <p class="asked-total">750 lookups at 4 names</p>
 <ul class="gaps">
-<li><span class="mono">glossier.com</span>: 110 DKIM selectors, 25 CNAME labels, 1 page</li>
-<li><span class="mono">marketing.glossier.com</span>: 27 DKIM selectors</li>
-<li><span class="mono">receipts.glossier.com</span>: 27 DKIM selectors</li>
-<li><span class="mono">send.glossier.com</span>: 27 DKIM selectors</li>
+<li>At <span class="mono">glossier.com</span>: 110 possible DKIM key names, 25 service record names, 1 web page.</li>
+<li>At <span class="mono">marketing.glossier.com</span>: 27 possible DKIM key names.</li>
+<li>At <span class="mono">receipts.glossier.com</span>: 27 possible DKIM key names.</li>
+<li>At <span class="mono">send.glossier.com</span>: 27 possible DKIM key names.</li>
 </ul>
 <details class="asked"><summary>Names asked</summary>
 <h4 class="mono">glossier.com</h4>
