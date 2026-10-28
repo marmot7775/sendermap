@@ -94,6 +94,7 @@ async def test_the_easydmarc_note_says_the_walk_read_its_record() -> None:
         Zone()
         .add("example.com", "TXT", "v=spf1 include:x._s.easydmarc.pro -all")
         .add("x._s.easydmarc.pro", "TXT", "v=spf1 include:sendgrid.net -all")
+        .add("sendgrid.net", "TXT", "v=spf1 ip4:192.0.2.0/24 -all")
     )
     observed, _ = await spf.collect(context(zone), "example.com")
     assert {c.service for c in observed.claims} == {"SendGrid"}

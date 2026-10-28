@@ -158,3 +158,49 @@ async def test_an_include_loop_is_a_risk() -> None:
     (loop,) = [f for f in observed.findings if "inside itself" in f.title]
     assert loop.severity is Severity.RISK
     assert loop.evidence[0].value == "include:example.com"
+
+
+async def test_an_include_of_a_name_with_no_spf_record_is_a_risk() -> None:
+    zone = (
+        Zone()
+        .add("example.com", "TXT", "v=spf1 include:_spf.example.com -all")
+        .add("_spf.example.com", "TXT", "google-site-verification=abc")
+    )
+    observed, _ = await walk(zone)
+    (dead,) = observed.findings
+    assert dead.severity is Severity.RISK
+    assert dead.title == (
+        "SPF at example.com includes _spf.example.com, which publishes no SPF record"
+    )
+    assert "section 5.2" in dead.detail
+    assert [(e.name, e.value) for e in dead.evidence] == [
+        ("example.com", "include:_spf.example.com"),
+        ("_spf.example.com", "no SPF record (v=spf1)"),
+    ]
+
+
+async def test_a_redirect_to_a_name_with_two_spf_records_is_a_risk() -> None:
+    zone = (
+        Zone()
+        .add("example.com", "TXT", "v=spf1 redirect=_spf.example.com")
+        .add("_spf.example.com", "TXT", "v=spf1 ip4:192.0.2.1 -all", "v=spf1 -all")
+    )
+    observed, _ = await walk(zone)
+    (dead,) = observed.findings
+    assert dead.title == (
+        "SPF at example.com redirects to _spf.example.com, which publishes 2 SPF records"
+    )
+    assert "section 4.5" in dead.detail
+    assert [e.value for e in dead.evidence] == [
+        "redirect=_spf.example.com",
+        "v=spf1 -all",
+        "v=spf1 ip4:192.0.2.1 -all",
+    ]
+
+
+async def test_an_include_that_does_not_answer_stays_a_gap() -> None:
+    zone = Zone(failing={"_spf.example.com"}).add(
+        "example.com", "TXT", "v=spf1 include:_spf.example.com -all"
+    )
+    observed, _ = await walk(zone)
+    assert observed.findings == () and len(observed.gaps) == 1
