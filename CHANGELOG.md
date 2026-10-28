@@ -11,6 +11,10 @@ fails before anything is published.
 
 ## Unreleased
 
+- Amazon SES no longer claims MX hosts under mail-manager-smtp.us-east-1.on.aws. Its proof,
+  go.asana.com, stopped publishing that MX, and none of the 2,003 hunt domains publishes it, so the
+  pattern waits in vendors_pending.json for a new one.
+
 ## 0.1.9 (2026-10-28)
 
 - Google's dated DKIM names (20161025, 20210112, 20221208, 20230601, the keys google.com and
