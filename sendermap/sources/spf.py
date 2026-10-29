@@ -12,7 +12,7 @@ is that ESP, not an SES account of the domain.
 from __future__ import annotations
 
 import asyncio
-from dataclasses import dataclass, field
+from dataclasses import dataclass, field, fields
 from datetime import datetime
 
 from ..dns import Answer, norm
@@ -83,6 +83,12 @@ class SpfTree:
     too_deep: list[str] = field(default_factory=list)
 
     @property
+    def managed_by(self) -> str | None:
+        """The hosted service or macro include that can authorize senders the record does not
+        name, or None."""
+        return self.hosted_by or ("a macro include" if self.macros else None)
+
+    @property
     def unnamed(self) -> str | None:
         """Why the walk could not name everything the record authorizes, or None when it
         could: a hosted service whose record it did not read, a macro include, or links past
@@ -105,11 +111,7 @@ async def collect(ctx: Context, where: str) -> tuple[Observed, SpfTree]:
         return Observed(gaps=(gap,), reads=(read,)), SpfTree()
     records = spf_records(answer)
     if not records:
-        none = (
-            Evidence(where, "TXT", "no SPF record (v=spf1)", ctx.checked_at)
-            if answer.ok
-            else negative(answer, ctx.checked_at)
-        )
+        none = _no_record(where, answer, ctx.checked_at)
         return Observed(reads=(Read("spf", where, Outcome.NONE, (none,)),)), SpfTree()
     if len(records) > 1:
         evidence = tuple(Evidence(where, "TXT", r, ctx.checked_at) for r in records)
@@ -153,7 +155,7 @@ def _read(ctx: Context, where: str, tree: SpfTree) -> Observed:
     """The record as a setup reads it: found, or unreadable when a hosted record the walk did not
     read or a macro can authorize services without naming them."""
     root = (Evidence(where, "TXT", tree.record or "", ctx.checked_at),)
-    by = tree.hosted_by or ("a macro include" if tree.macros else None)
+    by = tree.managed_by
     if by and by not in tree.flattened:
         reason = f"managed through {by}, which can authorize services without naming them"
         return Observed(reads=(Read("spf", where, Outcome.UNREADABLE, root, reason=reason),))
@@ -196,7 +198,7 @@ async def _prefetch(ctx: Context, record: str, depth: int, nearest: dict[str, in
         if len(records) == 1:
             await _prefetch(ctx, records[0], depth + 1, nearest)
 
-    targets = [t.value for t in _evaluated(record) if _followable(t) and "%{" not in t.value]
+    targets = [t.value for t in _evaluated(record) if _followable(t) and not _is_macro(t.value)]
     await asyncio.gather(*map(fetch, targets))
 
 
@@ -230,15 +232,9 @@ class _Walked:
     flattened: tuple[str, ...] = ()  # flattening services whose record was read
 
     def __add__(self, other: _Walked) -> _Walked:
+        # Field by field, by name: a field added later is summed too, never misplaced.
         return _Walked(
-            self.observed + other.observed,
-            self.lookups + other.lookups,
-            self.ranges + other.ranges,
-            self.includes + other.includes,
-            self.macros + other.macros,
-            self.hosted + other.hosted,
-            self.too_deep + other.too_deep,
-            self.flattened + other.flattened,
+            **{f.name: getattr(self, f.name) + getattr(other, f.name) for f in fields(self)}
         )
 
 
@@ -276,7 +272,7 @@ class _Walk:
         if term.mechanism in ("ip4", "ip6") and live:
             evidence = Evidence(name, "TXT", f"{term.mechanism}:{term.value}", self.ctx.checked_at)
             ranges = ((term.value, evidence),)
-        hint = _followable(term) and depth <= 1 and "%{" not in term.value
+        hint = _followable(term) and depth <= 1 and not _is_macro(term.value)
         return _Walked(
             lookups=int(term.mechanism in _LOOKUP_MECHANISMS),
             ranges=ranges,
@@ -284,7 +280,7 @@ class _Walk:
         )
 
     async def follow(self, link: _Link) -> _Walked:
-        if "%{" in link.target:
+        if _is_macro(link.target):
             service = self.ctx.catalog.spf(_macro_tail(link.target))
             hosted = (service,) if link.live and service else ()
             return _Walked(macros=(link.target,), hosted=hosted)
@@ -338,11 +334,7 @@ class _Walk:
             rule = "section 4.5"
         else:
             what = "no SPF record"
-            target = (
-                Evidence(link.target, "TXT", "no SPF record (v=spf1)", at)
-                if answer.ok
-                else negative(answer, at),
-            )
+            target = (_no_record(link.target, answer, at),)
             rule = "section 5.2" if link.how == "include" else "section 6.1"
         return Finding(
             Severity.RISK,
@@ -388,8 +380,7 @@ def _findings(ctx: Context, where: str, tree: SpfTree) -> Observed:
                 (root,),
             )
         )
-    if tree.hosted_by or tree.macros:
-        by = tree.hosted_by or "a macro include"
+    if by := tree.managed_by:
         if by in tree.flattened:
             detail = (
                 f"{by} copies the domain's senders into its own record. The walk read that "
@@ -414,6 +405,18 @@ def _findings(ctx: Context, where: str, tree: SpfTree) -> Observed:
 def _is_own(target: str, domain: str) -> bool:
     t = norm(target)
     return t == domain or t.endswith("." + domain)
+
+
+def _is_macro(target: str) -> bool:
+    return "%{" in target
+
+
+def _no_record(name: str, answer: Answer, checked_at: datetime) -> Evidence:
+    """The evidence for a name with no SPF record: a note when it answered with other TXT
+    records, or the negative answer (NXDOMAIN, no data) when it did not."""
+    if answer.ok:
+        return Evidence(name, "TXT", "no SPF record (v=spf1)", checked_at)
+    return negative(answer, checked_at)
 
 
 def _macro_tail(target: str) -> str:
