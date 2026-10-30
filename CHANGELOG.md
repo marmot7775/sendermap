@@ -11,6 +11,8 @@ fails before anything is published.
 
 ## Unreleased
 
+## 0.1.12 (2026-10-29)
+
 - The website has a second box, Services you use (optional). Name them, comma separated, and the
   map ends with Your list against the map: which ones it confirms, which it found that you did
   not name, which it could not find, and which names it does not know. Before, only a
