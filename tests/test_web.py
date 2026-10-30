@@ -176,3 +176,11 @@ async def test_the_page_links_its_assets_by_version() -> None:
     for asset in site.ASSETS:
         assert f'"{asset}?v={sendermap.__version__}"' in page
         assert f'"{asset}"' not in page
+
+
+def test_the_form_carries_the_claimed_list() -> None:
+    page = (STATIC / "index.html").read_text()
+    assert 'id="names"' in page and 'name="claimed"' in page
+    script = (STATIC / "app.js").read_text()
+    assert 'start($("domain").value, true, $("names").value.trim())' in script
+    assert '$("names").value = params.get("claimed") || ""' in script

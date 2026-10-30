@@ -29,8 +29,12 @@
         <input id="domain" name="d" type="text" inputmode="url" spellcheck="false"
                placeholder="example.com" aria-describedby="hint" required>
         <button type="submit">Map it</button>
+        <label for="names" class="visually-hidden">Services you use, optional</label>
+        <input id="names" name="claimed" type="text" spellcheck="false" maxlength="2000"
+               placeholder="Services you use (optional)">
       </form>
-      <p id="hint" class="hint">A domain, a web address or an email address. Public records only.</p>
+      <p id="hint" class="hint">A domain, a web address or an email address. Public records only.<br>
+        Name the services you use, comma separated, to see which ones the map confirms.</p>
     </section>
 
     <section id="progress" class="progress" hidden aria-live="polite">

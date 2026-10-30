@@ -11,6 +11,11 @@ fails before anything is published.
 
 ## Unreleased
 
+- The website has a second box, Services you use (optional). Name them, comma separated, and the
+  map ends with Your list against the map: which ones it confirms, which it found that you did
+  not name, which it could not find, and which names it does not know. Before, only a
+  `?claimed=` link could do this.
+
 ## 0.1.11 (2026-10-28)
 
 - An SPF include or redirect whose target publishes no SPF record, or more than one, is a
