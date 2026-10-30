@@ -540,8 +540,8 @@ its tier and, when the client wrote another name, "claimed as" with their words.
 Markdown and HTML views build it with `render.claimed_parts`.
 
 The web site caches maps by domain only; the claimed names a request carries are applied to the
-cached map for that response and kept nowhere. The page passes its own `?claimed=` on to the API,
-so it needs no input of its own. A recorded corpus case holds no claims, so `testing.comparable`
+cached map for that response and kept nowhere. The page's second box, Services you use, fills
+`?claimed=` and the page passes it on to the API; a shared link refills the box. A recorded corpus case holds no claims, so `testing.comparable`
 leaves out a `null` reconciliation and the corpus did not change.
 
 ## Determinism

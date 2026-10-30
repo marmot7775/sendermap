@@ -71,12 +71,13 @@ code { background: var(--code-bg); padding: .1em .35em; border-radius: 5px; }
 .hero { text-align: center; padding: 56px 0 28px; }
 .hero h1 { font-size: clamp(1.9rem, 4.6vw, 3rem); line-height: 1.12; letter-spacing: -.025em; margin: 0 0 12px; }
 .lede { color: var(--ink-2); font-size: 1.12rem; margin: 0 auto 28px; max-width: 34em; }
-.lookup { display: flex; gap: 10px; max-width: 560px; margin: 0 auto; }
+.lookup { display: flex; flex-wrap: wrap; gap: 10px; max-width: 560px; margin: 0 auto; }
 .lookup input {
   flex: 1; min-width: 0; font: inherit; font-size: 1.08rem; padding: 14px 16px;
   border: 1px solid var(--line); border-radius: var(--radius); background: var(--surface); color: var(--ink);
   box-shadow: var(--shadow);
 }
+.lookup #names { flex-basis: 100%; font-size: .95rem; padding: 10px 14px; box-shadow: none; }
 .lookup input:focus { outline: 2px solid var(--accent); outline-offset: 1px; border-color: transparent; }
 button {
   font: inherit; font-weight: 600; cursor: pointer; border-radius: var(--radius);
@@ -224,6 +225,7 @@ details.asked h4 { margin: 12px 0 0; font-size: .9rem; word-break: break-all; }
 
 @media (max-width: 560px) {
   .lookup { flex-direction: column; }
+  .lookup button { order: 1; }
   .hero { padding-top: 32px; }
   .actions { width: 100%; }
   .actions button { flex: 1; }

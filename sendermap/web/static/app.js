@@ -20,8 +20,8 @@ let current = null;
 let source = null;
 // The ring map's figure, kept here because each new result replaces the fragment it sits in.
 let figure = null;
-// The services the domain's owner says they use, from the page's own ?claimed=, comma
-// separated. The API reconciles them with the map; the page only passes them on.
+// The services the domain's owner says they use, comma separated, from the form's second box
+// or the page's own ?claimed=. The API reconciles them with the map; the page only passes them on.
 let claimed = "";
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -33,7 +33,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }).observe($("map"));
   $("lookup").addEventListener("submit", (e) => {
     e.preventDefault();
-    start($("domain").value);
+    start($("domain").value, true, $("names").value.trim());
   });
   $("copy-link").addEventListener("click", () => copy(shareLink(), "copy-link", "Link copied"));
   $("copy-md").addEventListener("click", copyMarkdown);
@@ -47,11 +47,12 @@ function fromUrl() {
   const d = params.get("d");
   if (d) {
     $("domain").value = d;
-    start(d, false, params.get("claimed") || "");
+    $("names").value = params.get("claimed") || "";
+    start(d, false, $("names").value);
   }
 }
 
-// A domain typed into the form starts afresh: a claimed list belongs to the link that carried it.
+// The form's second box carries the claimed list; left empty, the map runs without one.
 function start(text, push = true, names = "") {
   const domain = text.trim();
   if (!domain) return;
