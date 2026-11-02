@@ -101,7 +101,7 @@ async def test_every_gap_the_engine_records_carries_its_kind(
         *await gaps_of(Failing(zone), use_web=False),
         *await gaps_of(Failing(zone), use_web=False, use_subdomains=False),
     ]
-    # A Google Workspace domain whose key is found first: the probe stops early.
+    # A Google Workspace domain whose key is found first, with the early stop asked for.
     google = (
         Zone()
         .add(DOMAIN, "MX", "1 smtp.google.com")
@@ -109,7 +109,7 @@ async def test_every_gap_the_engine_records_carries_its_kind(
         .add(f"google._domainkey.{DOMAIN}", "TXT", "v=DKIM1; k=rsa; p=AAAA")
         .selectors_exist(DOMAIN)
     )
-    gaps += await gaps_of(google, use_web=False, use_subdomains=False)
+    gaps += await gaps_of(google, use_web=False, use_subdomains=False, stop_early=True)
     for module in (mx, tokens, reports, labels, mta_sts, web, subdomains):
         monkeypatch.setattr(module, "collect" if module is not subdomains else "discover", crash)
     monkeypatch.setattr(ct, "read_logs", crash)

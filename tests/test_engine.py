@@ -162,16 +162,7 @@ async def test_a_subdomain_whose_mx_is_google_probes_google_before_any_other_rul
         .add("mail.subhint.test", "TXT", "v=spf1 include:hubspotemail.net ~all")
         .selectors_exist("mail.subhint.test")
     )
-    # The full sweep, so the order is the ranking alone (the evidence-first waves are in
-    # test_dkim_plan.py).
-    await map_domain(
-        "subhint.test",
-        checked_at=CHECKED,
-        resolver=zone,
-        http=offline,
-        use_web=False,
-        full_dkim=True,
-    )
+    await map_domain("subhint.test", checked_at=CHECKED, resolver=zone, http=offline, use_web=False)
     probed = [
         name.removesuffix("._domainkey.mail.subhint.test")
         for name, rtype in zone.asked

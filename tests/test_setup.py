@@ -32,12 +32,8 @@ def m365(domain: str = "example.test", *, spf: str = SPF_M365, signed: bool = Fa
     return zone
 
 
-async def mapped(
-    zone: Zone, http: httpx.AsyncClient, domain: str = "example.test", *, full: bool = False
-) -> SenderMap:
-    return await map_domain(
-        domain, checked_at=CHECKED, resolver=zone, http=http, use_web=False, full_dkim=full
-    )
+async def mapped(zone: Zone, http: httpx.AsyncClient, domain: str = "example.test") -> SenderMap:
+    return await map_domain(domain, checked_at=CHECKED, resolver=zone, http=http, use_web=False)
 
 
 def service(result: SenderMap, name: str) -> Service:
@@ -292,14 +288,12 @@ async def test_a_bounce_domain_is_the_return_path_of_the_setup_above_it(
 async def test_a_setup_asks_dns_nothing_more(
     offline: httpx.AsyncClient, monkeypatch: pytest.MonkeyPatch
 ) -> None:
-    # The full sweep: the setups also say which names an early stop asks first, which is
-    # ordering, not a question of their own.
     with_setups = m365()
-    await mapped(with_setups, offline, full=True)
+    await mapped(with_setups, offline)
     without = m365()
     loaded = catalog.load()
     monkeypatch.setattr(catalog, "load", lambda: replace(loaded, setups={}))
-    bare = await mapped(without, offline, full=True)
+    bare = await mapped(without, offline)
     assert service(bare, "Microsoft 365").setups == ()
     assert with_setups.asked == without.asked
 
@@ -470,9 +464,8 @@ async def test_a_likely_service_missing_spf_raises_a_note_not_a_warning(
     offline: httpx.AsyncClient,
 ) -> None:
     # A key named for Cloudflare Email Routing is all the map holds of it: likely, not sure.
-    # The full sweep, since Microsoft 365's key would otherwise stop the probe before cf2024-1.
     zone = m365(signed=True).add("cf2024-1._domainkey.example.test", "TXT", KEY)
-    result = await mapped(zone, offline, full=True)
+    result = await mapped(zone, offline)
     assert service(result, "Cloudflare Email Routing").tier is Tier.LIKELY
     (finding,) = [f for f in result.findings if f.title.startswith("Cloudflare Email Routing")]
     assert finding.severity is Severity.NOTE and "only as likely" in finding.detail

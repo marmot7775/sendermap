@@ -110,7 +110,7 @@ async def _map(args: argparse.Namespace) -> SenderMap:
                 ct_cache=default_cache(),
                 progress=progress,
                 claimed=args.claimed,
-                full_dkim=args.full_dkim,
+                stop_early=args.stop_early_dkim,
             )
 
 
@@ -222,11 +222,12 @@ def _parser() -> argparse.ArgumentParser:
         ),
     )
     p.add_argument(
-        "--full-dkim",
+        "--stop-early-dkim",
         action="store_true",
         help=(
-            "Ask every DKIM selector in the sweep. By default the probe stops once every service "
-            "SPF, MX and CNAMEs name has a key, and the map lists the names it left unasked."
+            "Ask the DKIM selectors of services SPF, MX and CNAMEs name first, and stop once each "
+            "has a key. Faster, but a key under another service's name can be missed; the map "
+            "lists the names it left unasked as not checked. By default every selector is asked."
         ),
     )
     p.add_argument(

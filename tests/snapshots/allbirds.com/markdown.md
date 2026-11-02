@@ -215,9 +215,9 @@ Records Sendermap looked for and did not find.
 
 ## How this was checked
 
-Checked 2026-10-12 01:24 UTC: 771 DNS lookups in 0.0 s over Google DNS over HTTPS.
+Checked 2026-10-12 01:24 UTC: 772 DNS lookups in 0.0 s over Google DNS over HTTPS.
 
-- At allbirds.com: 109 possible DKIM key names, 25 service record names, 1 web page.
+- At allbirds.com: 110 possible DKIM key names, 25 service record names, 1 web page.
 - At alerts.allbirds.com: 36 possible DKIM key names.
 - At bounce.allbirds.com: 8 possible DKIM key names.
 - At email.allbirds.com: 13 possible DKIM key names.
@@ -228,7 +228,6 @@ Not checked:
 
 - certificate log names more than 2 labels deep: 34 not asked. Names up to 2 labels below the domain were asked (cap 2 labels).
 - sending subdomains: TXT, MX and NS at apisdk.allbirds.com, community.allbirds.com, dataplane.allbirds.com, jssdk.allbirds.com, rerun.allbirds.com, www.jssdk.allbirds.com: the domain's DNS servers failed to answer (SERVFAIL), so whether they send is not known
-- DKIM selectors at allbirds.com: 1 of 110 not asked: the services that use them already had a key
 - DKIM selectors at alerts and mail.allbirds.com: 78 of 114 not asked at each. The first 27 were asked, plus any the name's own SPF, MX or delegation points to (cap 27).
 - DKIM selectors at info.allbirds.com: 83 of 110 not asked. The first 27 were asked, plus any the name's own SPF, MX or delegation points to (cap 27).
 

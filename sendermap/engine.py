@@ -75,7 +75,7 @@ async def map_domain(
     ct_cache: Path | None = None,
     progress: Progress | None = None,
     claimed: Sequence[str] = (),
-    full_dkim: bool = False,
+    stop_early: bool = False,
 ) -> SenderMap:
     """Map the services that send email as `domain`, with the evidence for each.
 
@@ -85,8 +85,9 @@ async def map_domain(
     day in `ct_cache` (None: no cache). `use_ct` also resolves every logged name and matches it.
     `claimed` is the services the client says they use, by any name; the map's reconciliation
     holds them against what it found, and is None when nothing was claimed. It asks nothing.
-    The DKIM sweep runs evidence first and stops early once every service the domain's SPF, MX
-    and CNAMEs name has a key, recording the names it left unasked; `full_dkim` asks every name.
+    The DKIM sweep asks every selector. With `stop_early`, it runs evidence first and stops once
+    every service the domain's SPF, MX and CNAMEs name has a key, recording the names it left
+    unasked.
     """
     if checked_at.tzinfo is None:
         raise ValueError("checked_at needs a timezone")
@@ -148,7 +149,7 @@ async def map_domain(
         backed = backed_selectors(apex.claims, ctx.catalog)
         selectors = await _probe_order(ctx, rules, domain, tree.includes, backed)
         deep = await asyncio.gather(
-            dkim.collect(ctx, domain, selectors, backed, None if full_dkim else apex.claims),
+            dkim.collect(ctx, domain, selectors, backed, apex.claims if stop_early else None),
             networks.collect(ctx, domain, tree.ranges),
         )
 
@@ -157,7 +158,7 @@ async def map_domain(
         await say(f"Checking {len(picked)} sending subdomains")
         under = await asyncio.gather(
             *(
-                _subdomain(ctx, rules, name, discovered.delegations, full_dkim=full_dkim)
+                _subdomain(ctx, rules, name, discovered.delegations, stop_early=stop_early)
                 for name in picked
             )
         )
@@ -259,7 +260,7 @@ async def _subdomain(
     name: str,
     delegations: Iterable[Claim],
     *,
-    full_dkim: bool = False,
+    stop_early: bool = False,
 ) -> tuple[Observed, spf_checks.Partial | None]:
     (found, tree), received = await asyncio.gather(spf.collect(ctx, name), mx.collect(ctx, name))
     first = found + received + Observed(tuple(c for c in delegations if c.where == name))
@@ -267,7 +268,7 @@ async def _subdomain(
     order = await _probe_order(ctx, rules, name, tree.includes, backed)
     probed = (*order[:SUBDOMAIN_PROBES], *backed)
     keys, owned = await asyncio.gather(
-        dkim.collect(ctx, name, probed, backed, None if full_dkim else first.claims),
+        dkim.collect(ctx, name, probed, backed, first.claims if stop_early else None),
         networks.collect(ctx, name, tree.ranges),
     )
     budget = Observed()

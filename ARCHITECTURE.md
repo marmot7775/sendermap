@@ -123,10 +123,10 @@ Phase 1, concurrent
 Phase 2, the domain itself
   backed = generic DKIM names that belong to services SPF or MX already shows
   probe order = selector rules ranked by MX and SPF hints, then the generic names
-  dkim.plan = two waves: names of services any claim names, backed, google/selector1/selector2,
+  dkim.plan (--stop-early-dkim only; by default one wave asks every name) = two waves: names of services any claim names, backed, google/selector1/selector2,
               generic and footprint names first; the rest only while a service SPF, MX or a
               CNAME names at the name has no key, less names of services that have one
-              (skipped names go in Checked.dkim_skipped and a dkim_stopped gap; --full-dkim off)
+              (skipped names go in Checked.dkim_skipped and a dkim_stopped gap)
   dkim.collect  ||  networks.collect (SPF IP ranges: published vendor ranges, then ASN)
 Phase 3, each sending subdomain (first 30)
   spf + mx + its delegation -> backed -> dkim (27 names + backed, by dkim.plan)  ||  networks
@@ -653,8 +653,8 @@ recorder keeps the answers, not those requests.
   `ct_cache` (a directory, or None for no cache), a `progress` callback, and `claimed`, a
   sequence of the service names the client says they use.
 - **Command line**: `sendermap example.com`, with `--json`, `--markdown`, `--evidence` (every
-  claim, not only the deciding one), `--no-web`, `--no-subdomains`, `--full-dkim` (every
-  selector asked, no early stop), `--ct` (crt.sh read too,
+  claim, not only the deciding one), `--no-web`, `--no-subdomains`, `--stop-early-dkim`
+  (the DKIM probe stops once every named sender has a key), `--ct` (crt.sh read too,
   and every logged name resolved and matched), `--doh` (Cloudflare DNS over HTTPS), `--claimed`
   (a comma separated list of the services the client says they use) and `--claimed-file` (one
   per line; both may be given), and `--output PATH` (the chosen format to a file, text without

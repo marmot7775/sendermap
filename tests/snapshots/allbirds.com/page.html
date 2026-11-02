@@ -1,13 +1,13 @@
 <header class="view-head">
 <h2>Who handles email for allbirds.com?</h2>
 <p class="summary"><strong class="to-fix">15 services handle email for allbirds.com. 3 things need fixing.</strong></p>
-<p class="checked">Checked 2026-10-12 01:24 UTC: 771 DNS lookups in 0.0 s over Google DNS over HTTPS.</p>
+<p class="checked">Checked 2026-10-12 01:24 UTC: 772 DNS lookups in 0.0 s over Google DNS over HTTPS.</p>
 </header>
 <div class="lead">
 <div class="story">
 <p>Microsoft 365 receives the domain&#x27;s mail and has a DKIM key in place to sign it.</p>
 <p>Twelve other services are set up to send as the domain: six transactional (Amazon SES, Mailgun, Mailjet, Postmark, SendGrid, SparkPost), two support and CRM (Freshdesk, Zendesk), one mailbox (Google Workspace), two marketing (Iterable, Mailchimp), one commerce and apps (Shopify); two more are likely from a DKIM key name alone (Customer.io, Mandrill).</p>
-<p class="story-muted">Not checked: the website (turned off), DKIM selectors past the first 27 on three subdomains, one DKIM selector, since the probe stops once each sender has a key, six subdomains whose DNS failed to answer, 34 names from certificate logs left out by a limit, and the crt.sh certificate log (read only with --ct).</p>
+<p class="story-muted">Not checked: the website (turned off), DKIM selectors past the first 27 on three subdomains, six subdomains whose DNS failed to answer, 34 names from certificate logs left out by a limit, and the crt.sh certificate log (read only with --ct).</p>
 </div>
 </div>
 <section class="view-section glance">
@@ -608,21 +608,20 @@
 </section>
 <section class="view-section how-checked">
 <h3 class="section-title">How this was checked</h3>
-<details class="how"><summary>771 lookups at 6 names · 7 things not checked</summary>
+<details class="how"><summary>772 lookups at 6 names · 6 things not checked</summary>
 <h4>Not checked</h4>
 <ul class="gaps">
 <li>certificate log names more than 2 labels deep: 34 not asked. Names up to 2 labels below the domain were asked (cap 2 labels).</li>
 <li>sending subdomains: TXT, MX and NS at apisdk.allbirds.com, community.allbirds.com, dataplane.allbirds.com, jssdk.allbirds.com, rerun.allbirds.com, www.jssdk.allbirds.com: the domain&#x27;s DNS servers failed to answer (SERVFAIL), so whether they send is not known</li>
-<li>DKIM selectors at <span class="mono">allbirds.com</span>: 1 of 110 not asked: the services that use them already had a key</li>
 <li>DKIM selectors at <span class="mono">alerts</span> and <span class="mono">mail.allbirds.com</span>: 78 of 114 not asked at each. The first 27 were asked, plus any the name&#x27;s own SPF, MX or delegation points to (cap 27).</li>
 <li>DKIM selectors at <span class="mono">info.allbirds.com</span>: 83 of 110 not asked. The first 27 were asked, plus any the name&#x27;s own SPF, MX or delegation points to (cap 27).</li>
 <li>the website. Web checks were turned off (--no-web).</li>
 <li>certificate transparency, crt.sh. Read only with --ct (it also holds expired certificates).</li>
 </ul>
 <h4>What was asked</h4>
-<p class="asked-total">771 lookups at 6 names</p>
+<p class="asked-total">772 lookups at 6 names</p>
 <ul class="gaps">
-<li>At <span class="mono">allbirds.com</span>: 109 possible DKIM key names, 25 service record names, 1 web page.</li>
+<li>At <span class="mono">allbirds.com</span>: 110 possible DKIM key names, 25 service record names, 1 web page.</li>
 <li>At <span class="mono">alerts.allbirds.com</span>: 36 possible DKIM key names.</li>
 <li>At <span class="mono">bounce.allbirds.com</span>: 8 possible DKIM key names.</li>
 <li>At <span class="mono">email.allbirds.com</span>: 13 possible DKIM key names.</li>
@@ -634,11 +633,11 @@
 <ul>
 <li>Pages (1): <span class="mono">https://api.certspotter.com/v1/issuances?domain=allbirds.com&amp;include_subdomains=true&amp;expand=dns_names</span></li>
 <li>CNAME labels (25): <span class="mono">bounce, bounces, em, email, mail, send, mta, rp, pm-bounces, links, link, click, track, tracking, url, go, autodiscover, cf-bounce, eversrv, fwdkim1, bnc3, bounces.cloud.em, bounces.cloud2.em, outbound.intercom, atlassian-bounces</span></li>
-<li>DKIM selectors (109): <span class="mono">selector1, selector2, cm, krs, google, intercom, kl, kl1, kl2, km1, km2, k2, k1, k3, mg, mailgun, mg1, pdk1, pdk2, mandrill, mte1, mte2, sailthru, s1, s2, smtpapi, scph0819, sparkpost, mail, api, default, dk, dkim, dkim1, dkim2, email, k, key, key1, key2, mta, mx, pm, s, selector, smtp, sp, acdkim1, acdkim2, ses, aweber_key_a, aweber_key_b, aweber_key_c, brevo, brevo1, brevo2, cf2024-1, ctct1, ctct2, e2ma-k1, e2ma-k2, e2ma-k3, everlytickey1, everlytickey2, fm2, fm1, fm3, mesmtp, secureserver1, secureserver2, gor, strong1, strong2, hs1, hs2, s1-ionos, s42582890, s2-ionos, cka, litesrv, mailjet, mailpoet2, mailpoet1, marketo, mkto, mkto1, mimecast, mimecast20190719, pepipost, pp1, protonmail, protonmail2, protonmail3, resend, salesforce, salesforce2, salesforce1, sf, sf1, sf2, sfdc, 200608, pardot, sfmc, squarespace, zendesk1, zendesk2, zoho, mailru</span></li>
+<li>DKIM selectors (110): <span class="mono">selector1, selector2, acdkim1, acdkim2, ses, aweber_key_a, aweber_key_b, aweber_key_c, brevo, brevo1, brevo2, cm, cf2024-1, ctct1, ctct2, krs, e2ma-k1, e2ma-k2, e2ma-k3, everlytickey1, everlytickey2, fm2, fm1, fm3, mesmtp, secureserver1, secureserver2, google, gapps, gor, strong1, strong2, hs1, hs2, intercom, s1-ionos, s42582890, s2-ionos, cka, kl, kl1, kl2, km1, km2, k2, k1, k3, litesrv, mg, mailgun, mg1, pdk1, pdk2, mailjet, mailpoet2, mailpoet1, mandrill, mte1, mte2, marketo, mkto, mkto1, mimecast, mimecast20190719, pepipost, pp1, protonmail, protonmail2, protonmail3, resend, sailthru, salesforce, salesforce2, salesforce1, sf, sf1, sf2, sfdc, 200608, pardot, sfmc, s1, s2, smtpapi, scph0819, sparkpost, squarespace, zendesk1, zendesk2, zoho, mail, mailru, api, default, dk, dkim, dkim1, dkim2, email, k, key, key1, key2, mta, mx, pm, s, selector, smtp, sp</span></li>
 </ul>
 <h4 class="mono">alerts.allbirds.com</h4>
 <ul>
-<li>DKIM selectors (36): <span class="mono">google, gapps, ses, cm, krs, 20161025, 20210112, 20221208, 20230601, mailgun, mg, mg1, pdk1, pdk2, acdkim1, acdkim2, aweber_key_a, aweber_key_b, aweber_key_c, brevo, brevo1, brevo2, cf2024-1, ctct1, ctct2, e2ma-k1, e2ma-k2, e2ma-k3, everlytickey1, everlytickey2, fm2, fm1, fm3, mesmtp, secureserver1, secureserver2</span></li>
+<li>DKIM selectors (36): <span class="mono">google, gapps, acdkim1, acdkim2, ses, aweber_key_a, aweber_key_b, aweber_key_c, brevo, brevo1, brevo2, cm, cf2024-1, ctct1, ctct2, krs, e2ma-k1, e2ma-k2, e2ma-k3, everlytickey1, everlytickey2, fm2, fm1, fm3, mesmtp, secureserver1, secureserver2, 20161025, 20210112, 20221208, 20230601, mailgun, mg, mg1, pdk1, pdk2</span></li>
 </ul>
 <h4 class="mono">bounce.allbirds.com</h4>
 <ul>
@@ -650,11 +649,11 @@
 </ul>
 <h4 class="mono">info.allbirds.com</h4>
 <ul>
-<li>DKIM selectors (27): <span class="mono">cm, krs, google, acdkim1, acdkim2, ses, aweber_key_a, aweber_key_b, aweber_key_c, brevo, brevo1, brevo2, cf2024-1, ctct1, ctct2, e2ma-k1, e2ma-k2, e2ma-k3, everlytickey1, everlytickey2, fm2, fm1, fm3, mesmtp, secureserver1, secureserver2, gapps</span></li>
+<li>DKIM selectors (27): <span class="mono">acdkim1, acdkim2, ses, aweber_key_a, aweber_key_b, aweber_key_c, brevo, brevo1, brevo2, cm, cf2024-1, ctct1, ctct2, krs, e2ma-k1, e2ma-k2, e2ma-k3, everlytickey1, everlytickey2, fm2, fm1, fm3, mesmtp, secureserver1, secureserver2, google, gapps</span></li>
 </ul>
 <h4 class="mono">mail.allbirds.com</h4>
 <ul>
-<li>DKIM selectors (36): <span class="mono">google, gapps, ses, cm, krs, 20161025, 20210112, 20221208, 20230601, mailgun, mg, mg1, pdk1, pdk2, acdkim1, acdkim2, aweber_key_a, aweber_key_b, aweber_key_c, brevo, brevo1, brevo2, cf2024-1, ctct1, ctct2, e2ma-k1, e2ma-k2, e2ma-k3, everlytickey1, everlytickey2, fm2, fm1, fm3, mesmtp, secureserver1, secureserver2</span></li>
+<li>DKIM selectors (36): <span class="mono">google, gapps, acdkim1, acdkim2, ses, aweber_key_a, aweber_key_b, aweber_key_c, brevo, brevo1, brevo2, cm, cf2024-1, ctct1, ctct2, krs, e2ma-k1, e2ma-k2, e2ma-k3, everlytickey1, everlytickey2, fm2, fm1, fm3, mesmtp, secureserver1, secureserver2, 20161025, 20210112, 20221208, 20230601, mailgun, mg, mg1, pdk1, pdk2</span></li>
 </ul>
 </details>
 </details>
