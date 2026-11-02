@@ -110,6 +110,7 @@ async def _map(args: argparse.Namespace) -> SenderMap:
                 ct_cache=default_cache(),
                 progress=progress,
                 claimed=args.claimed,
+                full_dkim=args.full_dkim,
             )
 
 
@@ -218,6 +219,14 @@ def _parser() -> argparse.ArgumentParser:
         help=(
             "Map the domain itself only, without searching for sending subdomains such as email. "
             "or mg. The map says they were not searched."
+        ),
+    )
+    p.add_argument(
+        "--full-dkim",
+        action="store_true",
+        help=(
+            "Ask every DKIM selector in the sweep. By default the probe stops once every service "
+            "SPF, MX and CNAMEs name has a key, and the map lists the names it left unasked."
         ),
     )
     p.add_argument(

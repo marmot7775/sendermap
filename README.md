@@ -105,6 +105,7 @@ sendermap example.com --ct           # resolve every name in certificate logs, c
 sendermap example.com --claimed "Office 365, Mailchimp"   # hold the services you were told of against the map
 sendermap example.com --claimed-file services.txt         # the same, one name per line
 sendermap example.com --no-web --no-subdomains            # skip the website and the subdomain search
+sendermap example.com --full-dkim                         # ask every DKIM selector, no early stop
 sendermap example.com --doh                               # look up DNS over HTTPS through Cloudflare
 sendermap example.com --json --output map.json            # write the map to a file
 ```
@@ -161,6 +162,10 @@ line and reads the JSON.
 - **Selector discovery is never complete.** DNS cannot list DKIM selectors. Sendermap asks the
   names services are known to use and some common ones, and says how many it asked. A key under
   any other name stays unseen.
+- **The selector probe stops early.** It asks first the names of every service SPF, MX and CNAMEs
+  already name, the generic names, and the names of services that need no SPF include. Once every
+  service SPF, MX and CNAMEs name has a key, the rest is not asked, and the map lists those names
+  as not checked, never as not found. `--full-dkim` asks them all.
 - **Absence is read from how the zone answers, and said as such.** "Not there" is claimed only
   where the zone's denial class makes the answer trustworthy, and every such line carries the
   answers it rests on.

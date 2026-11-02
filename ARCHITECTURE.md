@@ -50,7 +50,8 @@ Everything Sendermap reports is built from a few frozen dataclasses in `senderma
   the page, or the check) and what `happened` (the lookup failed, HTTP 404, the check was turned
   off, the source crashed), so its silence is not read as absence. Its **GapKind**, set by the
   source that records it, says what it leaves unchecked: `website`, `page` (the subprocessor
-  page), `certificate_log`, `subdomains`, `dkim`, `labels`, `spf`, `mx`, `networks`,
+  page), `certificate_log`, `subdomains`, `dkim`, `dkim_stopped` (selectors the probe left
+  once every sender had a key), `labels`, `spf`, `mx`, `networks`,
   `published_ranges`, `reports`, `tokens`, `mta_sts`, or `off` for a check the caller turned
   off. The default, `other`, is never left on a gap the engine records. `count` is how many
   names, ranges or selectors it leaves unanswered when the source counted them (0: the check as
@@ -62,7 +63,8 @@ Everything Sendermap reports is built from a few frozen dataclasses in `senderma
 - **Checked**: what was asked at one name: the DKIM selectors probed, the labels whose CNAMEs
   were asked, the pages requested (homepage, subprocessor page, MTA-STS policy), and the
   `denial`: how the zone under the name's `_domainkey` answers for names that do not exist
-  (`classic`, `none by rcode`, `wildcard`, or `unknown`, the default where DKIM was not read).
+  (`classic`, `none by rcode`, `wildcard`, or `unknown`, the default where DKIM was not read),
+  and `dkim_skipped`: the sweep's names the early stop left unasked.
   With the gaps and absences, it says what the map's silence covers.
 - **CertificateEvidence**: the evidence type of the CT source: an Evidence (`rtype`
   `certificate`, `name` the hostname) that also carries the latest certificate's `not_before`
@@ -121,9 +123,13 @@ Phase 1, concurrent
 Phase 2, the domain itself
   backed = generic DKIM names that belong to services SPF or MX already shows
   probe order = selector rules ranked by MX and SPF hints, then the generic names
+  dkim.plan = two waves: names of services any claim names, backed, google/selector1/selector2,
+              generic and footprint names first; the rest only while a service SPF, MX or a
+              CNAME names at the name has no key, less names of services that have one
+              (skipped names go in Checked.dkim_skipped and a dkim_stopped gap; --full-dkim off)
   dkim.collect  ||  networks.collect (SPF IP ranges: published vendor ranges, then ASN)
 Phase 3, each sending subdomain (first 30)
-  spf + mx + its delegation -> backed -> dkim (27 names + backed)  ||  networks
+  spf + mx + its delegation -> backed -> dkim (27 names + backed, by dkim.plan)  ||  networks
 Phase 4, SPF evaluation, only at names the walk could not read in full
   spf_checks.collect: check_host for each vendor's sending address the walk did not credit
      there, eight at a time, until 150 lookups are spent
@@ -647,7 +653,8 @@ recorder keeps the answers, not those requests.
   `ct_cache` (a directory, or None for no cache), a `progress` callback, and `claimed`, a
   sequence of the service names the client says they use.
 - **Command line**: `sendermap example.com`, with `--json`, `--markdown`, `--evidence` (every
-  claim, not only the deciding one), `--no-web`, `--no-subdomains`, `--ct` (crt.sh read too,
+  claim, not only the deciding one), `--no-web`, `--no-subdomains`, `--full-dkim` (every
+  selector asked, no early stop), `--ct` (crt.sh read too,
   and every logged name resolved and matched), `--doh` (Cloudflare DNS over HTTPS), `--claimed`
   (a comma separated list of the services the client says they use) and `--claimed-file` (one
   per line; both may be given), and `--output PATH` (the chosen format to a file, text without

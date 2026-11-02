@@ -260,6 +260,29 @@ class Catalog:
         return frozenset(listed | own)
 
     @property
+    def footprint_selectors(self) -> frozenset[str]:
+        """The selector names of every service whose documented setup needs no SPF include and
+        no MX record, so a DKIM key can be the only record it leaves at the domain."""
+        return frozenset(
+            name
+            for vendor, rules in self.setups.items()
+            if rules
+            and not any(r.record in ("spf", "mx") and r.need is Need.REQUIRED for r in rules)
+            for name in self.selectors_of(vendor)
+        )
+
+    @property
+    def current_selectors(self) -> frozenset[str]:
+        """Every selector name a vendor's documented setup names as current."""
+        return frozenset(
+            name
+            for rules in self.setups.values()
+            for r in rules
+            if r.record == "dkim"
+            for name in r.selectors
+        )
+
+    @property
     def probe_selectors(self) -> tuple[str, ...]:
         """The DKIM sweep: every name the selector rules claim, in rule order, then the generic
         names, which credit nobody by name but show a key is there."""
