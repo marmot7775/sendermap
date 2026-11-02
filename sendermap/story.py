@@ -259,6 +259,14 @@ def _dkim(gaps: Sequence[Gap]) -> str:
     )
 
 
+def _dkim_stopped(gaps: Sequence[Gap]) -> str:
+    """'47 DKIM selectors at two names, since the probe stops once each sender has a key'."""
+    total = sum(g.count for g in gaps)
+    at = f" at {number(len(gaps))} names" if len(gaps) > 1 else ""
+    why = "since the probe stops once each sender has a key"
+    return f"{number(total)} DKIM selector{_s(total)}{at}, {why}"
+
+
 def _spf(gaps: Sequence[Gap]) -> str:
     evaluated = [g for g in gaps if g.asked.startswith(EVALUATION)]
     caps, failed, _ = _parts([g for g in gaps if g not in evaluated])
@@ -394,6 +402,7 @@ def _off(gap: Gap) -> str:
 CLAUSES: dict[GapKind, Callable[[Sequence[Gap]], str]] = {
     GapKind.PAGE: _page,
     GapKind.DKIM: _dkim,
+    GapKind.DKIM_STOPPED: _dkim_stopped,
     GapKind.NETWORKS: _networks,
     GapKind.SUBDOMAINS: _subdomains,
     GapKind.SPF: _spf,

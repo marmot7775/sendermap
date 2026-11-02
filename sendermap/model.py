@@ -294,13 +294,16 @@ class CtSummary:
 class GapKind(StrEnum):
     """What a gap leaves unchecked, set by the source that records it, so the story can count
     gaps of one kind together. `off` is a check the caller turned off. `other` is the default,
-    and nothing the engine records is left at it."""
+    and nothing the engine records is left at it. `dkim` is selectors that failed or that a cap
+    left unasked; `dkim_stopped` is selectors left unasked because every service the evidence
+    names already had a key, so the probe stopped early."""
 
     WEBSITE = "website"
     PAGE = "page"
     CERTIFICATE_LOG = "certificate_log"
     SUBDOMAINS = "subdomains"
     DKIM = "dkim"
+    DKIM_STOPPED = "dkim_stopped"
     LABELS = "labels"
     SPF = "spf"
     MX = "mx"
@@ -351,13 +354,16 @@ class Denial(StrEnum):
 @dataclass(frozen=True, slots=True)
 class Checked:
     """What was asked at one name: the DKIM selectors probed, the labels whose CNAMEs were
-    asked, the pages requested. Silence about anything not listed here says nothing."""
+    asked, the pages requested. Silence about anything not listed here says nothing.
+    `dkim_skipped` is the sweep's names left unasked because the probe stopped early: every
+    service the evidence names already had a key. Not asked is not absent."""
 
     where: str
     dkim_selectors: tuple[str, ...] = ()
     labels: tuple[str, ...] = ()
     pages: tuple[str, ...] = ()
     denial: Denial = Denial.UNKNOWN
+    dkim_skipped: tuple[str, ...] = ()
 
     def __add__(self, other: Checked) -> Checked:
         """Both records of one name, each list in the order first asked, without repeats, and
@@ -368,6 +374,11 @@ class Checked:
             tuple(dict.fromkeys(self.labels + other.labels)),
             tuple(dict.fromkeys(self.pages + other.pages)),
             self.denial if self.denial is not Denial.UNKNOWN else other.denial,
+            tuple(
+                n
+                for n in dict.fromkeys(self.dkim_skipped + other.dkim_skipped)
+                if n not in self.dkim_selectors + other.dkim_selectors
+            ),
         )
 
 

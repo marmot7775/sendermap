@@ -4254,7 +4254,8 @@
    "pages": [
     "https://api.certspotter.com/v1/issuances?domain=allbirds.com&include_subdomains=true&expand=dns_names"
    ],
-   "denial": "classic"
+   "denial": "classic",
+   "dkim_skipped": []
   },
   {
    "where": "alerts.allbirds.com",
@@ -4298,7 +4299,8 @@
    ],
    "labels": [],
    "pages": [],
-   "denial": "classic"
+   "denial": "classic",
+   "dkim_skipped": []
   },
   {
    "where": "bounce.allbirds.com",
@@ -4314,7 +4316,8 @@
    ],
    "labels": [],
    "pages": [],
-   "denial": "classic"
+   "denial": "classic",
+   "dkim_skipped": []
   },
   {
    "where": "email.allbirds.com",
@@ -4335,7 +4338,8 @@
    ],
    "labels": [],
    "pages": [],
-   "denial": "classic"
+   "denial": "classic",
+   "dkim_skipped": []
   },
   {
    "where": "info.allbirds.com",
@@ -4370,7 +4374,8 @@
    ],
    "labels": [],
    "pages": [],
-   "denial": "classic"
+   "denial": "classic",
+   "dkim_skipped": []
   },
   {
    "where": "mail.allbirds.com",
@@ -4414,7 +4419,8 @@
    ],
    "labels": [],
    "pages": [],
-   "denial": "classic"
+   "denial": "classic",
+   "dkim_skipped": []
   }
  ],
  "ct": {

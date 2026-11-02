@@ -43,7 +43,9 @@ uvx sendermap example.com --json --claimed "Office 365, Mailchimp, Klaviyo"
 uvx sendermap example.com --markdown --evidence
 ```
 
-Other flags: `--no-web`, `--no-subdomains`, `--ct` (crt.sh too), `--doh` (DNS over HTTPS through
+Other flags: `--no-web`, `--no-subdomains`, `--stop-early-dkim` (a faster DKIM probe that stops once every
+sender SPF and MX name has a key; a key under another service's name can be missed, so leave it
+off for an audit), `--ct` (crt.sh too), `--doh` (DNS over HTTPS through
 Cloudflare, for a machine whose resolver cannot be trusted), `--claimed-file FILE` (one name per
 line), `--output PATH`. Exit codes: 0 the map was built; 2 bad input (the message on stderr
 says which); 3 no map, because both the TXT and the MX lookups at the domain itself failed.

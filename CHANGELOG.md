@@ -11,6 +11,15 @@ fails before anything is published.
 
 ## Unreleased
 
+- An opt-in early stop for the DKIM probe: `map_domain(stop_early=True)` and `--stop-early-dkim`.
+  The names of every service SPF, MX, CNAMEs or other records already name go first, with google,
+  selector1, selector2, the generic names and the names of services whose setup needs no SPF
+  include. Once every service SPF, MX and CNAMEs name at the name has a key, the rest is not
+  asked; otherwise it is, less the other names of services that already have a key. A Google
+  Workspace domain then asks 47 selectors, not 114. The names left unasked are in the new
+  `Checked.dkim_skipped` field and a gap of the new kind `dkim_stopped`, so they read as not
+  checked, never as not found or as failed. The default, and the website and MCP tool, still ask
+  every selector.
 - A bare `all` in SPF is `+all` (RFC 7208, section 4.6.2) and is now flagged as authorizing every
   server. Only the first `all` decides, so `-all +all` is not flagged.
 - Two DMARC records, or two TLS-RPT records, at one name are no policy: no report address in them

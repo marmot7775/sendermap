@@ -2655,7 +2655,8 @@
    "pages": [
     "https://api.certspotter.com/v1/issuances?domain=casper.com&include_subdomains=true&expand=dns_names"
    ],
-   "denial": "none by rcode"
+   "denial": "none by rcode",
+   "dkim_skipped": []
   },
   {
    "where": "e.casper.com",
@@ -2699,7 +2700,8 @@
    ],
    "labels": [],
    "pages": [],
-   "denial": "classic"
+   "denial": "classic",
+   "dkim_skipped": []
   },
   {
    "where": "email.casper.com",
@@ -2737,7 +2739,8 @@
    ],
    "labels": [],
    "pages": [],
-   "denial": "classic"
+   "denial": "classic",
+   "dkim_skipped": []
   },
   {
    "where": "mail.casper.com",
@@ -2777,7 +2780,8 @@
    ],
    "labels": [],
    "pages": [],
-   "denial": "classic"
+   "denial": "classic",
+   "dkim_skipped": []
   },
   {
    "where": "orders.casper.com",
@@ -2816,7 +2820,8 @@
    ],
    "labels": [],
    "pages": [],
-   "denial": "classic"
+   "denial": "classic",
+   "dkim_skipped": []
   },
   {
    "where": "t.casper.com",
@@ -2856,7 +2861,8 @@
    ],
    "labels": [],
    "pages": [],
-   "denial": "classic"
+   "denial": "classic",
+   "dkim_skipped": []
   }
  ],
  "ct": {

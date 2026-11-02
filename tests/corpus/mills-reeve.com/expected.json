@@ -1192,7 +1192,8 @@
    "pages": [
     "https://api.certspotter.com/v1/issuances?domain=mills-reeve.com&include_subdomains=true&expand=dns_names"
    ],
-   "denial": "none by rcode"
+   "denial": "none by rcode",
+   "dkim_skipped": []
   },
   {
    "where": "update.mills-reeve.com",
@@ -1229,7 +1230,8 @@
    ],
    "labels": [],
    "pages": [],
-   "denial": "none by rcode"
+   "denial": "none by rcode",
+   "dkim_skipped": []
   },
   {
    "where": "updates.mills-reeve.com",
@@ -1264,7 +1266,8 @@
    ],
    "labels": [],
    "pages": [],
-   "denial": "none by rcode"
+   "denial": "none by rcode",
+   "dkim_skipped": []
   }
  ],
  "ct": {

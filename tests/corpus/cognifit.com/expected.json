@@ -1198,7 +1198,8 @@
    "pages": [
     "https://api.certspotter.com/v1/issuances?domain=cognifit.com&include_subdomains=true&expand=dns_names"
    ],
-   "denial": "classic"
+   "denial": "classic",
+   "dkim_skipped": []
   },
   {
    "where": "messages.cognifit.com",
@@ -1214,7 +1215,8 @@
    ],
    "labels": [],
    "pages": [],
-   "denial": "classic"
+   "denial": "classic",
+   "dkim_skipped": []
   },
   {
    "where": "send.cognifit.com",
@@ -1230,7 +1232,8 @@
    ],
    "labels": [],
    "pages": [],
-   "denial": "classic"
+   "denial": "classic",
+   "dkim_skipped": []
   }
  ],
  "ct": {

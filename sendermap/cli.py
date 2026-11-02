@@ -110,6 +110,7 @@ async def _map(args: argparse.Namespace) -> SenderMap:
                 ct_cache=default_cache(),
                 progress=progress,
                 claimed=args.claimed,
+                stop_early=args.stop_early_dkim,
             )
 
 
@@ -218,6 +219,15 @@ def _parser() -> argparse.ArgumentParser:
         help=(
             "Map the domain itself only, without searching for sending subdomains such as email. "
             "or mg. The map says they were not searched."
+        ),
+    )
+    p.add_argument(
+        "--stop-early-dkim",
+        action="store_true",
+        help=(
+            "Ask the DKIM selectors of services SPF, MX and CNAMEs name first, and stop once each "
+            "has a key. Faster, but a key under another service's name can be missed; the map "
+            "lists the names it left unasked as not checked. By default every selector is asked."
         ),
     )
     p.add_argument(

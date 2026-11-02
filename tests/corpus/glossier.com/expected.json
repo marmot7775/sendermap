@@ -1819,7 +1819,8 @@
    "pages": [
     "https://api.certspotter.com/v1/issuances?domain=glossier.com&include_subdomains=true&expand=dns_names"
    ],
-   "denial": "classic"
+   "denial": "classic",
+   "dkim_skipped": []
   },
   {
    "where": "marketing.glossier.com",
@@ -1854,7 +1855,8 @@
    ],
    "labels": [],
    "pages": [],
-   "denial": "none by rcode"
+   "denial": "none by rcode",
+   "dkim_skipped": []
   },
   {
    "where": "receipts.glossier.com",
@@ -1893,7 +1895,8 @@
    ],
    "labels": [],
    "pages": [],
-   "denial": "none by rcode"
+   "denial": "none by rcode",
+   "dkim_skipped": []
   },
   {
    "where": "send.glossier.com",
@@ -1928,7 +1931,8 @@
    ],
    "labels": [],
    "pages": [],
-   "denial": "none by rcode"
+   "denial": "none by rcode",
+   "dkim_skipped": []
   }
  ],
  "ct": {

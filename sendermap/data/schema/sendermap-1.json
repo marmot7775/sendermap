@@ -186,7 +186,7 @@
       ]
     },
     "GapKind": {
-      "description": "What a gap leaves unchecked. 'off' is a check the caller turned off. Consumers must tolerate values not listed here: the schema grows by addition, and a later sendermap/1 map may carry a value this list does not name yet.",
+      "description": "What a gap leaves unchecked. 'off' is a check the caller turned off. 'dkim' is selectors that failed or that a cap left unasked; 'dkim_stopped' is selectors left unasked because every service the evidence names already had a key. Consumers must tolerate values not listed here: the schema grows by addition, and a later sendermap/1 map may carry a value this list does not name yet.",
       "type": "string",
       "enum": [
         "website",
@@ -194,6 +194,7 @@
         "certificate_log",
         "subdomains",
         "dkim",
+        "dkim_stopped",
         "labels",
         "spf",
         "mx",
@@ -566,6 +567,13 @@
         },
         "denial": {
           "$ref": "#/$defs/Denial"
+        },
+        "dkim_skipped": {
+          "description": "The DKIM selectors in the sweep left unasked because the probe stopped early: every service the evidence names already had a key. Not asked, so never read as absent.",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
         }
       },
       "required": [

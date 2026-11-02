@@ -10,6 +10,12 @@ name at _domainkey means no selector exists under it (RFC 8020 section 2, RFC 45
 2.2.3), while an empty answer there means at least one does. A zone that answers empty for names
 that do not exist (compact denial, RFC 9824) says nothing about existence by its answer code, so
 the sweep runs as it would anyway.
+
+Given the evidence the first phase found, the sweep runs evidence first (`plan`): the names of
+every service SPF, MX, a CNAME or other evidence names, the names any domain is asked, and the
+generic names go first. When every service the sending evidence names has a key after that, the
+rest is not asked; otherwise it is, less the names of services that already have a key. Names
+left unasked are recorded as skipped, with a gap, so the map never reads them as absent.
 """
 
 from __future__ import annotations
@@ -19,9 +25,10 @@ import base64
 import hashlib
 import re
 from collections.abc import Iterable, Mapping
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from datetime import datetime
 
+from ..catalog import Catalog
 from ..dns import Answer, Status
 from ..model import (
     Absence,
@@ -49,6 +56,23 @@ NO_SELECTORS = "no selectors exist"
 # The key types RFC 6376 (rsa) and RFC 8463 (ed25519) define.
 KEY_TYPES = frozenset({"rsa", "ed25519"})
 FLAG_WORDS = {"y": "testing", "s": "strict"}
+# Asked first on every domain, whatever its evidence: the two mailbox providers most domains use.
+FIRST = ("google", "selector1", "selector2")
+# The claims that show a service sends, or receives, the mail at a name: until each such service
+# has a key there, the sweep runs to the end.
+SENDING_KINDS = frozenset(
+    {
+        Kind.MX,
+        Kind.SUBDOMAIN_MAILBOX,
+        Kind.SPF_INCLUDE,
+        Kind.SPF_NETWORK,
+        Kind.DELEGATION,
+        Kind.RETURN_PATH,
+        Kind.TRACKING,
+    }
+)
+# The claims a usable key at a selector makes.
+KEYED_KINDS = frozenset({Kind.DKIM_CNAME, Kind.DKIM_NAME})
 
 
 def fingerprint(p: str) -> str | None:
@@ -161,11 +185,80 @@ def _listed(value: str) -> frozenset[str]:
     return frozenset(v.strip().lower() for v in value.split(":") if v.strip())
 
 
+@dataclass(frozen=True, slots=True)
+class Plan:
+    """The sweep at one name in two waves. `first` is asked in full. `rest` is asked after it
+    unless every service in `senders` has a key by then; a name in `owners` is left out when
+    every service that uses it already has one. Both keep the sweep's order."""
+
+    first: tuple[str, ...]
+    rest: tuple[str, ...]
+    senders: frozenset[str]
+    owners: Mapping[str, frozenset[str]] = field(default_factory=dict)
+
+    def then(self, keyed: Iterable[str]) -> tuple[str, ...]:
+        """The names to ask after the first wave, once the services in `keyed` have a key."""
+        have = frozenset(keyed)
+        if self.senders and self.senders <= have:
+            return ()
+        return tuple(n for n in self.rest if not (o := self.owners.get(n)) or not o <= have)
+
+
+def plan(
+    catalog: Catalog,
+    where: str,
+    sweep: Iterable[str],
+    evidence: Iterable[Claim],
+    backed: Iterable[str] = (),
+) -> Plan:
+    """The sweep at `where` ordered by `evidence`, the claims found before DKIM.
+
+    First: every name of each service any claim names, the `backed` names, FIRST, the generic
+    names, and the names of services whose documented setup needs no SPF include or MX, whose key
+    can be the only record they leave. The rest follows. `senders` is the services a sending or
+    receiving claim at `where` names; with none, the plan never stops early. A name in a
+    service's current documented setup is never left out for that service's key at another."""
+    names = tuple(dict.fromkeys(s.lower() for s in sweep))
+    claims = list(evidence)
+    named = {c.service for c in claims}
+    early = {s.lower() for s in backed} | set(FIRST) | catalog.generic_selectors
+    early |= catalog.footprint_selectors
+    for service in named:
+        early |= catalog.selectors_of(service) | catalog.backs(service)
+    senders = frozenset(c.service for c in claims if c.kind in SENDING_KINDS and c.where == where)
+    current = catalog.current_selectors
+    owners: dict[str, set[str]] = {}
+    for rule in catalog.rules:
+        for name in rule.shape.expand():
+            owners.setdefault(name, set()).add(rule.vendor)
+    return Plan(
+        first=tuple(n for n in names if n in early),
+        rest=tuple(n for n in names if n not in early),
+        senders=senders,
+        owners={
+            n: frozenset(o)
+            for n, o in owners.items()
+            if n in names and n not in current and not catalog.is_generic(n)
+        },
+    )
+
+
+def _keyed(observed: Observed, where: str) -> set[str]:
+    """The services a usable key at `where` is credited to."""
+    return {c.service for c in observed.claims if c.kind in KEYED_KINDS and c.where == where}
+
+
 async def collect(
-    ctx: Context, where: str, selectors: Iterable[str], backed: Mapping[str, Claim]
+    ctx: Context,
+    where: str,
+    selectors: Iterable[str],
+    backed: Mapping[str, Claim],
+    evidence: Iterable[Claim] | None = None,
 ) -> Observed:
     """Scan `selectors` under `where`. `backed` maps a selector to the SPF or MX claim of a
-    service the domain already shows, whose own selector list has that name."""
+    service the domain already shows, whose own selector list has that name. With `evidence`,
+    the claims found before DKIM, the sweep runs by `plan` and may stop early; without it every
+    name is asked."""
     base = f"_domainkey.{where}"
     canary, node = await asyncio.gather(ctx.dns.txt(f"{CANARY}.{base}"), ctx.dns.txt(base))
     denial = _denial(canary)
@@ -200,26 +293,52 @@ async def collect(
                 f"skipped; the {len(check)} names its MX, SPF and delegations point to were "
                 "asked as a check, and none exists (RFC 8020 section 5)"
             )
-            evidence = (negative(node, ctx.checked_at), negative(canary, ctx.checked_at))
-            absence = Absence(f"DKIM keys at {where}", happened, evidence)
+            denied = (negative(node, ctx.checked_at), negative(canary, ctx.checked_at))
+            absence = Absence(f"DKIM keys at {where}", happened, denied)
             return _scan(
                 ctx, where, check, answers, backed=backed, canary=canary, denial=denial
             ) + Observed(absences=(absence,))
         contradicted = Observed(findings=(_denied_node(ctx, base, node, found),))
-    answers = await _ask(ctx, base, names)
+    if evidence is None:
+        sweep, answers, stopped = names, await _ask(ctx, base, names), Observed()
+    else:
+        order = plan(ctx.catalog, where, names, evidence, backed)
+        sweep, answers = list(order.first), await _ask(ctx, base, list(order.first))
+        first = _scan(ctx, where, sweep, answers, backed=backed, canary=canary, denial=denial)
+        then = list(order.then(_keyed(first, where)))
+        sweep, answers = sweep + then, answers + await _ask(ctx, base, then)
+        skipped = tuple(n for n in names if n not in set(sweep))
+        stopped = _stopped(where, len(names), skipped, every=bool(order.rest) and not then)
     observed = (
-        _scan(ctx, where, names, answers, backed=backed, canary=canary, denial=denial)
+        _scan(ctx, where, sweep, answers, backed=backed, canary=canary, denial=denial)
         + contradicted
+        + stopped
     )
     if (
         classic
         and node.status is Status.NOANSWER
         and all(a.status is Status.NXDOMAIN and not a.chain for a in answers)
     ):
-        happened = f"selectors exist but none of the {len(names)} names asked is one"
+        happened = f"selectors exist but none of the {len(sweep)} names asked is one"
         absence = Absence(f"DKIM keys at {where}", happened, (negative(node, ctx.checked_at),))
         observed += Observed(absences=(absence,))
     return observed
+
+
+def _stopped(where: str, total: int, skipped: tuple[str, ...], *, every: bool) -> Observed:
+    """The names the early stop left unasked: listed as skipped, with a gap, since a name not
+    asked says nothing about a key there. `every` is True when the whole rest of the sweep was
+    left, False when only the names of services that already had a key were."""
+    if not skipped:
+        return Observed()
+    why = (
+        f"every service the SPF, MX and CNAMEs at {where} name had a key, so the probe stopped"
+        if every
+        else "the services that use them already had a key"
+    )
+    happened = f"{len(skipped)} of {total} not asked: {why}"
+    gap = Gap(f"DKIM selectors at {where}", happened, GapKind.DKIM_STOPPED, len(skipped))
+    return Observed(gaps=(gap,), checked=(Checked(where, dkim_skipped=skipped),))
 
 
 def _denied_node(ctx: Context, base: str, node: Answer, found: Answer) -> Finding:
