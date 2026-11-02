@@ -22,7 +22,7 @@ import httpx
 from . import catalog as catalog_module
 from . import setup as setup_module
 from . import story as story_module
-from .dns import Lookups, Resolver, SystemResolver
+from .dns import Lookups, Resolver, Status, SystemResolver
 from .infer import backed_selectors, services
 from .model import (
     Claim,
@@ -202,6 +202,15 @@ async def map_domain(
         result = replace(result, story=story_module.write(result))
         await say("Done")
         return with_claimed(result, claimed, ctx.catalog)
+
+
+def unreadable(result: SenderMap) -> str:
+    """Why the domain's own records could not be read, or "" when they could: its TXT (where
+    SPF lives) and its MX both failed to look up, so nothing in the map can be told apart from a
+    resolver that is down. The command line, the website and the MCP tool all refuse such a map."""
+    own = {f"SPF: TXT at {result.domain}", f"mail servers: MX at {result.domain}"}
+    failed = [g for g in result.gaps if g.asked in own and g.happened == Status.FAILED.value]
+    return "; ".join(f"{g.asked}: {g.happened}" for g in failed) if len(failed) == len(own) else ""
 
 
 def _capped(sending: tuple[str, ...]) -> tuple[tuple[str, ...], Observed]:

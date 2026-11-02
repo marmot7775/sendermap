@@ -40,7 +40,7 @@ from fastmcp.exceptions import ToolError
 from fastmcp.server.dependencies import get_http_request
 
 from .. import SCHEMA_FILE, __version__, catalog, mcp_server
-from ..engine import Progress, clean_domain, map_domain
+from ..engine import Progress, clean_domain, map_domain, unreadable
 from ..model import SenderMap
 from ..reconcile import split, with_claimed
 from ..render import html, markdown
@@ -68,6 +68,12 @@ class LimitReachedError(Exception):
     """A rate limit was reached: a 429 from the API, a tool error from MCP."""
 
 
+class UnreadableError(Exception):
+    """The domain's own records could not be read: a 503 from the API, a tool error from MCP, as
+    the command line exits 3. Nothing is cached for it, since a resolver outage is not the
+    domain's answer."""
+
+
 state = _State()
 
 
@@ -88,6 +94,11 @@ app.mount("/static", StaticFiles(directory=str(STATIC)), name="static")
 @app.exception_handler(LimitReachedError)
 async def _limited(_: Request, e: LimitReachedError) -> JSONResponse:
     return JSONResponse({"detail": str(e)}, status_code=429)
+
+
+@app.exception_handler(UnreadableError)
+async def _unreadable(_: Request, e: UnreadableError) -> JSONResponse:
+    return JSONResponse({"detail": str(e)}, status_code=503)
 
 
 # The page's own assets, linked with the version as a query string so a cache in front of the
@@ -172,6 +183,8 @@ async def stream(
             result = await _map(domain, progress, claimed)
             done = {"map": result.to_dict(), "html": html.html(result)}
             await queue.put(("map", json.dumps(done, default=str)))
+        except (LimitReachedError, UnreadableError) as e:  # said as /api/map says them
+            await queue.put(("failed", json.dumps({"error": str(e)})))
         except Exception:  # the page shows a plain error instead of hanging
             await queue.put(("failed", json.dumps({"error": "The map could not be built."})))
 
@@ -217,6 +230,8 @@ async def _build(domain: str, progress: Progress) -> SenderMap:
         result = await map_domain(
             domain, checked_at=datetime.now(UTC), http=state.http, progress=progress
         )
+    if why := unreadable(result):
+        raise UnreadableError(f"No map: {domain}'s own records could not be read ({why}).")
     state.cache[domain] = (time.monotonic(), result)
     for old in [d for d, (at, _) in state.cache.items() if time.monotonic() - at > CACHE_SECONDS]:
         del state.cache[old]
@@ -272,7 +287,7 @@ async def _remote(domain: str, options: mcp_server.Options, progress: Progress) 
         if options == mcp_server.Options():
             return await _shared(domain, progress)
         _limit_domain(domain)
-    except LimitReachedError as e:
+    except (LimitReachedError, UnreadableError) as e:
         raise ToolError(str(e)) from e
     async with state.slots:
         return await map_domain(

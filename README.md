@@ -7,7 +7,7 @@
 
 Type a domain, see every service that sends email as it, and the public evidence for each one.
 
-**Status: early release (0.1.12).** The command-line tool works, and the website runs at [sendermap.dns-audit.com](https://sendermap.dns-audit.com).
+**Status: early release.** The command-line tool works, and the website runs at [sendermap.dns-audit.com](https://sendermap.dns-audit.com).
 Needs Python 3.12 or later.
 
 ## What it shows
@@ -23,7 +23,8 @@ services that receive its reports. Each one comes with:
   names):
   - **In use**: mail for the domain is delivered there.
   - **Configured**: set up to send as the domain.
-  - **Likely**: a signing key named for the service, or a trace of it on the domain's website.
+  - **Likely**: a signing key whose name points at the service, or the service's script, mention
+    or subprocessor listing on the domain's website.
   - **Account only**: a trace of an account with nothing set up to send.
 
 It looks beyond the main domain: brands often send from subdomains such as `email.`, `mg.` or
@@ -75,7 +76,8 @@ that supports it, so you can check it yourself.
   services its subprocessor page names. Every page fetch goes through one guard: https only,
   with the host's addresses checked first, so a domain cannot point a fetch at a private or
   internal address. A refused fetch is listed as not checked.
-- **Certificate transparency**: Cert Spotter's log is read on every map for the subdomain search.
+- **Certificate transparency**: Cert Spotter's log is read for the subdomain search, so on every map except one made with
+  `--no-subdomains`.
   With `--ct` (off by default), crt.sh is read too, since it also holds expired certificates,
   and every logged name is resolved now and matched like any DNS record, so a branded tracking
   link such as `link.example.com` pointing at an email platform shows up. A logged name that no

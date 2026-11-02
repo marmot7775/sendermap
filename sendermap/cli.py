@@ -20,8 +20,8 @@ import httpx
 from rich.console import Console
 
 from . import __version__
-from .dns import DohResolver, Resolver, Status, SystemResolver, doh_client
-from .engine import map_domain
+from .dns import DohResolver, Resolver, SystemResolver, doh_client
+from .engine import map_domain, unreadable
 from .model import SenderMap
 from .reconcile import names, split
 from .render import markdown, text
@@ -42,8 +42,9 @@ def _mapped(argv: list[str]) -> int:
     args = _parser().parse_args(argv)  # argparse exits with 2 on a bad flag
     try:
         args.claimed = _claimed(args)
-    except OSError as e:
-        print(f"sendermap: cannot read {args.claimed_file}: {e.strerror}", file=sys.stderr)
+    except (OSError, UnicodeDecodeError) as e:
+        why = e.strerror if isinstance(e, OSError) else "not UTF-8 text"
+        print(f"sendermap: cannot read {args.claimed_file}: {why}", file=sys.stderr)
         return BAD_INPUT
     try:
         result = asyncio.run(_map(args))
@@ -84,15 +85,6 @@ def _mcp(argv: list[str]) -> int:
         return BAD_INPUT
     serve()
     return MAPPED
-
-
-def unreadable(result: SenderMap) -> str:
-    """Why the domain's own records could not be read, or "" when they could: its TXT (where
-    SPF lives) and its MX both failed to look up, so nothing in the map can be told apart from a
-    resolver that is down."""
-    own = {f"SPF: TXT at {result.domain}", f"mail servers: MX at {result.domain}"}
-    failed = [g for g in result.gaps if g.asked in own and g.happened == Status.FAILED.value]
-    return "; ".join(f"{g.asked}: {g.happened}" for g in failed) if len(failed) == len(own) else ""
 
 
 async def _map(args: argparse.Namespace) -> SenderMap:
