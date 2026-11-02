@@ -11,6 +11,17 @@ fails before anything is published.
 
 ## Unreleased
 
+- A bare `all` in SPF is `+all` (RFC 7208, section 4.6.2) and is now flagged as authorizing every
+  server. Only the first `all` decides, so `-all +all` is not flagged.
+- Two DMARC records, or two TLS-RPT records, at one name are no policy: no report address in them
+  is credited, and the map raises a risk. `v=DMARC10` is not a DMARC record.
+- A range after `all` in a service's own SPF record is no longer counted as published by it.
+- The website answers 503 for a domain whose own records could not be read, as the command line
+  exits 3 and the MCP tool errors, and does not cache that map. The stream says why a map was
+  refused.
+- `--claimed-file` with a file that is not UTF-8 text exits 2 with a message, not a traceback.
+- README no longer carries a release number, and says what makes a service Likely.
+
 ## 0.1.12 (2026-10-29)
 
 - The website has a second box, Services you use (optional). Name them, comma separated, and the

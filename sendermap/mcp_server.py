@@ -26,8 +26,7 @@ from mcp.types import TextContent, ToolAnnotations
 from pydantic import Field
 
 from . import __version__, catalog, schema
-from .cli import unreadable
-from .engine import Progress, clean_domain, map_domain
+from .engine import Progress, clean_domain, map_domain, unreadable
 from .model import SenderMap
 from .reconcile import names, with_claimed
 from .render import claimed_parts

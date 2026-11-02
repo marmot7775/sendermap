@@ -31,7 +31,7 @@ from dataclasses import dataclass
 
 from ..model import Claim, Evidence, Gap, GapKind, Kind, Observed, Unknown
 from . import Context
-from .spf import spf_records, terms
+from .spf import evaluated, spf_records
 
 MAX_RANGES = 24
 # What an unknown range in SPF is called, by whether it holds one address or more.
@@ -240,7 +240,7 @@ async def _ranges_of(
         return [], ()
     found: list[tuple[Network, Evidence]] = []
     nested: list[str] = []
-    for term in terms(records[0]):
+    for term in evaluated(records[0]):
         if not term.authorizes:
             continue
         if term.mechanism in ("ip4", "ip6") and (network := _network(term.value)):

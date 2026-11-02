@@ -162,7 +162,7 @@ def _read(ctx: Context, where: str, tree: SpfTree) -> Observed:
     return Observed(reads=(Read("spf", where, Outcome.FOUND, root),))
 
 
-def _evaluated(record: str) -> list[Term]:
+def evaluated(record: str) -> list[Term]:
     """The terms a receiver evaluates, in order: everything before "all", and a redirect only
     when the record has no "all"."""
     parsed = terms(record)
@@ -198,7 +198,7 @@ async def _prefetch(ctx: Context, record: str, depth: int, nearest: dict[str, in
         if len(records) == 1:
             await _prefetch(ctx, records[0], depth + 1, nearest)
 
-    targets = [t.value for t in _evaluated(record) if _followable(t) and not _is_macro(t.value)]
+    targets = [t.value for t in evaluated(record) if _followable(t) and not _is_macro(t.value)]
     await asyncio.gather(*map(fetch, targets))
 
 
@@ -258,7 +258,7 @@ class _Walk:
         """Walk one record. `inside` is the service whose own record this is, if any;
         `authorized` is whether every link from the domain down to here authorizes."""
         walked = _Walked()
-        for term in _evaluated(record):
+        for term in evaluated(record):
             live = authorized and term.authorizes and inside is None
             walked += self._term(name, term, depth, live)
             if _followable(term):
@@ -371,12 +371,16 @@ def _findings(ctx: Context, where: str, tree: SpfTree) -> Observed:
                 (root,),
             )
         )
-    if any(t.mechanism == "all" and t.qualifier == "+" for t in terms(tree.record or "")):
+    # The first "all" matches every address, so it decides; one with no qualifier is "+all"
+    # (RFC 7208, section 4.6.2).
+    final = next((t for t in terms(tree.record or "") if t.mechanism == "all"), None)
+    if final is not None and final.authorizes:
         findings.append(
             Finding(
                 Severity.RISK,
                 f"SPF at {where} authorizes every server",
-                "It ends in +all, so any server on the internet passes SPF as this domain.",
+                "Its all term is +all (a bare all means the same), so any server on the internet "
+                "passes SPF as this domain.",
                 (root,),
             )
         )
