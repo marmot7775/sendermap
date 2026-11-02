@@ -103,6 +103,9 @@ sendermap example.com --markdown     # a summary to paste
 sendermap example.com --json         # everything, for scripts
 sendermap example.com --ct           # resolve every name in certificate logs, crt.sh too
 sendermap example.com --claimed "Office 365, Mailchimp"   # hold the services you were told of against the map
+sendermap example.com --claimed-file services.txt         # the same, one name per line
+sendermap example.com --no-web --no-subdomains            # skip the website and the subdomain search
+sendermap example.com --doh                               # look up DNS over HTTPS through Cloudflare
 sendermap example.com --json --output map.json            # write the map to a file
 ```
 
@@ -110,7 +113,24 @@ For scripts and agents: the exit code is 0 when the map was built, 2 for bad inp
 the domain's own records could not be read (no map). Progress goes to stderr, and only to a
 terminal, so stdout holds the map alone. `sendermap --help` explains every flag.
 
-The website keeps no record of the domains looked up.
+## The website
+
+[sendermap.dns-audit.com](https://sendermap.dns-audit.com) builds the same map on a web page,
+with progress shown while it runs. The form has a second box, Services you use (optional): name
+them, comma separated, and the map ends with Your list against the map, the same check as
+`--claimed`. Each map has a link to share, `?d=DOMAIN`, with `&claimed=` added when names were
+given, plus buttons to copy the Markdown or download the map.
+
+The site's API gives the map as JSON (`/api/map?d=DOMAIN`), Markdown (`/api/map.md`), the HTML
+fragment the page shows (`/api/map.html`) and a server-sent event stream (`/api/map/stream`).
+Each takes `&claimed=`. Requests are rate limited per visitor and per target domain.
+[`/llms.txt`](https://sendermap.dns-audit.com/llms.txt) lists the API, the schema, the MCP
+endpoint and the skill for agents.
+
+The site's request log records the path, status and timing of each request, without the query
+string or the visitor's address, so the domain looked up is not in it. A built map is held in
+memory for ten minutes so a shared link opens at once. Claimed names are used for that response
+only and are not cached with the map.
 
 ## MCP
 
@@ -187,7 +207,9 @@ and fixed.
 
 A tag `v*` builds the release files and, while the repository variable `PYPI_READY` is `true`
 (Settings, Secrets and variables, Actions, Variables), publishes them to PyPI by trusted
-publishing and makes the GitHub release with the tag's notes from `CHANGELOG.md`.
+publishing and makes the GitHub release with the tag's notes from `CHANGELOG.md`. The same run
+lists the version in the MCP registry from `server.json` and upgrades sendermap.dns-audit.com to
+it. [`deploy/README.md`](deploy/README.md) covers the site's server files.
 
 ## Related
 
