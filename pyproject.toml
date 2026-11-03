@@ -10,6 +10,7 @@ requires-python = ">=3.12"
 dependencies = [
     "dnspython>=2.7",
     "httpx>=0.28",
+    "idna>=3.7",  # IDNA 2008 with UTS 46, as browsers and registries encode names
     "rich>=13.9",
 ]
 keywords = ["email", "dns", "spf", "dkim", "dmarc", "deliverability"]

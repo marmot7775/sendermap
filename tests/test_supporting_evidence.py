@@ -66,6 +66,7 @@ async def test_every_unknown_carries_the_record_that_shows_it() -> None:
         .add("example.com", "MX", "10 mx.unknown-host.example")
         .add("example.com", "TXT", "v=spf1 include:_spf.sendergen.com -all")
         .add("_dmarc.example.com", "TXT", "v=DMARC1; p=none; rua=mailto:r@reports.example.org")
+        .add("example.com._report._dmarc.reports.example.org", "TXT", "v=DMARC1;")
     )
     ctx = context(zone)
     (found, _), mail, keys, addresses = (

@@ -201,6 +201,23 @@ def _term(word: str) -> _Term:
     return parse(_Term(word, _QUALIFIER.get(match[1], Result.PASS), name), rest)
 
 
+def every_address(word: str) -> tuple[str, ...]:
+    """The address families ("IPv4", "IPv6") whose every address one SPF term matches: an ip4
+    or ip6 range of prefix length 0, or an a or mx term with a prefix length of 0 (section
+    5.6), which matches every address of that family once its name has any address at all. A
+    term that does not parse, or matches less, gives none."""
+    try:
+        term = _term(word)
+    except _Error:
+        return ()
+    if term.name in ("ip4", "ip6"):
+        family = "IPv4" if term.name == "ip4" else "IPv6"
+        return (family,) if term.network is not None and term.network.prefixlen == 0 else ()
+    if term.name in ("a", "mx"):
+        return tuple(f for f, n in (("IPv4", term.cidr4), ("IPv6", term.cidr6)) if n == 0)
+    return ()
+
+
 def _all(term: _Term, rest: str) -> _Term:
     if rest:
         raise _perm(f"all takes nothing: {term.text}")

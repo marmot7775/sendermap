@@ -44,6 +44,8 @@ async def test_a_qualified_all_other_than_plus_is_not_flagged(record: str) -> No
 
 # ---------------------------------------------------------------- DMARC reports
 
+AUTHORIZED = "example.com._report._dmarc.r.example.net"  # r.example.net takes the reports
+
 
 async def report_hosts(zone: Zone) -> list[str]:
     observed = await reports.collect(context(zone))
@@ -83,8 +85,10 @@ async def test_only_version_dmarc1_is_a_dmarc_record(version: str) -> None:
 
 
 async def test_a_dmarc_record_with_spaces_around_the_version_still_reads() -> None:
-    zone = Zone().add(
-        "_dmarc.example.com", "TXT", "v = DMARC1 ; p=none; rua=mailto:a@r.example.net"
+    zone = (
+        Zone()
+        .add("_dmarc.example.com", "TXT", "v = DMARC1 ; p=none; rua=mailto:a@r.example.net")
+        .add(AUTHORIZED, "TXT", "v=DMARC1;")
     )
     assert await report_hosts(zone) == ["r.example.net"]
 
@@ -94,6 +98,7 @@ async def test_a_non_dmarc_txt_beside_one_dmarc_record_is_not_a_second_record() 
         Zone()
         .add("_dmarc.example.com", "TXT", "some note")
         .add("_dmarc.example.com", "TXT", "v=DMARC1; p=none; rua=mailto:a@r.example.net")
+        .add(AUTHORIZED, "TXT", "v=DMARC1;")
     )
     assert await report_hosts(zone) == ["r.example.net"]
 

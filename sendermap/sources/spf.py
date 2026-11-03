@@ -30,6 +30,7 @@ from ..model import (
     Unknown,
 )
 from . import Context, negative
+from .spf_eval import every_address
 
 LOOKUP_LIMIT = 10  # RFC 7208 section 4.6.4
 MAX_DEPTH = 10
@@ -41,6 +42,7 @@ class Term:
     qualifier: str
     mechanism: str
     value: str
+    text: str = ""  # the term as published
 
     @property
     def authorizes(self) -> bool:
@@ -53,8 +55,8 @@ class Term:
         for sep in ("=", ":", "/"):
             head, found, tail = body.partition(sep)
             if found and head.isalnum():
-                return cls(qualifier, head.lower(), tail if sep != "/" else "")
-        return cls(qualifier, body.lower(), "")
+                return cls(qualifier, head.lower(), tail if sep != "/" else "", text)
+        return cls(qualifier, body.lower(), "", text)
 
 
 def terms(record: str) -> list[Term]:
@@ -81,6 +83,9 @@ class SpfTree:
     includes: list[str] = field(default_factory=list)
     # Include and redirect targets past MAX_DEPTH, not walked.
     too_deep: list[str] = field(default_factory=list)
+    # Authorizing terms in the domain's own records that match every address of a family
+    # (ip4:0.0.0.0/0, ip6:::/0, a/0, mx//0), each with the families it opens.
+    opens: list[tuple[Evidence, tuple[str, ...]]] = field(default_factory=list)
 
     @property
     def managed_by(self) -> str | None:
@@ -147,6 +152,7 @@ async def collect(ctx: Context, where: str) -> tuple[Observed, SpfTree]:
         macros=list(walked.macros),
         includes=list(walked.includes),
         too_deep=too_deep,
+        opens=list(walked.opens),
     )
     return walked.observed + _findings(ctx, where, tree) + _read(ctx, where, tree), tree
 
@@ -230,6 +236,7 @@ class _Walked:
     hosted: tuple[str, ...] = ()  # hosted SPF services on authorizing links
     too_deep: tuple[str, ...] = ()  # targets past MAX_DEPTH, not walked
     flattened: tuple[str, ...] = ()  # flattening services whose record was read
+    opens: tuple[tuple[Evidence, tuple[str, ...]], ...] = ()  # terms matching every address
 
     def __add__(self, other: _Walked) -> _Walked:
         # Field by field, by name: a field added later is summed too, never misplaced.
@@ -267,16 +274,20 @@ class _Walk:
         return walked
 
     def _term(self, name: str, term: Term, depth: int, live: bool) -> _Walked:
-        """What one term says by itself: a lookup it costs, a range it lists, an include hint."""
+        """What one term says by itself: a lookup it costs, a range it lists, an include hint,
+        and whether it matches every address of a family."""
         ranges: tuple[tuple[str, Evidence], ...] = ()
         if term.mechanism in ("ip4", "ip6") and live:
             evidence = Evidence(name, "TXT", f"{term.mechanism}:{term.value}", self.ctx.checked_at)
             ranges = ((term.value, evidence),)
+        families = every_address(term.text) if live else ()
+        opens = ((Evidence(name, "TXT", term.text, self.ctx.checked_at), families),)
         hint = _followable(term) and depth <= 1 and not _is_macro(term.value)
         return _Walked(
             lookups=int(term.mechanism in _LOOKUP_MECHANISMS),
             ranges=ranges,
             includes=(norm(term.value),) if hint else (),
+            opens=opens if families else (),
         )
 
     async def follow(self, link: _Link) -> _Walked:
@@ -384,6 +395,8 @@ def _findings(ctx: Context, where: str, tree: SpfTree) -> Observed:
                 (root,),
             )
         )
+    elif tree.opens:
+        findings.append(_opens_every(where, tree.opens))
     if by := tree.managed_by:
         if by in tree.flattened:
             detail = (
@@ -404,6 +417,34 @@ def _findings(ctx: Context, where: str, tree: SpfTree) -> Observed:
             Finding(Severity.NOTE, f"SPF at {where} is managed through {by}", detail, (root,))
         )
     return Observed(findings=tuple(findings))
+
+
+def _opens_every(where: str, opens: list[tuple[Evidence, tuple[str, ...]]]) -> Finding:
+    """The +all risk for a record that matches every address by range instead: ip4:0.0.0.0/0,
+    ip6:::/0, or an a or mx term with prefix length 0."""
+    families = sorted({f for _, fams in opens for f in fams})
+    every = "every server" if len(families) == 2 else f"every {families[0]} server"
+    who = (
+        "any server on the internet"
+        if len(families) == 2
+        else f"any server sending over {families[0]}"
+    )
+    quoted = ", ".join(e.value + ("" if e.name == where else f" (in {e.name})") for e, _ in opens)
+    cover = "covers" if len(opens) == 1 else "cover"
+    lookups = [e.value for e, _ in opens if not e.value.lstrip("+").lower().startswith("ip")]
+    caveat = (
+        f" An a or mx term with prefix length 0 ({', '.join(lookups)}) matches every address "
+        "of its family as soon as its name has a single address."
+        if lookups
+        else ""
+    )
+    return Finding(
+        Severity.RISK,
+        f"SPF at {where} authorizes {every}",
+        f"It authorizes {quoted}, which {cover} every {' and '.join(families)} address, so {who} "
+        f"passes SPF as this domain, as with +all.{caveat}",
+        tuple(e for e, _ in opens),
+    )
 
 
 def _is_own(target: str, domain: str) -> bool:

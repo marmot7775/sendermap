@@ -32,6 +32,7 @@ def acme() -> Zone:
             "MS=ms12345678",
         )
         .add("_dmarc.acme.test", "TXT", "v=DMARC1; p=reject; rua=mailto:x@rua.agari.com")
+        .add("acme.test._report._dmarc.rua.agari.com", "TXT", "v=DMARC1;")
         .add("google._domainkey.acme.test", "TXT", KEY)
         .alias("k2._domainkey.acme.test", "dkim2.mcsv.net")
         .add("dkim2.mcsv.net", "TXT", KEY)
@@ -124,6 +125,16 @@ async def test_mx_and_spf_hints_put_google_and_microsoft_selectors_first(
         ("EXAMPLE.COM:443", "example.com"),
         ("http://user:pw@host.example.com/", "host.example.com"),
         ("example.xn--p1ai", "example.xn--p1ai"),
+        # IDNA 2008 with UTS 46, non-transitional, as browsers and registries encode names:
+        # IDNA 2003 maps these to fass.de, xn--nxasmq6b.com and xn--11b2ezc.com.
+        ("faß.de", "xn--fa-hia.de"),
+        ("FAß.DE", "xn--fa-hia.de"),
+        ("βόλος.com", "xn--nxasmm1c.com"),
+        ("क्\u200dष.com", "xn--11b2ezcw70k.com"),
+        # The same in both.
+        ("i❤.ws", "xn--i-7iq.ws"),
+        ("example\u3002com", "example.com"),
+        ("ab--cd.com", "ab--cd.com"),
     ],
 )
 def test_a_domain_is_accepted_however_it_is_pasted(pasted: str, domain: str) -> None:
@@ -144,6 +155,7 @@ def test_a_domain_is_accepted_however_it_is_pasted(pasted: str, domain: str) -> 
         "a..b.com",
         "x" * 64 + ".com",
         "example.123",
+        "a\u200db.com",  # a joiner where IDNA 2008 allows none; IDNA 2003 dropped it: ab.com
     ],
 )
 def test_nonsense_is_refused(bad: str) -> None:

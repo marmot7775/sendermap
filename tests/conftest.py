@@ -92,10 +92,16 @@ class Zone:
         return Answer(name, rtype, Status.NXDOMAIN, chain=tuple(chain))
 
     def _lookup(self, name: str, rtype: str) -> list[str]:
+        """The name's records, or the nearest wildcard's above it, so *.example.net answers
+        a.b.example.net too, as a wildcard does for any number of labels (RFC 4592). Names
+        between the two that exist are not checked, as a real zone would."""
         if (name, rtype) in self.records:
             return self.records[(name, rtype)]
-        _, _, parent = name.partition(".")
-        return self.records.get((f"*.{parent}", rtype), [])
+        labels = name.split(".")
+        for i in range(1, len(labels)):
+            if (f"*.{'.'.join(labels[i:])}", rtype) in self.records:
+                return self.records[(f"*.{'.'.join(labels[i:])}", rtype)]
+        return []
 
     def _exists(self, name: str) -> bool:
         """A name exists when it has records or a CNAME, or when a name below it does (an empty

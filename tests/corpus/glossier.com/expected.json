@@ -1525,7 +1525,14 @@
       "value": "v=DMARC1; p=reject; rua=mailto:dmarc_agg@vali.email",
       "checked_at": "2026-10-12T01:25:09+00:00"
      },
-     "supporting": []
+     "supporting": [
+      {
+       "name": "glossier.com._report._dmarc.vali.email",
+       "rtype": "TXT",
+       "value": "v=DMARC1;",
+       "checked_at": "2026-10-12T01:25:09+00:00"
+      }
+     ]
     }
    ],
    "setups": []

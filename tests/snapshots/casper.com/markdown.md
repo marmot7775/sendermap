@@ -201,7 +201,7 @@ Records Sendermap looked for and did not find.
 
 ## How this was checked
 
-Checked 2026-10-12 01:25 UTC: 756 DNS lookups in 0.0 s over Google DNS over HTTPS.
+Checked 2026-10-12 01:25 UTC: 757 DNS lookups in 0.0 s over Google DNS over HTTPS.
 
 - At casper.com: 114 possible DKIM key names, 25 service record names, 1 web page.
 - At e.casper.com: 36 possible DKIM key names.
