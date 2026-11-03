@@ -1693,6 +1693,7 @@ source = { editable = "." }
 dependencies = [
     { name = "dnspython" },
     { name = "httpx" },
+    { name = "idna" },
     { name = "rich" },
 ]
 
@@ -1729,6 +1730,7 @@ requires-dist = [
     { name = "fastmcp", marker = "extra == 'mcp'", specifier = ">=4.1.2,<5" },
     { name = "fastmcp", marker = "extra == 'web'", specifier = ">=4.1.2,<5" },
     { name = "httpx", specifier = ">=0.28" },
+    { name = "idna", specifier = ">=3.7" },
     { name = "jsonschema", marker = "extra == 'mcp'", specifier = ">=4.23" },
     { name = "jsonschema", marker = "extra == 'web'", specifier = ">=4.23" },
     { name = "rich", specifier = ">=13.9" },

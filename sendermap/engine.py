@@ -18,6 +18,7 @@ from datetime import datetime
 from pathlib import Path
 
 import httpx
+import idna
 
 from . import catalog as catalog_module
 from . import setup as setup_module
@@ -415,6 +416,27 @@ _LABEL = re.compile(r"^(?!-)[a-z0-9-]{1,63}(?<!-)$")
 _TLD = re.compile(r"^(?=.*[a-z])[a-z0-9-]+$")
 
 
+def to_ascii(name: str) -> str:
+    """A name as browsers and registries encode it: UTS 46 mapping, non-transitional, then
+    IDNA 2008 A-labels, so faß.de is xn--fa-hia.de, not fass.de as IDNA 2003 has it. An ASCII
+    name is left as it is. A label IDNA 2008 leaves out only for a symbol in it, as in i❤.ws,
+    is encoded as browsers encode it, which is also what IDNA 2003 gave. Raises UnicodeError
+    for a name that cannot be encoded."""
+    if name.isascii():
+        return name
+    mapped = idna.uts46_remap(name, std3_rules=False, transitional=False)
+    return ".".join(_a_label(label) for label in mapped.split("."))
+
+
+def _a_label(label: str) -> str:
+    if label.isascii():
+        return label
+    try:
+        return idna.alabel(label).decode("ascii")
+    except idna.InvalidCodepoint:  # a symbol IDNA 2008 does not list; UTS 46 still encodes it
+        return "xn--" + label.encode("punycode").decode("ascii")
+
+
 def clean_domain(text: str) -> str:
     """Accept a domain however it is pasted: a URL, an address, trailing dots, capitals. Refuse
     an IP address, a wildcard, and anything that is not a hostname."""
@@ -422,7 +444,7 @@ def clean_domain(text: str) -> str:
     value = value.split("://", 1)[-1].split("/", 1)[0].split("@")[-1].split(":", 1)[0]
     value = value.strip(".").removeprefix("www.")
     try:
-        ascii_name = value.encode("idna").decode("ascii")
+        ascii_name = to_ascii(value)
     except UnicodeError:
         ascii_name = ""
     labels = ascii_name.split(".")
