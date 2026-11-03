@@ -11,6 +11,8 @@ fails before anything is published.
 
 ## Unreleased
 
+## 0.1.13 (2026-11-02)
+
 - An opt-in early stop for the DKIM probe: `map_domain(stop_early=True)` and `--stop-early-dkim`.
   The names of every service SPF, MX, CNAMEs or other records already name go first, with google,
   selector1, selector2, the generic names and the names of services whose setup needs no SPF
