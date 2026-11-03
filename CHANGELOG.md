@@ -9,7 +9,7 @@ The publish workflow builds from the tag, takes that section as the release note
 PyPI, makes the GitHub release and lists the version in the MCP registry; a tag with no section
 fails before anything is published.
 
-## Unreleased
+## 0.1.13
 
 - An opt-in early stop for the DKIM probe: `map_domain(stop_early=True)` and `--stop-early-dkim`.
   The names of every service SPF, MX, CNAMEs or other records already name go first, with google,
