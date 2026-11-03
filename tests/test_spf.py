@@ -1,5 +1,6 @@
 """The SPF walk: only authorizing links count, and the tree is read the way receivers read it."""
 
+import pytest
 from conftest import Zone, context
 
 from sendermap.model import Kind, Observed, Severity
@@ -124,6 +125,62 @@ async def test_plus_all_is_a_risk() -> None:
     zone = Zone().add("example.com", "TXT", "v=spf1 +all")
     observed, _ = await walk(zone)
     assert any("every server" in f.title for f in observed.findings)
+
+
+def risks(observed: Observed) -> list[str]:
+    return [f.title for f in observed.findings if f.severity is Severity.RISK]
+
+
+@pytest.mark.parametrize(
+    ("record", "title"),
+    [
+        ("v=spf1 ip4:0.0.0.0/0 -all", "authorizes every IPv4 server"),
+        ("v=spf1 ip4:192.0.2.1/0 -all", "authorizes every IPv4 server"),
+        ("v=spf1 ip6:::/0 ~all", "authorizes every IPv6 server"),
+        ("v=spf1 a/0 -all", "authorizes every IPv4 server"),
+        ("v=spf1 mx//0 -all", "authorizes every IPv6 server"),
+        ("v=spf1 +a:mail.example.com/0//0 -all", "authorizes every server"),
+        ("v=spf1 ip4:0.0.0.0/0 ip6:::/0 -all", "authorizes every server"),
+        ("v=spf1 include:_spf.example.com -all", "authorizes every IPv4 server"),
+    ],
+)
+async def test_a_range_covering_every_address_is_the_plus_all_risk(record: str, title: str) -> None:
+    # A /0 matches every address of its family (RFC 7208 sections 5.6 and 5.1): a record that
+    # authorizes one lets any server pass, whatever its all term says.
+    zone = (
+        Zone()
+        .add("example.com", "TXT", record)
+        .add("_spf.example.com", "TXT", "v=spf1 ip4:0.0.0.0/0 -all")
+    )
+    observed, _ = await walk(zone)
+    assert risks(observed) == [f"SPF at example.com {title}"]
+
+
+@pytest.mark.parametrize(
+    "record",
+    [
+        "v=spf1 -ip4:0.0.0.0/0 -all",  # fails every address: strict, not open
+        "v=spf1 ?ip6:::/0 -all",
+        "v=spf1 -all ip4:0.0.0.0/0",  # after all: never evaluated
+        "v=spf1 ip4:0.0.0.0/1 -all",  # half the space is wide, not every address
+        "v=spf1 a/24 mx -all",
+        "v=spf1 include:_spf.sendgrid.net -all",  # a service's own record is its own
+    ],
+)
+async def test_a_narrower_or_non_authorizing_range_is_not_flagged(record: str) -> None:
+    zone = (
+        Zone()
+        .add("example.com", "TXT", record)
+        .add("_spf.sendgrid.net", "TXT", "v=spf1 ip4:0.0.0.0/0 -all")
+    )
+    observed, _ = await walk(zone)
+    assert not [t for t in risks(observed) if "authorizes every" in t]
+
+
+async def test_plus_all_with_a_zero_range_is_one_risk() -> None:
+    zone = Zone().add("example.com", "TXT", "v=spf1 ip4:0.0.0.0/0 +all")
+    observed, _ = await walk(zone)
+    assert risks(observed) == ["SPF at example.com authorizes every server"]
 
 
 async def test_a_failed_lookup_is_a_gap_not_an_absence() -> None:
