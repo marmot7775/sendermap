@@ -141,7 +141,7 @@ Not matched to a service
     cecollect.com TXT ip4:62.73.162.74
 
 How this was checked
-  Checked 2026-10-12 01:24 UTC: 644 DNS lookups in 0.0 s over Google DNS over HTTPS.
+  Checked 2026-10-12 01:24 UTC: 646 DNS lookups in 0.0 s over Google DNS over HTTPS.
   At mills-reeve.com: 110 possible DKIM key names, 25 service record names, 1 web page.
     Pages:                                                                                          
     https://api.certspotter.com/v1/issuances?domain=mills-reeve.com&include_subdomains=true&expand=d

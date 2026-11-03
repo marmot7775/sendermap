@@ -2181,7 +2181,14 @@
       "value": "v=DMARC1; p=reject;  rua=mailto:pyzv2eqw@ag.dmarcian.com;",
       "checked_at": "2026-10-12T01:25:01+00:00"
      },
-     "supporting": []
+     "supporting": [
+      {
+       "name": "casper.com._report._dmarc.ag.dmarcian.com",
+       "rtype": "TXT",
+       "value": "v=DMARC1;",
+       "checked_at": "2026-10-12T01:25:01+00:00"
+      }
+     ]
     }
    ],
    "setups": []

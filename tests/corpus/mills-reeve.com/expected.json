@@ -629,7 +629,33 @@
       "value": "v=DMARC1; p=reject; rua=mailto:dbaf5ee8973e712@rep.dmarcanalyzer.com; ruf=mailto:dbaf5ee8973e712@for.dmarcanalyzer.com; fo=1;",
       "checked_at": "2026-10-12T01:24:55+00:00"
      },
-     "supporting": []
+     "supporting": [
+      {
+       "name": "mills-reeve.com._report._dmarc.rep.dmarcanalyzer.com",
+       "rtype": "TXT",
+       "value": "v=DMARC1;",
+       "checked_at": "2026-10-12T01:24:55+00:00"
+      }
+     ]
+    },
+    {
+     "service": "Mimecast DMARC Analyzer",
+     "kind": "receives DMARC reports",
+     "where": "mills-reeve.com",
+     "evidence": {
+      "name": "_dmarc.mills-reeve.com",
+      "rtype": "TXT",
+      "value": "v=DMARC1; p=reject; rua=mailto:dbaf5ee8973e712@rep.dmarcanalyzer.com; ruf=mailto:dbaf5ee8973e712@for.dmarcanalyzer.com; fo=1;",
+      "checked_at": "2026-10-12T01:24:55+00:00"
+     },
+     "supporting": [
+      {
+       "name": "mills-reeve.com._report._dmarc.for.dmarcanalyzer.com",
+       "rtype": "TXT",
+       "value": "v=DMARC1;",
+       "checked_at": "2026-10-12T01:24:55+00:00"
+      }
+     ]
     }
    ],
    "setups": []

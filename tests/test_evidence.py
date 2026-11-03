@@ -43,6 +43,7 @@ def mapped() -> Zone:
         )
         .add("_loop.mapped.test", "TXT", "v=spf1 include:mapped.test -all")
         .add("_dmarc.mapped.test", "TXT", "v=DMARC1; p=none; rua=mailto:x@rua.agari.com")
+        .add("mapped.test._report._dmarc.rua.agari.com", "TXT", "v=DMARC1;")
         .add("_smtp._tls.mapped.test", "TXT", "v=TLSRPTv1; rua=mailto:t@uriports.com")
         .add("_mta-sts.mapped.test", "TXT", "v=STSv1; id=20261009")
         .add("google._domainkey.mapped.test", "TXT", KEY)

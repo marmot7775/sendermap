@@ -41,7 +41,11 @@ async def test_a_wildcard_record_that_is_not_a_key_is_not_read_as_a_malformed_ke
 
 
 async def test_a_reporting_service_has_no_tier(offline: httpx.AsyncClient) -> None:
-    zone = Zone().add("_dmarc.acme.test", "TXT", "v=DMARC1; p=none; rua=mailto:x@rua.agari.com")
+    zone = (
+        Zone()
+        .add("_dmarc.acme.test", "TXT", "v=DMARC1; p=none; rua=mailto:x@rua.agari.com")
+        .add("acme.test._report._dmarc.rua.agari.com", "TXT", "v=DMARC1;")
+    )
     result = await map_domain(
         "acme.test", checked_at=CHECKED, resolver=zone, http=offline, use_web=False
     )

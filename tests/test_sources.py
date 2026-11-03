@@ -90,6 +90,8 @@ async def test_report_services_are_reporting_and_others_listed() -> None:
             "TXT",
             "v=DMARC1; p=none; rua=mailto:x@rua.agari.com,mailto:y@reports.example.net",
         )
+        .add("example.com._report._dmarc.rua.agari.com", "TXT", "v=DMARC1;")
+        .add("example.com._report._dmarc.reports.example.net", "TXT", "v=DMARC1")
         .add("_smtp._tls.example.com", "TXT", "v=TLSRPTv1; rua=mailto:z@uriports.com")
     )
     observed = await reports.collect(context(zone))
