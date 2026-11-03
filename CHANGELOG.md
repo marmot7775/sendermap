@@ -22,6 +22,24 @@ fails before anything is published.
   every selector.
 - A bare `all` in SPF is `+all` (RFC 7208, section 4.6.2) and is now flagged as authorizing every
   server. Only the first `all` decides, so `-all +all` is not flagged.
+- An authorizing SPF term that matches every address of a family is the same risk as `+all`:
+  `ip4:0.0.0.0/0`, `ip6:::/0`, or an `a` or `mx` term with prefix length 0 (`a/0`, `mx//0`), in
+  the domain's record or one of its own includes. The title says which family: every IPv4
+  server, every IPv6 server, or every server.
+- A DMARC report address outside the domain is credited only when its domain authorizes it, as
+  receivers check (RFC 9990 section 4, RFC 9991 section 5): a `v=DMARC1` record at
+  `<domain>._report._dmarc.<report domain>`, which is now asked once per outside report host and
+  kept as the claim's supporting evidence. Without one the address is not credited and the map
+  warns that it is not authorized; an authorizing record that points reports at another host is
+  the same warning. A lookup that fails is a gap and the address stays credited. A host that
+  ends in the same two labels as the domain (two names under example.com, or under co.uk) and
+  has no authorization gets a note instead, since the two may be one organizational domain.
+- Internationalized names are encoded with IDNA 2008 and UTS 46, non-transitional, as browsers
+  and registries do, through the `idna` package, now a direct dependency (httpx already pulled
+  it in). `faß.de` maps `xn--fa-hia.de`, not `fass.de`; the same goes for final sigma
+  (`βόλος.com`) and joiners in Indic and Persian names. A name IDNA 2008 refuses for a symbol,
+  such as `i❤.ws`, is still encoded as browsers encode it; a joiner where none is allowed, or a
+  label that breaks the bidi rule, is now "not a domain". ASCII names are unchanged.
 - Two DMARC records, or two TLS-RPT records, at one name are no policy: no report address in them
   is credited, and the map raises a risk. `v=DMARC10` is not a DMARC record.
 - A range after `all` in a service's own SPF record is no longer counted as published by it.
