@@ -3581,6 +3581,16 @@
             "date": "2026-10-15"
           }
         }
+      ],
+      "tracking": [
+        {
+          "value": "mktoweb.com",
+          "proof": {
+            "domain": "openai.com",
+            "record": "go.openai.com",
+            "date": "2026-11-13"
+          }
+        }
       ]
     },
     "Microsoft 365": {
@@ -7465,6 +7475,170 @@
       ],
       "aliases": [
         "CheetahMail"
+      ]
+    },
+    "SendCloud": {
+      "spf_includes": [
+        {
+          "value": "spf.sendcloud.org",
+          "proof": {
+            "domain": "tiktok.com",
+            "record": "email.tiktok.com",
+            "date": "2026-11-13"
+          }
+        }
+      ],
+      "mx": [
+        {
+          "value": "sendcloud.org",
+          "proof": {
+            "domain": "tiktok.com",
+            "record": "email.tiktok.com",
+            "date": "2026-11-13"
+          }
+        }
+      ],
+      "category": "Transactional",
+      "aliases": [
+        "Sohu SendCloud"
+      ]
+    },
+    "Alibaba Cloud Direct Mail": {
+      "spf_includes": [
+        {
+          "value": "spf1.dm.aliyun.com",
+          "proof": {
+            "domain": "tiktok.com",
+            "record": "info.tiktok.com",
+            "date": "2026-11-13"
+          }
+        },
+        {
+          "value": "spfdm-ap-southeast-1.aliyun.com",
+          "proof": {
+            "domain": "hicloudcam.com",
+            "record": "hicloudcam.com",
+            "date": "2026-11-13"
+          }
+        }
+      ],
+      "mx": [
+        {
+          "value": "dm.aliyun.com",
+          "proof": {
+            "domain": "tiktok.com",
+            "record": "info.tiktok.com",
+            "date": "2026-11-13"
+          }
+        },
+        {
+          "value": "mxdm-ap-southeast-1.aliyun.com",
+          "proof": {
+            "domain": "hicloudcam.com",
+            "record": "notify.hicloudcam.com",
+            "date": "2026-11-13"
+          }
+        }
+      ],
+      "category": "Transactional",
+      "aliases": [
+        "Aliyun DirectMail",
+        "Alibaba DirectMail"
+      ]
+    },
+    "Alibaba Mail": {
+      "spf_includes": [
+        {
+          "value": "spf.mxhichina.com",
+          "proof": {
+            "domain": "hicloudcam.com",
+            "record": "hicloudcam.com",
+            "date": "2026-11-13"
+          }
+        },
+        {
+          "value": "spf.qiye.aliyun.com",
+          "proof": {
+            "domain": "alibaba.com",
+            "record": "info.alibaba.com",
+            "date": "2026-11-13"
+          }
+        }
+      ],
+      "mx": [
+        {
+          "value": "mxhichina.com",
+          "proof": {
+            "domain": "hicloudcam.com",
+            "record": "hicloudcam.com",
+            "date": "2026-11-13"
+          }
+        }
+      ],
+      "category": "Mailbox",
+      "aliases": [
+        "Alibaba Cloud Mail",
+        "Aliyun Mail",
+        "Alimail"
+      ],
+      "setup": [
+        {
+          "record": "mx",
+          "need": "optional",
+          "values": [
+            "mxhichina.com"
+          ],
+          "proof": {
+            "domain": "aliyun.com",
+            "record": "https://help.aliyun.com/zh/document_detail/36710.html",
+            "date": "2026-11-13"
+          },
+          "note": "Optional here because a security gateway in front of Alibaba Mail takes its place in MX."
+        },
+        {
+          "record": "spf",
+          "need": "required",
+          "values": [
+            "spf.qiye.aliyun.com"
+          ],
+          "proof": {
+            "domain": "aliyun.com",
+            "record": "https://help.aliyun.com/zh/document_detail/36710.html",
+            "date": "2026-11-13"
+          }
+        }
+      ]
+    },
+    "KnowBe4": {
+      "spf_includes": [
+        {
+          "value": "_spf.psm.knowbe4.com",
+          "proof": {
+            "domain": "medium.com",
+            "record": "medium.com",
+            "date": "2026-11-13"
+          }
+        }
+      ],
+      "category": "Commerce and apps",
+      "aliases": [
+        "KnowBe4 PhishER"
+      ]
+    },
+    "Adobe Journey Optimizer": {
+      "spf_includes": [
+        {
+          "value": "cjm.adobe.com",
+          "proof": {
+            "domain": "paypal.com",
+            "record": "news.paypal.com",
+            "date": "2026-11-13"
+          }
+        }
+      ],
+      "category": "Marketing",
+      "aliases": [
+        "AJO"
       ]
     }
   }

@@ -407,6 +407,7 @@ WITH_SETUP = {
     "Zoho Mail",
     "Yandex 360",
     "VK WorkMail",
+    "Alibaba Mail",
     "Barracuda",
     "DuoCircle",
     "Symantec MessageLabs",

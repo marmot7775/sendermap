@@ -189,7 +189,11 @@ the 10 second timeout (8 for the MTA-STS policy) and the 2,000,000 byte cap on a
 
 The guard's limit: the address is checked before the request and not pinned during it. The HTTP
 client resolves the name again when it connects, so a name that answers with a public address
-for the check and a private one a moment later (DNS rebinding) is not caught.
+for the check and a private one a moment later (DNS rebinding) still gets a connection to port
+443 of the private address. It gets no further: every client checks the certificate against the
+name asked, so the handshake fails unless the private host holds a valid certificate for the
+other party's name, and no request is sent and no page is read. What is left is that the gap's
+wording may show whether something answers on port 443 there.
 
 ## Modules
 
@@ -633,7 +637,7 @@ reads origins the same way and confirms with the same check.
 
 A vendor's own domain rarely publishes what it asks its customers to publish, so
 `tools/hunt_proofs.py` looks for the pending patterns on customer domains: `data/hunt_domains.txt`,
-the top 2,000 of a Tranco list (its id and date on the first line) and three retail brands. At each
+the top 6,000 of a Tranco list (its id and date on the first line) and three retail brands. At each
 domain it reads what the engine reads (SPF down the whole include chain, MX, DKIM keys at every
 proven, pending and generic selector name, the bounce and tracking labels, report addresses,
 tokens, networks, the sending subdomains with their NS delegations and one fetch of the
