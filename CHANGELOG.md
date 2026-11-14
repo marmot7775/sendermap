@@ -11,6 +11,11 @@ fails before anything is published.
 
 ## Unreleased
 
+## 0.1.15 (2026-11-13)
+
+- Sendermap now needs dnspython 2.9.2 or later, which fixes excessive memory and CPU use when
+  reading a hostile DNS answer (Dependabot alert 15). An install or upgrade pulls it in.
+
 ## 0.1.14 (2026-11-13)
 
 - Seven services are new in the catalog, each pattern with a live proof: SendCloud, Alibaba Cloud
