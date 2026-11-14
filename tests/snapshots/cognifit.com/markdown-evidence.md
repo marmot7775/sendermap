@@ -161,9 +161,9 @@ Records Sendermap looked for and did not find.
 
 ## How this was checked
 
-Checked 2026-10-28 12:11 UTC: 414 DNS lookups in 0.0 s over Google DNS over HTTPS.
+Checked 2026-10-28 12:11 UTC: 426 DNS lookups in 0.0 s over Google DNS over HTTPS.
 
-- At cognifit.com: 114 possible DKIM key names, 25 service record names, 1 web page.
+- At cognifit.com: 126 possible DKIM key names, 25 service record names, 1 web page.
 - At messages.cognifit.com: 8 possible DKIM key names.
 - At send.cognifit.com: 8 possible DKIM key names.
 
@@ -176,6 +176,6 @@ Names asked:
 
 - cognifit.com, Pages: `https://api.certspotter.com/v1/issuances?domain=cognifit.com&include_subdomains=true&expand=dns_names`
 - cognifit.com, CNAME labels: `bounce`, `bounces`, `em`, `email`, `mail`, `send`, `mta`, `rp`, `pm-bounces`, `links`, `link`, `click`, `track`, `tracking`, `url`, `go`, `autodiscover`, `cf-bounce`, `eversrv`, `fwdkim1`, `bnc3`, `bounces.cloud.em`, `bounces.cloud2.em`, `outbound.intercom`, `atlassian-bounces`
-- cognifit.com, DKIM selectors: `google`, `gapps`, `s1`, `s2`, `smtpapi`, `acdkim1`, `acdkim2`, `ses`, `aweber_key_a`, `aweber_key_b`, `aweber_key_c`, `brevo`, `brevo1`, `brevo2`, `cm`, `cf2024-1`, `ctct1`, `ctct2`, `krs`, `e2ma-k1`, `e2ma-k2`, `e2ma-k3`, `everlytickey1`, `everlytickey2`, `fm2`, `fm1`, `fm3`, `mesmtp`, `secureserver1`, `secureserver2`, `gor`, `strong1`, `strong2`, `hs1`, `hs2`, `intercom`, `s1-ionos`, `s42582890`, `s2-ionos`, `cka`, `kl`, `kl1`, `kl2`, `km1`, `km2`, `k2`, `k1`, `k3`, `litesrv`, `mg`, `mailgun`, `mg1`, `pdk1`, `pdk2`, `mailjet`, `mailpoet2`, `mailpoet1`, `mandrill`, `mte1`, `mte2`, `marketo`, `mkto`, `mkto1`, `selector1`, `selector2`, `mimecast`, `mimecast20190719`, `pepipost`, `pp1`, `protonmail`, `protonmail2`, `protonmail3`, `resend`, `sailthru`, `salesforce`, `salesforce2`, `salesforce1`, `sf`, `sf1`, `sf2`, `sfdc`, `200608`, `pardot`, `sfmc`, `scph0819`, `sparkpost`, `squarespace`, `zendesk1`, `zendesk2`, `zoho`, `mail`, `mailru`, `api`, `default`, `dk`, `dkim`, `dkim1`, `dkim2`, `email`, `k`, `key`, `key1`, `key2`, `mta`, `mx`, `pm`, `s`, `selector`, `smtp`, `sp`, `20161025`, `20210112`, `20221208`, `20230601`
-- messages.cognifit.com, DKIM selectors: `acdkim1`, `acdkim2`, `ses`, `aweber_key_a`, `aweber_key_b`, `aweber_key_c`, `brevo`, `brevo1`
-- send.cognifit.com, DKIM selectors: `acdkim1`, `acdkim2`, `ses`, `aweber_key_a`, `aweber_key_b`, `aweber_key_c`, `brevo`, `brevo1`
+- cognifit.com, DKIM selectors: `google`, `gapps`, `googlemail`, `s1`, `s2`, `smtpapi`, `sendgrid`, `acdkim1`, `acdkim2`, `ses`, `ses1`, `ses2`, `aweber_key_a`, `aweber_key_b`, `aweber_key_c`, `brevo`, `brevo1`, `brevo2`, `cm`, `cf2024-1`, `ctct1`, `ctct2`, `krs`, `cio`, `e2ma-k1`, `e2ma-k2`, `e2ma-k3`, `everlytickey1`, `everlytickey2`, `fm2`, `fm1`, `fm3`, `mesmtp`, `secureserver1`, `secureserver2`, `gor`, `strong1`, `strong2`, `hs1`, `hs2`, `intercom`, `s1-ionos`, `s42582890`, `s2-ionos`, `cka`, `kl`, `kl1`, `kl2`, `km1`, `km2`, `k2`, `k1`, `k3`, `mailchimp`, `litesrv`, `mg`, `mailgun`, `mg1`, `pdk1`, `pdk2`, `mailjet`, `mailpoet2`, `mailpoet1`, `mandrill`, `mte1`, `mte2`, `marketo`, `mkto`, `mkto1`, `selector1`, `selector2`, `mimecast`, `mimecast20190719`, `mc1`, `pepipost`, `pm1`, `pp1`, `proofpoint`, `protonmail`, `protonmail2`, `protonmail3`, `resend`, `sailthru`, `sailthru2`, `salesforce`, `salesforce2`, `salesforce1`, `sf`, `sf1`, `sf2`, `sfdc`, `200608`, `pardot`, `sfmc`, `scph0819`, `sparkpost`, `squarespace`, `mailru`, `mail`, `zendesk1`, `zendesk2`, `zendesk`, `zoho`, `zohomail`, `api`, `default`, `dk`, `dkim`, `dkim1`, `dkim2`, `email`, `k`, `key`, `key1`, `key2`, `mta`, `mx`, `pm`, `s`, `selector`, `smtp`, `sp`, `20161025`, `20210112`, `20221208`, `20230601`
+- messages.cognifit.com, DKIM selectors: `acdkim1`, `acdkim2`, `ses`, `ses1`, `ses2`, `aweber_key_a`, `aweber_key_b`, `aweber_key_c`
+- send.cognifit.com, DKIM selectors: `acdkim1`, `acdkim2`, `ses`, `ses1`, `ses2`, `aweber_key_a`, `aweber_key_b`, `aweber_key_c`

@@ -108,7 +108,7 @@ async def test_mx_and_spf_hints_put_google_and_microsoft_selectors_first(
         for name, rtype in zone.asked
         if rtype == "TXT" and name.endswith("._domainkey.hinted.test")
     ][1:]  # the first is the wildcard canary
-    assert set(probed[:4]) == {"gapps", "google", "selector1", "selector2"}
+    assert set(probed[:5]) == {"gapps", "google", "googlemail", "selector1", "selector2"}
     # The full sweep and the names Google's MX backs, each name once.
     cat = catalog.load()
     expected = set(cat.probe_selectors) | cat.backs("Google Workspace")
@@ -180,9 +180,9 @@ async def test_a_subdomain_whose_mx_is_google_probes_google_before_any_other_rul
         for name, rtype in zone.asked
         if rtype == "TXT" and name.endswith("._domainkey.mail.subhint.test")
     ][1:]  # the first is the wildcard canary
-    assert set(probed[:2]) == {"gapps", "google"}
+    assert set(probed[:3]) == {"gapps", "google", "googlemail"}
     # The budget, then the names the MX and the HubSpot include back that the budget left out.
-    google = catalog.load().backs("Google Workspace") - {"gapps", "google"}
+    google = catalog.load().backs("Google Workspace") - {"gapps", "google", "googlemail"}
     assert set(probed[engine.SUBDOMAIN_PROBES :]) == {"hs1", "hs2"} | google
 
 

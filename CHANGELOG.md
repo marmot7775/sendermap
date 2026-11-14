@@ -11,6 +11,23 @@ fails before anything is published.
 
 ## Unreleased
 
+- Five services are new in the catalog, each pattern with a live proof: SendCloud, Alibaba Cloud
+  Direct Mail, Alibaba Mail (with its setup, from Alibaba's own documentation), KnowBe4 and Adobe
+  Journey Optimizer. Marketo is also named by a landing page CNAME into `mktoweb.com`.
+- 23 patterns moved from pending to the catalog, each proven on a customer domain: DKIM selector
+  names for Amazon SES (`ses1`, `ses2`), Customer.io (`cio`), Google Workspace (`googlemail`),
+  Mailchimp (`mailchimp`), Mimecast (`mc1`), Postmark (`pm1`), Proofpoint (`proofpoint`), Sailthru
+  (`sailthru2`), SendGrid (`sendgrid`), Zendesk (`zendesk`) and Zoho Mail (`zohomail`); SPF
+  includes for Cheetah Digital, Cordial and Mapp; MX hosts for Amazon SES Mail Manager, Cheetah
+  Digital and IONOS; Inxmail's bounce CNAME; and website scripts for Attentive and Intercom. A
+  full DKIM sweep now asks 126 names, up from 114.
+- Fixed: with `--stop-early-dkim`, keys and their findings are listed in the order the full sweep
+  lists them. Before, two findings of the same severity could swap places between the two modes.
+- The proof hunt reads the top 6,000 domains of its Tranco list, up from 2,000.
+- Two more recorded domains in the test corpus: `hicloudcam.com` and `medium.com`.
+- ARCHITECTURE.md says what a rebound name gets from the page fetch guard: a failed TLS
+  handshake, since every client checks the certificate, and no page.
+
 ## 0.1.13 (2026-11-02)
 
 - An opt-in early stop for the DKIM probe: `map_domain(stop_early=True)` and `--stop-early-dkim`.

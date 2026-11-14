@@ -233,6 +233,19 @@
     ]
   },
   "vendors": {
+    "ActionKit": {
+      "spf_includes": [
+        {
+          "value": "sp.actionkit.com",
+          "proof": {
+            "domain": "habitat.org",
+            "record": "habitat.org",
+            "date": "2026-10-22"
+          }
+        }
+      ],
+      "category": "Marketing"
+    },
     "ActiveCampaign": {
       "category": "Marketing",
       "selectors": [
@@ -291,6 +304,55 @@
         }
       ]
     },
+    "Adobe Campaign": {
+      "mx": [
+        {
+          "value": "campaign.adobe.com",
+          "proof": {
+            "domain": "github.com",
+            "record": "communication.github.com",
+            "date": "2026-10-15"
+          }
+        }
+      ],
+      "category": "Marketing",
+      "aliases": [
+        "Adobe Campaign Classic",
+        "Adobe Campaign v8"
+      ]
+    },
+    "Adobe Journey Optimizer": {
+      "spf_includes": [
+        {
+          "value": "cjm.adobe.com",
+          "proof": {
+            "domain": "paypal.com",
+            "record": "news.paypal.com",
+            "date": "2026-11-13"
+          }
+        }
+      ],
+      "category": "Marketing",
+      "aliases": [
+        "AJO"
+      ]
+    },
+    "ADP": {
+      "spf_includes": [
+        {
+          "value": "_spf.adp.com",
+          "proof": {
+            "domain": "everlane.com",
+            "record": "everlane.com",
+            "date": "2026-10-15"
+          }
+        }
+      ],
+      "category": "Commerce and apps",
+      "aliases": [
+        "ADP Workforce Now"
+      ]
+    },
     "Agari": {
       "reporting": [
         {
@@ -305,6 +367,138 @@
       "category": "DMARC reporting",
       "aliases": [
         "Fortra Agari"
+      ]
+    },
+    "Alibaba Cloud Direct Mail": {
+      "spf_includes": [
+        {
+          "value": "spf1.dm.aliyun.com",
+          "proof": {
+            "domain": "tiktok.com",
+            "record": "info.tiktok.com",
+            "date": "2026-11-13"
+          }
+        },
+        {
+          "value": "spfdm-ap-southeast-1.aliyun.com",
+          "proof": {
+            "domain": "hicloudcam.com",
+            "record": "hicloudcam.com",
+            "date": "2026-11-13"
+          }
+        }
+      ],
+      "mx": [
+        {
+          "value": "dm.aliyun.com",
+          "proof": {
+            "domain": "tiktok.com",
+            "record": "info.tiktok.com",
+            "date": "2026-11-13"
+          }
+        },
+        {
+          "value": "mxdm-ap-southeast-1.aliyun.com",
+          "proof": {
+            "domain": "hicloudcam.com",
+            "record": "notify.hicloudcam.com",
+            "date": "2026-11-13"
+          }
+        }
+      ],
+      "category": "Transactional",
+      "aliases": [
+        "Aliyun DirectMail",
+        "Alibaba DirectMail"
+      ]
+    },
+    "Alibaba Mail": {
+      "spf_includes": [
+        {
+          "value": "spf.mxhichina.com",
+          "proof": {
+            "domain": "hicloudcam.com",
+            "record": "hicloudcam.com",
+            "date": "2026-11-13"
+          }
+        },
+        {
+          "value": "spf.qiye.aliyun.com",
+          "proof": {
+            "domain": "alibaba.com",
+            "record": "info.alibaba.com",
+            "date": "2026-11-13"
+          }
+        }
+      ],
+      "mx": [
+        {
+          "value": "mxhichina.com",
+          "proof": {
+            "domain": "hicloudcam.com",
+            "record": "hicloudcam.com",
+            "date": "2026-11-13"
+          }
+        }
+      ],
+      "category": "Mailbox",
+      "aliases": [
+        "Alibaba Cloud Mail",
+        "Aliyun Mail",
+        "Alimail"
+      ],
+      "setup": [
+        {
+          "record": "mx",
+          "need": "optional",
+          "values": [
+            "mxhichina.com"
+          ],
+          "proof": {
+            "domain": "aliyun.com",
+            "record": "https://help.aliyun.com/zh/document_detail/36710.html",
+            "date": "2026-11-13"
+          },
+          "note": "Optional here because a security gateway in front of Alibaba Mail takes its place in MX."
+        },
+        {
+          "record": "spf",
+          "need": "required",
+          "values": [
+            "spf.qiye.aliyun.com"
+          ],
+          "proof": {
+            "domain": "aliyun.com",
+            "record": "https://help.aliyun.com/zh/document_detail/36710.html",
+            "date": "2026-11-13"
+          }
+        }
+      ]
+    },
+    "Alida": {
+      "spf_includes": [
+        {
+          "value": "spf.alida.io",
+          "proof": {
+            "domain": "awaytravel.com",
+            "record": "zone1.awaytravel.com",
+            "date": "2026-10-15"
+          }
+        }
+      ],
+      "mx": [
+        {
+          "value": "alida.io",
+          "proof": {
+            "domain": "awaytravel.com",
+            "record": "zone1.awaytravel.com",
+            "date": "2026-10-15"
+          }
+        }
+      ],
+      "category": "Marketing",
+      "aliases": [
+        "Alida Touchpoint"
       ]
     },
     "Amazon SES": {
@@ -370,6 +564,36 @@
             "record": "ses._domainkey.twitter.com",
             "date": "2026-10-10"
           }
+        },
+        {
+          "shape": {
+            "kind": "fixed",
+            "names": [
+              "ses1"
+            ]
+          },
+          "source": "pattern",
+          "reference": null,
+          "proof": {
+            "domain": "wipo.int",
+            "record": "ses1._domainkey.wipo.int",
+            "date": "2026-11-13"
+          }
+        },
+        {
+          "shape": {
+            "kind": "fixed",
+            "names": [
+              "ses2"
+            ]
+          },
+          "source": "pattern",
+          "reference": null,
+          "proof": {
+            "domain": "wipo.int",
+            "record": "ses2._domainkey.wipo.int",
+            "date": "2026-11-13"
+          }
         }
       ],
       "mx": [
@@ -420,7 +644,33 @@
             "record": "foundry.openai.com",
             "date": "2026-10-25"
           }
+        },
+        {
+          "value": "mail-manager-smtp.us-east-1.on.aws",
+          "proof": {
+            "domain": "hpe.com",
+            "record": "updates.hpe.com",
+            "date": "2026-11-13"
+          }
         }
+      ]
+    },
+    "Amazon WorkMail": {
+      "other_cname": [
+        {
+          "label": "autodiscover",
+          "target": "awsapps.com",
+          "proof": {
+            "domain": "samsungqbe.com",
+            "record": "autodiscover.samsungqbe.com",
+            "date": "2026-10-25"
+          }
+        }
+      ],
+      "category": "Mailbox",
+      "aliases": [
+        "WorkMail",
+        "AWS WorkMail"
       ]
     },
     "Atlassian": {
@@ -507,7 +757,30 @@
             "date": "2026-10-09"
           }
         }
+      ],
+      "website": [
+        {
+          "value": "cdn.attn.tv",
+          "proof": {
+            "domain": "bostonglobe.com",
+            "record": "https://bostonglobe.com/",
+            "date": "2026-11-13"
+          }
+        }
       ]
+    },
+    "AutoSPF": {
+      "spf_includes": [
+        {
+          "value": "autospf.email",
+          "proof": {
+            "domain": "mit.edu",
+            "record": "mit.edu",
+            "date": "2026-10-15"
+          }
+        }
+      ],
+      "category": "DMARC reporting"
     },
     "AWeber": {
       "dkim_cname": [
@@ -644,6 +917,36 @@
           }
         }
       ]
+    },
+    "Blackbaud Luminate Online": {
+      "spf_includes": [
+        {
+          "value": "convio.net",
+          "proof": {
+            "domain": "utoronto.ca",
+            "record": "updates.utoronto.ca",
+            "date": "2026-10-15"
+          }
+        }
+      ],
+      "category": "Marketing",
+      "aliases": [
+        "Convio",
+        "Luminate Online"
+      ]
+    },
+    "Braintree": {
+      "spf_includes": [
+        {
+          "value": "spf.braintreegateway.com",
+          "proof": {
+            "domain": "hotjar.com",
+            "record": "hotjar.com",
+            "date": "2026-10-22"
+          }
+        }
+      ],
+      "category": "Commerce and apps"
     },
     "Braze": {
       "category": "Marketing",
@@ -921,6 +1224,170 @@
         }
       ]
     },
+    "Cheetah Digital": {
+      "category": "Marketing",
+      "delegation_ns": [
+        {
+          "value": "cheetahmail.com",
+          "proof": {
+            "domain": "disneyplus.com",
+            "record": "em.disneyplus.com",
+            "date": "2026-10-28"
+          }
+        }
+      ],
+      "aliases": [
+        "CheetahMail"
+      ],
+      "spf_includes": [
+        {
+          "value": "cheetahmail.com",
+          "proof": {
+            "domain": "globalnews.ca",
+            "record": "newsletter.globalnews.ca",
+            "date": "2026-11-13"
+          }
+        },
+        {
+          "value": "chtah.net",
+          "proof": {
+            "domain": "americanexpress.com",
+            "record": "email.americanexpress.com",
+            "date": "2026-11-13"
+          }
+        }
+      ],
+      "mx": [
+        {
+          "value": "chtah.net",
+          "proof": {
+            "domain": "americanexpress.com",
+            "record": "email.americanexpress.com",
+            "date": "2026-11-13"
+          }
+        }
+      ]
+    },
+    "CISA": {
+      "reporting": [
+        {
+          "value": "dmarc.cyber.dhs.gov",
+          "proof": {
+            "domain": "cisa.gov",
+            "record": "_dmarc.cisa.gov",
+            "date": "2026-10-25"
+          }
+        }
+      ],
+      "category": "DMARC reporting",
+      "aliases": [
+        "BOD 18-01",
+        "DHS DMARC reporting"
+      ]
+    },
+    "Cisco Secure Email": {
+      "mx": [
+        {
+          "value": "iphmx.com",
+          "proof": {
+            "domain": "mailchimp.com",
+            "record": "mailchimp.com",
+            "date": "2026-10-15"
+          }
+        }
+      ],
+      "networks": [
+        {
+          "value": "AS16417",
+          "proof": {
+            "domain": "iphmx.com",
+            "record": "mx1.intuit.iphmx.com",
+            "date": "2026-10-15"
+          }
+        }
+      ],
+      "category": "Security gateway",
+      "aliases": [
+        "IronPort",
+        "Cisco IronPort",
+        "Cisco ESA",
+        "Cisco CES",
+        "Cisco Secure Email Cloud Gateway"
+      ],
+      "setup": [
+        {
+          "record": "mx",
+          "need": "required",
+          "values": [
+            "iphmx.com"
+          ],
+          "proof": {
+            "domain": "cisco.com",
+            "record": "https://docs.ces.cisco.com/docs/hostnames",
+            "date": "2026-10-15"
+          }
+        }
+      ]
+    },
+    "ClickDimensions": {
+      "tracking": [
+        {
+          "value": "clickdimensions.com",
+          "proof": {
+            "domain": "doctorswithoutborders.org",
+            "record": "links.doctorswithoutborders.org",
+            "date": "2026-10-22"
+          }
+        }
+      ],
+      "category": "Marketing"
+    },
+    "ClickFunnels": {
+      "spf_includes": [
+        {
+          "value": "mailer.myclickfunnels.com",
+          "proof": {
+            "domain": "clickfunnels.com",
+            "record": "clickfunnels.com",
+            "date": "2026-10-15"
+          }
+        }
+      ],
+      "sending_ip": [
+        {
+          "value": "141.193.71.1",
+          "proof": {
+            "domain": "myclickfunnels.com",
+            "record": "cf01.mailer.myclickfunnels.com",
+            "date": "2026-10-15"
+          }
+        }
+      ],
+      "category": "Marketing",
+      "verification_txt": [
+        {
+          "value": "^clickfunnels-domain-verification=",
+          "proof": {
+            "domain": "clickfunnels.com",
+            "record": "clickfunnels.com",
+            "date": "2026-10-15"
+          }
+        }
+      ]
+    },
+    "Clinch": {
+      "spf_includes": [
+        {
+          "value": "mail.clinchtalent.com",
+          "proof": {
+            "domain": "etsy.com",
+            "record": "etsy.com",
+            "date": "2026-10-15"
+          }
+        }
+      ],
+      "category": "Commerce and apps"
+    },
     "Cloudflare DMARC Management": {
       "reporting": [
         {
@@ -1030,6 +1497,63 @@
         }
       ]
     },
+    "Cloudflare Email Security": {
+      "mx": [
+        {
+          "value": "inbound.cf-emailsecurity.net",
+          "proof": {
+            "domain": "cloudflare.com",
+            "record": "cloudflare.com",
+            "date": "2026-10-15"
+          }
+        }
+      ],
+      "category": "Security gateway",
+      "aliases": [
+        "Area 1",
+        "Cloudflare Area 1"
+      ],
+      "setup": [
+        {
+          "record": "mx",
+          "need": "required",
+          "values": [
+            "inbound.cf-emailsecurity.net"
+          ],
+          "proof": {
+            "domain": "cloudflare.com",
+            "record": "https://developers.cloudflare.com/cloudflare-one/email-security/setup/pre-delivery-deployment/prerequisites/gsuite-email-security-mx/",
+            "date": "2026-10-15"
+          }
+        }
+      ]
+    },
+    "Communicator": {
+      "spf_includes": [
+        {
+          "value": "spf.communicatoremail.com",
+          "proof": {
+            "domain": "theatlantic.com",
+            "record": "orders.theatlantic.com",
+            "date": "2026-10-22"
+          }
+        }
+      ],
+      "mx": [
+        {
+          "value": "communicatoremail.com",
+          "proof": {
+            "domain": "theatlantic.com",
+            "record": "orders.theatlantic.com",
+            "date": "2026-10-22"
+          }
+        }
+      ],
+      "category": "Marketing",
+      "aliases": [
+        "Communicator Corp"
+      ]
+    },
     "Constant Contact": {
       "spf_includes": [
         {
@@ -1115,6 +1639,70 @@
         }
       ]
     },
+    "Conversica": {
+      "spf_includes": [
+        {
+          "value": "spf.conversica.com",
+          "proof": {
+            "domain": "airtable.com",
+            "record": "em.airtable.com",
+            "date": "2026-10-22"
+          }
+        }
+      ],
+      "mx": [
+        {
+          "value": "e.conversica.com",
+          "proof": {
+            "domain": "airtable.com",
+            "record": "em.airtable.com",
+            "date": "2026-10-22"
+          }
+        }
+      ],
+      "category": "Marketing"
+    },
+    "Cordial": {
+      "category": "Marketing",
+      "spf_includes": [
+        {
+          "value": "cordialmail.net",
+          "proof": {
+            "domain": "forbes.com",
+            "record": "email.forbes.com",
+            "date": "2026-10-11"
+          }
+        },
+        {
+          "value": "cordial.io",
+          "proof": {
+            "domain": "edmunds.com",
+            "record": "e.edmunds.com",
+            "date": "2026-11-13"
+          }
+        }
+      ],
+      "mx": [
+        {
+          "value": "cordial.mx.e.sparkpost.com",
+          "proof": {
+            "domain": "wtso.com",
+            "record": "hello.wtso.com",
+            "date": "2026-10-11"
+          }
+        }
+      ],
+      "delegation_ns": [
+        {
+          "value": "crdl.io",
+          "proof": {
+            "domain": "forbes.com",
+            "record": "email.forbes.com",
+            "date": "2026-10-11"
+          }
+        }
+      ]
+    },
     "Customer.io": {
       "tracking": [
         {
@@ -1152,6 +1740,21 @@
             "record": "krs._domainkey.cloudflare.com",
             "date": "2026-10-10"
           }
+        },
+        {
+          "shape": {
+            "kind": "fixed",
+            "names": [
+              "cio"
+            ]
+          },
+          "source": "pattern",
+          "reference": null,
+          "proof": {
+            "domain": "updates.calendly.com",
+            "record": "cio._domainkey.updates.calendly.com",
+            "date": "2026-11-13"
+          }
         }
       ],
       "setup": [
@@ -1179,6 +1782,58 @@
         }
       ]
     },
+    "Cvent": {
+      "spf_includes": [
+        {
+          "value": "cvent-planner.com",
+          "proof": {
+            "domain": "etsy.com",
+            "record": "etsy.com",
+            "date": "2026-10-15"
+          }
+        }
+      ],
+      "category": "Commerce and apps"
+    },
+    "Discourse": {
+      "mx": [
+        {
+          "value": "discoursemail.com",
+          "proof": {
+            "domain": "openai.com",
+            "record": "community.openai.com",
+            "date": "2026-10-25"
+          }
+        }
+      ],
+      "category": "Support and CRM"
+    },
+    "DMARC Digests": {
+      "reporting": [
+        {
+          "value": "dmarcdigests.com",
+          "proof": {
+            "domain": "linear.app",
+            "record": "_dmarc.linear.app",
+            "date": "2026-10-15"
+          }
+        }
+      ],
+      "category": "DMARC reporting"
+    },
+    "DmarcDuty": {
+      "spf_includes": [
+        {
+          "value": "dmarcdutydns.com",
+          "proof": {
+            "domain": "skims.com",
+            "record": "skims.com",
+            "date": "2026-10-22"
+          }
+        }
+      ],
+      "category": "DMARC reporting"
+    },
     "DMARCian": {
       "reporting": [
         {
@@ -1191,6 +1846,94 @@
         }
       ],
       "category": "DMARC reporting"
+    },
+    "DMARCLY": {
+      "reporting": [
+        {
+          "value": "dmarcly.com",
+          "proof": {
+            "domain": "stanford.edu",
+            "record": "_dmarc.stanford.edu",
+            "date": "2026-10-15"
+          }
+        }
+      ],
+      "category": "DMARC reporting"
+    },
+    "Docebo": {
+      "spf_includes": [
+        {
+          "value": "docebosaas.com",
+          "proof": {
+            "domain": "casper.com",
+            "record": "casper.com",
+            "date": "2026-10-15"
+          }
+        }
+      ],
+      "category": "Commerce and apps"
+    },
+    "Dotdigital": {
+      "category": "Marketing",
+      "aliases": [
+        "dotmailer"
+      ],
+      "spf_includes": [
+        {
+          "value": "dotmailer.com",
+          "proof": {
+            "domain": "lg.com",
+            "record": "email.lg.com",
+            "date": "2026-10-11"
+          }
+        }
+      ],
+      "published_spf": [
+        {
+          "value": "spf.dotmailer.com",
+          "proof": {
+            "domain": "cam.ac.uk",
+            "record": "news.cam.ac.uk",
+            "date": "2026-10-15"
+          }
+        }
+      ],
+      "mx": [
+        {
+          "value": "dotdigital.com",
+          "proof": {
+            "domain": "lg.com",
+            "record": "email.lg.com",
+            "date": "2026-10-11"
+          }
+        },
+        {
+          "value": "dotmailer.co.uk",
+          "proof": {
+            "domain": "cam.ac.uk",
+            "record": "news.cam.ac.uk",
+            "date": "2026-10-11"
+          }
+        }
+      ],
+      "delegation_ns": [
+        {
+          "value": "dotdigital.com",
+          "proof": {
+            "domain": "lg.com",
+            "record": "email.lg.com",
+            "date": "2026-10-11"
+          }
+        },
+        {
+          "value": "dotmailer.co.uk",
+          "proof": {
+            "domain": "caliente.mx",
+            "record": "mail.caliente.mx",
+            "date": "2026-10-11"
+          }
+        }
+      ]
     },
     "DuoCircle": {
       "spf_includes": [
@@ -1287,6 +2030,22 @@
         }
       ]
     },
+    "eDataSource": {
+      "reporting": [
+        {
+          "value": "emailanalyst.com",
+          "proof": {
+            "domain": "twitter.com",
+            "record": "_dmarc.twitter.com",
+            "date": "2026-10-25"
+          }
+        }
+      ],
+      "category": "DMARC reporting",
+      "aliases": [
+        "Email Analyst"
+      ]
+    },
     "Elastic Email": {
       "spf_includes": [
         {
@@ -1316,6 +2075,78 @@
             "domain": "princeton.edu",
             "record": "tracking.princeton.edu",
             "date": "2026-10-10"
+          }
+        }
+      ]
+    },
+    "Emarsys": {
+      "category": "Marketing",
+      "aliases": [
+        "SAP Emarsys"
+      ],
+      "spf_includes": [
+        {
+          "value": "emarsys.net",
+          "proof": {
+            "domain": "ebay.com",
+            "record": "p._spf.ebay.com",
+            "date": "2026-10-11"
+          }
+        },
+        {
+          "value": "emarsys.us",
+          "proof": {
+            "domain": "markt.de",
+            "record": "info.markt.de",
+            "date": "2026-10-11"
+          }
+        }
+      ],
+      "mx": [
+        {
+          "value": "emarsys.net",
+          "proof": {
+            "domain": "ebay.com",
+            "record": "mail.ebay.com",
+            "date": "2026-10-11"
+          }
+        },
+        {
+          "value": "eemms.net",
+          "proof": {
+            "domain": "ebay.com",
+            "record": "info.ebay.com",
+            "date": "2026-10-11"
+          }
+        }
+      ],
+      "return_path": [
+        {
+          "value": "emarsys.net",
+          "proof": {
+            "domain": "ebay.com",
+            "record": "mail.ebay.com",
+            "date": "2026-10-11"
+          }
+        }
+      ],
+      "tracking": [
+        {
+          "value": "emarsys.net",
+          "proof": {
+            "domain": "tp-link.com",
+            "record": "link.tp-link.com",
+            "date": "2026-10-11"
+          }
+        }
+      ],
+      "delegation_ns": [
+        {
+          "value": "emarsys.net",
+          "proof": {
+            "domain": "bild.de",
+            "record": "mail.bild.de",
+            "date": "2026-10-11"
           }
         }
       ]
@@ -1367,6 +2198,83 @@
           }
         }
       ]
+    },
+    "Engaging Networks": {
+      "spf_includes": [
+        {
+          "value": "_spf.e-activist.com",
+          "proof": {
+            "domain": "worldwildlife.org",
+            "record": "worldwildlife.org",
+            "date": "2026-10-22"
+          }
+        }
+      ],
+      "category": "Marketing"
+    },
+    "Epsilon": {
+      "spf_includes": [
+        {
+          "value": "bigfootinteractive.com",
+          "proof": {
+            "domain": "target.com",
+            "record": "email.target.com",
+            "date": "2026-10-15"
+          }
+        },
+        {
+          "value": "bfi0.com",
+          "proof": {
+            "domain": "target.com",
+            "record": "email.target.com",
+            "date": "2026-10-15"
+          }
+        },
+        {
+          "value": "epsl1.com",
+          "proof": {
+            "domain": "patagonia.com",
+            "record": "support.patagonia.com",
+            "date": "2026-10-22"
+          }
+        }
+      ],
+      "mx": [
+        {
+          "value": "bigfootinteractive.com",
+          "proof": {
+            "domain": "target.com",
+            "record": "email.target.com",
+            "date": "2026-10-15"
+          }
+        },
+        {
+          "value": "epsl1.com",
+          "proof": {
+            "domain": "patagonia.com",
+            "record": "support.patagonia.com",
+            "date": "2026-10-22"
+          }
+        }
+      ],
+      "category": "Marketing",
+      "aliases": [
+        "Epsilon Email",
+        "Bigfoot Interactive"
+      ]
+    },
+    "Everbridge": {
+      "spf_includes": [
+        {
+          "value": "everbridge.net",
+          "proof": {
+            "domain": "unicef.org",
+            "record": "alerts.unicef.org",
+            "date": "2026-10-15"
+          }
+        }
+      ],
+      "category": "Transactional"
     },
     "Everlytic": {
       "spf_includes": [
@@ -1445,6 +2353,19 @@
           }
         }
       ]
+    },
+    "Extole": {
+      "spf_includes": [
+        {
+          "value": "spf.extole.io",
+          "proof": {
+            "domain": "thirdlove.com",
+            "record": "thirdlove.com",
+            "date": "2026-10-22"
+          }
+        }
+      ],
+      "category": "Marketing"
     },
     "Fastmail": {
       "spf_includes": [
@@ -1686,6 +2607,32 @@
           }
         }
       ]
+    },
+    "FreshMail": {
+      "spf_includes": [
+        {
+          "value": "_spf.freshmail.pl",
+          "proof": {
+            "domain": "eobuwie.pl",
+            "record": "eobuwie.pl",
+            "date": "2026-10-22"
+          }
+        }
+      ],
+      "category": "Marketing"
+    },
+    "Fundraise Up": {
+      "spf_includes": [
+        {
+          "value": "spf.fundraiseup.com",
+          "proof": {
+            "domain": "mozilla.org",
+            "record": "mozilla.org",
+            "date": "2026-10-15"
+          }
+        }
+      ],
+      "category": "Commerce and apps"
     },
     "GetResponse": {
       "category": "Marketing",
@@ -1957,6 +2904,21 @@
             "record": "gapps._domainkey.ebay.de",
             "date": "2026-10-10"
           }
+        },
+        {
+          "shape": {
+            "kind": "fixed",
+            "names": [
+              "googlemail"
+            ]
+          },
+          "source": "pattern",
+          "reference": null,
+          "proof": {
+            "domain": "gamer.com.tw",
+            "record": "googlemail._domainkey.gamer.com.tw",
+            "date": "2026-11-13"
+          }
         }
       ],
       "hints": {
@@ -2079,6 +3041,22 @@
         }
       ]
     },
+    "Greenhouse": {
+      "spf_includes": [
+        {
+          "value": "mg-spf.greenhouse.io",
+          "proof": {
+            "domain": "asana.com",
+            "record": "asana.com",
+            "date": "2026-10-15"
+          }
+        }
+      ],
+      "category": "Commerce and apps",
+      "aliases": [
+        "Greenhouse Recruiting"
+      ]
+    },
     "Help Scout": {
       "spf_includes": [
         {
@@ -2146,6 +3124,19 @@
           }
         }
       ]
+    },
+    "Hivebrite": {
+      "spf_includes": [
+        {
+          "value": "email.hivebrite.com",
+          "proof": {
+            "domain": "hubspot.com",
+            "record": "events.hubspot.com",
+            "date": "2026-10-15"
+          }
+        }
+      ],
+      "category": "Marketing"
     },
     "HubSpot": {
       "spf_includes": [
@@ -2310,6 +3301,32 @@
         }
       ]
     },
+    "Impartner": {
+      "spf_includes": [
+        {
+          "value": "mta.impartner.com",
+          "proof": {
+            "domain": "gusto.com",
+            "record": "partners.gusto.com",
+            "date": "2026-10-22"
+          }
+        }
+      ],
+      "category": "Support and CRM"
+    },
+    "Inbox Monster": {
+      "reporting": [
+        {
+          "value": "inboxmonster.com",
+          "proof": {
+            "domain": "chewy.com",
+            "record": "_dmarc.chewy.com",
+            "date": "2026-10-15"
+          }
+        }
+      ],
+      "category": "DMARC reporting"
+    },
     "Intercom": {
       "dkim_cname": [
         {
@@ -2402,6 +3419,49 @@
             "date": "2026-10-22"
           }
         }
+      ],
+      "website": [
+        {
+          "value": "widget.intercom.io",
+          "proof": {
+            "domain": "userway.org",
+            "record": "https://userway.org/",
+            "date": "2026-11-13"
+          }
+        }
+      ]
+    },
+    "Inxmail": {
+      "category": "Marketing",
+      "spf_includes": [
+        {
+          "value": "inxserver.com",
+          "proof": {
+            "domain": "teamviewer.com",
+            "record": "news.teamviewer.com",
+            "date": "2026-10-11"
+          }
+        }
+      ],
+      "mx": [
+        {
+          "value": "inxserver.de",
+          "proof": {
+            "domain": "teamviewer.com",
+            "record": "news.teamviewer.com",
+            "date": "2026-10-11"
+          }
+        }
+      ],
+      "return_path": [
+        {
+          "value": "inxmail.com",
+          "proof": {
+            "domain": "1und1.de",
+            "record": "bounce.1und1.de",
+            "date": "2026-11-13"
+          }
+        }
       ]
     },
     "IONOS": {
@@ -2432,6 +3492,14 @@
             "domain": "goodsitesforkids.org",
             "record": "goodsitesforkids.org",
             "date": "2026-10-12"
+          }
+        },
+        {
+          "value": "kundenserver.de",
+          "proof": {
+            "domain": "pdflib.com",
+            "record": "support.pdflib.com",
+            "date": "2026-11-13"
           }
         }
       ],
@@ -2574,6 +3642,38 @@
             "date": "2026-10-10"
           }
         }
+      ]
+    },
+    "Khoros": {
+      "spf_includes": [
+        {
+          "value": "khoros-mail.com",
+          "proof": {
+            "domain": "atlassian.com",
+            "record": "em.atlassian.com",
+            "date": "2026-10-15"
+          }
+        }
+      ],
+      "category": "Support and CRM",
+      "aliases": [
+        "Lithium"
+      ]
+    },
+    "Kibo Commerce": {
+      "spf_includes": [
+        {
+          "value": "spf.kibocommerce.com",
+          "proof": {
+            "domain": "lego.com",
+            "record": "orders.lego.com",
+            "date": "2026-10-15"
+          }
+        }
+      ],
+      "category": "Commerce and apps",
+      "aliases": [
+        "Kibo"
       ]
     },
     "Kit": {
@@ -2802,6 +3902,78 @@
         }
       ]
     },
+    "KnowBe4": {
+      "spf_includes": [
+        {
+          "value": "_spf.psm.knowbe4.com",
+          "proof": {
+            "domain": "medium.com",
+            "record": "medium.com",
+            "date": "2026-11-13"
+          }
+        }
+      ],
+      "category": "Commerce and apps",
+      "aliases": [
+        "KnowBe4 PhishER"
+      ]
+    },
+    "Listrak": {
+      "spf_includes": [
+        {
+          "value": "esp1.co",
+          "proof": {
+            "domain": "goop.com",
+            "record": "bounce.goop.com",
+            "date": "2026-10-23"
+          }
+        }
+      ],
+      "mx": [
+        {
+          "value": "esp1.co",
+          "proof": {
+            "domain": "goop.com",
+            "record": "bounce.goop.com",
+            "date": "2026-10-23"
+          }
+        }
+      ],
+      "tracking": [
+        {
+          "value": "esp1.co",
+          "proof": {
+            "domain": "goop.com",
+            "record": "email.goop.com",
+            "date": "2026-10-23"
+          }
+        }
+      ],
+      "networks": [
+        {
+          "value": "AS394396",
+          "proof": {
+            "domain": "esp1.co",
+            "record": "bounce.esp1.co",
+            "date": "2026-10-23"
+          }
+        }
+      ],
+      "category": "Marketing"
+    },
+    "Madgex": {
+      "spf_includes": [
+        {
+          "value": "madgexjb.com",
+          "proof": {
+            "domain": "washingtonpost.com",
+            "record": "washingtonpost.com",
+            "date": "2026-10-15"
+          }
+        }
+      ],
+      "category": "Commerce and apps"
+    },
     "Mailchimp": {
       "spf_includes": [
         {
@@ -2902,6 +4074,21 @@
             "date": "2026-10-09"
           },
           "note": "Not in Mailchimp's own docs; reported by third parties. Points at dkim3.mcsv.net."
+        },
+        {
+          "shape": {
+            "kind": "fixed",
+            "names": [
+              "mailchimp"
+            ]
+          },
+          "source": "pattern",
+          "reference": null,
+          "proof": {
+            "domain": "bigcommerce.com",
+            "record": "mailchimp._domainkey.bigcommerce.com",
+            "date": "2026-11-13"
+          }
         }
       ],
       "subprocessor_names": [
@@ -3464,6 +4651,52 @@
         }
       ]
     },
+    "Mapp": {
+      "category": "Marketing",
+      "aliases": [
+        "Mapp Engage",
+        "Mapp Digital",
+        "ecircle"
+      ],
+      "mx": [
+        {
+          "value": "shortest-route.com",
+          "proof": {
+            "domain": "springer.com",
+            "record": "alerts.springer.com",
+            "date": "2026-10-11"
+          }
+        }
+      ],
+      "delegation_ns": [
+        {
+          "value": "ecircle.de",
+          "proof": {
+            "domain": "springer.com",
+            "record": "alerts.springer.com",
+            "date": "2026-10-11"
+          }
+        },
+        {
+          "value": "shortest-route.com",
+          "proof": {
+            "domain": "cnet.com",
+            "record": "newsletter.cnet.com",
+            "date": "2026-10-11"
+          }
+        }
+      ],
+      "spf_includes": [
+        {
+          "value": "shortest-route.com",
+          "proof": {
+            "domain": "mercedes-benz.com",
+            "record": "em.mercedes-benz.com",
+            "date": "2026-11-13"
+          }
+        }
+      ]
+    },
     "Marketo": {
       "spf_includes": [
         {
@@ -3592,6 +4825,19 @@
           }
         }
       ]
+    },
+    "Maropost": {
+      "spf_includes": [
+        {
+          "value": "spf.maropost.com",
+          "proof": {
+            "domain": "warbyparker.com",
+            "record": "email.warbyparker.com",
+            "date": "2026-10-22"
+          }
+        }
+      ],
+      "category": "Marketing"
     },
     "Microsoft 365": {
       "spf_includes": [
@@ -3785,6 +5031,23 @@
         }
       ]
     },
+    "Microsoft Dynamics 365 Customer Insights": {
+      "spf_includes": [
+        {
+          "value": "marketing.dynamics.com",
+          "proof": {
+            "domain": "awaytravel.com",
+            "record": "awaytravel.com",
+            "date": "2026-10-15"
+          }
+        }
+      ],
+      "category": "Marketing",
+      "aliases": [
+        "Dynamics 365 Marketing",
+        "Dynamics 365 Customer Insights - Journeys"
+      ]
+    },
     "Mimecast": {
       "spf_includes": [
         {
@@ -3893,6 +5156,21 @@
             "record": "mimecast20190719._domainkey.redhat.com",
             "date": "2026-10-10"
           }
+        },
+        {
+          "shape": {
+            "kind": "fixed",
+            "names": [
+              "mc1"
+            ]
+          },
+          "source": "pattern",
+          "reference": null,
+          "proof": {
+            "domain": "wufoo.com",
+            "record": "mc1._domainkey.wufoo.com",
+            "date": "2026-11-13"
+          }
         }
       ]
     },
@@ -3910,6 +5188,82 @@
       "category": "DMARC reporting",
       "aliases": [
         "DMARC Analyzer"
+      ]
+    },
+    "MxToolbox": {
+      "reporting": [
+        {
+          "value": "dmarc-report.com",
+          "proof": {
+            "domain": "nhs.net",
+            "record": "_dmarc.nhs.net",
+            "date": "2026-10-15"
+          }
+        }
+      ],
+      "category": "DMARC reporting"
+    },
+    "NCSC Mail Check": {
+      "reporting": [
+        {
+          "value": "mailcheck.service.ncsc.gov.uk",
+          "proof": {
+            "domain": "nhs.net",
+            "record": "_smtp._tls.nhs.net",
+            "date": "2026-10-15"
+          }
+        }
+      ],
+      "category": "DMARC reporting"
+    },
+    "Netcraft": {
+      "reporting": [
+        {
+          "value": "netcraft.com",
+          "proof": {
+            "domain": "revolut.com",
+            "record": "_dmarc.revolut.com",
+            "date": "2026-10-15"
+          }
+        }
+      ],
+      "category": "DMARC reporting"
+    },
+    "Netigate": {
+      "spf_includes": [
+        {
+          "value": "_spf.netigate.se",
+          "proof": {
+            "domain": "spotify.com",
+            "record": "spotify.com",
+            "date": "2026-10-15"
+          }
+        }
+      ],
+      "category": "Marketing"
+    },
+    "NetSuite": {
+      "spf_includes": [
+        {
+          "value": "mailsenders.netsuite.com",
+          "proof": {
+            "domain": "mailchimp.com",
+            "record": "mailchimp.com",
+            "date": "2026-10-15"
+          }
+        },
+        {
+          "value": "sent-via.netsuite.com",
+          "proof": {
+            "domain": "cloudflare.com",
+            "record": "billing.cloudflare.com",
+            "date": "2026-10-15"
+          }
+        }
+      ],
+      "category": "Commerce and apps",
+      "aliases": [
+        "Oracle NetSuite"
       ]
     },
     "Omnisend": {
@@ -3959,6 +5313,111 @@
             "date": "2026-10-11"
           }
         }
+      ]
+    },
+    "Optimizely Campaign": {
+      "category": "Marketing",
+      "aliases": [
+        "Episerver Campaign",
+        "optivo"
+      ],
+      "spf_includes": [
+        {
+          "value": "srv2.de",
+          "proof": {
+            "domain": "tchibo.de",
+            "record": "news.tchibo.de",
+            "date": "2026-10-11"
+          }
+        }
+      ],
+      "mx": [
+        {
+          "value": "srv2.de",
+          "proof": {
+            "domain": "tchibo.de",
+            "record": "news.tchibo.de",
+            "date": "2026-10-11"
+          }
+        }
+      ],
+      "dkim_cname": [
+        {
+          "value": "srv2.de",
+          "proof": {
+            "domain": "galeria.de",
+            "record": "mailing._domainkey.galeria.de",
+            "date": "2026-10-11"
+          }
+        }
+      ]
+    },
+    "Oracle Eloqua": {
+      "spf_includes": [
+        {
+          "value": "eloqua.com",
+          "proof": {
+            "domain": "economist.com",
+            "record": "go.economist.com",
+            "date": "2026-10-15"
+          }
+        }
+      ],
+      "mx": [
+        {
+          "value": "en25.com",
+          "proof": {
+            "domain": "economist.com",
+            "record": "go.economist.com",
+            "date": "2026-10-15"
+          }
+        }
+      ],
+      "category": "Marketing",
+      "aliases": [
+        "Eloqua",
+        "Oracle Marketing Cloud"
+      ]
+    },
+    "Oracle Email Delivery": {
+      "spf_includes": [
+        {
+          "value": "rp.oracleemaildelivery.com",
+          "proof": {
+            "domain": "dropbox.com",
+            "record": "dropbox.com",
+            "date": "2026-10-15"
+          }
+        },
+        {
+          "value": "spf_c.oraclecloud.com",
+          "proof": {
+            "domain": "theguardian.com",
+            "record": "theguardian.com",
+            "date": "2026-10-15"
+          }
+        }
+      ],
+      "category": "Transactional",
+      "aliases": [
+        "OCI Email Delivery",
+        "Oracle Cloud Infrastructure Email Delivery"
+      ]
+    },
+    "Oracle Responsys": {
+      "mx": [
+        {
+          "value": "responsys.ocs.oraclecloud.com",
+          "proof": {
+            "domain": "rei.com",
+            "record": "notices.rei.com",
+            "date": "2026-10-22"
+          }
+        }
+      ],
+      "category": "Marketing",
+      "aliases": [
+        "Responsys"
       ]
     },
     "Outlook.com (consumer)": {
@@ -4103,6 +5562,23 @@
             "date": "2026-10-22"
           }
         }
+      ],
+      "selectors": [
+        {
+          "shape": {
+            "kind": "fixed",
+            "names": [
+              "pm1"
+            ]
+          },
+          "source": "pattern",
+          "reference": null,
+          "proof": {
+            "domain": "3m.com",
+            "record": "pm1._domainkey.3m.com",
+            "date": "2026-11-13"
+          }
+        }
       ]
     },
     "PowerDMARC": {
@@ -4194,6 +5670,21 @@
             "domain": "ibm.com",
             "record": "pp1._domainkey.ibm.com",
             "date": "2026-10-10"
+          }
+        },
+        {
+          "shape": {
+            "kind": "fixed",
+            "names": [
+              "proofpoint"
+            ]
+          },
+          "source": "pattern",
+          "reference": null,
+          "proof": {
+            "domain": "smh.com.au",
+            "record": "proofpoint._domainkey.smh.com.au",
+            "date": "2026-11-13"
           }
         }
       ],
@@ -4354,6 +5845,50 @@
         }
       ]
     },
+    "Q4": {
+      "spf_includes": [
+        {
+          "value": "_spf.q4press.com",
+          "proof": {
+            "domain": "casper.com",
+            "record": "casper.com",
+            "date": "2026-10-15"
+          }
+        }
+      ],
+      "category": "Commerce and apps"
+    },
+    "Qualtrics": {
+      "spf_includes": [
+        {
+          "value": "_spf.qualtrics.com",
+          "proof": {
+            "domain": "mailchimp.com",
+            "record": "mailchimp.com",
+            "date": "2026-10-15"
+          }
+        },
+        {
+          "value": "_spf.qemailserver.com",
+          "proof": {
+            "domain": "clickup.com",
+            "record": "clickup.com",
+            "date": "2026-10-22"
+          }
+        }
+      ],
+      "category": "Marketing",
+      "mx": [
+        {
+          "value": "qemailserver.com",
+          "proof": {
+            "domain": "parachutehome.com",
+            "record": "help.parachutehome.com",
+            "date": "2026-10-22"
+          }
+        }
+      ]
+    },
     "Rackspace Email": {
       "mx": [
         {
@@ -4417,6 +5952,32 @@
         }
       ]
     },
+    "Recurly": {
+      "spf_includes": [
+        {
+          "value": "spf.recurly.com",
+          "proof": {
+            "domain": "zoom.us",
+            "record": "billing.zoom.us",
+            "date": "2026-10-15"
+          }
+        }
+      ],
+      "category": "Commerce and apps"
+    },
+    "Red Points": {
+      "spf_includes": [
+        {
+          "value": "spf.redpoints.com",
+          "proof": {
+            "domain": "etsy.com",
+            "record": "etsy.com",
+            "date": "2026-10-15"
+          }
+        }
+      ],
+      "category": "Commerce and apps"
+    },
     "Red Sift OnDMARC": {
       "spf_includes": [
         {
@@ -4442,6 +6003,35 @@
       "aliases": [
         "OnDMARC",
         "Red Sift"
+      ]
+    },
+    "Report URI": {
+      "reporting": [
+        {
+          "value": "report-uri.com",
+          "proof": {
+            "domain": "everlane.com",
+            "record": "_dmarc.everlane.com",
+            "date": "2026-10-15"
+          }
+        }
+      ],
+      "category": "DMARC reporting"
+    },
+    "ResellerClub": {
+      "spf_includes": [
+        {
+          "value": "_spf.myorderbox.com",
+          "proof": {
+            "domain": "hostgator.com",
+            "record": "hostgator.com",
+            "date": "2026-10-25"
+          }
+        }
+      ],
+      "category": "Commerce and apps",
+      "aliases": [
+        "OrderBox"
       ]
     },
     "Resend": {
@@ -4513,6 +6103,21 @@
             "domain": "sailthru.com",
             "record": "sailthru._domainkey.sailthru.com",
             "date": "2026-10-09"
+          }
+        },
+        {
+          "shape": {
+            "kind": "fixed",
+            "names": [
+              "sailthru2"
+            ]
+          },
+          "source": "pattern",
+          "reference": null,
+          "proof": {
+            "domain": "everydayhealth.com",
+            "record": "sailthru2._domainkey.everydayhealth.com",
+            "date": "2026-11-13"
           }
         }
       ],
@@ -4883,6 +6488,78 @@
         }
       ]
     },
+    "Salsa Labs": {
+      "spf_includes": [
+        {
+          "value": "salsalabs.org",
+          "proof": {
+            "domain": "eff.org",
+            "record": "eff.org",
+            "date": "2026-10-15"
+          }
+        }
+      ],
+      "category": "Marketing",
+      "aliases": [
+        "Salsa Engage",
+        "Bonterra Salsa"
+      ]
+    },
+    "SAP SuccessFactors": {
+      "spf_includes": [
+        {
+          "value": "sapsf.eu",
+          "proof": {
+            "domain": "sephora.com",
+            "record": "spf5.sephora.com",
+            "date": "2026-10-15"
+          }
+        }
+      ],
+      "category": "Commerce and apps",
+      "aliases": [
+        "SuccessFactors"
+      ]
+    },
+    "SendCloud": {
+      "spf_includes": [
+        {
+          "value": "spf.sendcloud.org",
+          "proof": {
+            "domain": "tiktok.com",
+            "record": "email.tiktok.com",
+            "date": "2026-11-13"
+          }
+        }
+      ],
+      "mx": [
+        {
+          "value": "sendcloud.org",
+          "proof": {
+            "domain": "tiktok.com",
+            "record": "email.tiktok.com",
+            "date": "2026-11-13"
+          }
+        }
+      ],
+      "category": "Transactional",
+      "aliases": [
+        "Sohu SendCloud"
+      ]
+    },
+    "SendForensics": {
+      "reporting": [
+        {
+          "value": "sendforensics.com",
+          "proof": {
+            "domain": "economist.com",
+            "record": "_dmarc.economist.com",
+            "date": "2026-10-15"
+          }
+        }
+      ],
+      "category": "DMARC reporting"
+    },
     "SendGrid": {
       "spf_includes": [
         {
@@ -4967,6 +6644,21 @@
             "domain": "sendgrid.com",
             "record": "smtpapi._domainkey.sendgrid.com",
             "date": "2026-10-09"
+          }
+        },
+        {
+          "shape": {
+            "kind": "fixed",
+            "names": [
+              "sendgrid"
+            ]
+          },
+          "source": "pattern",
+          "reference": null,
+          "proof": {
+            "domain": "michelin.com",
+            "record": "sendgrid._domainkey.michelin.com",
+            "date": "2026-11-13"
           }
         }
       ],
@@ -5064,6 +6756,39 @@
         }
       ]
     },
+    "Sendsay": {
+      "category": "Marketing",
+      "spf_includes": [
+        {
+          "value": "sendsay.ru",
+          "proof": {
+            "domain": "nic.ru",
+            "record": "nic.ru",
+            "date": "2026-10-11"
+          }
+        }
+      ],
+      "mx": [
+        {
+          "value": "sendsay.ru",
+          "proof": {
+            "domain": "ozon.ru",
+            "record": "news.ozon.ru",
+            "date": "2026-10-11"
+          }
+        }
+      ],
+      "delegation_ns": [
+        {
+          "value": "sendsay.ru",
+          "proof": {
+            "domain": "megafon.ru",
+            "record": "info.megafon.ru",
+            "date": "2026-10-11"
+          }
+        }
+      ]
+    },
     "Shopify": {
       "category": "Commerce and apps",
       "aliases": [
@@ -5099,6 +6824,80 @@
           }
         }
       ]
+    },
+    "SiteGround": {
+      "spf_includes": [
+        {
+          "value": "dnssmarthost.net",
+          "proof": {
+            "domain": "immobiliare.it",
+            "record": "immobiliare.it",
+            "date": "2026-10-15"
+          }
+        },
+        {
+          "value": "mailspamprotection.com",
+          "proof": {
+            "domain": "siteground.com",
+            "record": "siteground.com",
+            "date": "2026-10-15"
+          }
+        }
+      ],
+      "published_spf": [
+        {
+          "value": "_spf.mailspamprotection.com",
+          "proof": {
+            "domain": "siteground.com",
+            "record": "siteground.com",
+            "date": "2026-10-15"
+          }
+        }
+      ],
+      "sending_ip": [
+        {
+          "value": "185.56.87.13",
+          "proof": {
+            "domain": "mailspamprotection.com",
+            "record": "delivery.antispam.mailspamprotection.com",
+            "date": "2026-10-15"
+          }
+        }
+      ],
+      "mx": [
+        {
+          "value": "mailspamprotection.com",
+          "proof": {
+            "domain": "siteground.com",
+            "record": "siteground.com",
+            "date": "2026-10-15"
+          }
+        }
+      ],
+      "category": "Mailbox"
+    },
+    "SocketLabs": {
+      "spf_includes": [
+        {
+          "value": "email-od.com",
+          "proof": {
+            "domain": "socketlabs.com",
+            "record": "_spf.socketlabs.com",
+            "date": "2026-10-22"
+          }
+        }
+      ],
+      "mx": [
+        {
+          "value": "email-od.com",
+          "proof": {
+            "domain": "socketlabs.com",
+            "record": "tracking.socketlabs.com",
+            "date": "2026-10-22"
+          }
+        }
+      ],
+      "category": "Transactional"
     },
     "SparkPost": {
       "return_path": [
@@ -5244,6 +7043,19 @@
           "note": "Needed only for a domain whose inbound mail SparkPost relays."
         }
       ]
+    },
+    "SPIRAL": {
+      "spf_includes": [
+        {
+          "value": "smp.ne.jp",
+          "proof": {
+            "domain": "patagonia.com",
+            "record": "patagonia.com",
+            "date": "2026-10-22"
+          }
+        }
+      ],
+      "category": "Marketing"
     },
     "Square": {
       "category": "Commerce and apps",
@@ -5419,6 +7231,88 @@
         }
       ]
     },
+    "Tipalti": {
+      "spf_includes": [
+        {
+          "value": "spf.tipalti.com",
+          "proof": {
+            "domain": "hotjar.com",
+            "record": "hotjar.com",
+            "date": "2026-10-22"
+          }
+        }
+      ],
+      "category": "Commerce and apps"
+    },
+    "Trend Micro Email Security": {
+      "mx": [
+        {
+          "value": "tmes.trendmicro.eu",
+          "proof": {
+            "domain": "ox.ac.uk",
+            "record": "ox.ac.uk",
+            "date": "2026-10-15"
+          }
+        }
+      ],
+      "category": "Security gateway",
+      "aliases": [
+        "TMES",
+        "Trend Micro Hosted Email Security",
+        "Trend Vision One Email"
+      ],
+      "setup": [
+        {
+          "record": "mx",
+          "need": "required",
+          "values": [
+            "tmes.trendmicro.eu"
+          ],
+          "proof": {
+            "domain": "trendmicro.com",
+            "record": "https://docs.trendmicro.com/en-us/documentation/article/trend-micro-email-security-online-help-configuring-a-domain",
+            "date": "2026-10-15"
+          },
+          "note": "The page names one MX host per region (<company>.in.tmes.trendmicro.com, .eu and others); only the .eu host is proven on a live domain so far."
+        }
+      ]
+    },
+    "Trustpilot": {
+      "spf_includes": [
+        {
+          "value": "trustpilotservice.com",
+          "proof": {
+            "domain": "bombas.com",
+            "record": "email.bombas.com",
+            "date": "2026-10-15"
+          }
+        }
+      ],
+      "category": "Commerce and apps"
+    },
+    "UniSender": {
+      "category": "Marketing",
+      "spf_includes": [
+        {
+          "value": "unisender.com",
+          "proof": {
+            "domain": "drom.ru",
+            "record": "drom.ru",
+            "date": "2026-10-11"
+          }
+        }
+      ],
+      "published_spf": [
+        {
+          "value": "spf.unisender.com",
+          "proof": {
+            "domain": "avito.ru",
+            "record": "avito.ru",
+            "date": "2026-10-15"
+          }
+        }
+      ]
+    },
     "URIports": {
       "reporting": [
         {
@@ -5431,6 +7325,31 @@
         }
       ],
       "category": "DMARC reporting"
+    },
+    "Validity Everest": {
+      "reporting": [
+        {
+          "value": "everest.email",
+          "proof": {
+            "domain": "asana.com",
+            "record": "_dmarc.asana.com",
+            "date": "2026-10-15"
+          }
+        },
+        {
+          "value": "250ok.net",
+          "proof": {
+            "domain": "aclu.org",
+            "record": "_dmarc.aclu.org",
+            "date": "2026-10-22"
+          }
+        }
+      ],
+      "category": "DMARC reporting",
+      "aliases": [
+        "Everest",
+        "250ok"
+      ]
     },
     "Valimail": {
       "spf_includes": [
@@ -5465,6 +7384,207 @@
       "aliases": [
         "Valimail Enforce",
         "Valimail Monitor"
+      ]
+    },
+    "VK WorkMail": {
+      "spf_includes": [
+        {
+          "value": "_spf.mail.ru",
+          "proof": {
+            "domain": "max.ru",
+            "record": "max.ru",
+            "date": "2026-10-25"
+          }
+        }
+      ],
+      "mx": [
+        {
+          "value": "emx.mail.ru",
+          "proof": {
+            "domain": "max.ru",
+            "record": "max.ru",
+            "date": "2026-10-25"
+          }
+        },
+        {
+          "value": "mxs.mail.ru",
+          "proof": {
+            "domain": "vk.com",
+            "record": "vk.com",
+            "date": "2026-10-25"
+          }
+        }
+      ],
+      "verification_txt": [
+        {
+          "value": "mailru-domain:",
+          "proof": {
+            "domain": "vk.ru",
+            "record": "vk.ru",
+            "date": "2026-10-25"
+          }
+        }
+      ],
+      "category": "Mailbox",
+      "aliases": [
+        "Mail.ru for business",
+        "VK WorkSpace"
+      ],
+      "selectors": [
+        {
+          "shape": {
+            "kind": "fixed",
+            "names": [
+              "mailru"
+            ]
+          },
+          "source": "pattern",
+          "reference": null,
+          "proof": {
+            "domain": "max.ru",
+            "record": "mailru._domainkey.max.ru",
+            "date": "2026-10-25"
+          }
+        }
+      ],
+      "setup": [
+        {
+          "record": "mx",
+          "need": "optional",
+          "values": [
+            "emx.mail.ru"
+          ],
+          "proof": {
+            "domain": "vk.ru",
+            "record": "https://workspace.vk.ru/docs/saas/ru/get-started/setup/mx-record",
+            "date": "2026-10-25"
+          },
+          "note": "Optional here because a security gateway in front of VK WorkMail takes its place in MX."
+        },
+        {
+          "record": "spf",
+          "need": "required",
+          "values": [
+            "_spf.mail.ru"
+          ],
+          "proof": {
+            "domain": "vk.ru",
+            "record": "https://workspace.vk.ru/docs/saas/ru/get-started/setup/spf-record",
+            "date": "2026-10-25"
+          }
+        }
+      ]
+    },
+    "Wix": {
+      "website": [
+        {
+          "value": "static.wixstatic.com",
+          "proof": {
+            "domain": "wixstudio.com",
+            "record": "https://wixstudio.com/",
+            "date": "2026-10-22"
+          }
+        }
+      ],
+      "category": "Commerce and apps"
+    },
+    "Yandex 360": {
+      "spf_includes": [
+        {
+          "value": "_spf.yandex.net",
+          "proof": {
+            "domain": "pikabu.ru",
+            "record": "pikabu.ru",
+            "date": "2026-10-25"
+          }
+        },
+        {
+          "value": "_spf.yandex.ru",
+          "proof": {
+            "domain": "yandex.com",
+            "record": "yandex.com",
+            "date": "2026-10-25"
+          }
+        }
+      ],
+      "mx": [
+        {
+          "value": "mx.yandex.net",
+          "proof": {
+            "domain": "pikabu.ru",
+            "record": "pikabu.ru",
+            "date": "2026-10-25"
+          }
+        },
+        {
+          "value": "mx.yandex.ru",
+          "proof": {
+            "domain": "yandex.ru",
+            "record": "yandex.ru",
+            "date": "2026-10-25"
+          }
+        }
+      ],
+      "category": "Mailbox",
+      "aliases": [
+        "Yandex Mail",
+        "Yandex.Connect"
+      ],
+      "selectors": [
+        {
+          "shape": {
+            "kind": "fixed",
+            "names": [
+              "mail"
+            ]
+          },
+          "source": "pattern",
+          "reference": null,
+          "proof": {
+            "domain": "pikabu.ru",
+            "record": "mail._domainkey.pikabu.ru",
+            "date": "2026-10-25"
+          }
+        }
+      ],
+      "setup": [
+        {
+          "record": "mx",
+          "need": "optional",
+          "values": [
+            "mx.yandex.net"
+          ],
+          "proof": {
+            "domain": "yandex.com",
+            "record": "https://yandex.com/support/yandex-360/business/admin/en/domains/dns/mx",
+            "date": "2026-10-25"
+          },
+          "note": "Optional here because a security gateway in front of Yandex 360 takes its place in MX."
+        },
+        {
+          "record": "spf",
+          "need": "required",
+          "values": [
+            "_spf.yandex.net"
+          ],
+          "proof": {
+            "domain": "yandex.com",
+            "record": "https://yandex.com/support/yandex-360/business/admin/en/domains/dns/spf",
+            "date": "2026-10-25"
+          }
+        },
+        {
+          "record": "dkim",
+          "need": "required",
+          "values": [
+            "mail"
+          ],
+          "proof": {
+            "domain": "yandex.com",
+            "record": "https://yandex.com/support/yandex-360/business/admin/en/domains/dns/dkim",
+            "date": "2026-10-25"
+          }
+        }
       ]
     },
     "Zendesk": {
@@ -5522,6 +7642,21 @@
               "date": "2026-10-09"
             }
           ]
+        },
+        {
+          "shape": {
+            "kind": "fixed",
+            "names": [
+              "zendesk"
+            ]
+          },
+          "source": "pattern",
+          "reference": null,
+          "proof": {
+            "domain": "unimelb.edu.au",
+            "record": "zendesk._domainkey.unimelb.edu.au",
+            "date": "2026-11-13"
+          }
         }
       ],
       "subprocessor_names": [
@@ -5720,6 +7855,21 @@
             "record": "zoho._domainkey.itch.io",
             "date": "2026-10-10"
           }
+        },
+        {
+          "shape": {
+            "kind": "fixed",
+            "names": [
+              "zohomail"
+            ]
+          },
+          "source": "pattern",
+          "reference": null,
+          "proof": {
+            "domain": "canva.site",
+            "record": "zohomail._domainkey.canva.site",
+            "date": "2026-11-13"
+          }
         }
       ],
       "setup": [
@@ -5752,577 +7902,6 @@
         }
       ]
     },
-    "Emarsys": {
-      "category": "Marketing",
-      "aliases": [
-        "SAP Emarsys"
-      ],
-      "spf_includes": [
-        {
-          "value": "emarsys.net",
-          "proof": {
-            "domain": "ebay.com",
-            "record": "p._spf.ebay.com",
-            "date": "2026-10-11"
-          }
-        },
-        {
-          "value": "emarsys.us",
-          "proof": {
-            "domain": "markt.de",
-            "record": "info.markt.de",
-            "date": "2026-10-11"
-          }
-        }
-      ],
-      "mx": [
-        {
-          "value": "emarsys.net",
-          "proof": {
-            "domain": "ebay.com",
-            "record": "mail.ebay.com",
-            "date": "2026-10-11"
-          }
-        },
-        {
-          "value": "eemms.net",
-          "proof": {
-            "domain": "ebay.com",
-            "record": "info.ebay.com",
-            "date": "2026-10-11"
-          }
-        }
-      ],
-      "return_path": [
-        {
-          "value": "emarsys.net",
-          "proof": {
-            "domain": "ebay.com",
-            "record": "mail.ebay.com",
-            "date": "2026-10-11"
-          }
-        }
-      ],
-      "tracking": [
-        {
-          "value": "emarsys.net",
-          "proof": {
-            "domain": "tp-link.com",
-            "record": "link.tp-link.com",
-            "date": "2026-10-11"
-          }
-        }
-      ],
-      "delegation_ns": [
-        {
-          "value": "emarsys.net",
-          "proof": {
-            "domain": "bild.de",
-            "record": "mail.bild.de",
-            "date": "2026-10-11"
-          }
-        }
-      ]
-    },
-    "Mapp": {
-      "category": "Marketing",
-      "aliases": [
-        "Mapp Engage",
-        "Mapp Digital",
-        "ecircle"
-      ],
-      "mx": [
-        {
-          "value": "shortest-route.com",
-          "proof": {
-            "domain": "springer.com",
-            "record": "alerts.springer.com",
-            "date": "2026-10-11"
-          }
-        }
-      ],
-      "delegation_ns": [
-        {
-          "value": "ecircle.de",
-          "proof": {
-            "domain": "springer.com",
-            "record": "alerts.springer.com",
-            "date": "2026-10-11"
-          }
-        },
-        {
-          "value": "shortest-route.com",
-          "proof": {
-            "domain": "cnet.com",
-            "record": "newsletter.cnet.com",
-            "date": "2026-10-11"
-          }
-        }
-      ]
-    },
-    "Cordial": {
-      "category": "Marketing",
-      "spf_includes": [
-        {
-          "value": "cordialmail.net",
-          "proof": {
-            "domain": "forbes.com",
-            "record": "email.forbes.com",
-            "date": "2026-10-11"
-          }
-        }
-      ],
-      "mx": [
-        {
-          "value": "cordial.mx.e.sparkpost.com",
-          "proof": {
-            "domain": "wtso.com",
-            "record": "hello.wtso.com",
-            "date": "2026-10-11"
-          }
-        }
-      ],
-      "delegation_ns": [
-        {
-          "value": "crdl.io",
-          "proof": {
-            "domain": "forbes.com",
-            "record": "email.forbes.com",
-            "date": "2026-10-11"
-          }
-        }
-      ]
-    },
-    "Dotdigital": {
-      "category": "Marketing",
-      "aliases": [
-        "dotmailer"
-      ],
-      "spf_includes": [
-        {
-          "value": "dotmailer.com",
-          "proof": {
-            "domain": "lg.com",
-            "record": "email.lg.com",
-            "date": "2026-10-11"
-          }
-        }
-      ],
-      "published_spf": [
-        {
-          "value": "spf.dotmailer.com",
-          "proof": {
-            "domain": "cam.ac.uk",
-            "record": "news.cam.ac.uk",
-            "date": "2026-10-15"
-          }
-        }
-      ],
-      "mx": [
-        {
-          "value": "dotdigital.com",
-          "proof": {
-            "domain": "lg.com",
-            "record": "email.lg.com",
-            "date": "2026-10-11"
-          }
-        },
-        {
-          "value": "dotmailer.co.uk",
-          "proof": {
-            "domain": "cam.ac.uk",
-            "record": "news.cam.ac.uk",
-            "date": "2026-10-11"
-          }
-        }
-      ],
-      "delegation_ns": [
-        {
-          "value": "dotdigital.com",
-          "proof": {
-            "domain": "lg.com",
-            "record": "email.lg.com",
-            "date": "2026-10-11"
-          }
-        },
-        {
-          "value": "dotmailer.co.uk",
-          "proof": {
-            "domain": "caliente.mx",
-            "record": "mail.caliente.mx",
-            "date": "2026-10-11"
-          }
-        }
-      ]
-    },
-    "Inxmail": {
-      "category": "Marketing",
-      "spf_includes": [
-        {
-          "value": "inxserver.com",
-          "proof": {
-            "domain": "teamviewer.com",
-            "record": "news.teamviewer.com",
-            "date": "2026-10-11"
-          }
-        }
-      ],
-      "mx": [
-        {
-          "value": "inxserver.de",
-          "proof": {
-            "domain": "teamviewer.com",
-            "record": "news.teamviewer.com",
-            "date": "2026-10-11"
-          }
-        }
-      ]
-    },
-    "UniSender": {
-      "category": "Marketing",
-      "spf_includes": [
-        {
-          "value": "unisender.com",
-          "proof": {
-            "domain": "drom.ru",
-            "record": "drom.ru",
-            "date": "2026-10-11"
-          }
-        }
-      ],
-      "published_spf": [
-        {
-          "value": "spf.unisender.com",
-          "proof": {
-            "domain": "avito.ru",
-            "record": "avito.ru",
-            "date": "2026-10-15"
-          }
-        }
-      ]
-    },
-    "Sendsay": {
-      "category": "Marketing",
-      "spf_includes": [
-        {
-          "value": "sendsay.ru",
-          "proof": {
-            "domain": "nic.ru",
-            "record": "nic.ru",
-            "date": "2026-10-11"
-          }
-        }
-      ],
-      "mx": [
-        {
-          "value": "sendsay.ru",
-          "proof": {
-            "domain": "ozon.ru",
-            "record": "news.ozon.ru",
-            "date": "2026-10-11"
-          }
-        }
-      ],
-      "delegation_ns": [
-        {
-          "value": "sendsay.ru",
-          "proof": {
-            "domain": "megafon.ru",
-            "record": "info.megafon.ru",
-            "date": "2026-10-11"
-          }
-        }
-      ]
-    },
-    "Optimizely Campaign": {
-      "category": "Marketing",
-      "aliases": [
-        "Episerver Campaign",
-        "optivo"
-      ],
-      "spf_includes": [
-        {
-          "value": "srv2.de",
-          "proof": {
-            "domain": "tchibo.de",
-            "record": "news.tchibo.de",
-            "date": "2026-10-11"
-          }
-        }
-      ],
-      "mx": [
-        {
-          "value": "srv2.de",
-          "proof": {
-            "domain": "tchibo.de",
-            "record": "news.tchibo.de",
-            "date": "2026-10-11"
-          }
-        }
-      ],
-      "dkim_cname": [
-        {
-          "value": "srv2.de",
-          "proof": {
-            "domain": "galeria.de",
-            "record": "mailing._domainkey.galeria.de",
-            "date": "2026-10-11"
-          }
-        }
-      ]
-    },
-    "SiteGround": {
-      "spf_includes": [
-        {
-          "value": "dnssmarthost.net",
-          "proof": {
-            "domain": "immobiliare.it",
-            "record": "immobiliare.it",
-            "date": "2026-10-15"
-          }
-        },
-        {
-          "value": "mailspamprotection.com",
-          "proof": {
-            "domain": "siteground.com",
-            "record": "siteground.com",
-            "date": "2026-10-15"
-          }
-        }
-      ],
-      "published_spf": [
-        {
-          "value": "_spf.mailspamprotection.com",
-          "proof": {
-            "domain": "siteground.com",
-            "record": "siteground.com",
-            "date": "2026-10-15"
-          }
-        }
-      ],
-      "sending_ip": [
-        {
-          "value": "185.56.87.13",
-          "proof": {
-            "domain": "mailspamprotection.com",
-            "record": "delivery.antispam.mailspamprotection.com",
-            "date": "2026-10-15"
-          }
-        }
-      ],
-      "mx": [
-        {
-          "value": "mailspamprotection.com",
-          "proof": {
-            "domain": "siteground.com",
-            "record": "siteground.com",
-            "date": "2026-10-15"
-          }
-        }
-      ],
-      "category": "Mailbox"
-    },
-    "ClickFunnels": {
-      "spf_includes": [
-        {
-          "value": "mailer.myclickfunnels.com",
-          "proof": {
-            "domain": "clickfunnels.com",
-            "record": "clickfunnels.com",
-            "date": "2026-10-15"
-          }
-        }
-      ],
-      "sending_ip": [
-        {
-          "value": "141.193.71.1",
-          "proof": {
-            "domain": "myclickfunnels.com",
-            "record": "cf01.mailer.myclickfunnels.com",
-            "date": "2026-10-15"
-          }
-        }
-      ],
-      "category": "Marketing",
-      "verification_txt": [
-        {
-          "value": "^clickfunnels-domain-verification=",
-          "proof": {
-            "domain": "clickfunnels.com",
-            "record": "clickfunnels.com",
-            "date": "2026-10-15"
-          }
-        }
-      ]
-    },
-    "Cloudflare Email Security": {
-      "mx": [
-        {
-          "value": "inbound.cf-emailsecurity.net",
-          "proof": {
-            "domain": "cloudflare.com",
-            "record": "cloudflare.com",
-            "date": "2026-10-15"
-          }
-        }
-      ],
-      "category": "Security gateway",
-      "aliases": [
-        "Area 1",
-        "Cloudflare Area 1"
-      ],
-      "setup": [
-        {
-          "record": "mx",
-          "need": "required",
-          "values": [
-            "inbound.cf-emailsecurity.net"
-          ],
-          "proof": {
-            "domain": "cloudflare.com",
-            "record": "https://developers.cloudflare.com/cloudflare-one/email-security/setup/pre-delivery-deployment/prerequisites/gsuite-email-security-mx/",
-            "date": "2026-10-15"
-          }
-        }
-      ]
-    },
-    "Cisco Secure Email": {
-      "mx": [
-        {
-          "value": "iphmx.com",
-          "proof": {
-            "domain": "mailchimp.com",
-            "record": "mailchimp.com",
-            "date": "2026-10-15"
-          }
-        }
-      ],
-      "networks": [
-        {
-          "value": "AS16417",
-          "proof": {
-            "domain": "iphmx.com",
-            "record": "mx1.intuit.iphmx.com",
-            "date": "2026-10-15"
-          }
-        }
-      ],
-      "category": "Security gateway",
-      "aliases": [
-        "IronPort",
-        "Cisco IronPort",
-        "Cisco ESA",
-        "Cisco CES",
-        "Cisco Secure Email Cloud Gateway"
-      ],
-      "setup": [
-        {
-          "record": "mx",
-          "need": "required",
-          "values": [
-            "iphmx.com"
-          ],
-          "proof": {
-            "domain": "cisco.com",
-            "record": "https://docs.ces.cisco.com/docs/hostnames",
-            "date": "2026-10-15"
-          }
-        }
-      ]
-    },
-    "Oracle Email Delivery": {
-      "spf_includes": [
-        {
-          "value": "rp.oracleemaildelivery.com",
-          "proof": {
-            "domain": "dropbox.com",
-            "record": "dropbox.com",
-            "date": "2026-10-15"
-          }
-        },
-        {
-          "value": "spf_c.oraclecloud.com",
-          "proof": {
-            "domain": "theguardian.com",
-            "record": "theguardian.com",
-            "date": "2026-10-15"
-          }
-        }
-      ],
-      "category": "Transactional",
-      "aliases": [
-        "OCI Email Delivery",
-        "Oracle Cloud Infrastructure Email Delivery"
-      ]
-    },
-    "NetSuite": {
-      "spf_includes": [
-        {
-          "value": "mailsenders.netsuite.com",
-          "proof": {
-            "domain": "mailchimp.com",
-            "record": "mailchimp.com",
-            "date": "2026-10-15"
-          }
-        },
-        {
-          "value": "sent-via.netsuite.com",
-          "proof": {
-            "domain": "cloudflare.com",
-            "record": "billing.cloudflare.com",
-            "date": "2026-10-15"
-          }
-        }
-      ],
-      "category": "Commerce and apps",
-      "aliases": [
-        "Oracle NetSuite"
-      ]
-    },
-    "Qualtrics": {
-      "spf_includes": [
-        {
-          "value": "_spf.qualtrics.com",
-          "proof": {
-            "domain": "mailchimp.com",
-            "record": "mailchimp.com",
-            "date": "2026-10-15"
-          }
-        },
-        {
-          "value": "_spf.qemailserver.com",
-          "proof": {
-            "domain": "clickup.com",
-            "record": "clickup.com",
-            "date": "2026-10-22"
-          }
-        }
-      ],
-      "category": "Marketing",
-      "mx": [
-        {
-          "value": "qemailserver.com",
-          "proof": {
-            "domain": "parachutehome.com",
-            "record": "help.parachutehome.com",
-            "date": "2026-10-22"
-          }
-        }
-      ]
-    },
-    "Recurly": {
-      "spf_includes": [
-        {
-          "value": "spf.recurly.com",
-          "proof": {
-            "domain": "zoom.us",
-            "record": "billing.zoom.us",
-            "date": "2026-10-15"
-          }
-        }
-      ],
-      "category": "Commerce and apps"
-    },
     "Zuora": {
       "spf_includes": [
         {
@@ -6335,1311 +7914,6 @@
         }
       ],
       "category": "Commerce and apps"
-    },
-    "DMARC Digests": {
-      "reporting": [
-        {
-          "value": "dmarcdigests.com",
-          "proof": {
-            "domain": "linear.app",
-            "record": "_dmarc.linear.app",
-            "date": "2026-10-15"
-          }
-        }
-      ],
-      "category": "DMARC reporting"
-    },
-    "MxToolbox": {
-      "reporting": [
-        {
-          "value": "dmarc-report.com",
-          "proof": {
-            "domain": "nhs.net",
-            "record": "_dmarc.nhs.net",
-            "date": "2026-10-15"
-          }
-        }
-      ],
-      "category": "DMARC reporting"
-    },
-    "NCSC Mail Check": {
-      "reporting": [
-        {
-          "value": "mailcheck.service.ncsc.gov.uk",
-          "proof": {
-            "domain": "nhs.net",
-            "record": "_smtp._tls.nhs.net",
-            "date": "2026-10-15"
-          }
-        }
-      ],
-      "category": "DMARC reporting"
-    },
-    "Oracle Eloqua": {
-      "spf_includes": [
-        {
-          "value": "eloqua.com",
-          "proof": {
-            "domain": "economist.com",
-            "record": "go.economist.com",
-            "date": "2026-10-15"
-          }
-        }
-      ],
-      "mx": [
-        {
-          "value": "en25.com",
-          "proof": {
-            "domain": "economist.com",
-            "record": "go.economist.com",
-            "date": "2026-10-15"
-          }
-        }
-      ],
-      "category": "Marketing",
-      "aliases": [
-        "Eloqua",
-        "Oracle Marketing Cloud"
-      ]
-    },
-    "Listrak": {
-      "spf_includes": [
-        {
-          "value": "esp1.co",
-          "proof": {
-            "domain": "goop.com",
-            "record": "bounce.goop.com",
-            "date": "2026-10-23"
-          }
-        }
-      ],
-      "mx": [
-        {
-          "value": "esp1.co",
-          "proof": {
-            "domain": "goop.com",
-            "record": "bounce.goop.com",
-            "date": "2026-10-23"
-          }
-        }
-      ],
-      "tracking": [
-        {
-          "value": "esp1.co",
-          "proof": {
-            "domain": "goop.com",
-            "record": "email.goop.com",
-            "date": "2026-10-23"
-          }
-        }
-      ],
-      "networks": [
-        {
-          "value": "AS394396",
-          "proof": {
-            "domain": "esp1.co",
-            "record": "bounce.esp1.co",
-            "date": "2026-10-23"
-          }
-        }
-      ],
-      "category": "Marketing"
-    },
-    "Epsilon": {
-      "spf_includes": [
-        {
-          "value": "bigfootinteractive.com",
-          "proof": {
-            "domain": "target.com",
-            "record": "email.target.com",
-            "date": "2026-10-15"
-          }
-        },
-        {
-          "value": "bfi0.com",
-          "proof": {
-            "domain": "target.com",
-            "record": "email.target.com",
-            "date": "2026-10-15"
-          }
-        },
-        {
-          "value": "epsl1.com",
-          "proof": {
-            "domain": "patagonia.com",
-            "record": "support.patagonia.com",
-            "date": "2026-10-22"
-          }
-        }
-      ],
-      "mx": [
-        {
-          "value": "bigfootinteractive.com",
-          "proof": {
-            "domain": "target.com",
-            "record": "email.target.com",
-            "date": "2026-10-15"
-          }
-        },
-        {
-          "value": "epsl1.com",
-          "proof": {
-            "domain": "patagonia.com",
-            "record": "support.patagonia.com",
-            "date": "2026-10-22"
-          }
-        }
-      ],
-      "category": "Marketing",
-      "aliases": [
-        "Epsilon Email",
-        "Bigfoot Interactive"
-      ]
-    },
-    "Adobe Campaign": {
-      "mx": [
-        {
-          "value": "campaign.adobe.com",
-          "proof": {
-            "domain": "github.com",
-            "record": "communication.github.com",
-            "date": "2026-10-15"
-          }
-        }
-      ],
-      "category": "Marketing",
-      "aliases": [
-        "Adobe Campaign Classic",
-        "Adobe Campaign v8"
-      ]
-    },
-    "Microsoft Dynamics 365 Customer Insights": {
-      "spf_includes": [
-        {
-          "value": "marketing.dynamics.com",
-          "proof": {
-            "domain": "awaytravel.com",
-            "record": "awaytravel.com",
-            "date": "2026-10-15"
-          }
-        }
-      ],
-      "category": "Marketing",
-      "aliases": [
-        "Dynamics 365 Marketing",
-        "Dynamics 365 Customer Insights - Journeys"
-      ]
-    },
-    "Blackbaud Luminate Online": {
-      "spf_includes": [
-        {
-          "value": "convio.net",
-          "proof": {
-            "domain": "utoronto.ca",
-            "record": "updates.utoronto.ca",
-            "date": "2026-10-15"
-          }
-        }
-      ],
-      "category": "Marketing",
-      "aliases": [
-        "Convio",
-        "Luminate Online"
-      ]
-    },
-    "Salsa Labs": {
-      "spf_includes": [
-        {
-          "value": "salsalabs.org",
-          "proof": {
-            "domain": "eff.org",
-            "record": "eff.org",
-            "date": "2026-10-15"
-          }
-        }
-      ],
-      "category": "Marketing",
-      "aliases": [
-        "Salsa Engage",
-        "Bonterra Salsa"
-      ]
-    },
-    "Alida": {
-      "spf_includes": [
-        {
-          "value": "spf.alida.io",
-          "proof": {
-            "domain": "awaytravel.com",
-            "record": "zone1.awaytravel.com",
-            "date": "2026-10-15"
-          }
-        }
-      ],
-      "mx": [
-        {
-          "value": "alida.io",
-          "proof": {
-            "domain": "awaytravel.com",
-            "record": "zone1.awaytravel.com",
-            "date": "2026-10-15"
-          }
-        }
-      ],
-      "category": "Marketing",
-      "aliases": [
-        "Alida Touchpoint"
-      ]
-    },
-    "Netigate": {
-      "spf_includes": [
-        {
-          "value": "_spf.netigate.se",
-          "proof": {
-            "domain": "spotify.com",
-            "record": "spotify.com",
-            "date": "2026-10-15"
-          }
-        }
-      ],
-      "category": "Marketing"
-    },
-    "Hivebrite": {
-      "spf_includes": [
-        {
-          "value": "email.hivebrite.com",
-          "proof": {
-            "domain": "hubspot.com",
-            "record": "events.hubspot.com",
-            "date": "2026-10-15"
-          }
-        }
-      ],
-      "category": "Marketing"
-    },
-    "Trend Micro Email Security": {
-      "mx": [
-        {
-          "value": "tmes.trendmicro.eu",
-          "proof": {
-            "domain": "ox.ac.uk",
-            "record": "ox.ac.uk",
-            "date": "2026-10-15"
-          }
-        }
-      ],
-      "category": "Security gateway",
-      "aliases": [
-        "TMES",
-        "Trend Micro Hosted Email Security",
-        "Trend Vision One Email"
-      ],
-      "setup": [
-        {
-          "record": "mx",
-          "need": "required",
-          "values": [
-            "tmes.trendmicro.eu"
-          ],
-          "proof": {
-            "domain": "trendmicro.com",
-            "record": "https://docs.trendmicro.com/en-us/documentation/article/trend-micro-email-security-online-help-configuring-a-domain",
-            "date": "2026-10-15"
-          },
-          "note": "The page names one MX host per region (<company>.in.tmes.trendmicro.com, .eu and others); only the .eu host is proven on a live domain so far."
-        }
-      ]
-    },
-    "Khoros": {
-      "spf_includes": [
-        {
-          "value": "khoros-mail.com",
-          "proof": {
-            "domain": "atlassian.com",
-            "record": "em.atlassian.com",
-            "date": "2026-10-15"
-          }
-        }
-      ],
-      "category": "Support and CRM",
-      "aliases": [
-        "Lithium"
-      ]
-    },
-    "Everbridge": {
-      "spf_includes": [
-        {
-          "value": "everbridge.net",
-          "proof": {
-            "domain": "unicef.org",
-            "record": "alerts.unicef.org",
-            "date": "2026-10-15"
-          }
-        }
-      ],
-      "category": "Transactional"
-    },
-    "Greenhouse": {
-      "spf_includes": [
-        {
-          "value": "mg-spf.greenhouse.io",
-          "proof": {
-            "domain": "asana.com",
-            "record": "asana.com",
-            "date": "2026-10-15"
-          }
-        }
-      ],
-      "category": "Commerce and apps",
-      "aliases": [
-        "Greenhouse Recruiting"
-      ]
-    },
-    "Red Points": {
-      "spf_includes": [
-        {
-          "value": "spf.redpoints.com",
-          "proof": {
-            "domain": "etsy.com",
-            "record": "etsy.com",
-            "date": "2026-10-15"
-          }
-        }
-      ],
-      "category": "Commerce and apps"
-    },
-    "Trustpilot": {
-      "spf_includes": [
-        {
-          "value": "trustpilotservice.com",
-          "proof": {
-            "domain": "bombas.com",
-            "record": "email.bombas.com",
-            "date": "2026-10-15"
-          }
-        }
-      ],
-      "category": "Commerce and apps"
-    },
-    "Cvent": {
-      "spf_includes": [
-        {
-          "value": "cvent-planner.com",
-          "proof": {
-            "domain": "etsy.com",
-            "record": "etsy.com",
-            "date": "2026-10-15"
-          }
-        }
-      ],
-      "category": "Commerce and apps"
-    },
-    "Kibo Commerce": {
-      "spf_includes": [
-        {
-          "value": "spf.kibocommerce.com",
-          "proof": {
-            "domain": "lego.com",
-            "record": "orders.lego.com",
-            "date": "2026-10-15"
-          }
-        }
-      ],
-      "category": "Commerce and apps",
-      "aliases": [
-        "Kibo"
-      ]
-    },
-    "Docebo": {
-      "spf_includes": [
-        {
-          "value": "docebosaas.com",
-          "proof": {
-            "domain": "casper.com",
-            "record": "casper.com",
-            "date": "2026-10-15"
-          }
-        }
-      ],
-      "category": "Commerce and apps"
-    },
-    "ADP": {
-      "spf_includes": [
-        {
-          "value": "_spf.adp.com",
-          "proof": {
-            "domain": "everlane.com",
-            "record": "everlane.com",
-            "date": "2026-10-15"
-          }
-        }
-      ],
-      "category": "Commerce and apps",
-      "aliases": [
-        "ADP Workforce Now"
-      ]
-    },
-    "SAP SuccessFactors": {
-      "spf_includes": [
-        {
-          "value": "sapsf.eu",
-          "proof": {
-            "domain": "sephora.com",
-            "record": "spf5.sephora.com",
-            "date": "2026-10-15"
-          }
-        }
-      ],
-      "category": "Commerce and apps",
-      "aliases": [
-        "SuccessFactors"
-      ]
-    },
-    "Fundraise Up": {
-      "spf_includes": [
-        {
-          "value": "spf.fundraiseup.com",
-          "proof": {
-            "domain": "mozilla.org",
-            "record": "mozilla.org",
-            "date": "2026-10-15"
-          }
-        }
-      ],
-      "category": "Commerce and apps"
-    },
-    "Q4": {
-      "spf_includes": [
-        {
-          "value": "_spf.q4press.com",
-          "proof": {
-            "domain": "casper.com",
-            "record": "casper.com",
-            "date": "2026-10-15"
-          }
-        }
-      ],
-      "category": "Commerce and apps"
-    },
-    "Madgex": {
-      "spf_includes": [
-        {
-          "value": "madgexjb.com",
-          "proof": {
-            "domain": "washingtonpost.com",
-            "record": "washingtonpost.com",
-            "date": "2026-10-15"
-          }
-        }
-      ],
-      "category": "Commerce and apps"
-    },
-    "Clinch": {
-      "spf_includes": [
-        {
-          "value": "mail.clinchtalent.com",
-          "proof": {
-            "domain": "etsy.com",
-            "record": "etsy.com",
-            "date": "2026-10-15"
-          }
-        }
-      ],
-      "category": "Commerce and apps"
-    },
-    "AutoSPF": {
-      "spf_includes": [
-        {
-          "value": "autospf.email",
-          "proof": {
-            "domain": "mit.edu",
-            "record": "mit.edu",
-            "date": "2026-10-15"
-          }
-        }
-      ],
-      "category": "DMARC reporting"
-    },
-    "DMARCLY": {
-      "reporting": [
-        {
-          "value": "dmarcly.com",
-          "proof": {
-            "domain": "stanford.edu",
-            "record": "_dmarc.stanford.edu",
-            "date": "2026-10-15"
-          }
-        }
-      ],
-      "category": "DMARC reporting"
-    },
-    "Report URI": {
-      "reporting": [
-        {
-          "value": "report-uri.com",
-          "proof": {
-            "domain": "everlane.com",
-            "record": "_dmarc.everlane.com",
-            "date": "2026-10-15"
-          }
-        }
-      ],
-      "category": "DMARC reporting"
-    },
-    "Netcraft": {
-      "reporting": [
-        {
-          "value": "netcraft.com",
-          "proof": {
-            "domain": "revolut.com",
-            "record": "_dmarc.revolut.com",
-            "date": "2026-10-15"
-          }
-        }
-      ],
-      "category": "DMARC reporting"
-    },
-    "Inbox Monster": {
-      "reporting": [
-        {
-          "value": "inboxmonster.com",
-          "proof": {
-            "domain": "chewy.com",
-            "record": "_dmarc.chewy.com",
-            "date": "2026-10-15"
-          }
-        }
-      ],
-      "category": "DMARC reporting"
-    },
-    "Validity Everest": {
-      "reporting": [
-        {
-          "value": "everest.email",
-          "proof": {
-            "domain": "asana.com",
-            "record": "_dmarc.asana.com",
-            "date": "2026-10-15"
-          }
-        },
-        {
-          "value": "250ok.net",
-          "proof": {
-            "domain": "aclu.org",
-            "record": "_dmarc.aclu.org",
-            "date": "2026-10-22"
-          }
-        }
-      ],
-      "category": "DMARC reporting",
-      "aliases": [
-        "Everest",
-        "250ok"
-      ]
-    },
-    "SendForensics": {
-      "reporting": [
-        {
-          "value": "sendforensics.com",
-          "proof": {
-            "domain": "economist.com",
-            "record": "_dmarc.economist.com",
-            "date": "2026-10-15"
-          }
-        }
-      ],
-      "category": "DMARC reporting"
-    },
-    "SocketLabs": {
-      "spf_includes": [
-        {
-          "value": "email-od.com",
-          "proof": {
-            "domain": "socketlabs.com",
-            "record": "_spf.socketlabs.com",
-            "date": "2026-10-22"
-          }
-        }
-      ],
-      "mx": [
-        {
-          "value": "email-od.com",
-          "proof": {
-            "domain": "socketlabs.com",
-            "record": "tracking.socketlabs.com",
-            "date": "2026-10-22"
-          }
-        }
-      ],
-      "category": "Transactional"
-    },
-    "Conversica": {
-      "spf_includes": [
-        {
-          "value": "spf.conversica.com",
-          "proof": {
-            "domain": "airtable.com",
-            "record": "em.airtable.com",
-            "date": "2026-10-22"
-          }
-        }
-      ],
-      "mx": [
-        {
-          "value": "e.conversica.com",
-          "proof": {
-            "domain": "airtable.com",
-            "record": "em.airtable.com",
-            "date": "2026-10-22"
-          }
-        }
-      ],
-      "category": "Marketing"
-    },
-    "Maropost": {
-      "spf_includes": [
-        {
-          "value": "spf.maropost.com",
-          "proof": {
-            "domain": "warbyparker.com",
-            "record": "email.warbyparker.com",
-            "date": "2026-10-22"
-          }
-        }
-      ],
-      "category": "Marketing"
-    },
-    "Engaging Networks": {
-      "spf_includes": [
-        {
-          "value": "_spf.e-activist.com",
-          "proof": {
-            "domain": "worldwildlife.org",
-            "record": "worldwildlife.org",
-            "date": "2026-10-22"
-          }
-        }
-      ],
-      "category": "Marketing"
-    },
-    "ActionKit": {
-      "spf_includes": [
-        {
-          "value": "sp.actionkit.com",
-          "proof": {
-            "domain": "habitat.org",
-            "record": "habitat.org",
-            "date": "2026-10-22"
-          }
-        }
-      ],
-      "category": "Marketing"
-    },
-    "Extole": {
-      "spf_includes": [
-        {
-          "value": "spf.extole.io",
-          "proof": {
-            "domain": "thirdlove.com",
-            "record": "thirdlove.com",
-            "date": "2026-10-22"
-          }
-        }
-      ],
-      "category": "Marketing"
-    },
-    "Communicator": {
-      "spf_includes": [
-        {
-          "value": "spf.communicatoremail.com",
-          "proof": {
-            "domain": "theatlantic.com",
-            "record": "orders.theatlantic.com",
-            "date": "2026-10-22"
-          }
-        }
-      ],
-      "mx": [
-        {
-          "value": "communicatoremail.com",
-          "proof": {
-            "domain": "theatlantic.com",
-            "record": "orders.theatlantic.com",
-            "date": "2026-10-22"
-          }
-        }
-      ],
-      "category": "Marketing",
-      "aliases": [
-        "Communicator Corp"
-      ]
-    },
-    "ClickDimensions": {
-      "tracking": [
-        {
-          "value": "clickdimensions.com",
-          "proof": {
-            "domain": "doctorswithoutborders.org",
-            "record": "links.doctorswithoutborders.org",
-            "date": "2026-10-22"
-          }
-        }
-      ],
-      "category": "Marketing"
-    },
-    "SPIRAL": {
-      "spf_includes": [
-        {
-          "value": "smp.ne.jp",
-          "proof": {
-            "domain": "patagonia.com",
-            "record": "patagonia.com",
-            "date": "2026-10-22"
-          }
-        }
-      ],
-      "category": "Marketing"
-    },
-    "FreshMail": {
-      "spf_includes": [
-        {
-          "value": "_spf.freshmail.pl",
-          "proof": {
-            "domain": "eobuwie.pl",
-            "record": "eobuwie.pl",
-            "date": "2026-10-22"
-          }
-        }
-      ],
-      "category": "Marketing"
-    },
-    "Oracle Responsys": {
-      "mx": [
-        {
-          "value": "responsys.ocs.oraclecloud.com",
-          "proof": {
-            "domain": "rei.com",
-            "record": "notices.rei.com",
-            "date": "2026-10-22"
-          }
-        }
-      ],
-      "category": "Marketing",
-      "aliases": [
-        "Responsys"
-      ]
-    },
-    "Braintree": {
-      "spf_includes": [
-        {
-          "value": "spf.braintreegateway.com",
-          "proof": {
-            "domain": "hotjar.com",
-            "record": "hotjar.com",
-            "date": "2026-10-22"
-          }
-        }
-      ],
-      "category": "Commerce and apps"
-    },
-    "Tipalti": {
-      "spf_includes": [
-        {
-          "value": "spf.tipalti.com",
-          "proof": {
-            "domain": "hotjar.com",
-            "record": "hotjar.com",
-            "date": "2026-10-22"
-          }
-        }
-      ],
-      "category": "Commerce and apps"
-    },
-    "Impartner": {
-      "spf_includes": [
-        {
-          "value": "mta.impartner.com",
-          "proof": {
-            "domain": "gusto.com",
-            "record": "partners.gusto.com",
-            "date": "2026-10-22"
-          }
-        }
-      ],
-      "category": "Support and CRM"
-    },
-    "DmarcDuty": {
-      "spf_includes": [
-        {
-          "value": "dmarcdutydns.com",
-          "proof": {
-            "domain": "skims.com",
-            "record": "skims.com",
-            "date": "2026-10-22"
-          }
-        }
-      ],
-      "category": "DMARC reporting"
-    },
-    "Wix": {
-      "website": [
-        {
-          "value": "static.wixstatic.com",
-          "proof": {
-            "domain": "wixstudio.com",
-            "record": "https://wixstudio.com/",
-            "date": "2026-10-22"
-          }
-        }
-      ],
-      "category": "Commerce and apps"
-    },
-    "Yandex 360": {
-      "spf_includes": [
-        {
-          "value": "_spf.yandex.net",
-          "proof": {
-            "domain": "pikabu.ru",
-            "record": "pikabu.ru",
-            "date": "2026-10-25"
-          }
-        },
-        {
-          "value": "_spf.yandex.ru",
-          "proof": {
-            "domain": "yandex.com",
-            "record": "yandex.com",
-            "date": "2026-10-25"
-          }
-        }
-      ],
-      "mx": [
-        {
-          "value": "mx.yandex.net",
-          "proof": {
-            "domain": "pikabu.ru",
-            "record": "pikabu.ru",
-            "date": "2026-10-25"
-          }
-        },
-        {
-          "value": "mx.yandex.ru",
-          "proof": {
-            "domain": "yandex.ru",
-            "record": "yandex.ru",
-            "date": "2026-10-25"
-          }
-        }
-      ],
-      "category": "Mailbox",
-      "aliases": [
-        "Yandex Mail",
-        "Yandex.Connect"
-      ],
-      "selectors": [
-        {
-          "shape": {
-            "kind": "fixed",
-            "names": [
-              "mail"
-            ]
-          },
-          "source": "pattern",
-          "reference": null,
-          "proof": {
-            "domain": "pikabu.ru",
-            "record": "mail._domainkey.pikabu.ru",
-            "date": "2026-10-25"
-          }
-        }
-      ],
-      "setup": [
-        {
-          "record": "mx",
-          "need": "optional",
-          "values": [
-            "mx.yandex.net"
-          ],
-          "proof": {
-            "domain": "yandex.com",
-            "record": "https://yandex.com/support/yandex-360/business/admin/en/domains/dns/mx",
-            "date": "2026-10-25"
-          },
-          "note": "Optional here because a security gateway in front of Yandex 360 takes its place in MX."
-        },
-        {
-          "record": "spf",
-          "need": "required",
-          "values": [
-            "_spf.yandex.net"
-          ],
-          "proof": {
-            "domain": "yandex.com",
-            "record": "https://yandex.com/support/yandex-360/business/admin/en/domains/dns/spf",
-            "date": "2026-10-25"
-          }
-        },
-        {
-          "record": "dkim",
-          "need": "required",
-          "values": [
-            "mail"
-          ],
-          "proof": {
-            "domain": "yandex.com",
-            "record": "https://yandex.com/support/yandex-360/business/admin/en/domains/dns/dkim",
-            "date": "2026-10-25"
-          }
-        }
-      ]
-    },
-    "VK WorkMail": {
-      "spf_includes": [
-        {
-          "value": "_spf.mail.ru",
-          "proof": {
-            "domain": "max.ru",
-            "record": "max.ru",
-            "date": "2026-10-25"
-          }
-        }
-      ],
-      "mx": [
-        {
-          "value": "emx.mail.ru",
-          "proof": {
-            "domain": "max.ru",
-            "record": "max.ru",
-            "date": "2026-10-25"
-          }
-        },
-        {
-          "value": "mxs.mail.ru",
-          "proof": {
-            "domain": "vk.com",
-            "record": "vk.com",
-            "date": "2026-10-25"
-          }
-        }
-      ],
-      "verification_txt": [
-        {
-          "value": "mailru-domain:",
-          "proof": {
-            "domain": "vk.ru",
-            "record": "vk.ru",
-            "date": "2026-10-25"
-          }
-        }
-      ],
-      "category": "Mailbox",
-      "aliases": [
-        "Mail.ru for business",
-        "VK WorkSpace"
-      ],
-      "selectors": [
-        {
-          "shape": {
-            "kind": "fixed",
-            "names": [
-              "mailru"
-            ]
-          },
-          "source": "pattern",
-          "reference": null,
-          "proof": {
-            "domain": "max.ru",
-            "record": "mailru._domainkey.max.ru",
-            "date": "2026-10-25"
-          }
-        }
-      ],
-      "setup": [
-        {
-          "record": "mx",
-          "need": "optional",
-          "values": [
-            "emx.mail.ru"
-          ],
-          "proof": {
-            "domain": "vk.ru",
-            "record": "https://workspace.vk.ru/docs/saas/ru/get-started/setup/mx-record",
-            "date": "2026-10-25"
-          },
-          "note": "Optional here because a security gateway in front of VK WorkMail takes its place in MX."
-        },
-        {
-          "record": "spf",
-          "need": "required",
-          "values": [
-            "_spf.mail.ru"
-          ],
-          "proof": {
-            "domain": "vk.ru",
-            "record": "https://workspace.vk.ru/docs/saas/ru/get-started/setup/spf-record",
-            "date": "2026-10-25"
-          }
-        }
-      ]
-    },
-    "eDataSource": {
-      "reporting": [
-        {
-          "value": "emailanalyst.com",
-          "proof": {
-            "domain": "twitter.com",
-            "record": "_dmarc.twitter.com",
-            "date": "2026-10-25"
-          }
-        }
-      ],
-      "category": "DMARC reporting",
-      "aliases": [
-        "Email Analyst"
-      ]
-    },
-    "CISA": {
-      "reporting": [
-        {
-          "value": "dmarc.cyber.dhs.gov",
-          "proof": {
-            "domain": "cisa.gov",
-            "record": "_dmarc.cisa.gov",
-            "date": "2026-10-25"
-          }
-        }
-      ],
-      "category": "DMARC reporting",
-      "aliases": [
-        "BOD 18-01",
-        "DHS DMARC reporting"
-      ]
-    },
-    "Amazon WorkMail": {
-      "other_cname": [
-        {
-          "label": "autodiscover",
-          "target": "awsapps.com",
-          "proof": {
-            "domain": "samsungqbe.com",
-            "record": "autodiscover.samsungqbe.com",
-            "date": "2026-10-25"
-          }
-        }
-      ],
-      "category": "Mailbox",
-      "aliases": [
-        "WorkMail",
-        "AWS WorkMail"
-      ]
-    },
-    "ResellerClub": {
-      "spf_includes": [
-        {
-          "value": "_spf.myorderbox.com",
-          "proof": {
-            "domain": "hostgator.com",
-            "record": "hostgator.com",
-            "date": "2026-10-25"
-          }
-        }
-      ],
-      "category": "Commerce and apps",
-      "aliases": [
-        "OrderBox"
-      ]
-    },
-    "Discourse": {
-      "mx": [
-        {
-          "value": "discoursemail.com",
-          "proof": {
-            "domain": "openai.com",
-            "record": "community.openai.com",
-            "date": "2026-10-25"
-          }
-        }
-      ],
-      "category": "Support and CRM"
-    },
-    "Cheetah Digital": {
-      "category": "Marketing",
-      "delegation_ns": [
-        {
-          "value": "cheetahmail.com",
-          "proof": {
-            "domain": "disneyplus.com",
-            "record": "em.disneyplus.com",
-            "date": "2026-10-28"
-          }
-        }
-      ],
-      "aliases": [
-        "CheetahMail"
-      ]
-    },
-    "SendCloud": {
-      "spf_includes": [
-        {
-          "value": "spf.sendcloud.org",
-          "proof": {
-            "domain": "tiktok.com",
-            "record": "email.tiktok.com",
-            "date": "2026-11-13"
-          }
-        }
-      ],
-      "mx": [
-        {
-          "value": "sendcloud.org",
-          "proof": {
-            "domain": "tiktok.com",
-            "record": "email.tiktok.com",
-            "date": "2026-11-13"
-          }
-        }
-      ],
-      "category": "Transactional",
-      "aliases": [
-        "Sohu SendCloud"
-      ]
-    },
-    "Alibaba Cloud Direct Mail": {
-      "spf_includes": [
-        {
-          "value": "spf1.dm.aliyun.com",
-          "proof": {
-            "domain": "tiktok.com",
-            "record": "info.tiktok.com",
-            "date": "2026-11-13"
-          }
-        },
-        {
-          "value": "spfdm-ap-southeast-1.aliyun.com",
-          "proof": {
-            "domain": "hicloudcam.com",
-            "record": "hicloudcam.com",
-            "date": "2026-11-13"
-          }
-        }
-      ],
-      "mx": [
-        {
-          "value": "dm.aliyun.com",
-          "proof": {
-            "domain": "tiktok.com",
-            "record": "info.tiktok.com",
-            "date": "2026-11-13"
-          }
-        },
-        {
-          "value": "mxdm-ap-southeast-1.aliyun.com",
-          "proof": {
-            "domain": "hicloudcam.com",
-            "record": "notify.hicloudcam.com",
-            "date": "2026-11-13"
-          }
-        }
-      ],
-      "category": "Transactional",
-      "aliases": [
-        "Aliyun DirectMail",
-        "Alibaba DirectMail"
-      ]
-    },
-    "Alibaba Mail": {
-      "spf_includes": [
-        {
-          "value": "spf.mxhichina.com",
-          "proof": {
-            "domain": "hicloudcam.com",
-            "record": "hicloudcam.com",
-            "date": "2026-11-13"
-          }
-        },
-        {
-          "value": "spf.qiye.aliyun.com",
-          "proof": {
-            "domain": "alibaba.com",
-            "record": "info.alibaba.com",
-            "date": "2026-11-13"
-          }
-        }
-      ],
-      "mx": [
-        {
-          "value": "mxhichina.com",
-          "proof": {
-            "domain": "hicloudcam.com",
-            "record": "hicloudcam.com",
-            "date": "2026-11-13"
-          }
-        }
-      ],
-      "category": "Mailbox",
-      "aliases": [
-        "Alibaba Cloud Mail",
-        "Aliyun Mail",
-        "Alimail"
-      ],
-      "setup": [
-        {
-          "record": "mx",
-          "need": "optional",
-          "values": [
-            "mxhichina.com"
-          ],
-          "proof": {
-            "domain": "aliyun.com",
-            "record": "https://help.aliyun.com/zh/document_detail/36710.html",
-            "date": "2026-11-13"
-          },
-          "note": "Optional here because a security gateway in front of Alibaba Mail takes its place in MX."
-        },
-        {
-          "record": "spf",
-          "need": "required",
-          "values": [
-            "spf.qiye.aliyun.com"
-          ],
-          "proof": {
-            "domain": "aliyun.com",
-            "record": "https://help.aliyun.com/zh/document_detail/36710.html",
-            "date": "2026-11-13"
-          }
-        }
-      ]
-    },
-    "KnowBe4": {
-      "spf_includes": [
-        {
-          "value": "_spf.psm.knowbe4.com",
-          "proof": {
-            "domain": "medium.com",
-            "record": "medium.com",
-            "date": "2026-11-13"
-          }
-        }
-      ],
-      "category": "Commerce and apps",
-      "aliases": [
-        "KnowBe4 PhishER"
-      ]
-    },
-    "Adobe Journey Optimizer": {
-      "spf_includes": [
-        {
-          "value": "cjm.adobe.com",
-          "proof": {
-            "domain": "paypal.com",
-            "record": "news.paypal.com",
-            "date": "2026-11-13"
-          }
-        }
-      ],
-      "category": "Marketing",
-      "aliases": [
-        "AJO"
-      ]
     }
   }
 }

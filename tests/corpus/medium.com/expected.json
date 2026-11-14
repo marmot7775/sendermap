@@ -1,0 +1,2699 @@
+{
+ "domain": "medium.com",
+ "services": [
+  {
+   "name": "Google Workspace",
+   "category": "Mailbox",
+   "tier": "In use",
+   "role": "sender",
+   "claims": [
+    {
+     "service": "Google Workspace",
+     "kind": "receives the domain's mail (MX)",
+     "where": "medium.com",
+     "evidence": {
+      "name": "medium.com",
+      "rtype": "MX",
+      "value": "1 aspmx.l.google.com",
+      "checked_at": "2026-11-14T06:40:31+00:00"
+     },
+     "supporting": []
+    },
+    {
+     "service": "Google Workspace",
+     "kind": "receives the domain's mail (MX)",
+     "where": "medium.com",
+     "evidence": {
+      "name": "medium.com",
+      "rtype": "MX",
+      "value": "5 alt1.aspmx.l.google.com",
+      "checked_at": "2026-11-14T06:40:31+00:00"
+     },
+     "supporting": []
+    },
+    {
+     "service": "Google Workspace",
+     "kind": "receives the domain's mail (MX)",
+     "where": "medium.com",
+     "evidence": {
+      "name": "medium.com",
+      "rtype": "MX",
+      "value": "5 alt2.aspmx.l.google.com",
+      "checked_at": "2026-11-14T06:40:31+00:00"
+     },
+     "supporting": []
+    },
+    {
+     "service": "Google Workspace",
+     "kind": "receives the domain's mail (MX)",
+     "where": "medium.com",
+     "evidence": {
+      "name": "medium.com",
+      "rtype": "MX",
+      "value": "10 aspmx2.googlemail.com",
+      "checked_at": "2026-11-14T06:40:31+00:00"
+     },
+     "supporting": []
+    },
+    {
+     "service": "Google Workspace",
+     "kind": "receives the domain's mail (MX)",
+     "where": "medium.com",
+     "evidence": {
+      "name": "medium.com",
+      "rtype": "MX",
+      "value": "10 aspmx3.googlemail.com",
+      "checked_at": "2026-11-14T06:40:31+00:00"
+     },
+     "supporting": []
+    },
+    {
+     "service": "Google Workspace",
+     "kind": "included in SPF",
+     "where": "medium.com",
+     "evidence": {
+      "name": "medium.com",
+      "rtype": "TXT",
+      "value": "include:_spf.google.com",
+      "checked_at": "2026-11-14T06:40:31+00:00"
+     },
+     "supporting": []
+    },
+    {
+     "service": "Google Workspace",
+     "kind": "in use for a subdomain's mail (MX)",
+     "where": "mail.medium.com",
+     "evidence": {
+      "name": "mail.medium.com",
+      "rtype": "MX",
+      "value": "1 aspmx.l.google.com",
+      "checked_at": "2026-11-14T06:40:31+00:00"
+     },
+     "supporting": []
+    },
+    {
+     "service": "Google Workspace",
+     "kind": "in use for a subdomain's mail (MX)",
+     "where": "mail.medium.com",
+     "evidence": {
+      "name": "mail.medium.com",
+      "rtype": "MX",
+      "value": "5 alt1.aspmx.l.google.com",
+      "checked_at": "2026-11-14T06:40:31+00:00"
+     },
+     "supporting": []
+    },
+    {
+     "service": "Google Workspace",
+     "kind": "in use for a subdomain's mail (MX)",
+     "where": "mail.medium.com",
+     "evidence": {
+      "name": "mail.medium.com",
+      "rtype": "MX",
+      "value": "5 alt2.aspmx.l.google.com",
+      "checked_at": "2026-11-14T06:40:31+00:00"
+     },
+     "supporting": []
+    },
+    {
+     "service": "Google Workspace",
+     "kind": "in use for a subdomain's mail (MX)",
+     "where": "mail.medium.com",
+     "evidence": {
+      "name": "mail.medium.com",
+      "rtype": "MX",
+      "value": "10 alt3.aspmx.l.google.com",
+      "checked_at": "2026-11-14T06:40:31+00:00"
+     },
+     "supporting": []
+    },
+    {
+     "service": "Google Workspace",
+     "kind": "in use for a subdomain's mail (MX)",
+     "where": "mail.medium.com",
+     "evidence": {
+      "name": "mail.medium.com",
+      "rtype": "MX",
+      "value": "10 alt4.aspmx.l.google.com",
+      "checked_at": "2026-11-14T06:40:31+00:00"
+     },
+     "supporting": []
+    },
+    {
+     "service": "Google Workspace",
+     "kind": "DKIM key named for it",
+     "where": "medium.com",
+     "evidence": {
+      "name": "google._domainkey.medium.com",
+      "rtype": "TXT",
+      "value": "v=DKIM1; k=rsa; p=MIGfMA0GCSqG..., 1024-bit, fp ed74a6d0292ef851",
+      "checked_at": "2026-11-14T06:40:31+00:00"
+     },
+     "supporting": [
+      {
+       "name": "medium.com",
+       "rtype": "TXT",
+       "value": "include:_spf.google.com",
+       "checked_at": "2026-11-14T06:40:31+00:00"
+      }
+     ]
+    }
+   ],
+   "setups": [
+    {
+     "service": "Google Workspace",
+     "where": "medium.com",
+     "items": [
+      {
+       "record": "spf",
+       "need": "required",
+       "state": "present",
+       "evidence": [
+        {
+         "name": "medium.com",
+         "rtype": "TXT",
+         "value": "include:_spf.google.com",
+         "checked_at": "2026-11-14T06:40:31+00:00"
+        }
+       ],
+       "asked": "TXT at medium.com",
+       "detail": ""
+      },
+      {
+       "record": "dkim",
+       "need": "required",
+       "state": "present",
+       "evidence": [
+        {
+         "name": "google._domainkey.medium.com",
+         "rtype": "TXT",
+         "value": "v=DKIM1; k=rsa; p=MIGfMA0GCSqG..., 1024-bit, fp ed74a6d0292ef851",
+         "checked_at": "2026-11-14T06:40:31+00:00"
+        }
+       ],
+       "asked": "TXT at google._domainkey.medium.com",
+       "detail": ""
+      },
+      {
+       "record": "mx",
+       "need": "optional",
+       "state": "present",
+       "evidence": [
+        {
+         "name": "medium.com",
+         "rtype": "MX",
+         "value": "1 aspmx.l.google.com",
+         "checked_at": "2026-11-14T06:40:31+00:00"
+        },
+        {
+         "name": "medium.com",
+         "rtype": "MX",
+         "value": "5 alt1.aspmx.l.google.com",
+         "checked_at": "2026-11-14T06:40:31+00:00"
+        },
+        {
+         "name": "medium.com",
+         "rtype": "MX",
+         "value": "5 alt2.aspmx.l.google.com",
+         "checked_at": "2026-11-14T06:40:31+00:00"
+        },
+        {
+         "name": "medium.com",
+         "rtype": "MX",
+         "value": "10 aspmx2.googlemail.com",
+         "checked_at": "2026-11-14T06:40:31+00:00"
+        },
+        {
+         "name": "medium.com",
+         "rtype": "MX",
+         "value": "10 aspmx3.googlemail.com",
+         "checked_at": "2026-11-14T06:40:31+00:00"
+        }
+       ],
+       "asked": "MX at medium.com",
+       "detail": ""
+      },
+      {
+       "record": "return_path",
+       "need": "none",
+       "state": "not needed",
+       "evidence": [],
+       "asked": "",
+       "detail": ""
+      }
+     ],
+     "complete": true
+    },
+    {
+     "service": "Google Workspace",
+     "where": "mail.medium.com",
+     "items": [
+      {
+       "record": "spf",
+       "need": "required",
+       "state": "missing",
+       "evidence": [
+        {
+         "name": "mail.medium.com",
+         "rtype": "TXT",
+         "value": "no SPF record (v=spf1)",
+         "checked_at": "2026-11-14T06:40:31+00:00"
+        }
+       ],
+       "asked": "TXT at mail.medium.com",
+       "detail": "no SPF record"
+      },
+      {
+       "record": "dkim",
+       "need": "required",
+       "state": "missing",
+       "evidence": [
+        {
+         "name": "google._domainkey.mail.medium.com",
+         "rtype": "TXT",
+         "value": "no such name",
+         "checked_at": "2026-11-14T06:40:31+00:00"
+        },
+        {
+         "name": "_domainkey.mail.medium.com",
+         "rtype": "TXT",
+         "value": "no record of this type",
+         "checked_at": "2026-11-14T06:40:31+00:00"
+        }
+       ],
+       "asked": "TXT at google._domainkey.mail.medium.com",
+       "detail": "no key at google._domainkey, a name that does not exist"
+      },
+      {
+       "record": "mx",
+       "need": "optional",
+       "state": "present",
+       "evidence": [
+        {
+         "name": "mail.medium.com",
+         "rtype": "MX",
+         "value": "1 aspmx.l.google.com",
+         "checked_at": "2026-11-14T06:40:31+00:00"
+        },
+        {
+         "name": "mail.medium.com",
+         "rtype": "MX",
+         "value": "5 alt1.aspmx.l.google.com",
+         "checked_at": "2026-11-14T06:40:31+00:00"
+        },
+        {
+         "name": "mail.medium.com",
+         "rtype": "MX",
+         "value": "5 alt2.aspmx.l.google.com",
+         "checked_at": "2026-11-14T06:40:31+00:00"
+        },
+        {
+         "name": "mail.medium.com",
+         "rtype": "MX",
+         "value": "10 alt3.aspmx.l.google.com",
+         "checked_at": "2026-11-14T06:40:31+00:00"
+        },
+        {
+         "name": "mail.medium.com",
+         "rtype": "MX",
+         "value": "10 alt4.aspmx.l.google.com",
+         "checked_at": "2026-11-14T06:40:31+00:00"
+        }
+       ],
+       "asked": "MX at mail.medium.com",
+       "detail": ""
+      },
+      {
+       "record": "return_path",
+       "need": "none",
+       "state": "not needed",
+       "evidence": [],
+       "asked": "",
+       "detail": ""
+      }
+     ],
+     "complete": false
+    }
+   ]
+  },
+  {
+   "name": "Amazon SES",
+   "category": "Transactional",
+   "tier": "Configured",
+   "role": "sender",
+   "claims": [
+    {
+     "service": "Amazon SES",
+     "kind": "included in SPF",
+     "where": "medium.com",
+     "evidence": {
+      "name": "medium.com",
+      "rtype": "TXT",
+      "value": "include:amazonses.com",
+      "checked_at": "2026-11-14T06:40:31+00:00"
+     },
+     "supporting": []
+    }
+   ],
+   "setups": []
+  },
+  {
+   "name": "Intercom",
+   "category": "Support and CRM",
+   "tier": "Configured",
+   "role": "sender",
+   "claims": [
+    {
+     "service": "Intercom",
+     "kind": "hosts a DKIM key (CNAME)",
+     "where": "medium.com",
+     "evidence": {
+      "name": "intercom._domainkey.medium.com",
+      "rtype": "TXT",
+      "value": "k=rsa; p=MIGfMA0GCSqG..., 1024-bit, fp c5fb9f656f567b63 via 5fdfac11-2ed9-41ef-9460-e56a59043246.dkim.intercom.io",
+      "checked_at": "2026-11-14T06:40:31+00:00"
+     },
+     "supporting": []
+    },
+    {
+     "service": "Intercom",
+     "kind": "bounce address CNAME",
+     "where": "medium.com",
+     "evidence": {
+      "name": "outbound.intercom.medium.com",
+      "rtype": "CNAME",
+      "value": "rp.medium-a7e301761373.intercom-mail.com",
+      "checked_at": "2026-11-14T06:40:31+00:00"
+     },
+     "supporting": []
+    }
+   ],
+   "setups": [
+    {
+     "service": "Intercom",
+     "where": "medium.com",
+     "items": [
+      {
+       "record": "spf",
+       "need": "none",
+       "state": "not needed",
+       "evidence": [],
+       "asked": "",
+       "detail": ""
+      },
+      {
+       "record": "dkim",
+       "need": "required",
+       "state": "present",
+       "evidence": [
+        {
+         "name": "intercom._domainkey.medium.com",
+         "rtype": "TXT",
+         "value": "k=rsa; p=MIGfMA0GCSqG..., 1024-bit, fp c5fb9f656f567b63 via 5fdfac11-2ed9-41ef-9460-e56a59043246.dkim.intercom.io",
+         "checked_at": "2026-11-14T06:40:31+00:00"
+        }
+       ],
+       "asked": "TXT at intercom._domainkey.medium.com",
+       "detail": ""
+      }
+     ],
+     "complete": true
+    }
+   ]
+  },
+  {
+   "name": "KnowBe4",
+   "category": "Commerce and apps",
+   "tier": "Configured",
+   "role": "sender",
+   "claims": [
+    {
+     "service": "KnowBe4",
+     "kind": "included in SPF",
+     "where": "medium.com",
+     "evidence": {
+      "name": "medium.com",
+      "rtype": "TXT",
+      "value": "include:_spf.psm.knowbe4.com",
+      "checked_at": "2026-11-14T06:40:31+00:00"
+     },
+     "supporting": []
+    }
+   ],
+   "setups": []
+  },
+  {
+   "name": "SendGrid",
+   "category": "Transactional",
+   "tier": "Configured",
+   "role": "sender",
+   "claims": [
+    {
+     "service": "SendGrid",
+     "kind": "included in SPF",
+     "where": "medium.com",
+     "evidence": {
+      "name": "medium.com",
+      "rtype": "TXT",
+      "value": "include:sendgrid.net",
+      "checked_at": "2026-11-14T06:40:31+00:00"
+     },
+     "supporting": []
+    },
+    {
+     "service": "SendGrid",
+     "kind": "hosts a DKIM key (CNAME)",
+     "where": "medium.com",
+     "evidence": {
+      "name": "s1._domainkey.medium.com",
+      "rtype": "TXT",
+      "value": "k=rsa; t=s (strict); p=MIIBIjANBgkq..., 2048-bit, fp c8d37e821f8cbd21 via s1.domainkey.u1815634.wl135.sendgrid.net",
+      "checked_at": "2026-11-14T06:40:31+00:00"
+     },
+     "supporting": []
+    },
+    {
+     "service": "SendGrid",
+     "kind": "hosts a DKIM key (CNAME)",
+     "where": "medium.com",
+     "evidence": {
+      "name": "s2._domainkey.medium.com",
+      "rtype": "TXT",
+      "value": "k=rsa; t=s (strict); p=MIGfMA0GCSqG..., 1024-bit, fp 656c793271cffad5 via s2.domainkey.u1815634.wl135.sendgrid.net",
+      "checked_at": "2026-11-14T06:40:31+00:00"
+     },
+     "supporting": []
+    },
+    {
+     "service": "SendGrid",
+     "kind": "receives replies and bounces for a sending subdomain (MX)",
+     "where": "email.medium.com",
+     "evidence": {
+      "name": "email.medium.com",
+      "rtype": "MX",
+      "value": "10 mx.sendgrid.net",
+      "checked_at": "2026-11-14T06:40:31+00:00"
+     },
+     "supporting": []
+    },
+    {
+     "service": "SendGrid",
+     "kind": "owns a network listed in SPF",
+     "where": "email.medium.com",
+     "evidence": {
+      "name": "_digest-one.medium.com",
+      "rtype": "TXT",
+      "value": "ip4:149.72.137.151",
+      "checked_at": "2026-11-14T06:40:31+00:00"
+     },
+     "supporting": [
+      {
+       "name": "sendgrid.net",
+       "rtype": "TXT",
+       "value": "ip4:149.72.0.0/16",
+       "checked_at": "2026-11-14T06:40:31+00:00"
+      }
+     ]
+    },
+    {
+     "service": "SendGrid",
+     "kind": "owns a network listed in SPF",
+     "where": "email.medium.com",
+     "evidence": {
+      "name": "_digest-one.medium.com",
+      "rtype": "TXT",
+      "value": "ip4:149.72.133.6",
+      "checked_at": "2026-11-14T06:40:31+00:00"
+     },
+     "supporting": [
+      {
+       "name": "sendgrid.net",
+       "rtype": "TXT",
+       "value": "ip4:149.72.0.0/16",
+       "checked_at": "2026-11-14T06:40:31+00:00"
+      }
+     ]
+    },
+    {
+     "service": "SendGrid",
+     "kind": "owns a network listed in SPF",
+     "where": "email.medium.com",
+     "evidence": {
+      "name": "_digest-one.medium.com",
+      "rtype": "TXT",
+      "value": "ip4:149.72.133.59",
+      "checked_at": "2026-11-14T06:40:31+00:00"
+     },
+     "supporting": [
+      {
+       "name": "sendgrid.net",
+       "rtype": "TXT",
+       "value": "ip4:149.72.0.0/16",
+       "checked_at": "2026-11-14T06:40:31+00:00"
+      }
+     ]
+    },
+    {
+     "service": "SendGrid",
+     "kind": "owns a network listed in SPF",
+     "where": "email.medium.com",
+     "evidence": {
+      "name": "_digest-two.medium.com",
+      "rtype": "TXT",
+      "value": "ip4:149.72.177.63",
+      "checked_at": "2026-11-14T06:40:31+00:00"
+     },
+     "supporting": [
+      {
+       "name": "sendgrid.net",
+       "rtype": "TXT",
+       "value": "ip4:149.72.0.0/16",
+       "checked_at": "2026-11-14T06:40:31+00:00"
+      }
+     ]
+    },
+    {
+     "service": "SendGrid",
+     "kind": "owns a network listed in SPF",
+     "where": "email.medium.com",
+     "evidence": {
+      "name": "_digest-two.medium.com",
+      "rtype": "TXT",
+      "value": "ip4:149.72.177.236",
+      "checked_at": "2026-11-14T06:40:31+00:00"
+     },
+     "supporting": [
+      {
+       "name": "sendgrid.net",
+       "rtype": "TXT",
+       "value": "ip4:149.72.0.0/16",
+       "checked_at": "2026-11-14T06:40:31+00:00"
+      }
+     ]
+    },
+    {
+     "service": "SendGrid",
+     "kind": "owns a network listed in SPF",
+     "where": "email.medium.com",
+     "evidence": {
+      "name": "_digest-two.medium.com",
+      "rtype": "TXT",
+      "value": "ip4:149.72.177.231",
+      "checked_at": "2026-11-14T06:40:31+00:00"
+     },
+     "supporting": [
+      {
+       "name": "sendgrid.net",
+       "rtype": "TXT",
+       "value": "ip4:149.72.0.0/16",
+       "checked_at": "2026-11-14T06:40:31+00:00"
+      }
+     ]
+    },
+    {
+     "service": "SendGrid",
+     "kind": "owns a network listed in SPF",
+     "where": "email.medium.com",
+     "evidence": {
+      "name": "_digest-two.medium.com",
+      "rtype": "TXT",
+      "value": "ip4:149.72.177.225",
+      "checked_at": "2026-11-14T06:40:31+00:00"
+     },
+     "supporting": [
+      {
+       "name": "sendgrid.net",
+       "rtype": "TXT",
+       "value": "ip4:149.72.0.0/16",
+       "checked_at": "2026-11-14T06:40:31+00:00"
+      }
+     ]
+    },
+    {
+     "service": "SendGrid",
+     "kind": "owns a network listed in SPF",
+     "where": "email.medium.com",
+     "evidence": {
+      "name": "_digest-two.medium.com",
+      "rtype": "TXT",
+      "value": "ip4:149.72.177.21",
+      "checked_at": "2026-11-14T06:40:31+00:00"
+     },
+     "supporting": [
+      {
+       "name": "sendgrid.net",
+       "rtype": "TXT",
+       "value": "ip4:149.72.0.0/16",
+       "checked_at": "2026-11-14T06:40:31+00:00"
+      }
+     ]
+    },
+    {
+     "service": "SendGrid",
+     "kind": "owns a network listed in SPF",
+     "where": "email.medium.com",
+     "evidence": {
+      "name": "_digest-two.medium.com",
+      "rtype": "TXT",
+      "value": "ip4:149.72.177.204",
+      "checked_at": "2026-11-14T06:40:31+00:00"
+     },
+     "supporting": [
+      {
+       "name": "sendgrid.net",
+       "rtype": "TXT",
+       "value": "ip4:149.72.0.0/16",
+       "checked_at": "2026-11-14T06:40:31+00:00"
+      }
+     ]
+    },
+    {
+     "service": "SendGrid",
+     "kind": "owns a network listed in SPF",
+     "where": "email.medium.com",
+     "evidence": {
+      "name": "_digest-two.medium.com",
+      "rtype": "TXT",
+      "value": "ip4:149.72.177.190",
+      "checked_at": "2026-11-14T06:40:31+00:00"
+     },
+     "supporting": [
+      {
+       "name": "sendgrid.net",
+       "rtype": "TXT",
+       "value": "ip4:149.72.0.0/16",
+       "checked_at": "2026-11-14T06:40:31+00:00"
+      }
+     ]
+    },
+    {
+     "service": "SendGrid",
+     "kind": "owns a network listed in SPF",
+     "where": "email.medium.com",
+     "evidence": {
+      "name": "_digest-two.medium.com",
+      "rtype": "TXT",
+      "value": "ip4:149.72.177.155",
+      "checked_at": "2026-11-14T06:40:31+00:00"
+     },
+     "supporting": [
+      {
+       "name": "sendgrid.net",
+       "rtype": "TXT",
+       "value": "ip4:149.72.0.0/16",
+       "checked_at": "2026-11-14T06:40:31+00:00"
+      }
+     ]
+    },
+    {
+     "service": "SendGrid",
+     "kind": "owns a network listed in SPF",
+     "where": "email.medium.com",
+     "evidence": {
+      "name": "_digest-two.medium.com",
+      "rtype": "TXT",
+      "value": "ip4:149.72.122.8",
+      "checked_at": "2026-11-14T06:40:31+00:00"
+     },
+     "supporting": [
+      {
+       "name": "sendgrid.net",
+       "rtype": "TXT",
+       "value": "ip4:149.72.0.0/16",
+       "checked_at": "2026-11-14T06:40:31+00:00"
+      }
+     ]
+    },
+    {
+     "service": "SendGrid",
+     "kind": "owns a network listed in SPF",
+     "where": "email.medium.com",
+     "evidence": {
+      "name": "_digest-two.medium.com",
+      "rtype": "TXT",
+      "value": "ip4:149.72.117.99",
+      "checked_at": "2026-11-14T06:40:31+00:00"
+     },
+     "supporting": [
+      {
+       "name": "sendgrid.net",
+       "rtype": "TXT",
+       "value": "ip4:149.72.0.0/16",
+       "checked_at": "2026-11-14T06:40:31+00:00"
+      }
+     ]
+    },
+    {
+     "service": "SendGrid",
+     "kind": "owns a network listed in SPF",
+     "where": "email.medium.com",
+     "evidence": {
+      "name": "_legal.medium.com",
+      "rtype": "TXT",
+      "value": "ip4:159.183.144.235",
+      "checked_at": "2026-11-14T06:40:31+00:00"
+     },
+     "supporting": [
+      {
+       "name": "sendgrid.net",
+       "rtype": "TXT",
+       "value": "ip4:159.183.0.0/16",
+       "checked_at": "2026-11-14T06:40:31+00:00"
+      }
+     ]
+    },
+    {
+     "service": "SendGrid",
+     "kind": "owns a network listed in SPF",
+     "where": "email.medium.com",
+     "evidence": {
+      "name": "_legal.medium.com",
+      "rtype": "TXT",
+      "value": "ip4:159.183.145.91",
+      "checked_at": "2026-11-14T06:40:31+00:00"
+     },
+     "supporting": [
+      {
+       "name": "sendgrid.net",
+       "rtype": "TXT",
+       "value": "ip4:159.183.0.0/16",
+       "checked_at": "2026-11-14T06:40:31+00:00"
+      }
+     ]
+    },
+    {
+     "service": "SendGrid",
+     "kind": "owns a network listed in SPF",
+     "where": "email.medium.com",
+     "evidence": {
+      "name": "_legal.medium.com",
+      "rtype": "TXT",
+      "value": "ip4:159.183.160.29",
+      "checked_at": "2026-11-14T06:40:31+00:00"
+     },
+     "supporting": [
+      {
+       "name": "sendgrid.net",
+       "rtype": "TXT",
+       "value": "ip4:159.183.0.0/16",
+       "checked_at": "2026-11-14T06:40:31+00:00"
+      }
+     ]
+    },
+    {
+     "service": "SendGrid",
+     "kind": "owns a network listed in SPF",
+     "where": "email.medium.com",
+     "evidence": {
+      "name": "_letters.medium.com",
+      "rtype": "TXT",
+      "value": "ip4:159.183.172.152",
+      "checked_at": "2026-11-14T06:40:31+00:00"
+     },
+     "supporting": [
+      {
+       "name": "sendgrid.net",
+       "rtype": "TXT",
+       "value": "ip4:159.183.0.0/16",
+       "checked_at": "2026-11-14T06:40:31+00:00"
+      }
+     ]
+    },
+    {
+     "service": "SendGrid",
+     "kind": "owns a network listed in SPF",
+     "where": "email.medium.com",
+     "evidence": {
+      "name": "_letters.medium.com",
+      "rtype": "TXT",
+      "value": "ip4:149.72.199.196",
+      "checked_at": "2026-11-14T06:40:31+00:00"
+     },
+     "supporting": [
+      {
+       "name": "sendgrid.net",
+       "rtype": "TXT",
+       "value": "ip4:149.72.0.0/16",
+       "checked_at": "2026-11-14T06:40:31+00:00"
+      }
+     ]
+    },
+    {
+     "service": "SendGrid",
+     "kind": "owns a network listed in SPF",
+     "where": "email.medium.com",
+     "evidence": {
+      "name": "_partnerprogram.medium.com",
+      "rtype": "TXT",
+      "value": "ip4:159.183.176.0",
+      "checked_at": "2026-11-14T06:40:31+00:00"
+     },
+     "supporting": [
+      {
+       "name": "sendgrid.net",
+       "rtype": "TXT",
+       "value": "ip4:159.183.0.0/16",
+       "checked_at": "2026-11-14T06:40:31+00:00"
+      }
+     ]
+    },
+    {
+     "service": "SendGrid",
+     "kind": "owns a network listed in SPF",
+     "where": "email.medium.com",
+     "evidence": {
+      "name": "_transactional.medium.com",
+      "rtype": "TXT",
+      "value": "ip4:149.72.36.156",
+      "checked_at": "2026-11-14T06:40:31+00:00"
+     },
+     "supporting": [
+      {
+       "name": "sendgrid.net",
+       "rtype": "TXT",
+       "value": "ip4:149.72.0.0/16",
+       "checked_at": "2026-11-14T06:40:31+00:00"
+      }
+     ]
+    },
+    {
+     "service": "SendGrid",
+     "kind": "owns a network listed in SPF",
+     "where": "email.medium.com",
+     "evidence": {
+      "name": "_auth.medium.com",
+      "rtype": "TXT",
+      "value": "ip4:149.72.23.220",
+      "checked_at": "2026-11-14T06:40:31+00:00"
+     },
+     "supporting": [
+      {
+       "name": "sendgrid.net",
+       "rtype": "TXT",
+       "value": "ip4:149.72.0.0/16",
+       "checked_at": "2026-11-14T06:40:31+00:00"
+      }
+     ]
+    },
+    {
+     "service": "SendGrid",
+     "kind": "owns a network listed in SPF",
+     "where": "email.medium.com",
+     "evidence": {
+      "name": "_auth.medium.com",
+      "rtype": "TXT",
+      "value": "ip4:159.183.87.116",
+      "checked_at": "2026-11-14T06:40:31+00:00"
+     },
+     "supporting": [
+      {
+       "name": "sendgrid.net",
+       "rtype": "TXT",
+       "value": "ip4:159.183.0.0/16",
+       "checked_at": "2026-11-14T06:40:31+00:00"
+      }
+     ]
+    },
+    {
+     "service": "SendGrid",
+     "kind": "owns a network listed in SPF",
+     "where": "email.medium.com",
+     "evidence": {
+      "name": "_campaigns.medium.com",
+      "rtype": "TXT",
+      "value": "ip4:167.89.66.191",
+      "checked_at": "2026-11-14T06:40:31+00:00"
+     },
+     "supporting": [
+      {
+       "name": "191.66.89.167.origin.asn.cymru.com",
+       "rtype": "TXT",
+       "value": "11377 | 167.89.64.0/19 | US | arin | 2013-10-31",
+       "checked_at": "2026-11-14T06:40:31+00:00"
+      },
+      {
+       "name": "as11377.asn.cymru.com",
+       "rtype": "TXT",
+       "value": "11377 | US | arin | 2012-06-28 | SENDGRID - SendGrid, Inc., US",
+       "checked_at": "2026-11-14T06:40:31+00:00"
+      }
+     ]
+    },
+    {
+     "service": "SendGrid",
+     "kind": "owns a network listed in SPF",
+     "where": "email.medium.com",
+     "evidence": {
+      "name": "_campaigns.medium.com",
+      "rtype": "TXT",
+      "value": "ip4:167.89.66.175",
+      "checked_at": "2026-11-14T06:40:31+00:00"
+     },
+     "supporting": [
+      {
+       "name": "175.66.89.167.origin.asn.cymru.com",
+       "rtype": "TXT",
+       "value": "11377 | 167.89.64.0/19 | US | arin | 2013-10-31",
+       "checked_at": "2026-11-14T06:40:31+00:00"
+      },
+      {
+       "name": "as11377.asn.cymru.com",
+       "rtype": "TXT",
+       "value": "11377 | US | arin | 2012-06-28 | SENDGRID - SendGrid, Inc., US",
+       "checked_at": "2026-11-14T06:40:31+00:00"
+      }
+     ]
+    },
+    {
+     "service": "SendGrid",
+     "kind": "owns a network listed in SPF",
+     "where": "email.medium.com",
+     "evidence": {
+      "name": "_digest-one.medium.com",
+      "rtype": "TXT",
+      "value": "ip4:168.245.100.68",
+      "checked_at": "2026-11-14T06:40:31+00:00"
+     },
+     "supporting": [
+      {
+       "name": "68.100.245.168.origin.asn.cymru.com",
+       "rtype": "TXT",
+       "value": "11377 | 168.245.96.0/19 | US | arin | 2016-11-10",
+       "checked_at": "2026-11-14T06:40:31+00:00"
+      },
+      {
+       "name": "as11377.asn.cymru.com",
+       "rtype": "TXT",
+       "value": "11377 | US | arin | 2012-06-28 | SENDGRID - SendGrid, Inc., US",
+       "checked_at": "2026-11-14T06:40:31+00:00"
+      }
+     ]
+    },
+    {
+     "service": "SendGrid",
+     "kind": "owns a network listed in SPF",
+     "where": "email.medium.com",
+     "evidence": {
+      "name": "_digest-one.medium.com",
+      "rtype": "TXT",
+      "value": "ip4:168.245.3.222",
+      "checked_at": "2026-11-14T06:40:31+00:00"
+     },
+     "supporting": [
+      {
+       "name": "222.3.245.168.origin.asn.cymru.com",
+       "rtype": "TXT",
+       "value": "11377 | 168.245.0.0/18 | US | arin | 2016-11-10",
+       "checked_at": "2026-11-14T06:40:31+00:00"
+      },
+      {
+       "name": "as11377.asn.cymru.com",
+       "rtype": "TXT",
+       "value": "11377 | US | arin | 2012-06-28 | SENDGRID - SendGrid, Inc., US",
+       "checked_at": "2026-11-14T06:40:31+00:00"
+      }
+     ]
+    },
+    {
+     "service": "SendGrid",
+     "kind": "owns a network listed in SPF",
+     "where": "email.medium.com",
+     "evidence": {
+      "name": "_digest-one.medium.com",
+      "rtype": "TXT",
+      "value": "ip4:167.89.47.62",
+      "checked_at": "2026-11-14T06:40:31+00:00"
+     },
+     "supporting": [
+      {
+       "name": "62.47.89.167.origin.asn.cymru.com",
+       "rtype": "TXT",
+       "value": "11377 | 167.89.0.0/18 | US | arin | 2013-10-31",
+       "checked_at": "2026-11-14T06:40:31+00:00"
+      },
+      {
+       "name": "as11377.asn.cymru.com",
+       "rtype": "TXT",
+       "value": "11377 | US | arin | 2012-06-28 | SENDGRID - SendGrid, Inc., US",
+       "checked_at": "2026-11-14T06:40:31+00:00"
+      }
+     ]
+    },
+    {
+     "service": "SendGrid",
+     "kind": "owns a network listed in SPF",
+     "where": "email.medium.com",
+     "evidence": {
+      "name": "_digest-one.medium.com",
+      "rtype": "TXT",
+      "value": "ip4:167.89.15.8",
+      "checked_at": "2026-11-14T06:40:31+00:00"
+     },
+     "supporting": [
+      {
+       "name": "8.15.89.167.origin.asn.cymru.com",
+       "rtype": "TXT",
+       "value": "11377 | 167.89.0.0/18 | US | arin | 2013-10-31",
+       "checked_at": "2026-11-14T06:40:31+00:00"
+      },
+      {
+       "name": "as11377.asn.cymru.com",
+       "rtype": "TXT",
+       "value": "11377 | US | arin | 2012-06-28 | SENDGRID - SendGrid, Inc., US",
+       "checked_at": "2026-11-14T06:40:31+00:00"
+      }
+     ]
+    },
+    {
+     "service": "SendGrid",
+     "kind": "owns a network listed in SPF",
+     "where": "email.medium.com",
+     "evidence": {
+      "name": "_digest-one.medium.com",
+      "rtype": "TXT",
+      "value": "ip4:167.89.15.48",
+      "checked_at": "2026-11-14T06:40:31+00:00"
+     },
+     "supporting": [
+      {
+       "name": "48.15.89.167.origin.asn.cymru.com",
+       "rtype": "TXT",
+       "value": "11377 | 167.89.0.0/18 | US | arin | 2013-10-31",
+       "checked_at": "2026-11-14T06:40:31+00:00"
+      },
+      {
+       "name": "as11377.asn.cymru.com",
+       "rtype": "TXT",
+       "value": "11377 | US | arin | 2012-06-28 | SENDGRID - SendGrid, Inc., US",
+       "checked_at": "2026-11-14T06:40:31+00:00"
+      }
+     ]
+    },
+    {
+     "service": "SendGrid",
+     "kind": "owns a network listed in SPF",
+     "where": "email.medium.com",
+     "evidence": {
+      "name": "_digest-one.medium.com",
+      "rtype": "TXT",
+      "value": "ip4:167.89.110.85",
+      "checked_at": "2026-11-14T06:40:31+00:00"
+     },
+     "supporting": [
+      {
+       "name": "85.110.89.167.origin.asn.cymru.com",
+       "rtype": "TXT",
+       "value": "11377 | 167.89.96.0/20 | US | arin | 2013-10-31",
+       "checked_at": "2026-11-14T06:40:31+00:00"
+      },
+      {
+       "name": "as11377.asn.cymru.com",
+       "rtype": "TXT",
+       "value": "11377 | US | arin | 2012-06-28 | SENDGRID - SendGrid, Inc., US",
+       "checked_at": "2026-11-14T06:40:31+00:00"
+      }
+     ]
+    },
+    {
+     "service": "SendGrid",
+     "kind": "owns a network listed in SPF",
+     "where": "email.medium.com",
+     "evidence": {
+      "name": "_digest-one.medium.com",
+      "rtype": "TXT",
+      "value": "ip4:167.89.110.59",
+      "checked_at": "2026-11-14T06:40:31+00:00"
+     },
+     "supporting": [
+      {
+       "name": "59.110.89.167.origin.asn.cymru.com",
+       "rtype": "TXT",
+       "value": "11377 | 167.89.96.0/20 | US | arin | 2013-10-31",
+       "checked_at": "2026-11-14T06:40:31+00:00"
+      },
+      {
+       "name": "as11377.asn.cymru.com",
+       "rtype": "TXT",
+       "value": "11377 | US | arin | 2012-06-28 | SENDGRID - SendGrid, Inc., US",
+       "checked_at": "2026-11-14T06:40:31+00:00"
+      }
+     ]
+    },
+    {
+     "service": "SendGrid",
+     "kind": "owns a network listed in SPF",
+     "where": "email.medium.com",
+     "evidence": {
+      "name": "_legal.medium.com",
+      "rtype": "TXT",
+      "value": "ip4:168.245.8.34",
+      "checked_at": "2026-11-14T06:40:31+00:00"
+     },
+     "supporting": [
+      {
+       "name": "34.8.245.168.origin.asn.cymru.com",
+       "rtype": "TXT",
+       "value": "11377 | 168.245.0.0/18 | US | arin | 2016-11-10",
+       "checked_at": "2026-11-14T06:40:31+00:00"
+      },
+      {
+       "name": "as11377.asn.cymru.com",
+       "rtype": "TXT",
+       "value": "11377 | US | arin | 2012-06-28 | SENDGRID - SendGrid, Inc., US",
+       "checked_at": "2026-11-14T06:40:31+00:00"
+      }
+     ]
+    },
+    {
+     "service": "SendGrid",
+     "kind": "owns a network listed in SPF",
+     "where": "email.medium.com",
+     "evidence": {
+      "name": "_letters.medium.com",
+      "rtype": "TXT",
+      "value": "ip4:167.89.49.168",
+      "checked_at": "2026-11-14T06:40:31+00:00"
+     },
+     "supporting": [
+      {
+       "name": "168.49.89.167.origin.asn.cymru.com",
+       "rtype": "TXT",
+       "value": "11377 | 167.89.0.0/18 | US | arin | 2013-10-31",
+       "checked_at": "2026-11-14T06:40:31+00:00"
+      },
+      {
+       "name": "as11377.asn.cymru.com",
+       "rtype": "TXT",
+       "value": "11377 | US | arin | 2012-06-28 | SENDGRID - SendGrid, Inc., US",
+       "checked_at": "2026-11-14T06:40:31+00:00"
+      }
+     ]
+    },
+    {
+     "service": "SendGrid",
+     "kind": "owns a network listed in SPF",
+     "where": "email.medium.com",
+     "evidence": {
+      "name": "_transactional.medium.com",
+      "rtype": "TXT",
+      "value": "ip4:167.89.65.228",
+      "checked_at": "2026-11-14T06:40:31+00:00"
+     },
+     "supporting": [
+      {
+       "name": "228.65.89.167.origin.asn.cymru.com",
+       "rtype": "TXT",
+       "value": "11377 | 167.89.64.0/19 | US | arin | 2013-10-31",
+       "checked_at": "2026-11-14T06:40:31+00:00"
+      },
+      {
+       "name": "as11377.asn.cymru.com",
+       "rtype": "TXT",
+       "value": "11377 | US | arin | 2012-06-28 | SENDGRID - SendGrid, Inc., US",
+       "checked_at": "2026-11-14T06:40:31+00:00"
+      }
+     ]
+    },
+    {
+     "service": "SendGrid",
+     "kind": "DKIM key named for it",
+     "where": "medium.com",
+     "evidence": {
+      "name": "smtpapi._domainkey.medium.com",
+      "rtype": "TXT",
+      "value": "k=rsa; t=s (strict); p=MIGfMA0GCSqG..., 1024-bit, fp 303963420cfee1c6",
+      "checked_at": "2026-11-14T06:40:31+00:00"
+     },
+     "supporting": [
+      {
+       "name": "medium.com",
+       "rtype": "TXT",
+       "value": "include:sendgrid.net",
+       "checked_at": "2026-11-14T06:40:31+00:00"
+      }
+     ]
+    },
+    {
+     "service": "SendGrid",
+     "kind": "DKIM key named for it",
+     "where": "email.medium.com",
+     "evidence": {
+      "name": "smtpapi._domainkey.email.medium.com",
+      "rtype": "TXT",
+      "value": "k=rsa; t=s (strict); p=MIGfMA0GCSqG..., 1024-bit, fp 303963420cfee1c6",
+      "checked_at": "2026-11-14T06:40:31+00:00"
+     },
+     "supporting": []
+    }
+   ],
+   "setups": [
+    {
+     "service": "SendGrid",
+     "where": "medium.com",
+     "items": [
+      {
+       "record": "dkim",
+       "need": "required",
+       "state": "present",
+       "evidence": [
+        {
+         "name": "s1._domainkey.medium.com",
+         "rtype": "TXT",
+         "value": "k=rsa; t=s (strict); p=MIIBIjANBgkq..., 2048-bit, fp c8d37e821f8cbd21 via s1.domainkey.u1815634.wl135.sendgrid.net",
+         "checked_at": "2026-11-14T06:40:31+00:00"
+        },
+        {
+         "name": "s2._domainkey.medium.com",
+         "rtype": "TXT",
+         "value": "k=rsa; t=s (strict); p=MIGfMA0GCSqG..., 1024-bit, fp 656c793271cffad5 via s2.domainkey.u1815634.wl135.sendgrid.net",
+         "checked_at": "2026-11-14T06:40:31+00:00"
+        },
+        {
+         "name": "smtpapi._domainkey.medium.com",
+         "rtype": "TXT",
+         "value": "k=rsa; t=s (strict); p=MIGfMA0GCSqG..., 1024-bit, fp 303963420cfee1c6",
+         "checked_at": "2026-11-14T06:40:31+00:00"
+        }
+       ],
+       "asked": "TXT at s1._domainkey.medium.com and TXT at s2._domainkey.medium.com and TXT at smtpapi._domainkey.medium.com",
+       "detail": ""
+      },
+      {
+       "record": "return_path",
+       "need": "optional",
+       "state": "present",
+       "evidence": [
+        {
+         "name": "email.medium.com",
+         "rtype": "MX",
+         "value": "10 mx.sendgrid.net",
+         "checked_at": "2026-11-14T06:40:31+00:00"
+        }
+       ],
+       "asked": "MX at email.medium.com",
+       "detail": ""
+      },
+      {
+       "record": "spf",
+       "need": "none",
+       "state": "not needed",
+       "evidence": [],
+       "asked": "",
+       "detail": ""
+      },
+      {
+       "record": "tracking",
+       "need": "optional",
+       "state": "missing",
+       "evidence": [
+        {
+         "name": "bounce.medium.com",
+         "rtype": "CNAME",
+         "value": "no record of this type",
+         "checked_at": "2026-11-14T06:40:31+00:00"
+        },
+        {
+         "name": "bounces.medium.com",
+         "rtype": "CNAME",
+         "value": "medium.com",
+         "checked_at": "2026-11-14T06:40:31+00:00"
+        },
+        {
+         "name": "em.medium.com",
+         "rtype": "CNAME",
+         "value": "no record of this type",
+         "checked_at": "2026-11-14T06:40:31+00:00"
+        },
+        {
+         "name": "email.medium.com",
+         "rtype": "CNAME",
+         "value": "no record of this type",
+         "checked_at": "2026-11-14T06:40:31+00:00"
+        },
+        {
+         "name": "mail.medium.com",
+         "rtype": "CNAME",
+         "value": "no record of this type",
+         "checked_at": "2026-11-14T06:40:31+00:00"
+        },
+        {
+         "name": "send.medium.com",
+         "rtype": "CNAME",
+         "value": "no record of this type",
+         "checked_at": "2026-11-14T06:40:31+00:00"
+        },
+        {
+         "name": "mta.medium.com",
+         "rtype": "CNAME",
+         "value": "no record of this type",
+         "checked_at": "2026-11-14T06:40:31+00:00"
+        },
+        {
+         "name": "rp.medium.com",
+         "rtype": "CNAME",
+         "value": "no record of this type",
+         "checked_at": "2026-11-14T06:40:31+00:00"
+        },
+        {
+         "name": "pm-bounces.medium.com",
+         "rtype": "CNAME",
+         "value": "no record of this type",
+         "checked_at": "2026-11-14T06:40:31+00:00"
+        },
+        {
+         "name": "links.medium.com",
+         "rtype": "CNAME",
+         "value": "no record of this type",
+         "checked_at": "2026-11-14T06:40:31+00:00"
+        },
+        {
+         "name": "link.medium.com",
+         "rtype": "CNAME",
+         "value": "custom.bnc.lt",
+         "checked_at": "2026-11-14T06:40:31+00:00"
+        },
+        {
+         "name": "click.medium.com",
+         "rtype": "CNAME",
+         "value": "no record of this type",
+         "checked_at": "2026-11-14T06:40:31+00:00"
+        },
+        {
+         "name": "track.medium.com",
+         "rtype": "CNAME",
+         "value": "no record of this type",
+         "checked_at": "2026-11-14T06:40:31+00:00"
+        },
+        {
+         "name": "tracking.medium.com",
+         "rtype": "CNAME",
+         "value": "no record of this type",
+         "checked_at": "2026-11-14T06:40:31+00:00"
+        },
+        {
+         "name": "url.medium.com",
+         "rtype": "CNAME",
+         "value": "no record of this type",
+         "checked_at": "2026-11-14T06:40:31+00:00"
+        },
+        {
+         "name": "go.medium.com",
+         "rtype": "CNAME",
+         "value": "no record of this type",
+         "checked_at": "2026-11-14T06:40:31+00:00"
+        },
+        {
+         "name": "autodiscover.medium.com",
+         "rtype": "CNAME",
+         "value": "no record of this type",
+         "checked_at": "2026-11-14T06:40:31+00:00"
+        },
+        {
+         "name": "cf-bounce.medium.com",
+         "rtype": "CNAME",
+         "value": "no record of this type",
+         "checked_at": "2026-11-14T06:40:31+00:00"
+        },
+        {
+         "name": "eversrv.medium.com",
+         "rtype": "CNAME",
+         "value": "no record of this type",
+         "checked_at": "2026-11-14T06:40:31+00:00"
+        },
+        {
+         "name": "fwdkim1.medium.com",
+         "rtype": "CNAME",
+         "value": "no record of this type",
+         "checked_at": "2026-11-14T06:40:31+00:00"
+        },
+        {
+         "name": "bnc3.medium.com",
+         "rtype": "CNAME",
+         "value": "no record of this type",
+         "checked_at": "2026-11-14T06:40:31+00:00"
+        },
+        {
+         "name": "bounces.cloud.em.medium.com",
+         "rtype": "CNAME",
+         "value": "no record of this type",
+         "checked_at": "2026-11-14T06:40:31+00:00"
+        },
+        {
+         "name": "bounces.cloud2.em.medium.com",
+         "rtype": "CNAME",
+         "value": "no record of this type",
+         "checked_at": "2026-11-14T06:40:31+00:00"
+        },
+        {
+         "name": "outbound.intercom.medium.com",
+         "rtype": "CNAME",
+         "value": "rp.medium-a7e301761373.intercom-mail.com",
+         "checked_at": "2026-11-14T06:40:31+00:00"
+        },
+        {
+         "name": "atlassian-bounces.medium.com",
+         "rtype": "CNAME",
+         "value": "no record of this type",
+         "checked_at": "2026-11-14T06:40:31+00:00"
+        }
+       ],
+       "asked": "CNAME at 25 labels under medium.com",
+       "detail": "no CNAME into sendgrid.net at the 25 labels asked"
+      }
+     ],
+     "complete": true
+    }
+   ]
+  },
+  {
+   "name": "Tipalti",
+   "category": "Commerce and apps",
+   "tier": "Configured",
+   "role": "sender",
+   "claims": [
+    {
+     "service": "Tipalti",
+     "kind": "included in SPF",
+     "where": "medium.com",
+     "evidence": {
+      "name": "medium.com",
+      "rtype": "TXT",
+      "value": "include:spf.tipalti.com",
+      "checked_at": "2026-11-14T06:40:31+00:00"
+     },
+     "supporting": []
+    }
+   ],
+   "setups": []
+  },
+  {
+   "name": "Zendesk",
+   "category": "Support and CRM",
+   "tier": "Configured",
+   "role": "sender",
+   "claims": [
+    {
+     "service": "Zendesk",
+     "kind": "included in SPF",
+     "where": "medium.com",
+     "evidence": {
+      "name": "medium.com",
+      "rtype": "TXT",
+      "value": "include:mail.zendesk.com",
+      "checked_at": "2026-11-14T06:40:31+00:00"
+     },
+     "supporting": []
+    },
+    {
+     "service": "Zendesk",
+     "kind": "hosts a DKIM key (CNAME)",
+     "where": "medium.com",
+     "evidence": {
+      "name": "zendesk1._domainkey.medium.com",
+      "rtype": "TXT",
+      "value": "v=DKIM1; t=s (strict); n=core; k=rsa; p=MIIBIjANBgkq..., 2048-bit, fp cb942434bd40aaba via zendesk1._domainkey.zendesk.com",
+      "checked_at": "2026-11-14T06:40:31+00:00"
+     },
+     "supporting": []
+    },
+    {
+     "service": "Zendesk",
+     "kind": "hosts a DKIM key (CNAME)",
+     "where": "medium.com",
+     "evidence": {
+      "name": "zendesk2._domainkey.medium.com",
+      "rtype": "TXT",
+      "value": "v=DKIM1; t=s (strict); n=core; k=rsa; p=MIIBIjANBgkq..., 2048-bit, fp c5fa8a017cd8c5a5 via zendesk2._domainkey.zendesk.com",
+      "checked_at": "2026-11-14T06:40:31+00:00"
+     },
+     "supporting": []
+    },
+    {
+     "service": "Zendesk",
+     "kind": "receives replies and bounces for a sending subdomain (MX)",
+     "where": "help.medium.com",
+     "evidence": {
+      "name": "help.medium.com",
+      "rtype": "MX",
+      "value": "10 mail-pod-23.int.zendesk.com",
+      "checked_at": "2026-11-14T06:40:31+00:00"
+     },
+     "supporting": []
+    },
+    {
+     "service": "Zendesk",
+     "kind": "included in SPF",
+     "where": "help.medium.com",
+     "evidence": {
+      "name": "help.medium.com",
+      "rtype": "TXT",
+      "value": "include:mail.zendesk.com",
+      "checked_at": "2026-11-14T06:40:31+00:00"
+     },
+     "supporting": []
+    }
+   ],
+   "setups": [
+    {
+     "service": "Zendesk",
+     "where": "medium.com",
+     "items": [
+      {
+       "record": "spf",
+       "need": "required",
+       "state": "present",
+       "evidence": [
+        {
+         "name": "medium.com",
+         "rtype": "TXT",
+         "value": "include:mail.zendesk.com",
+         "checked_at": "2026-11-14T06:40:31+00:00"
+        }
+       ],
+       "asked": "TXT at medium.com",
+       "detail": ""
+      },
+      {
+       "record": "dkim",
+       "need": "optional",
+       "state": "present",
+       "evidence": [
+        {
+         "name": "zendesk1._domainkey.medium.com",
+         "rtype": "TXT",
+         "value": "v=DKIM1; t=s (strict); n=core; k=rsa; p=MIIBIjANBgkq..., 2048-bit, fp cb942434bd40aaba via zendesk1._domainkey.zendesk.com",
+         "checked_at": "2026-11-14T06:40:31+00:00"
+        },
+        {
+         "name": "zendesk2._domainkey.medium.com",
+         "rtype": "TXT",
+         "value": "v=DKIM1; t=s (strict); n=core; k=rsa; p=MIIBIjANBgkq..., 2048-bit, fp c5fa8a017cd8c5a5 via zendesk2._domainkey.zendesk.com",
+         "checked_at": "2026-11-14T06:40:31+00:00"
+        }
+       ],
+       "asked": "TXT at zendesk1._domainkey.medium.com and TXT at zendesk2._domainkey.medium.com",
+       "detail": ""
+      }
+     ],
+     "complete": true
+    }
+   ]
+  },
+  {
+   "name": "Cloudflare Email Routing",
+   "category": "Mailbox",
+   "tier": "Likely",
+   "role": "sender",
+   "claims": [
+    {
+     "service": "Cloudflare Email Routing",
+     "kind": "DKIM key named for it",
+     "where": "medium.com",
+     "evidence": {
+      "name": "cf2024-1._domainkey.medium.com",
+      "rtype": "TXT",
+      "value": "v=DKIM1; h=sha256; k=rsa; p=MIIBIjANBgkq..., 2048-bit, fp 3893fd85802c0281",
+      "checked_at": "2026-11-14T06:40:31+00:00"
+     },
+     "supporting": []
+    }
+   ],
+   "setups": [
+    {
+     "service": "Cloudflare Email Routing",
+     "where": "medium.com",
+     "items": [
+      {
+       "record": "mx",
+       "need": "optional",
+       "state": "missing",
+       "evidence": [
+        {
+         "name": "medium.com",
+         "rtype": "MX",
+         "value": "1 aspmx.l.google.com",
+         "checked_at": "2026-11-14T06:40:31+00:00"
+        },
+        {
+         "name": "medium.com",
+         "rtype": "MX",
+         "value": "5 alt1.aspmx.l.google.com",
+         "checked_at": "2026-11-14T06:40:31+00:00"
+        },
+        {
+         "name": "medium.com",
+         "rtype": "MX",
+         "value": "5 alt2.aspmx.l.google.com",
+         "checked_at": "2026-11-14T06:40:31+00:00"
+        },
+        {
+         "name": "medium.com",
+         "rtype": "MX",
+         "value": "10 aspmx2.googlemail.com",
+         "checked_at": "2026-11-14T06:40:31+00:00"
+        },
+        {
+         "name": "medium.com",
+         "rtype": "MX",
+         "value": "10 aspmx3.googlemail.com",
+         "checked_at": "2026-11-14T06:40:31+00:00"
+        }
+       ],
+       "asked": "MX at medium.com",
+       "detail": "no MX host under mx.cloudflare.net"
+      },
+      {
+       "record": "spf",
+       "need": "required",
+       "state": "missing",
+       "evidence": [
+        {
+         "name": "medium.com",
+         "rtype": "TXT",
+         "value": "v=spf1 include:amazonses.com include:_spf.google.com include:mail.zendesk.com include:sendgrid.net include:spf.tipalti.com include:_spf.psm.knowbe4.com ~all",
+         "checked_at": "2026-11-14T06:40:31+00:00"
+        }
+       ],
+       "asked": "TXT at medium.com",
+       "detail": "the record does not authorize _spf.mx.cloudflare.net"
+      },
+      {
+       "record": "dkim",
+       "need": "required",
+       "state": "present",
+       "evidence": [
+        {
+         "name": "cf2024-1._domainkey.medium.com",
+         "rtype": "TXT",
+         "value": "v=DKIM1; h=sha256; k=rsa; p=MIIBIjANBgkq..., 2048-bit, fp 3893fd85802c0281",
+         "checked_at": "2026-11-14T06:40:31+00:00"
+        }
+       ],
+       "asked": "TXT at cf2024-1._domainkey.medium.com",
+       "detail": ""
+      }
+     ],
+     "complete": false
+    }
+   ]
+  },
+  {
+   "name": "Kit",
+   "category": "Marketing",
+   "tier": "Likely",
+   "role": "sender",
+   "claims": [
+    {
+     "service": "Kit",
+     "kind": "DKIM key named for it",
+     "where": "medium.com",
+     "evidence": {
+      "name": "cka._domainkey.medium.com",
+      "rtype": "TXT",
+      "value": "k=rsa; t=s (strict); p=MIGfMA0GCSqG..., 1024-bit, fp ae2635ee9f973947 via dkim.dm-0m73zvny.sg7.convertkit.com",
+      "checked_at": "2026-11-14T06:40:31+00:00"
+     },
+     "supporting": []
+    }
+   ],
+   "setups": []
+  },
+  {
+   "name": "Mandrill",
+   "category": "Transactional",
+   "tier": "Likely",
+   "role": "sender",
+   "claims": [
+    {
+     "service": "Mandrill",
+     "kind": "DKIM key named for it",
+     "where": "medium.com",
+     "evidence": {
+      "name": "mandrill._domainkey.medium.com",
+      "rtype": "TXT",
+      "value": "v=DKIM1; k=rsa; p=MIGfMA0GCSqG..., 1024-bit, fp 9cee89b6f986543a",
+      "checked_at": "2026-11-14T06:40:31+00:00"
+     },
+     "supporting": []
+    }
+   ],
+   "setups": [
+    {
+     "service": "Mandrill",
+     "where": "medium.com",
+     "items": [
+      {
+       "record": "dkim",
+       "need": "required",
+       "state": "present",
+       "evidence": [
+        {
+         "name": "mandrill._domainkey.medium.com",
+         "rtype": "TXT",
+         "value": "v=DKIM1; k=rsa; p=MIGfMA0GCSqG..., 1024-bit, fp 9cee89b6f986543a",
+         "checked_at": "2026-11-14T06:40:31+00:00"
+        }
+       ],
+       "asked": "TXT at mandrill._domainkey.medium.com",
+       "detail": "older setup: a key at mandrill; the current setup names mte1 and mte2"
+      },
+      {
+       "record": "return_path",
+       "need": "optional",
+       "state": "missing",
+       "evidence": [
+        {
+         "name": "bounce.medium.com",
+         "rtype": "CNAME",
+         "value": "no record of this type",
+         "checked_at": "2026-11-14T06:40:31+00:00"
+        },
+        {
+         "name": "bounces.medium.com",
+         "rtype": "CNAME",
+         "value": "medium.com",
+         "checked_at": "2026-11-14T06:40:31+00:00"
+        },
+        {
+         "name": "em.medium.com",
+         "rtype": "CNAME",
+         "value": "no record of this type",
+         "checked_at": "2026-11-14T06:40:31+00:00"
+        },
+        {
+         "name": "email.medium.com",
+         "rtype": "CNAME",
+         "value": "no record of this type",
+         "checked_at": "2026-11-14T06:40:31+00:00"
+        },
+        {
+         "name": "mail.medium.com",
+         "rtype": "CNAME",
+         "value": "no record of this type",
+         "checked_at": "2026-11-14T06:40:31+00:00"
+        },
+        {
+         "name": "send.medium.com",
+         "rtype": "CNAME",
+         "value": "no record of this type",
+         "checked_at": "2026-11-14T06:40:31+00:00"
+        },
+        {
+         "name": "mta.medium.com",
+         "rtype": "CNAME",
+         "value": "no record of this type",
+         "checked_at": "2026-11-14T06:40:31+00:00"
+        },
+        {
+         "name": "rp.medium.com",
+         "rtype": "CNAME",
+         "value": "no record of this type",
+         "checked_at": "2026-11-14T06:40:31+00:00"
+        },
+        {
+         "name": "pm-bounces.medium.com",
+         "rtype": "CNAME",
+         "value": "no record of this type",
+         "checked_at": "2026-11-14T06:40:31+00:00"
+        },
+        {
+         "name": "links.medium.com",
+         "rtype": "CNAME",
+         "value": "no record of this type",
+         "checked_at": "2026-11-14T06:40:31+00:00"
+        },
+        {
+         "name": "link.medium.com",
+         "rtype": "CNAME",
+         "value": "custom.bnc.lt",
+         "checked_at": "2026-11-14T06:40:31+00:00"
+        },
+        {
+         "name": "click.medium.com",
+         "rtype": "CNAME",
+         "value": "no record of this type",
+         "checked_at": "2026-11-14T06:40:31+00:00"
+        },
+        {
+         "name": "track.medium.com",
+         "rtype": "CNAME",
+         "value": "no record of this type",
+         "checked_at": "2026-11-14T06:40:31+00:00"
+        },
+        {
+         "name": "tracking.medium.com",
+         "rtype": "CNAME",
+         "value": "no record of this type",
+         "checked_at": "2026-11-14T06:40:31+00:00"
+        },
+        {
+         "name": "url.medium.com",
+         "rtype": "CNAME",
+         "value": "no record of this type",
+         "checked_at": "2026-11-14T06:40:31+00:00"
+        },
+        {
+         "name": "go.medium.com",
+         "rtype": "CNAME",
+         "value": "no record of this type",
+         "checked_at": "2026-11-14T06:40:31+00:00"
+        },
+        {
+         "name": "autodiscover.medium.com",
+         "rtype": "CNAME",
+         "value": "no record of this type",
+         "checked_at": "2026-11-14T06:40:31+00:00"
+        },
+        {
+         "name": "cf-bounce.medium.com",
+         "rtype": "CNAME",
+         "value": "no record of this type",
+         "checked_at": "2026-11-14T06:40:31+00:00"
+        },
+        {
+         "name": "eversrv.medium.com",
+         "rtype": "CNAME",
+         "value": "no record of this type",
+         "checked_at": "2026-11-14T06:40:31+00:00"
+        },
+        {
+         "name": "fwdkim1.medium.com",
+         "rtype": "CNAME",
+         "value": "no record of this type",
+         "checked_at": "2026-11-14T06:40:31+00:00"
+        },
+        {
+         "name": "bnc3.medium.com",
+         "rtype": "CNAME",
+         "value": "no record of this type",
+         "checked_at": "2026-11-14T06:40:31+00:00"
+        },
+        {
+         "name": "bounces.cloud.em.medium.com",
+         "rtype": "CNAME",
+         "value": "no record of this type",
+         "checked_at": "2026-11-14T06:40:31+00:00"
+        },
+        {
+         "name": "bounces.cloud2.em.medium.com",
+         "rtype": "CNAME",
+         "value": "no record of this type",
+         "checked_at": "2026-11-14T06:40:31+00:00"
+        },
+        {
+         "name": "outbound.intercom.medium.com",
+         "rtype": "CNAME",
+         "value": "rp.medium-a7e301761373.intercom-mail.com",
+         "checked_at": "2026-11-14T06:40:31+00:00"
+        },
+        {
+         "name": "atlassian-bounces.medium.com",
+         "rtype": "CNAME",
+         "value": "no record of this type",
+         "checked_at": "2026-11-14T06:40:31+00:00"
+        }
+       ],
+       "asked": "CNAME at 25 labels under medium.com",
+       "detail": "no CNAME into mandrillapp.com at the 25 labels asked"
+      },
+      {
+       "record": "tracking",
+       "need": "optional",
+       "state": "missing",
+       "evidence": [
+        {
+         "name": "bounce.medium.com",
+         "rtype": "CNAME",
+         "value": "no record of this type",
+         "checked_at": "2026-11-14T06:40:31+00:00"
+        },
+        {
+         "name": "bounces.medium.com",
+         "rtype": "CNAME",
+         "value": "medium.com",
+         "checked_at": "2026-11-14T06:40:31+00:00"
+        },
+        {
+         "name": "em.medium.com",
+         "rtype": "CNAME",
+         "value": "no record of this type",
+         "checked_at": "2026-11-14T06:40:31+00:00"
+        },
+        {
+         "name": "email.medium.com",
+         "rtype": "CNAME",
+         "value": "no record of this type",
+         "checked_at": "2026-11-14T06:40:31+00:00"
+        },
+        {
+         "name": "mail.medium.com",
+         "rtype": "CNAME",
+         "value": "no record of this type",
+         "checked_at": "2026-11-14T06:40:31+00:00"
+        },
+        {
+         "name": "send.medium.com",
+         "rtype": "CNAME",
+         "value": "no record of this type",
+         "checked_at": "2026-11-14T06:40:31+00:00"
+        },
+        {
+         "name": "mta.medium.com",
+         "rtype": "CNAME",
+         "value": "no record of this type",
+         "checked_at": "2026-11-14T06:40:31+00:00"
+        },
+        {
+         "name": "rp.medium.com",
+         "rtype": "CNAME",
+         "value": "no record of this type",
+         "checked_at": "2026-11-14T06:40:31+00:00"
+        },
+        {
+         "name": "pm-bounces.medium.com",
+         "rtype": "CNAME",
+         "value": "no record of this type",
+         "checked_at": "2026-11-14T06:40:31+00:00"
+        },
+        {
+         "name": "links.medium.com",
+         "rtype": "CNAME",
+         "value": "no record of this type",
+         "checked_at": "2026-11-14T06:40:31+00:00"
+        },
+        {
+         "name": "link.medium.com",
+         "rtype": "CNAME",
+         "value": "custom.bnc.lt",
+         "checked_at": "2026-11-14T06:40:31+00:00"
+        },
+        {
+         "name": "click.medium.com",
+         "rtype": "CNAME",
+         "value": "no record of this type",
+         "checked_at": "2026-11-14T06:40:31+00:00"
+        },
+        {
+         "name": "track.medium.com",
+         "rtype": "CNAME",
+         "value": "no record of this type",
+         "checked_at": "2026-11-14T06:40:31+00:00"
+        },
+        {
+         "name": "tracking.medium.com",
+         "rtype": "CNAME",
+         "value": "no record of this type",
+         "checked_at": "2026-11-14T06:40:31+00:00"
+        },
+        {
+         "name": "url.medium.com",
+         "rtype": "CNAME",
+         "value": "no record of this type",
+         "checked_at": "2026-11-14T06:40:31+00:00"
+        },
+        {
+         "name": "go.medium.com",
+         "rtype": "CNAME",
+         "value": "no record of this type",
+         "checked_at": "2026-11-14T06:40:31+00:00"
+        },
+        {
+         "name": "autodiscover.medium.com",
+         "rtype": "CNAME",
+         "value": "no record of this type",
+         "checked_at": "2026-11-14T06:40:31+00:00"
+        },
+        {
+         "name": "cf-bounce.medium.com",
+         "rtype": "CNAME",
+         "value": "no record of this type",
+         "checked_at": "2026-11-14T06:40:31+00:00"
+        },
+        {
+         "name": "eversrv.medium.com",
+         "rtype": "CNAME",
+         "value": "no record of this type",
+         "checked_at": "2026-11-14T06:40:31+00:00"
+        },
+        {
+         "name": "fwdkim1.medium.com",
+         "rtype": "CNAME",
+         "value": "no record of this type",
+         "checked_at": "2026-11-14T06:40:31+00:00"
+        },
+        {
+         "name": "bnc3.medium.com",
+         "rtype": "CNAME",
+         "value": "no record of this type",
+         "checked_at": "2026-11-14T06:40:31+00:00"
+        },
+        {
+         "name": "bounces.cloud.em.medium.com",
+         "rtype": "CNAME",
+         "value": "no record of this type",
+         "checked_at": "2026-11-14T06:40:31+00:00"
+        },
+        {
+         "name": "bounces.cloud2.em.medium.com",
+         "rtype": "CNAME",
+         "value": "no record of this type",
+         "checked_at": "2026-11-14T06:40:31+00:00"
+        },
+        {
+         "name": "outbound.intercom.medium.com",
+         "rtype": "CNAME",
+         "value": "rp.medium-a7e301761373.intercom-mail.com",
+         "checked_at": "2026-11-14T06:40:31+00:00"
+        },
+        {
+         "name": "atlassian-bounces.medium.com",
+         "rtype": "CNAME",
+         "value": "no record of this type",
+         "checked_at": "2026-11-14T06:40:31+00:00"
+        }
+       ],
+       "asked": "CNAME at 25 labels under medium.com",
+       "detail": "no CNAME into mandrillapp.com at the 25 labels asked"
+      }
+     ],
+     "complete": true
+    }
+   ]
+  },
+  {
+   "name": "Valimail",
+   "category": "DMARC reporting",
+   "tier": null,
+   "role": "reporting",
+   "claims": [
+    {
+     "service": "Valimail",
+     "kind": "receives DMARC reports",
+     "where": "medium.com",
+     "evidence": {
+      "name": "_dmarc.medium.com",
+      "rtype": "TXT",
+      "value": "v=DMARC1; p=reject; sp=reject; pct=100; fo=1; ri=3600; rua=mailto:dmarc.rua@medium.com,mailto:dmarc_agg@vali.email; ruf=mailto:dmarc.rua@medium.com,mailto:ruf@dmarc.medium.com,mailto:dmarc_agg@vali.email;",
+      "checked_at": "2026-11-14T06:40:31+00:00"
+     },
+     "supporting": [
+      {
+       "name": "medium.com._report._dmarc.vali.email",
+       "rtype": "TXT",
+       "value": "v=DMARC1;",
+       "checked_at": "2026-11-14T06:40:31+00:00"
+      }
+     ]
+    }
+   ],
+   "setups": []
+  }
+ ],
+ "run": {
+  "checked_at": "2026-11-14T06:40:31+00:00",
+  "resolver": "doh google"
+ },
+ "findings": [
+  {
+   "severity": "warning",
+   "title": "The google key at medium.com is 1024-bit",
+   "detail": "Some receivers already treat 1024-bit RSA keys as weak. Rotate to 2048-bit.",
+   "evidence": [
+    {
+     "name": "google._domainkey.medium.com",
+     "rtype": "TXT",
+     "value": "v=DKIM1; k=rsa; p=MIGfMA0GCSqG..., 1024-bit, fp ed74a6d0292ef851",
+     "checked_at": "2026-11-14T06:40:31+00:00"
+    }
+   ]
+  },
+  {
+   "severity": "warning",
+   "title": "The s2 key at medium.com is 1024-bit",
+   "detail": "Some receivers already treat 1024-bit RSA keys as weak. Rotate to 2048-bit.",
+   "evidence": [
+    {
+     "name": "s2._domainkey.medium.com",
+     "rtype": "TXT",
+     "value": "k=rsa; t=s (strict); p=MIGfMA0GCSqG..., 1024-bit, fp 656c793271cffad5 via s2.domainkey.u1815634.wl135.sendgrid.net",
+     "checked_at": "2026-11-14T06:40:31+00:00"
+    }
+   ]
+  },
+  {
+   "severity": "warning",
+   "title": "The smtpapi key at medium.com is 1024-bit",
+   "detail": "Some receivers already treat 1024-bit RSA keys as weak. Rotate to 2048-bit.",
+   "evidence": [
+    {
+     "name": "smtpapi._domainkey.medium.com",
+     "rtype": "TXT",
+     "value": "k=rsa; t=s (strict); p=MIGfMA0GCSqG..., 1024-bit, fp 303963420cfee1c6",
+     "checked_at": "2026-11-14T06:40:31+00:00"
+    }
+   ]
+  },
+  {
+   "severity": "warning",
+   "title": "The intercom key at medium.com is 1024-bit",
+   "detail": "Some receivers already treat 1024-bit RSA keys as weak. Rotate to 2048-bit.",
+   "evidence": [
+    {
+     "name": "intercom._domainkey.medium.com",
+     "rtype": "TXT",
+     "value": "k=rsa; p=MIGfMA0GCSqG..., 1024-bit, fp c5fb9f656f567b63 via 5fdfac11-2ed9-41ef-9460-e56a59043246.dkim.intercom.io",
+     "checked_at": "2026-11-14T06:40:31+00:00"
+    }
+   ]
+  },
+  {
+   "severity": "warning",
+   "title": "The cka key at medium.com is 1024-bit",
+   "detail": "Some receivers already treat 1024-bit RSA keys as weak. Rotate to 2048-bit.",
+   "evidence": [
+    {
+     "name": "cka._domainkey.medium.com",
+     "rtype": "TXT",
+     "value": "k=rsa; t=s (strict); p=MIGfMA0GCSqG..., 1024-bit, fp ae2635ee9f973947 via dkim.dm-0m73zvny.sg7.convertkit.com",
+     "checked_at": "2026-11-14T06:40:31+00:00"
+    }
+   ]
+  },
+  {
+   "severity": "warning",
+   "title": "The mandrill key at medium.com is 1024-bit",
+   "detail": "Some receivers already treat 1024-bit RSA keys as weak. Rotate to 2048-bit.",
+   "evidence": [
+    {
+     "name": "mandrill._domainkey.medium.com",
+     "rtype": "TXT",
+     "value": "v=DKIM1; k=rsa; p=MIGfMA0GCSqG..., 1024-bit, fp 9cee89b6f986543a",
+     "checked_at": "2026-11-14T06:40:31+00:00"
+    }
+   ]
+  },
+  {
+   "severity": "warning",
+   "title": "The mx key at medium.com is 1024-bit",
+   "detail": "Some receivers already treat 1024-bit RSA keys as weak. Rotate to 2048-bit.",
+   "evidence": [
+    {
+     "name": "mx._domainkey.medium.com",
+     "rtype": "TXT",
+     "value": "k=rsa; p=MIGfMA0GCSqG..., 1024-bit, fp ed9c30e7c3b40a07",
+     "checked_at": "2026-11-14T06:40:31+00:00"
+    }
+   ]
+  },
+  {
+   "severity": "warning",
+   "title": "The smtpapi key at email.medium.com is 1024-bit",
+   "detail": "Some receivers already treat 1024-bit RSA keys as weak. Rotate to 2048-bit.",
+   "evidence": [
+    {
+     "name": "smtpapi._domainkey.email.medium.com",
+     "rtype": "TXT",
+     "value": "k=rsa; t=s (strict); p=MIGfMA0GCSqG..., 1024-bit, fp 303963420cfee1c6",
+     "checked_at": "2026-11-14T06:40:31+00:00"
+    }
+   ]
+  },
+  {
+   "severity": "warning",
+   "title": "Google Workspace at mail.medium.com has no SPF",
+   "detail": "Its documented setup needs it and the map shows it missing: no SPF record.",
+   "evidence": [
+    {
+     "name": "mail.medium.com",
+     "rtype": "TXT",
+     "value": "no SPF record (v=spf1)",
+     "checked_at": "2026-11-14T06:40:31+00:00"
+    }
+   ]
+  },
+  {
+   "severity": "warning",
+   "title": "Google Workspace at mail.medium.com has no DKIM",
+   "detail": "Its documented setup needs it and the map shows it missing: no key at google._domainkey, a name that does not exist.",
+   "evidence": [
+    {
+     "name": "google._domainkey.mail.medium.com",
+     "rtype": "TXT",
+     "value": "no such name",
+     "checked_at": "2026-11-14T06:40:31+00:00"
+    },
+    {
+     "name": "_domainkey.mail.medium.com",
+     "rtype": "TXT",
+     "value": "no record of this type",
+     "checked_at": "2026-11-14T06:40:31+00:00"
+    }
+   ]
+  },
+  {
+   "severity": "note",
+   "title": "The smtpapi key at medium.com and the smtpapi key at email.medium.com are the same key",
+   "detail": "They publish one public key, fp 303963420cfee1c6, so one private key signs for all of them, and replacing the key at one selector leaves it live at the others.",
+   "evidence": [
+    {
+     "name": "smtpapi._domainkey.medium.com",
+     "rtype": "TXT",
+     "value": "k=rsa; t=s (strict); p=MIGfMA0GCSqG..., 1024-bit, fp 303963420cfee1c6",
+     "checked_at": "2026-11-14T06:40:31+00:00"
+    },
+    {
+     "name": "smtpapi._domainkey.email.medium.com",
+     "rtype": "TXT",
+     "value": "k=rsa; t=s (strict); p=MIGfMA0GCSqG..., 1024-bit, fp 303963420cfee1c6",
+     "checked_at": "2026-11-14T06:40:31+00:00"
+    }
+   ]
+  },
+  {
+   "severity": "note",
+   "title": "Cloudflare Email Routing at medium.com has no SPF",
+   "detail": "Its documented setup needs it and the map shows it missing: the record does not authorize _spf.mx.cloudflare.net. The map shows this service only as likely, so check it still sends first.",
+   "evidence": [
+    {
+     "name": "medium.com",
+     "rtype": "TXT",
+     "value": "v=spf1 include:amazonses.com include:_spf.google.com include:mail.zendesk.com include:sendgrid.net include:spf.tipalti.com include:_spf.psm.knowbe4.com ~all",
+     "checked_at": "2026-11-14T06:40:31+00:00"
+    }
+   ]
+  }
+ ],
+ "unknowns": [
+  {
+   "what": "CNAME at link",
+   "value": "custom.bnc.lt",
+   "where": "medium.com",
+   "evidence": {
+    "name": "link.medium.com",
+    "rtype": "CNAME",
+    "value": "custom.bnc.lt",
+    "checked_at": "2026-11-14T06:40:31+00:00"
+   }
+  },
+  {
+   "what": "DKIM key",
+   "value": "mx",
+   "where": "medium.com",
+   "evidence": {
+    "name": "mx._domainkey.medium.com",
+    "rtype": "TXT",
+    "value": "k=rsa; p=MIGfMA0GCSqG..., 1024-bit, fp ed9c30e7c3b40a07",
+    "checked_at": "2026-11-14T06:40:31+00:00"
+   }
+  }
+ ],
+ "gaps": [
+  {
+   "asked": "the website",
+   "happened": "not read: web checks were turned off (--no-web)",
+   "kind": "off",
+   "count": 0,
+   "cap": 0
+  },
+  {
+   "asked": "certificate transparency, crt.sh: GET https://crt.sh/?q=%25.medium.com&output=json",
+   "happened": "not asked: read only with --ct (it also holds expired certificates)",
+   "kind": "off",
+   "count": 0,
+   "cap": 0
+  },
+  {
+   "asked": "DKIM selectors at email.medium.com",
+   "happened": "95 of 122 not asked. The first 27 were asked, plus any the name's own SPF, MX or delegation points to (cap 27).",
+   "kind": "dkim",
+   "count": 95,
+   "cap": 27
+  },
+  {
+   "asked": "DKIM selectors at mail.medium.com",
+   "happened": "92 of 126 not asked. The first 27 were asked, plus any the name's own SPF, MX or delegation points to (cap 27).",
+   "kind": "dkim",
+   "count": 92,
+   "cap": 27
+  }
+ ],
+ "subdomains_checked": [
+  "email.medium.com",
+  "help.medium.com",
+  "mail.medium.com",
+  "read.medium.com"
+ ],
+ "checked": [
+  {
+   "where": "medium.com",
+   "dkim_selectors": [
+    "google",
+    "gapps",
+    "googlemail",
+    "s1",
+    "s2",
+    "smtpapi",
+    "sendgrid",
+    "acdkim1",
+    "acdkim2",
+    "ses",
+    "ses1",
+    "ses2",
+    "aweber_key_a",
+    "aweber_key_b",
+    "aweber_key_c",
+    "brevo",
+    "brevo1",
+    "brevo2",
+    "cm",
+    "cf2024-1",
+    "ctct1",
+    "ctct2",
+    "krs",
+    "cio",
+    "e2ma-k1",
+    "e2ma-k2",
+    "e2ma-k3",
+    "everlytickey1",
+    "everlytickey2",
+    "fm2",
+    "fm1",
+    "fm3",
+    "mesmtp",
+    "secureserver1",
+    "secureserver2",
+    "gor",
+    "strong1",
+    "strong2",
+    "hs1",
+    "hs2",
+    "intercom",
+    "s1-ionos",
+    "s42582890",
+    "s2-ionos",
+    "cka",
+    "kl",
+    "kl1",
+    "kl2",
+    "km1",
+    "km2",
+    "k2",
+    "k1",
+    "k3",
+    "mailchimp",
+    "litesrv",
+    "mg",
+    "mailgun",
+    "mg1",
+    "pdk1",
+    "pdk2",
+    "mailjet",
+    "mailpoet2",
+    "mailpoet1",
+    "mandrill",
+    "mte1",
+    "mte2",
+    "marketo",
+    "mkto",
+    "mkto1",
+    "selector1",
+    "selector2",
+    "mimecast",
+    "mimecast20190719",
+    "mc1",
+    "pepipost",
+    "pm1",
+    "pp1",
+    "proofpoint",
+    "protonmail",
+    "protonmail2",
+    "protonmail3",
+    "resend",
+    "sailthru",
+    "sailthru2",
+    "salesforce",
+    "salesforce2",
+    "salesforce1",
+    "sf",
+    "sf1",
+    "sf2",
+    "sfdc",
+    "200608",
+    "pardot",
+    "sfmc",
+    "scph0819",
+    "sparkpost",
+    "squarespace",
+    "mailru",
+    "mail",
+    "zendesk1",
+    "zendesk2",
+    "zendesk",
+    "zoho",
+    "zohomail",
+    "api",
+    "default",
+    "dk",
+    "dkim",
+    "dkim1",
+    "dkim2",
+    "email",
+    "k",
+    "key",
+    "key1",
+    "key2",
+    "mta",
+    "mx",
+    "pm",
+    "s",
+    "selector",
+    "smtp",
+    "sp",
+    "20161025",
+    "20210112",
+    "20221208",
+    "20230601"
+   ],
+   "labels": [
+    "bounce",
+    "bounces",
+    "em",
+    "email",
+    "mail",
+    "send",
+    "mta",
+    "rp",
+    "pm-bounces",
+    "links",
+    "link",
+    "click",
+    "track",
+    "tracking",
+    "url",
+    "go",
+    "autodiscover",
+    "cf-bounce",
+    "eversrv",
+    "fwdkim1",
+    "bnc3",
+    "bounces.cloud.em",
+    "bounces.cloud2.em",
+    "outbound.intercom",
+    "atlassian-bounces"
+   ],
+   "pages": [
+    "https://api.certspotter.com/v1/issuances?domain=medium.com&include_subdomains=true&expand=dns_names"
+   ],
+   "denial": "none by rcode",
+   "dkim_skipped": []
+  },
+  {
+   "where": "email.medium.com",
+   "dkim_selectors": [
+    "s1",
+    "s2",
+    "smtpapi",
+    "sendgrid",
+    "acdkim1",
+    "acdkim2",
+    "ses",
+    "ses1",
+    "ses2",
+    "aweber_key_a",
+    "aweber_key_b",
+    "aweber_key_c",
+    "brevo",
+    "brevo1",
+    "brevo2",
+    "cm",
+    "cf2024-1",
+    "ctct1",
+    "ctct2",
+    "krs",
+    "cio",
+    "e2ma-k1",
+    "e2ma-k2",
+    "e2ma-k3",
+    "everlytickey1",
+    "everlytickey2",
+    "fm2"
+   ],
+   "labels": [],
+   "pages": [],
+   "denial": "classic",
+   "dkim_skipped": []
+  },
+  {
+   "where": "help.medium.com",
+   "dkim_selectors": [
+    "acdkim1",
+    "acdkim2",
+    "ses",
+    "ses1",
+    "ses2",
+    "aweber_key_a",
+    "aweber_key_b",
+    "aweber_key_c",
+    "zendesk",
+    "zendesk1",
+    "zendesk2"
+   ],
+   "labels": [],
+   "pages": [],
+   "denial": "classic",
+   "dkim_skipped": []
+  },
+  {
+   "where": "mail.medium.com",
+   "dkim_selectors": [
+    "acdkim1",
+    "acdkim2",
+    "ses",
+    "ses1",
+    "ses2",
+    "aweber_key_a",
+    "aweber_key_b",
+    "aweber_key_c",
+    "brevo",
+    "brevo1",
+    "brevo2",
+    "cm",
+    "cf2024-1",
+    "ctct1",
+    "ctct2",
+    "krs",
+    "cio",
+    "e2ma-k1",
+    "e2ma-k2",
+    "e2ma-k3",
+    "everlytickey1",
+    "everlytickey2",
+    "fm2",
+    "fm1",
+    "fm3",
+    "mesmtp",
+    "secureserver1",
+    "20161025",
+    "20210112",
+    "20221208",
+    "20230601",
+    "gapps",
+    "google",
+    "googlemail"
+   ],
+   "labels": [],
+   "pages": [],
+   "denial": "classic",
+   "dkim_skipped": []
+  },
+  {
+   "where": "read.medium.com",
+   "dkim_selectors": [
+    "acdkim1",
+    "acdkim2",
+    "ses",
+    "ses1",
+    "ses2",
+    "aweber_key_a",
+    "aweber_key_b",
+    "aweber_key_c"
+   ],
+   "labels": [],
+   "pages": [],
+   "denial": "classic",
+   "dkim_skipped": []
+  }
+ ],
+ "ct": {
+  "status": "off",
+  "logged": 11,
+  "resolved": 0,
+  "gone_unnamed": 0,
+  "providers": [
+   {
+    "name": "Cert Spotter",
+    "status": "read",
+    "logged": 11
+   },
+   {
+    "name": "crt.sh",
+    "status": "off",
+    "logged": 0
+   }
+  ]
+ },
+ "historical": [],
+ "logo": null,
+ "schema": "sendermap/1",
+ "absences": [
+  {
+   "asked": "DKIM keys at help.medium.com",
+   "happened": "no selectors exist: _domainkey.help.medium.com does not exist, so the 30-name sweep was skipped; the 11 names its MX, SPF and delegations point to were asked as a check, and none exists (RFC 8020 section 5)",
+   "evidence": [
+    {
+     "name": "_domainkey.help.medium.com",
+     "rtype": "TXT",
+     "value": "no such name",
+     "checked_at": "2026-11-14T06:40:31+00:00"
+    },
+    {
+     "name": "sendermap-wildcard-check._domainkey.help.medium.com",
+     "rtype": "TXT",
+     "value": "no such name",
+     "checked_at": "2026-11-14T06:40:31+00:00"
+    }
+   ]
+  },
+  {
+   "asked": "DKIM keys at mail.medium.com",
+   "happened": "selectors exist but none of the 34 names asked is one",
+   "evidence": [
+    {
+     "name": "_domainkey.mail.medium.com",
+     "rtype": "TXT",
+     "value": "no record of this type",
+     "checked_at": "2026-11-14T06:40:31+00:00"
+    }
+   ]
+  },
+  {
+   "asked": "DKIM keys at read.medium.com",
+   "happened": "no selectors exist: _domainkey.read.medium.com does not exist, so the 27-name sweep was skipped; the 8 names its MX, SPF and delegations point to were asked as a check, and none exists (RFC 8020 section 5)",
+   "evidence": [
+    {
+     "name": "_domainkey.read.medium.com",
+     "rtype": "TXT",
+     "value": "no such name",
+     "checked_at": "2026-11-14T06:40:31+00:00"
+    },
+    {
+     "name": "sendermap-wildcard-check._domainkey.read.medium.com",
+     "rtype": "TXT",
+     "value": "no such name",
+     "checked_at": "2026-11-14T06:40:31+00:00"
+    }
+   ]
+  }
+ ],
+ "story": "Google Workspace receives the domain's mail and has a DKIM key in place to sign it. Six other services are set up to send as the domain: two transactional (Amazon SES, SendGrid), two support and CRM (Intercom, Zendesk), two commerce and apps (KnowBe4, Tipalti); three more are likely from a DKIM key name alone (Cloudflare Email Routing, Kit, Mandrill). DMARC reports go to Valimail. Not checked: the website (turned off), DKIM selectors past the first 27 on two subdomains, and the crt.sh certificate log (read only with --ct)."
+}

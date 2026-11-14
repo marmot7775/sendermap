@@ -146,16 +146,16 @@ These records point somewhere Sendermap does not recognise: a service it does no
 
 ## How this was checked
 
-Checked 2026-10-12 01:24 UTC: 661 DNS lookups in 0.0 s over Google DNS over HTTPS.
+Checked 2026-10-12 01:24 UTC: 680 DNS lookups in 0.0 s over Google DNS over HTTPS.
 
-- At mills-reeve.com: 110 possible DKIM key names, 25 service record names, 1 web page.
-- At update.mills-reeve.com: 29 possible DKIM key names.
+- At mills-reeve.com: 122 possible DKIM key names, 25 service record names, 1 web page.
+- At update.mills-reeve.com: 30 possible DKIM key names.
 - At updates.mills-reeve.com: 27 possible DKIM key names.
 
 Not checked:
 
-- DKIM selectors at update.mills-reeve.com: 81 of 110 not asked. The first 27 were asked, plus any the name's own SPF, MX or delegation points to (cap 27).
-- DKIM selectors at updates.mills-reeve.com: 83 of 110 not asked. The first 27 were asked, plus any the name's own SPF, MX or delegation points to (cap 27).
+- DKIM selectors at update.mills-reeve.com: 92 of 122 not asked. The first 27 were asked, plus any the name's own SPF, MX or delegation points to (cap 27).
+- DKIM selectors at updates.mills-reeve.com: 95 of 122 not asked. The first 27 were asked, plus any the name's own SPF, MX or delegation points to (cap 27).
 
 Not run:
 
@@ -166,6 +166,6 @@ Names asked:
 
 - mills-reeve.com, Pages: `https://api.certspotter.com/v1/issuances?domain=mills-reeve.com&include_subdomains=true&expand=dns_names`
 - mills-reeve.com, CNAME labels: `bounce`, `bounces`, `em`, `email`, `mail`, `send`, `mta`, `rp`, `pm-bounces`, `links`, `link`, `click`, `track`, `tracking`, `url`, `go`, `autodiscover`, `cf-bounce`, `eversrv`, `fwdkim1`, `bnc3`, `bounces.cloud.em`, `bounces.cloud2.em`, `outbound.intercom`, `atlassian-bounces`
-- mills-reeve.com, DKIM selectors: `selector1`, `selector2`, `acdkim1`, `acdkim2`, `ses`, `aweber_key_a`, `aweber_key_b`, `aweber_key_c`, `brevo`, `brevo1`, `brevo2`, `cm`, `cf2024-1`, `ctct1`, `ctct2`, `krs`, `e2ma-k1`, `e2ma-k2`, `e2ma-k3`, `everlytickey1`, `everlytickey2`, `fm2`, `fm1`, `fm3`, `mesmtp`, `secureserver1`, `secureserver2`, `google`, `gapps`, `gor`, `strong1`, `strong2`, `hs1`, `hs2`, `intercom`, `s1-ionos`, `s42582890`, `s2-ionos`, `cka`, `kl`, `kl1`, `kl2`, `km1`, `km2`, `k2`, `k1`, `k3`, `litesrv`, `mg`, `mailgun`, `mg1`, `pdk1`, `pdk2`, `mailjet`, `mailpoet2`, `mailpoet1`, `mandrill`, `mte1`, `mte2`, `marketo`, `mkto`, `mkto1`, `mimecast`, `mimecast20190719`, `pepipost`, `pp1`, `protonmail`, `protonmail2`, `protonmail3`, `resend`, `sailthru`, `salesforce`, `salesforce2`, `salesforce1`, `sf`, `sf1`, `sf2`, `sfdc`, `200608`, `pardot`, `sfmc`, `s1`, `s2`, `smtpapi`, `scph0819`, `sparkpost`, `squarespace`, `zendesk1`, `zendesk2`, `zoho`, `mail`, `mailru`, `api`, `default`, `dk`, `dkim`, `dkim1`, `dkim2`, `email`, `k`, `key`, `key1`, `key2`, `mta`, `mx`, `pm`, `s`, `selector`, `smtp`, `sp`
-- update.mills-reeve.com, DKIM selectors: `acdkim1`, `acdkim2`, `ses`, `aweber_key_a`, `aweber_key_b`, `aweber_key_c`, `brevo`, `brevo1`, `brevo2`, `cm`, `cf2024-1`, `ctct1`, `ctct2`, `krs`, `e2ma-k1`, `e2ma-k2`, `e2ma-k3`, `everlytickey1`, `everlytickey2`, `fm2`, `fm1`, `fm3`, `mesmtp`, `secureserver1`, `secureserver2`, `google`, `gapps`, `mimecast`, `mimecast20190719`
-- updates.mills-reeve.com, DKIM selectors: `acdkim1`, `acdkim2`, `ses`, `aweber_key_a`, `aweber_key_b`, `aweber_key_c`, `brevo`, `brevo1`, `brevo2`, `cm`, `cf2024-1`, `ctct1`, `ctct2`, `krs`, `e2ma-k1`, `e2ma-k2`, `e2ma-k3`, `everlytickey1`, `everlytickey2`, `fm2`, `fm1`, `fm3`, `mesmtp`, `secureserver1`, `secureserver2`, `google`, `gapps`
+- mills-reeve.com, DKIM selectors: `selector1`, `selector2`, `acdkim1`, `acdkim2`, `ses`, `ses1`, `ses2`, `aweber_key_a`, `aweber_key_b`, `aweber_key_c`, `brevo`, `brevo1`, `brevo2`, `cm`, `cf2024-1`, `ctct1`, `ctct2`, `krs`, `cio`, `e2ma-k1`, `e2ma-k2`, `e2ma-k3`, `everlytickey1`, `everlytickey2`, `fm2`, `fm1`, `fm3`, `mesmtp`, `secureserver1`, `secureserver2`, `google`, `gapps`, `googlemail`, `gor`, `strong1`, `strong2`, `hs1`, `hs2`, `intercom`, `s1-ionos`, `s42582890`, `s2-ionos`, `cka`, `kl`, `kl1`, `kl2`, `km1`, `km2`, `k2`, `k1`, `k3`, `mailchimp`, `litesrv`, `mg`, `mailgun`, `mg1`, `pdk1`, `pdk2`, `mailjet`, `mailpoet2`, `mailpoet1`, `mandrill`, `mte1`, `mte2`, `marketo`, `mkto`, `mkto1`, `mimecast`, `mimecast20190719`, `mc1`, `pepipost`, `pm1`, `pp1`, `proofpoint`, `protonmail`, `protonmail2`, `protonmail3`, `resend`, `sailthru`, `sailthru2`, `salesforce`, `salesforce2`, `salesforce1`, `sf`, `sf1`, `sf2`, `sfdc`, `200608`, `pardot`, `sfmc`, `s1`, `s2`, `smtpapi`, `sendgrid`, `scph0819`, `sparkpost`, `squarespace`, `mailru`, `mail`, `zendesk1`, `zendesk2`, `zendesk`, `zoho`, `zohomail`, `api`, `default`, `dk`, `dkim`, `dkim1`, `dkim2`, `email`, `k`, `key`, `key1`, `key2`, `mta`, `mx`, `pm`, `s`, `selector`, `smtp`, `sp`
+- update.mills-reeve.com, DKIM selectors: `acdkim1`, `acdkim2`, `ses`, `ses1`, `ses2`, `aweber_key_a`, `aweber_key_b`, `aweber_key_c`, `brevo`, `brevo1`, `brevo2`, `cm`, `cf2024-1`, `ctct1`, `ctct2`, `krs`, `cio`, `e2ma-k1`, `e2ma-k2`, `e2ma-k3`, `everlytickey1`, `everlytickey2`, `fm2`, `fm1`, `fm3`, `mesmtp`, `secureserver1`, `mc1`, `mimecast`, `mimecast20190719`
+- updates.mills-reeve.com, DKIM selectors: `acdkim1`, `acdkim2`, `ses`, `ses1`, `ses2`, `aweber_key_a`, `aweber_key_b`, `aweber_key_c`, `brevo`, `brevo1`, `brevo2`, `cm`, `cf2024-1`, `ctct1`, `ctct2`, `krs`, `cio`, `e2ma-k1`, `e2ma-k2`, `e2ma-k3`, `everlytickey1`, `everlytickey2`, `fm2`, `fm1`, `fm3`, `mesmtp`, `secureserver1`

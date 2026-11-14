@@ -187,6 +187,7 @@ def test_shipped_rules_split_mailchimp_by_provenance() -> None:
         (Source.VENDOR_DOCS, ["k2"]),
         (Source.PATTERN, ["k1"]),
         (Source.PATTERN, ["k3"]),
+        (Source.PATTERN, ["mailchimp"]),
     ]
 
 

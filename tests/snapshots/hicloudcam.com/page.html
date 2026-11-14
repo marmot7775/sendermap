@@ -1,0 +1,167 @@
+<header class="view-head">
+<h2>Who handles email for hicloudcam.com?</h2>
+<p class="summary"><strong class="no-fix">3 services handle email for hicloudcam.com. Nothing needs fixing.</strong></p>
+<p class="checked">Checked 2026-11-14 06:40 UTC: 233 DNS lookups in 0.0 s over Google DNS over HTTPS.</p>
+</header>
+<div class="lead">
+<div class="story">
+<p>Alibaba Cloud Direct Mail receives the domain&#x27;s mail; Alibaba Mail receives the domain&#x27;s mail.</p>
+<p>One service shows an account and nothing set up to send (Amazon SES).</p>
+<p class="story-muted">Not checked: the website (turned off) and the crt.sh certificate log (read only with --ct).</p>
+</div>
+</div>
+<section class="view-section glance">
+<h3 class="section-title">Who handles your email</h3>
+<p class="section-intro">Each service below receives or sends email for hicloudcam.com.</p>
+<ul class="section-key">
+<li>Receives your mail: your MX records deliver the domain&#x27;s mail there.</li>
+<li>Account only: an account exists, with nothing set up to send.</li>
+</ul>
+<table class="glance">
+<thead><tr><th>Service</th><th>Category</th><th>Status</th><th>Setup</th></tr></thead>
+<tbody>
+<tr>
+<td class="name"><span class="dot in-use"></span><a href="#service-alibaba-cloud-direct-mail">Alibaba Cloud Direct Mail</a></td>
+<td class="category">Transactional</td>
+<td><span class="badge b-in-use">Receives your mail</span></td>
+<td class="state "></td>
+</tr>
+<tr>
+<td class="name"><span class="dot in-use"></span><a href="#service-alibaba-mail">Alibaba Mail</a></td>
+<td class="category">Mailbox</td>
+<td><span class="badge b-in-use">Receives your mail</span></td>
+<td class="state complete">✓ setup complete</td>
+</tr>
+<tr>
+<td class="name"><span class="dot account-only"></span><a href="#service-amazon-ses">Amazon SES</a></td>
+<td class="category">Transactional</td>
+<td><span class="badge b-account-only">Account only</span></td>
+<td class="state basis">from: Verification token</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section class="view-section tier">
+<h3 class="section-title">The proof, service by service</h3>
+<p class="section-intro">The DNS records behind each service above, for anyone who wants to check them.</p>
+<ul class="section-key">
+<li>MX: where the domain&#x27;s mail is delivered.</li>
+<li>SPF: the list of servers allowed to send as the domain.</li>
+<li>Verification token: proves the domain owner set up an account with the service.</li>
+</ul>
+<div class="rows">
+<article class="row" id="service-alibaba-cloud-direct-mail">
+<h4>Alibaba Cloud Direct Mail</h4>
+<p class="meta">Transactional</p>
+<span class="badge b-in-use">Receives your mail</span>
+<div class="row-body">
+<p class="decider"><span class="kind">MX</span>: mx01.dm.aliyun.com</p>
+<ul class="claims">
+<li><span class="kind">SPF</span>: include:spfdm-ap-southeast-1.aliyun.com at hicloudcam.com and notify.hicloudcam.com</li>
+<li><span class="kind">MX for bounces</span>: mxdm-ap-southeast-1.aliyun.com at notify.hicloudcam.com</li>
+</ul>
+<details class="records"><summary>All records</summary>
+<p class="kind">MX</p>
+<ul class="records">
+<li class="ev mono">hicloudcam.com MX 10 mx01.dm.aliyun.com</li>
+</ul>
+<p class="kind">SPF</p>
+<ul class="records">
+<li class="ev mono">hicloudcam.com TXT include:spfdm-ap-southeast-1.aliyun.com</li>
+<li class="ev mono">notify.hicloudcam.com TXT include:spfdm-ap-southeast-1.aliyun.com</li>
+</ul>
+<p class="kind">MX for bounces</p>
+<ul class="records">
+<li class="ev mono">notify.hicloudcam.com MX 10 mxdm-ap-southeast-1.aliyun.com</li>
+</ul>
+</details>
+</div>
+</article>
+<article class="row" id="service-alibaba-mail">
+<h4>Alibaba Mail</h4>
+<p class="meta">Mailbox</p>
+<span class="badge b-in-use">Receives your mail</span>
+<div class="row-body">
+<p class="decider"><span class="kind">MX</span>: mxn.mxhichina.com, mxw.mxhichina.com</p>
+<ul class="claims">
+<li><span class="kind">SPF</span>: include:spf.mxhichina.com</li>
+</ul>
+<p class="setup">setup complete</p>
+<details class="records"><summary>All records</summary>
+<p class="kind">MX</p>
+<ul class="records">
+<li class="ev mono">hicloudcam.com MX 5 mxn.mxhichina.com</li>
+<li class="ev mono">hicloudcam.com MX 10 mxw.mxhichina.com</li>
+</ul>
+<p class="kind">SPF</p>
+<ul class="records">
+<li class="ev mono">hicloudcam.com TXT include:spf.mxhichina.com</li>
+</ul>
+<p class="setup">setup complete: MX present, SPF present</p>
+</details>
+</div>
+</article>
+<article class="row" id="service-amazon-ses">
+<h4>Amazon SES</h4>
+<p class="meta">Transactional</p>
+<span class="badge b-account-only">Account only</span>
+<div class="row-body">
+<p class="decider"><span class="kind">Verification token</span>: amazonses:hUp0SJqUUSLitFCvnXtq9BHr28l8RN9qKKu4lI/5YpU=</p>
+<details class="records"><summary>All records</summary>
+<p class="kind">Verification token</p>
+<ul class="records">
+<li class="ev mono">hicloudcam.com TXT amazonses:hUp0SJqUUSLitFCvnXtq9BHr28l8RN9qKKu4lI/5YpU=</li>
+</ul>
+</details>
+</div>
+</article>
+</div>
+</section>
+<section class="view-section unknowns">
+<h3 class="section-title">Not matched to a service</h3>
+<p class="section-intro">These records point somewhere Sendermap does not recognise: a service it does not know yet, or your own servers.</p>
+<ul class="unknowns">
+<li>DMARC reports go to: <span class="mono">ibesecurity.com</span>
+<span class="ev mono">_dmarc.hicloudcam.com TXT v=DMARC1; p=none; rua=mailto:dmarc_agg@ibesecurity.com;</span>
+</li>
+<li>CNAME at mail: <span class="mono">mail.mxhichina.com</span>
+<span class="ev mono">mail.hicloudcam.com CNAME mail.mxhichina.com</span>
+</li>
+</ul>
+</section>
+<section class="view-section absences">
+<h3 class="section-title">Looked for and not found</h3>
+<p class="section-intro">Records Sendermap looked for and did not find.</p>
+<ul class="gaps absences">
+<li><span class="mono">DKIM keys at hicloudcam.com</span>: no selectors exist: _domainkey.hicloudcam.com does not exist, so the 122-name sweep was skipped; the 8 names its MX, SPF and delegations point to were asked as a check, and none exists (RFC 8020 section 5)<span class="ev mono">_domainkey.hicloudcam.com TXT no such name</span><span class="ev mono">sendermap-wildcard-check._domainkey.hicloudcam.com TXT no such name</span></li>
+<li><span class="mono">DKIM keys at notify.hicloudcam.com</span>: no selectors exist: _domainkey.notify.hicloudcam.com does not exist, so the 27-name sweep was skipped; the 8 names its MX, SPF and delegations point to were asked as a check, and none exists (RFC 8020 section 5)<span class="ev mono">_domainkey.notify.hicloudcam.com TXT no such name</span><span class="ev mono">sendermap-wildcard-check._domainkey.notify.hicloudcam.com TXT no such name</span></li>
+</ul>
+</section>
+<section class="view-section how-checked">
+<h3 class="section-title">How this was checked</h3>
+<details class="how"><summary>233 lookups at 2 names · 2 things not checked</summary>
+<h4>Not checked</h4>
+<ul class="gaps">
+<li>the website. Web checks were turned off (--no-web).</li>
+<li>certificate transparency, crt.sh. Read only with --ct (it also holds expired certificates).</li>
+</ul>
+<h4>What was asked</h4>
+<p class="asked-total">233 lookups at 2 names</p>
+<ul class="gaps">
+<li>At <span class="mono">hicloudcam.com</span>: 8 possible DKIM key names, 25 service record names, 1 web page.</li>
+<li>At <span class="mono">notify.hicloudcam.com</span>: 8 possible DKIM key names.</li>
+</ul>
+<details class="asked"><summary>Names asked</summary>
+<h4 class="mono">hicloudcam.com</h4>
+<ul>
+<li>Pages (1): <span class="mono">https://api.certspotter.com/v1/issuances?domain=hicloudcam.com&amp;include_subdomains=true&amp;expand=dns_names</span></li>
+<li>CNAME labels (25): <span class="mono">bounce, bounces, em, email, mail, send, mta, rp, pm-bounces, links, link, click, track, tracking, url, go, autodiscover, cf-bounce, eversrv, fwdkim1, bnc3, bounces.cloud.em, bounces.cloud2.em, outbound.intercom, atlassian-bounces</span></li>
+<li>DKIM selectors (8): <span class="mono">acdkim1, acdkim2, ses, ses1, ses2, aweber_key_a, aweber_key_b, aweber_key_c</span></li>
+</ul>
+<h4 class="mono">notify.hicloudcam.com</h4>
+<ul>
+<li>DKIM selectors (8): <span class="mono">acdkim1, acdkim2, ses, ses1, ses2, aweber_key_a, aweber_key_b, aweber_key_c</span></li>
+</ul>
+</details>
+</details>
+</section>

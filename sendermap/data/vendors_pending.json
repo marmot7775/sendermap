@@ -8,7 +8,7 @@
           "value": "trackcmp.net"
         }
       ],
-      "checked": "2026-10-09, the vendor's own domains activecampaign.com, emsd1.com, trackcmp.net: SPF at the apex and 70 labels, with every include and redirect below them; the scripts and stylesheets the homepage loads; TXT at 184 DKIM selectors; homepage not readable at emsd1.com. None of the entries here was found. 2026-10-10, the 2,003 domains in data/hunt_domains.txt (tools/hunt_proofs.py): none of the entries left here was found there either.",
+      "checked": "2026-10-09, the vendor's own domains activecampaign.com, emsd1.com, trackcmp.net: SPF at the apex and 70 labels, with every include and redirect below them; the scripts and stylesheets the homepage loads; TXT at 184 DKIM selectors; homepage not readable at emsd1.com. None of the entries here was found. 2026-10-10, the 2,003 domains in data/hunt_domains.txt (tools/hunt_proofs.py): none of the entries left here was found there either. 2026-11-13, the 6,003 domains in data/hunt_domains.txt (tools/hunt_proofs.py): none of the entries left here was found there either.",
       "selectors": [
         {
           "shape": {
@@ -40,7 +40,7 @@
           "value": "amazonses.com"
         }
       ],
-      "checked": "2026-10-09, the vendor's own domains amazon.com, amazonses.com: the CNAMEs of 184 DKIM selectors; CNAMEs at the bounce labels; TXT at the apex; TXT at 184 DKIM selectors. None of the entries here was found. 2026-10-10, the 2,003 domains in data/hunt_domains.txt (tools/hunt_proofs.py): none of the entries left here was found there either. 2026-10-28: mx mail-manager-smtp.us-east-1.on.aws moved back here from vendors.json: its proof, go.asana.com (2026-10-15), no longer publishes that MX, and none of the 2,003 domains in data/hunt_domains.txt does.",
+      "checked": "2026-10-09, the vendor's own domains amazon.com, amazonses.com: the CNAMEs of 184 DKIM selectors; CNAMEs at the bounce labels; TXT at the apex; TXT at 184 DKIM selectors. None of the entries here was found. 2026-10-10, the 2,003 domains in data/hunt_domains.txt (tools/hunt_proofs.py): none of the entries left here was found there either. 2026-10-28: mx mail-manager-smtp.us-east-1.on.aws moved back here from vendors.json: its proof, go.asana.com (2026-10-15), no longer publishes that MX, and none of the 2,003 domains in data/hunt_domains.txt does. 2026-11-13, the 6,003 domains in data/hunt_domains.txt (tools/hunt_proofs.py): none of the entries left here was found there either.",
       "selectors": [
         {
           "shape": {
@@ -49,27 +49,6 @@
               "amazonses"
             ]
           }
-        },
-        {
-          "shape": {
-            "kind": "fixed",
-            "names": [
-              "ses1"
-            ]
-          }
-        },
-        {
-          "shape": {
-            "kind": "fixed",
-            "names": [
-              "ses2"
-            ]
-          }
-        }
-      ],
-      "mx": [
-        {
-          "value": "mail-manager-smtp.us-east-1.on.aws"
         }
       ]
     },
@@ -77,17 +56,14 @@
       "category": "Marketing",
       "website": [
         {
-          "value": "cdn.attn.tv"
-        },
-        {
           "value": "attentivemobile.com"
         }
       ],
-      "checked": "2026-10-09, the vendor's own domains attentive.com, attentivemobile.com, attn.tv: the scripts and stylesheets the homepage loads; homepage not readable at attn.tv. None of the entries here was found. 2026-10-10, the 2,003 domains in data/hunt_domains.txt (tools/hunt_proofs.py): none of the entries left here was found there either."
+      "checked": "2026-10-09, the vendor's own domains attentive.com, attentivemobile.com, attn.tv: the scripts and stylesheets the homepage loads; homepage not readable at attn.tv. None of the entries here was found. 2026-10-10, the 2,003 domains in data/hunt_domains.txt (tools/hunt_proofs.py): none of the entries left here was found there either. 2026-11-13, the 6,003 domains in data/hunt_domains.txt (tools/hunt_proofs.py): none of the entries left here was found there either."
     },
     "AWeber": {
       "category": "Marketing",
-      "checked": "2026-10-09, the vendor's own domains aweber.com: SPF at the apex and 70 labels, with every include and redirect below them; TXT at 184 DKIM selectors. None of the entries here was found. 2026-10-10, the 2,003 domains in data/hunt_domains.txt (tools/hunt_proofs.py): none of the entries left here was found there either.",
+      "checked": "2026-10-09, the vendor's own domains aweber.com: SPF at the apex and 70 labels, with every include and redirect below them; TXT at 184 DKIM selectors. None of the entries here was found. 2026-10-10, the 2,003 domains in data/hunt_domains.txt (tools/hunt_proofs.py): none of the entries left here was found there either. 2026-11-13, the 6,003 domains in data/hunt_domains.txt (tools/hunt_proofs.py): none of the entries left here was found there either.",
       "selectors": [
         {
           "shape": {
@@ -119,7 +95,7 @@
           }
         }
       ],
-      "checked": "2026-10-09, the vendor's own domains barracuda.com, barracudanetworks.com: TXT at 184 DKIM selectors. None of the entries here was found. 2026-10-10, the 2,003 domains in data/hunt_domains.txt (tools/hunt_proofs.py): none of the entries left here was found there either."
+      "checked": "2026-10-09, the vendor's own domains barracuda.com, barracudanetworks.com: TXT at 184 DKIM selectors. None of the entries here was found. 2026-10-10, the 2,003 domains in data/hunt_domains.txt (tools/hunt_proofs.py): none of the entries left here was found there either. 2026-11-13, the 6,003 domains in data/hunt_domains.txt (tools/hunt_proofs.py): none of the entries left here was found there either."
     },
     "Braze": {
       "category": "Marketing",
@@ -134,7 +110,7 @@
           "value": "cdn.braze.eu"
         }
       ],
-      "checked": "2026-10-09, the vendor's own domains braze.com, braze.eu, appboy.com, appboycdn.com: the scripts and stylesheets the homepage loads; TXT at 184 DKIM selectors; homepage not readable at appboycdn.com. None of the entries here was found. 2026-10-10, the 2,003 domains in data/hunt_domains.txt (tools/hunt_proofs.py): none of the entries left here was found there either.",
+      "checked": "2026-10-09, the vendor's own domains braze.com, braze.eu, appboy.com, appboycdn.com: the scripts and stylesheets the homepage loads; TXT at 184 DKIM selectors; homepage not readable at appboycdn.com. None of the entries here was found. 2026-10-10, the 2,003 domains in data/hunt_domains.txt (tools/hunt_proofs.py): none of the entries left here was found there either. 2026-11-13, the 6,003 domains in data/hunt_domains.txt (tools/hunt_proofs.py): none of the entries left here was found there either.",
       "selectors": [
         {
           "shape": {
@@ -164,7 +140,7 @@
           "value": "sibautomation.com"
         }
       ],
-      "checked": "2026-10-09, the vendor's own domains brevo.com, sendinblue.com, sibforms.com, sibautomation.com: the CNAMEs of 184 DKIM selectors; Team Cymru for the addresses of the apex, www, mail and the MX hosts; the scripts and stylesheets the homepage loads; TXT at 184 DKIM selectors; homepage not readable at sibforms.com, sibautomation.com. None of the entries here was found. 2026-10-10, the 2,003 domains in data/hunt_domains.txt (tools/hunt_proofs.py): none of the entries left here was found there either.",
+      "checked": "2026-10-09, the vendor's own domains brevo.com, sendinblue.com, sibforms.com, sibautomation.com: the CNAMEs of 184 DKIM selectors; Team Cymru for the addresses of the apex, www, mail and the MX hosts; the scripts and stylesheets the homepage loads; TXT at 184 DKIM selectors; homepage not readable at sibforms.com, sibautomation.com. None of the entries here was found. 2026-10-10, the 2,003 domains in data/hunt_domains.txt (tools/hunt_proofs.py): none of the entries left here was found there either. 2026-11-13, the 6,003 domains in data/hunt_domains.txt (tools/hunt_proofs.py): none of the entries left here was found there either.",
       "selectors": [
         {
           "shape": {
@@ -196,7 +172,7 @@
           }
         }
       ],
-      "checked": "2026-10-09, the vendor's own domains calendly.com: TXT at 184 DKIM selectors. None of the entries here was found. 2026-10-10, the 2,003 domains in data/hunt_domains.txt (tools/hunt_proofs.py): none of the entries left here was found there either."
+      "checked": "2026-10-09, the vendor's own domains calendly.com: TXT at 184 DKIM selectors. None of the entries here was found. 2026-10-10, the 2,003 domains in data/hunt_domains.txt (tools/hunt_proofs.py): none of the entries left here was found there either. 2026-11-13, the 6,003 domains in data/hunt_domains.txt (tools/hunt_proofs.py): none of the entries left here was found there either."
     },
     "Campaign Monitor": {
       "category": "Marketing",
@@ -210,7 +186,7 @@
           }
         }
       ],
-      "checked": "2026-10-09, the vendor's own domains campaignmonitor.com, createsend.com: TXT at 184 DKIM selectors. None of the entries here was found. 2026-10-10, the 2,003 domains in data/hunt_domains.txt (tools/hunt_proofs.py): none of the entries left here was found there either."
+      "checked": "2026-10-09, the vendor's own domains campaignmonitor.com, createsend.com: TXT at 184 DKIM selectors. None of the entries here was found. 2026-10-10, the 2,003 domains in data/hunt_domains.txt (tools/hunt_proofs.py): none of the entries left here was found there either. 2026-11-13, the 6,003 domains in data/hunt_domains.txt (tools/hunt_proofs.py): none of the entries left here was found there either."
     },
     "Cloudflare Email Routing": {
       "category": "Mailbox",
@@ -219,7 +195,7 @@
           "value": "mx.cloudflare.net"
         }
       ],
-      "checked": "2026-10-09, the vendor's own domains cloudflare.com, cloudflare.net: CNAMEs at the bounce labels; the homepage's text; homepage not readable at cloudflare.net. None of the entries here was found. 2026-10-10, the 2,003 domains in data/hunt_domains.txt (tools/hunt_proofs.py): none of the entries left here was found there either.",
+      "checked": "2026-10-09, the vendor's own domains cloudflare.com, cloudflare.net: CNAMEs at the bounce labels; the homepage's text; homepage not readable at cloudflare.net. None of the entries here was found. 2026-10-10, the 2,003 domains in data/hunt_domains.txt (tools/hunt_proofs.py): none of the entries left here was found there either. 2026-11-13, the 6,003 domains in data/hunt_domains.txt (tools/hunt_proofs.py): none of the entries left here was found there either.",
       "subprocessor_names": [
         {
           "value": "Cloudflare Email Routing"
@@ -238,7 +214,7 @@
           "value": "static.ctctcdn.com"
         }
       ],
-      "checked": "2026-10-09, the vendor's own domains constantcontact.com, ccsend.com, ctctcdn.com: SPF at the apex and 70 labels, with every include and redirect below them; the CNAMEs of 184 DKIM selectors; the scripts and stylesheets the homepage loads; TXT at 184 DKIM selectors; the homepage's text; homepage not readable at constantcontact.com, ccsend.com, ctctcdn.com. None of the entries here was found. 2026-10-10, the 2,003 domains in data/hunt_domains.txt (tools/hunt_proofs.py): none of the entries left here was found there either.",
+      "checked": "2026-10-09, the vendor's own domains constantcontact.com, ccsend.com, ctctcdn.com: SPF at the apex and 70 labels, with every include and redirect below them; the CNAMEs of 184 DKIM selectors; the scripts and stylesheets the homepage loads; TXT at 184 DKIM selectors; the homepage's text; homepage not readable at constantcontact.com, ccsend.com, ctctcdn.com. None of the entries here was found. 2026-10-10, the 2,003 domains in data/hunt_domains.txt (tools/hunt_proofs.py): none of the entries left here was found there either. 2026-11-13, the 6,003 domains in data/hunt_domains.txt (tools/hunt_proofs.py): none of the entries left here was found there either.",
       "selectors": [
         {
           "shape": {
@@ -260,7 +236,7 @@
           "value": "track.customer.io"
         }
       ],
-      "checked": "2026-10-09, the vendor's own domains customer.io, customeriomail.com: the scripts and stylesheets the homepage loads; TXT at 184 DKIM selectors; homepage not readable at customeriomail.com. None of the entries here was found. 2026-10-10, the 2,003 domains in data/hunt_domains.txt (tools/hunt_proofs.py): none of the entries left here was found there either. 2026-10-22, the 2,003 domains of data/hunt_domains.txt and 50 more mapped that day, by DoH: no key at cio or customerio. 2026-10-28, the same hunt: a key at cio._domainkey.updates.calendly.com, but nothing else at calendly.com shows Customer.io and its documentation names krs, not cio, so cio stays here.",
+      "checked": "2026-10-09, the vendor's own domains customer.io, customeriomail.com: the scripts and stylesheets the homepage loads; TXT at 184 DKIM selectors; homepage not readable at customeriomail.com. None of the entries here was found. 2026-10-10, the 2,003 domains in data/hunt_domains.txt (tools/hunt_proofs.py): none of the entries left here was found there either. 2026-10-22, the 2,003 domains of data/hunt_domains.txt and 50 more mapped that day, by DoH: no key at cio or customerio. 2026-10-28, the same hunt: a key at cio._domainkey.updates.calendly.com, but nothing else at calendly.com shows Customer.io and its documentation names krs, not cio, so cio stays here. 2026-11-13, the 6,003 domains in data/hunt_domains.txt (tools/hunt_proofs.py): none of the entries left here was found there either.",
       "selectors": [
         {
           "shape": {
@@ -269,20 +245,12 @@
               "customerio"
             ]
           }
-        },
-        {
-          "shape": {
-            "kind": "fixed",
-            "names": [
-              "cio"
-            ]
-          }
         }
       ]
     },
     "Elastic Email": {
       "category": "Marketing",
-      "checked": "2026-10-09, the vendor's own domains elasticemail.com: CNAMEs at the tracking labels; TXT at 184 DKIM selectors. None of the entries here was found. 2026-10-10, the 2,003 domains in data/hunt_domains.txt (tools/hunt_proofs.py): none of the entries left here was found there either.",
+      "checked": "2026-10-09, the vendor's own domains elasticemail.com: CNAMEs at the tracking labels; TXT at 184 DKIM selectors. None of the entries here was found. 2026-10-10, the 2,003 domains in data/hunt_domains.txt (tools/hunt_proofs.py): none of the entries left here was found there either. 2026-11-13, the 6,003 domains in data/hunt_domains.txt (tools/hunt_proofs.py): none of the entries left here was found there either.",
       "selectors": [
         {
           "shape": {
@@ -314,7 +282,7 @@
           }
         }
       ],
-      "checked": "2026-10-09, the vendor's own domains myemma.com, e2ma.net: TXT at 184 DKIM selectors. None of the entries here was found. 2026-10-10, the 2,003 domains in data/hunt_domains.txt (tools/hunt_proofs.py): none of the entries left here was found there either."
+      "checked": "2026-10-09, the vendor's own domains myemma.com, e2ma.net: TXT at 184 DKIM selectors. None of the entries here was found. 2026-10-10, the 2,003 domains in data/hunt_domains.txt (tools/hunt_proofs.py): none of the entries left here was found there either. 2026-11-13, the 6,003 domains in data/hunt_domains.txt (tools/hunt_proofs.py): none of the entries left here was found there either."
     },
     "Fastmail": {
       "category": "Mailbox",
@@ -328,7 +296,7 @@
           "value": "messagingengine.com"
         }
       ],
-      "checked": "2026-10-09, the vendor's own domains fastmail.com, messagingengine.com, fmhosted.com: SPF at the apex and 70 labels, with every include and redirect below them; the CNAMEs of 184 DKIM selectors; TXT at 184 DKIM selectors; homepage not readable at fmhosted.com. None of the entries here was found. 2026-10-10, the 2,003 domains in data/hunt_domains.txt (tools/hunt_proofs.py): none of the entries left here was found there either.",
+      "checked": "2026-10-09, the vendor's own domains fastmail.com, messagingengine.com, fmhosted.com: SPF at the apex and 70 labels, with every include and redirect below them; the CNAMEs of 184 DKIM selectors; TXT at 184 DKIM selectors; homepage not readable at fmhosted.com. None of the entries here was found. 2026-10-10, the 2,003 domains in data/hunt_domains.txt (tools/hunt_proofs.py): none of the entries left here was found there either. 2026-11-13, the 6,003 domains in data/hunt_domains.txt (tools/hunt_proofs.py): none of the entries left here was found there either.",
       "selectors": [
         {
           "shape": {
@@ -347,7 +315,7 @@
           "value": "freshdesk.com"
         }
       ],
-      "checked": "2026-10-09, the vendor's own domains freshdesk.com, freshworks.com: SPF at the apex and 70 labels, with every include and redirect below them; CNAMEs at the bounce labels; TXT at 184 DKIM selectors; homepage not readable at freshworks.com. None of the entries here was found. 2026-10-10, the 2,003 domains in data/hunt_domains.txt (tools/hunt_proofs.py): none of the entries left here was found there either.",
+      "checked": "2026-10-09, the vendor's own domains freshdesk.com, freshworks.com: SPF at the apex and 70 labels, with every include and redirect below them; CNAMEs at the bounce labels; TXT at 184 DKIM selectors; homepage not readable at freshworks.com. None of the entries here was found. 2026-10-10, the 2,003 domains in data/hunt_domains.txt (tools/hunt_proofs.py): none of the entries left here was found there either. 2026-11-13, the 6,003 domains in data/hunt_domains.txt (tools/hunt_proofs.py): none of the entries left here was found there either.",
       "selectors": [
         {
           "shape": {
@@ -371,7 +339,7 @@
           }
         }
       ],
-      "checked": "2026-10-09, the vendor's own domains getresponse.com: TXT at 184 DKIM selectors. None of the entries here was found. 2026-10-10, the 2,003 domains in data/hunt_domains.txt (tools/hunt_proofs.py): none of the entries left here was found there either."
+      "checked": "2026-10-09, the vendor's own domains getresponse.com: TXT at 184 DKIM selectors. None of the entries here was found. 2026-10-10, the 2,003 domains in data/hunt_domains.txt (tools/hunt_proofs.py): none of the entries left here was found there either. 2026-11-13, the 6,003 domains in data/hunt_domains.txt (tools/hunt_proofs.py): none of the entries left here was found there either."
     },
     "GoDaddy Professional Email": {
       "category": "Mailbox",
@@ -380,7 +348,7 @@
           "value": "GoDaddy Professional Email"
         }
       ],
-      "checked": "2026-10-09, the vendor's own domains godaddy.com, secureserver.net: the homepage's text; homepage not readable at godaddy.com, secureserver.net. None of the entries here was found. 2026-10-10, the 2,003 domains in data/hunt_domains.txt (tools/hunt_proofs.py): none of the entries left here was found there either."
+      "checked": "2026-10-09, the vendor's own domains godaddy.com, secureserver.net: the homepage's text; homepage not readable at godaddy.com, secureserver.net. None of the entries here was found. 2026-10-10, the 2,003 domains in data/hunt_domains.txt (tools/hunt_proofs.py): none of the entries left here was found there either. 2026-11-13, the 6,003 domains in data/hunt_domains.txt (tools/hunt_proofs.py): none of the entries left here was found there either."
     },
     "GoDaddy Websites + Marketing": {
       "category": "Marketing",
@@ -389,7 +357,7 @@
           "value": "em.secureserver.net"
         }
       ],
-      "checked": "2026-10-09, the vendor's own domains godaddy.com, secureserver.net: the CNAMEs of 184 DKIM selectors; the homepage's text; homepage not readable at godaddy.com, secureserver.net. None of the entries here was found. 2026-10-10, the 2,003 domains in data/hunt_domains.txt (tools/hunt_proofs.py): none of the entries left here was found there either.",
+      "checked": "2026-10-09, the vendor's own domains godaddy.com, secureserver.net: the CNAMEs of 184 DKIM selectors; the homepage's text; homepage not readable at godaddy.com, secureserver.net. None of the entries here was found. 2026-10-10, the 2,003 domains in data/hunt_domains.txt (tools/hunt_proofs.py): none of the entries left here was found there either. 2026-11-13, the 6,003 domains in data/hunt_domains.txt (tools/hunt_proofs.py): none of the entries left here was found there either.",
       "subprocessor_names": [
         {
           "value": "GoDaddy Websites + Marketing"
@@ -398,21 +366,13 @@
     },
     "Google Workspace": {
       "category": "Mailbox",
-      "checked": "2026-10-09, the vendor's own domains google.com, googlemail.com, gmail.com: SPF at the apex and 70 labels, with every include and redirect below them; MX at the apex and 70 labels; TXT at 184 DKIM selectors; the homepage's text. None of the entries here was found. 2026-10-10, the 2,003 domains in data/hunt_domains.txt (tools/hunt_proofs.py): none of the entries left here was found there either.",
+      "checked": "2026-10-09, the vendor's own domains google.com, googlemail.com, gmail.com: SPF at the apex and 70 labels, with every include and redirect below them; MX at the apex and 70 labels; TXT at 184 DKIM selectors; the homepage's text. None of the entries here was found. 2026-10-10, the 2,003 domains in data/hunt_domains.txt (tools/hunt_proofs.py): none of the entries left here was found there either. 2026-11-13, the 6,003 domains in data/hunt_domains.txt (tools/hunt_proofs.py): none of the entries left here was found there either.",
       "selectors": [
         {
           "shape": {
             "kind": "fixed",
             "names": [
               "ga1"
-            ]
-          }
-        },
-        {
-          "shape": {
-            "kind": "fixed",
-            "names": [
-              "googlemail"
             ]
           }
         }
@@ -438,7 +398,7 @@
           }
         }
       ],
-      "checked": "2026-10-09, the vendor's own domains gorgias.com, gorgias.chat: TXT at 184 DKIM selectors; homepage not readable at gorgias.chat. None of the entries here was found. 2026-10-10, the 2,003 domains in data/hunt_domains.txt (tools/hunt_proofs.py): none of the entries left here was found there either."
+      "checked": "2026-10-09, the vendor's own domains gorgias.com, gorgias.chat: TXT at 184 DKIM selectors; homepage not readable at gorgias.chat. None of the entries here was found. 2026-10-10, the 2,003 domains in data/hunt_domains.txt (tools/hunt_proofs.py): none of the entries left here was found there either. 2026-11-13, the 6,003 domains in data/hunt_domains.txt (tools/hunt_proofs.py): none of the entries left here was found there either."
     },
     "Help Scout": {
       "category": "Support and CRM",
@@ -447,7 +407,7 @@
           "value": "beacon-v2.helpscout.net"
         }
       ],
-      "checked": "2026-10-09, the vendor's own domains helpscout.com, helpscout.net, helpscoutemail.com: the scripts and stylesheets the homepage loads; TXT at 184 DKIM selectors; homepage not readable at helpscoutemail.com. None of the entries here was found. 2026-10-10, the 2,003 domains in data/hunt_domains.txt (tools/hunt_proofs.py): none of the entries left here was found there either.",
+      "checked": "2026-10-09, the vendor's own domains helpscout.com, helpscout.net, helpscoutemail.com: the scripts and stylesheets the homepage loads; TXT at 184 DKIM selectors; homepage not readable at helpscoutemail.com. None of the entries here was found. 2026-10-10, the 2,003 domains in data/hunt_domains.txt (tools/hunt_proofs.py): none of the entries left here was found there either. 2026-11-13, the 6,003 domains in data/hunt_domains.txt (tools/hunt_proofs.py): none of the entries left here was found there either.",
       "selectors": [
         {
           "shape": {
@@ -466,7 +426,7 @@
           "value": "_spf.hubspot.com"
         }
       ],
-      "checked": "2026-10-09, the vendor's own domains hubspot.com, hubspotemail.net, hs-scripts.com, hsforms.net: SPF at the apex and 70 labels, with every include and redirect below them; the scripts and stylesheets the homepage loads; TXT at 184 DKIM selectors; homepage not readable at hubspotemail.net, hs-scripts.com, hsforms.net. None of the entries here was found. 2026-10-10, the 2,003 domains in data/hunt_domains.txt (tools/hunt_proofs.py): none of the entries left here was found there either.",
+      "checked": "2026-10-09, the vendor's own domains hubspot.com, hubspotemail.net, hs-scripts.com, hsforms.net: SPF at the apex and 70 labels, with every include and redirect below them; the scripts and stylesheets the homepage loads; TXT at 184 DKIM selectors; homepage not readable at hubspotemail.net, hs-scripts.com, hsforms.net. None of the entries here was found. 2026-10-10, the 2,003 domains in data/hunt_domains.txt (tools/hunt_proofs.py): none of the entries left here was found there either. 2026-11-13, the 6,003 domains in data/hunt_domains.txt (tools/hunt_proofs.py): none of the entries left here was found there either.",
       "selectors": [
         {
           "shape": {
@@ -487,13 +447,10 @@
       ],
       "website": [
         {
-          "value": "widget.intercom.io"
-        },
-        {
           "value": "js.intercomcdn.com"
         }
       ],
-      "checked": "2026-10-09, the vendor's own domains intercom.com, intercom.io, intercom-mail.com, intercomcdn.com: SPF at the apex and 70 labels, with every include and redirect below them; the scripts and stylesheets the homepage loads; TXT at 184 DKIM selectors; homepage not readable at intercom-mail.com. None of the entries here was found. 2026-10-10, the 2,003 domains in data/hunt_domains.txt (tools/hunt_proofs.py): none of the entries left here was found there either.",
+      "checked": "2026-10-09, the vendor's own domains intercom.com, intercom.io, intercom-mail.com, intercomcdn.com: SPF at the apex and 70 labels, with every include and redirect below them; the scripts and stylesheets the homepage loads; TXT at 184 DKIM selectors; homepage not readable at intercom-mail.com. None of the entries here was found. 2026-10-10, the 2,003 domains in data/hunt_domains.txt (tools/hunt_proofs.py): none of the entries left here was found there either. 2026-11-13, the 6,003 domains in data/hunt_domains.txt (tools/hunt_proofs.py): none of the entries left here was found there either.",
       "selectors": [
         {
           "shape": {
@@ -505,15 +462,6 @@
         }
       ]
     },
-    "IONOS": {
-      "category": "Mailbox",
-      "mx": [
-        {
-          "value": "kundenserver.de"
-        }
-      ],
-      "checked": "2026-10-09, the vendor's own domains ionos.com, ionos.de, kundenserver.de: MX at the apex and 70 labels; TXT at 184 DKIM selectors. None of the entries here was found. 2026-10-10, the 2,003 domains in data/hunt_domains.txt (tools/hunt_proofs.py): none of the entries left here was found there either. 2026-10-22: s2-ionos proven on goodsitesforkids.org and moved."
-    },
     "Iterable": {
       "category": "Marketing",
       "website": [
@@ -521,7 +469,7 @@
           "value": "js.iterable.com"
         }
       ],
-      "checked": "2026-10-09, the vendor's own domains iterable.com: CNAMEs at the tracking labels; the scripts and stylesheets the homepage loads; TXT at 184 DKIM selectors. None of the entries here was found. 2026-10-10, the 2,003 domains in data/hunt_domains.txt (tools/hunt_proofs.py): none of the entries left here was found there either.",
+      "checked": "2026-10-09, the vendor's own domains iterable.com: CNAMEs at the tracking labels; the scripts and stylesheets the homepage loads; TXT at 184 DKIM selectors. None of the entries here was found. 2026-10-10, the 2,003 domains in data/hunt_domains.txt (tools/hunt_proofs.py): none of the entries left here was found there either. 2026-11-13, the 6,003 domains in data/hunt_domains.txt (tools/hunt_proofs.py): none of the entries left here was found there either.",
       "selectors": [
         {
           "shape": {
@@ -540,7 +488,7 @@
           "value": "infusionmail.com"
         }
       ],
-      "checked": "2026-10-09, the vendor's own domains keap.com, infusionsoft.com, infusionmail.com: SPF at the apex and 70 labels, with every include and redirect below them. None of the entries here was found. 2026-10-10, the 2,003 domains in data/hunt_domains.txt (tools/hunt_proofs.py): none of the entries left here was found there either. 2026-10-22, the 2,003 domains of data/hunt_domains.txt and 50 more mapped that day, by DoH: no SPF at the apex or eight sending labels includes infusionmail.com."
+      "checked": "2026-10-09, the vendor's own domains keap.com, infusionsoft.com, infusionmail.com: SPF at the apex and 70 labels, with every include and redirect below them. None of the entries here was found. 2026-10-10, the 2,003 domains in data/hunt_domains.txt (tools/hunt_proofs.py): none of the entries left here was found there either. 2026-10-22, the 2,003 domains of data/hunt_domains.txt and 50 more mapped that day, by DoH: no SPF at the apex or eight sending labels includes infusionmail.com. 2026-11-13, the 6,003 domains in data/hunt_domains.txt (tools/hunt_proofs.py): none of the entries left here was found there either."
     },
     "Kit": {
       "category": "Marketing",
@@ -549,7 +497,7 @@
           "value": "f.convertkit.com"
         }
       ],
-      "checked": "2026-10-09, the vendor's own domains kit.com, convertkit.com: the scripts and stylesheets the homepage loads; TXT at 184 DKIM selectors. None of the entries here was found. 2026-10-10, the 2,003 domains in data/hunt_domains.txt (tools/hunt_proofs.py): none of the entries left here was found there either.",
+      "checked": "2026-10-09, the vendor's own domains kit.com, convertkit.com: the scripts and stylesheets the homepage loads; TXT at 184 DKIM selectors. None of the entries here was found. 2026-10-10, the 2,003 domains in data/hunt_domains.txt (tools/hunt_proofs.py): none of the entries left here was found there either. 2026-11-13, the 6,003 domains in data/hunt_domains.txt (tools/hunt_proofs.py): none of the entries left here was found there either.",
       "selectors": [
         {
           "shape": {
@@ -583,7 +531,7 @@
           "value": "static-forms.klaviyo.com"
         }
       ],
-      "checked": "2026-10-09, the vendor's own domains klaviyo.com, klaviyodns.com, klaviyomail.com: SPF at the apex and 70 labels, with every include and redirect below them; the CNAMEs of 184 DKIM selectors; CNAMEs at the bounce labels; CNAMEs at the tracking labels; the scripts and stylesheets the homepage loads; TXT at 184 DKIM selectors; homepage not readable at klaviyodns.com, klaviyomail.com. None of the entries here was found. 2026-10-10, the 2,003 domains in data/hunt_domains.txt (tools/hunt_proofs.py): none of the entries left here was found there either. 2026-10-22, the 2,003 domains of data/hunt_domains.txt and 50 more mapped that day, by DoH: km1 and km2 proven on target.com and moved; kt1, kt2, ks1 and ks2 were found nowhere.",
+      "checked": "2026-10-09, the vendor's own domains klaviyo.com, klaviyodns.com, klaviyomail.com: SPF at the apex and 70 labels, with every include and redirect below them; the CNAMEs of 184 DKIM selectors; CNAMEs at the bounce labels; CNAMEs at the tracking labels; the scripts and stylesheets the homepage loads; TXT at 184 DKIM selectors; homepage not readable at klaviyodns.com, klaviyomail.com. None of the entries here was found. 2026-10-10, the 2,003 domains in data/hunt_domains.txt (tools/hunt_proofs.py): none of the entries left here was found there either. 2026-10-22, the 2,003 domains of data/hunt_domains.txt and 50 more mapped that day, by DoH: km1 and km2 proven on target.com and moved; kt1, kt2, ks1 and ks2 were found nowhere. 2026-11-13, the 6,003 domains in data/hunt_domains.txt (tools/hunt_proofs.py): none of the entries left here was found there either.",
       "selectors": [
         {
           "shape": {
@@ -637,17 +585,7 @@
           "value": "list-manage.com"
         }
       ],
-      "checked": "2026-10-09, the vendor's own domains mailchimp.com, mcsv.net, list-manage.com, chimpstatic.com: the scripts and stylesheets the homepage loads; TXT at 184 DKIM selectors; homepage not readable at mcsv.net, list-manage.com, chimpstatic.com. None of the entries here was found. 2026-10-10, the 2,003 domains in data/hunt_domains.txt (tools/hunt_proofs.py): none of the entries left here was found there either.",
-      "selectors": [
-        {
-          "shape": {
-            "kind": "fixed",
-            "names": [
-              "mailchimp"
-            ]
-          }
-        }
-      ]
+      "checked": "2026-10-09, the vendor's own domains mailchimp.com, mcsv.net, list-manage.com, chimpstatic.com: the scripts and stylesheets the homepage loads; TXT at 184 DKIM selectors; homepage not readable at mcsv.net, list-manage.com, chimpstatic.com. None of the entries here was found. 2026-10-10, the 2,003 domains in data/hunt_domains.txt (tools/hunt_proofs.py): none of the entries left here was found there either. 2026-11-13, the 6,003 domains in data/hunt_domains.txt (tools/hunt_proofs.py): none of the entries left here was found there either."
     },
     "MailerLite": {
       "category": "Marketing",
@@ -659,7 +597,7 @@
           "value": "groot.mailerlite.com"
         }
       ],
-      "checked": "2026-10-09, the vendor's own domains mailerlite.com: the scripts and stylesheets the homepage loads; TXT at 184 DKIM selectors. None of the entries here was found. 2026-10-10, the 2,003 domains in data/hunt_domains.txt (tools/hunt_proofs.py): none of the entries left here was found there either.",
+      "checked": "2026-10-09, the vendor's own domains mailerlite.com: the scripts and stylesheets the homepage loads; TXT at 184 DKIM selectors. None of the entries here was found. 2026-10-10, the 2,003 domains in data/hunt_domains.txt (tools/hunt_proofs.py): none of the entries left here was found there either. 2026-11-13, the 6,003 domains in data/hunt_domains.txt (tools/hunt_proofs.py): none of the entries left here was found there either.",
       "selectors": [
         {
           "shape": {
@@ -678,11 +616,11 @@
           "value": "mailgun.com"
         }
       ],
-      "checked": "2026-10-09, the vendor's own domains mailgun.com, mailgun.org, mailgun.net: the CNAMEs of 184 DKIM selectors; CNAMEs at the tracking labels; Team Cymru for the addresses of the apex, www, mail and the MX hosts; TXT at 184 DKIM selectors; the homepage's text; homepage not readable at mailgun.com, mailgun.org, mailgun.net. None of the entries here was found. 2026-10-10, the 2,003 domains in data/hunt_domains.txt (tools/hunt_proofs.py): none of the entries left here was found there either."
+      "checked": "2026-10-09, the vendor's own domains mailgun.com, mailgun.org, mailgun.net: the CNAMEs of 184 DKIM selectors; CNAMEs at the tracking labels; Team Cymru for the addresses of the apex, www, mail and the MX hosts; TXT at 184 DKIM selectors; the homepage's text; homepage not readable at mailgun.com, mailgun.org, mailgun.net. None of the entries here was found. 2026-10-10, the 2,003 domains in data/hunt_domains.txt (tools/hunt_proofs.py): none of the entries left here was found there either. 2026-11-13, the 6,003 domains in data/hunt_domains.txt (tools/hunt_proofs.py): none of the entries left here was found there either."
     },
     "Mailjet": {
       "category": "Transactional",
-      "checked": "2026-10-09, the vendor's own domains mailjet.com: CNAMEs at the bounce labels; Team Cymru for the addresses of the apex, www, mail and the MX hosts; TXT at 184 DKIM selectors; the homepage's text; homepage not readable at mailjet.com. None of the entries here was found. 2026-10-10, the 2,003 domains in data/hunt_domains.txt (tools/hunt_proofs.py): none of the entries left here was found there either.",
+      "checked": "2026-10-09, the vendor's own domains mailjet.com: CNAMEs at the bounce labels; Team Cymru for the addresses of the apex, www, mail and the MX hosts; TXT at 184 DKIM selectors; the homepage's text; homepage not readable at mailjet.com. None of the entries here was found. 2026-10-10, the 2,003 domains in data/hunt_domains.txt (tools/hunt_proofs.py): none of the entries left here was found there either. 2026-11-13, the 6,003 domains in data/hunt_domains.txt (tools/hunt_proofs.py): none of the entries left here was found there either.",
       "selectors": [
         {
           "shape": {
@@ -701,7 +639,7 @@
     },
     "MailPoet": {
       "category": "Marketing",
-      "checked": "2026-10-09, the vendor's own domains mailpoet.com: TXT at 184 DKIM selectors; the homepage's text; homepage not readable at mailpoet.com. None of the entries here was found. 2026-10-10, the 2,003 domains in data/hunt_domains.txt (tools/hunt_proofs.py): none of the entries left here was found there either.",
+      "checked": "2026-10-09, the vendor's own domains mailpoet.com: TXT at 184 DKIM selectors; the homepage's text; homepage not readable at mailpoet.com. None of the entries here was found. 2026-10-10, the 2,003 domains in data/hunt_domains.txt (tools/hunt_proofs.py): none of the entries left here was found there either. 2026-11-13, the 6,003 domains in data/hunt_domains.txt (tools/hunt_proofs.py): none of the entries left here was found there either.",
       "subprocessor_names": [
         {
           "value": "MailPoet"
@@ -715,7 +653,7 @@
           "value": "mktomail.com"
         }
       ],
-      "checked": "2026-10-09, the vendor's own domains marketo.com, mktomail.com, marketo.net: CNAMEs at the bounce labels; the scripts and stylesheets the homepage loads; TXT at 184 DKIM selectors; the homepage's text; homepage not readable at marketo.com, marketo.net. None of the entries here was found. 2026-10-10, the 2,003 domains in data/hunt_domains.txt (tools/hunt_proofs.py): none of the entries left here was found there either.",
+      "checked": "2026-10-09, the vendor's own domains marketo.com, mktomail.com, marketo.net: CNAMEs at the bounce labels; the scripts and stylesheets the homepage loads; TXT at 184 DKIM selectors; the homepage's text; homepage not readable at marketo.com, marketo.net. None of the entries here was found. 2026-10-10, the 2,003 domains in data/hunt_domains.txt (tools/hunt_proofs.py): none of the entries left here was found there either. 2026-11-13, the 6,003 domains in data/hunt_domains.txt (tools/hunt_proofs.py): none of the entries left here was found there either.",
       "selectors": [
         {
           "shape": {
@@ -734,16 +672,8 @@
           "value": "mimecast-offshore.com"
         }
       ],
-      "checked": "2026-10-09, the vendor's own domains mimecast.com: SPF at the apex and 70 labels, with every include and redirect below them; MX at the apex and 70 labels; TXT at 184 DKIM selectors. None of the entries here was found. 2026-10-10, the 2,003 domains in data/hunt_domains.txt (tools/hunt_proofs.py): none of the entries left here was found there either.",
+      "checked": "2026-10-09, the vendor's own domains mimecast.com: SPF at the apex and 70 labels, with every include and redirect below them; MX at the apex and 70 labels; TXT at 184 DKIM selectors. None of the entries here was found. 2026-10-10, the 2,003 domains in data/hunt_domains.txt (tools/hunt_proofs.py): none of the entries left here was found there either. 2026-11-13, the 6,003 domains in data/hunt_domains.txt (tools/hunt_proofs.py): none of the entries left here was found there either.",
       "selectors": [
-        {
-          "shape": {
-            "kind": "fixed",
-            "names": [
-              "mc1"
-            ]
-          }
-        },
         {
           "shape": {
             "kind": "fixed",
@@ -780,7 +710,7 @@
           "value": "omnisrc.com"
         }
       ],
-      "checked": "2026-10-09, the vendor's own domains omnisend.com: the scripts and stylesheets the homepage loads; TXT at 184 DKIM selectors. None of the entries here was found. 2026-10-10, the 2,003 domains in data/hunt_domains.txt (tools/hunt_proofs.py): none of the entries left here was found there either.",
+      "checked": "2026-10-09, the vendor's own domains omnisend.com: the scripts and stylesheets the homepage loads; TXT at 184 DKIM selectors. None of the entries here was found. 2026-10-10, the 2,003 domains in data/hunt_domains.txt (tools/hunt_proofs.py): none of the entries left here was found there either. 2026-11-13, the 6,003 domains in data/hunt_domains.txt (tools/hunt_proofs.py): none of the entries left here was found there either.",
       "selectors": [
         {
           "shape": {
@@ -799,7 +729,7 @@
           "value": "omnivery.com"
         }
       ],
-      "checked": "2026-10-09, the vendor's own domains omnivery.com: SPF at the apex and 70 labels, with every include and redirect below them; TXT at 184 DKIM selectors. None of the entries here was found. 2026-10-10, the 2,003 domains in data/hunt_domains.txt (tools/hunt_proofs.py): none of the entries left here was found there either.",
+      "checked": "2026-10-09, the vendor's own domains omnivery.com: SPF at the apex and 70 labels, with every include and redirect below them; TXT at 184 DKIM selectors. None of the entries here was found. 2026-10-10, the 2,003 domains in data/hunt_domains.txt (tools/hunt_proofs.py): none of the entries left here was found there either. 2026-11-13, the 6,003 domains in data/hunt_domains.txt (tools/hunt_proofs.py): none of the entries left here was found there either.",
       "selectors": [
         {
           "shape": {
@@ -834,7 +764,7 @@
           "value": "Omnivery/Mailkit"
         }
       ],
-      "checked": "2026-10-09, the vendor's own domains mailkit.eu: the homepage's text. None of the entries here was found. 2026-10-10, the 2,003 domains in data/hunt_domains.txt (tools/hunt_proofs.py): none of the entries left here was found there either."
+      "checked": "2026-10-09, the vendor's own domains mailkit.eu: the homepage's text. None of the entries here was found. 2026-10-10, the 2,003 domains in data/hunt_domains.txt (tools/hunt_proofs.py): none of the entries left here was found there either. 2026-11-13, the 6,003 domains in data/hunt_domains.txt (tools/hunt_proofs.py): none of the entries left here was found there either."
     },
     "Outlook.com (consumer)": {
       "category": "Mailbox",
@@ -843,7 +773,7 @@
           "value": "Outlook.com (consumer)"
         }
       ],
-      "checked": "2026-10-09, the vendor's own domains outlook.com, hotmail.com, live.com: the homepage's text. None of the entries here was found. 2026-10-10, the 2,003 domains in data/hunt_domains.txt (tools/hunt_proofs.py): none of the entries left here was found there either."
+      "checked": "2026-10-09, the vendor's own domains outlook.com, hotmail.com, live.com: the homepage's text. None of the entries here was found. 2026-10-10, the 2,003 domains in data/hunt_domains.txt (tools/hunt_proofs.py): none of the entries left here was found there either. 2026-11-13, the 6,003 domains in data/hunt_domains.txt (tools/hunt_proofs.py): none of the entries left here was found there either."
     },
     "Pepipost": {
       "category": "Transactional",
@@ -852,7 +782,7 @@
           "value": "Pepipost"
         }
       ],
-      "checked": "2026-10-09, the vendor's own domains pepipost.com, netcorecloud.com: the homepage's text; homepage not readable at pepipost.com, netcorecloud.com. None of the entries here was found. 2026-10-10, the 2,003 domains in data/hunt_domains.txt (tools/hunt_proofs.py): none of the entries left here was found there either."
+      "checked": "2026-10-09, the vendor's own domains pepipost.com, netcorecloud.com: the homepage's text; homepage not readable at pepipost.com, netcorecloud.com. None of the entries here was found. 2026-10-10, the 2,003 domains in data/hunt_domains.txt (tools/hunt_proofs.py): none of the entries left here was found there either. 2026-11-13, the 6,003 domains in data/hunt_domains.txt (tools/hunt_proofs.py): none of the entries left here was found there either."
     },
     "Pipedrive": {
       "category": "Support and CRM",
@@ -866,20 +796,12 @@
           }
         }
       ],
-      "checked": "2026-10-09, the vendor's own domains pipedrive.com: TXT at 184 DKIM selectors. None of the entries here was found. 2026-10-10, the 2,003 domains in data/hunt_domains.txt (tools/hunt_proofs.py): none of the entries left here was found there either."
+      "checked": "2026-10-09, the vendor's own domains pipedrive.com: TXT at 184 DKIM selectors. None of the entries here was found. 2026-10-10, the 2,003 domains in data/hunt_domains.txt (tools/hunt_proofs.py): none of the entries left here was found there either. 2026-11-13, the 6,003 domains in data/hunt_domains.txt (tools/hunt_proofs.py): none of the entries left here was found there either."
     },
     "Postmark": {
       "category": "Transactional",
-      "checked": "2026-10-09, the vendor's own domains postmarkapp.com, mtasv.net: CNAMEs at the bounce labels; TXT at 184 DKIM selectors. None of the entries here was found. 2026-10-10, the 2,003 domains in data/hunt_domains.txt (tools/hunt_proofs.py): none of the entries left here was found there either.",
+      "checked": "2026-10-09, the vendor's own domains postmarkapp.com, mtasv.net: CNAMEs at the bounce labels; TXT at 184 DKIM selectors. None of the entries here was found. 2026-10-10, the 2,003 domains in data/hunt_domains.txt (tools/hunt_proofs.py): none of the entries left here was found there either. 2026-11-13, the 6,003 domains in data/hunt_domains.txt (tools/hunt_proofs.py): none of the entries left here was found there either.",
       "selectors": [
-        {
-          "shape": {
-            "kind": "fixed",
-            "names": [
-              "pm1"
-            ]
-          }
-        },
         {
           "shape": {
             "kind": "fixed",
@@ -892,7 +814,7 @@
     },
     "Proofpoint": {
       "category": "Security gateway",
-      "checked": "2026-10-09, the vendor's own domains proofpoint.com, pphosted.com: SPF at the apex and 70 labels, with every include and redirect below them; MX at the apex and 70 labels; TXT at 184 DKIM selectors; homepage not readable at pphosted.com. None of the entries here was found. 2026-10-10, the 2,003 domains in data/hunt_domains.txt (tools/hunt_proofs.py): none of the entries left here was found there either.",
+      "checked": "2026-10-09, the vendor's own domains proofpoint.com, pphosted.com: SPF at the apex and 70 labels, with every include and redirect below them; MX at the apex and 70 labels; TXT at 184 DKIM selectors; homepage not readable at pphosted.com. None of the entries here was found. 2026-10-10, the 2,003 domains in data/hunt_domains.txt (tools/hunt_proofs.py): none of the entries left here was found there either. 2026-11-13, the 6,003 domains in data/hunt_domains.txt (tools/hunt_proofs.py): none of the entries left here was found there either.",
       "selectors": [
         {
           "shape": {
@@ -907,14 +829,6 @@
             "kind": "fixed",
             "names": [
               "pphosted"
-            ]
-          }
-        },
-        {
-          "shape": {
-            "kind": "fixed",
-            "names": [
-              "proofpoint"
             ]
           }
         },
@@ -946,7 +860,7 @@
     },
     "Rackspace Email": {
       "category": "Mailbox",
-      "checked": "2026-10-09, the vendor's own domains rackspace.com, emailsrvr.com: SPF at the apex and 70 labels, with every include and redirect below them; TXT at 184 DKIM selectors; the homepage's text. None of the entries here was found. 2026-10-10, the 2,003 domains in data/hunt_domains.txt (tools/hunt_proofs.py): none of the entries left here was found there either.",
+      "checked": "2026-10-09, the vendor's own domains rackspace.com, emailsrvr.com: SPF at the apex and 70 labels, with every include and redirect below them; TXT at 184 DKIM selectors; the homepage's text. None of the entries here was found. 2026-10-10, the 2,003 domains in data/hunt_domains.txt (tools/hunt_proofs.py): none of the entries left here was found there either. 2026-11-13, the 6,003 domains in data/hunt_domains.txt (tools/hunt_proofs.py): none of the entries left here was found there either.",
       "selectors": [
         {
           "shape": {
@@ -978,7 +892,7 @@
           "value": "resend-dns.com"
         }
       ],
-      "checked": "2026-10-09, the vendor's own domains resend.com, resend.dev: CNAMEs at the tracking labels. None of the entries here was found. 2026-10-10, the 2,003 domains in data/hunt_domains.txt (tools/hunt_proofs.py): none of the entries left here was found there either."
+      "checked": "2026-10-09, the vendor's own domains resend.com, resend.dev: CNAMEs at the tracking labels. None of the entries here was found. 2026-10-10, the 2,003 domains in data/hunt_domains.txt (tools/hunt_proofs.py): none of the entries left here was found there either. 2026-11-13, the 6,003 domains in data/hunt_domains.txt (tools/hunt_proofs.py): none of the entries left here was found there either."
     },
     "Salesforce Account Engagement": {
       "category": "Marketing",
@@ -987,7 +901,7 @@
           "value": "pi.pardot.com"
         }
       ],
-      "checked": "2026-10-09, the vendor's own domains pardot.com, salesforce.com: the scripts and stylesheets the homepage loads; TXT at 184 DKIM selectors. None of the entries here was found. 2026-10-10, the 2,003 domains in data/hunt_domains.txt (tools/hunt_proofs.py): none of the entries left here was found there either.",
+      "checked": "2026-10-09, the vendor's own domains pardot.com, salesforce.com: the scripts and stylesheets the homepage loads; TXT at 184 DKIM selectors. None of the entries here was found. 2026-10-10, the 2,003 domains in data/hunt_domains.txt (tools/hunt_proofs.py): none of the entries left here was found there either. 2026-11-13, the 6,003 domains in data/hunt_domains.txt (tools/hunt_proofs.py): none of the entries left here was found there either.",
       "selectors": [
         {
           "shape": {
@@ -1006,7 +920,7 @@
           "value": "AS22606"
         }
       ],
-      "checked": "2026-10-09, the vendor's own domains exacttarget.com, salesforce.com: Team Cymru for the addresses of the apex, www, mail and the MX hosts; TXT at 184 DKIM selectors; the homepage's text. None of the entries here was found. 2026-10-10, the 2,003 domains in data/hunt_domains.txt (tools/hunt_proofs.py): none of the entries left here was found there either.",
+      "checked": "2026-10-09, the vendor's own domains exacttarget.com, salesforce.com: Team Cymru for the addresses of the apex, www, mail and the MX hosts; TXT at 184 DKIM selectors; the homepage's text. None of the entries here was found. 2026-10-10, the 2,003 domains in data/hunt_domains.txt (tools/hunt_proofs.py): none of the entries left here was found there either. 2026-11-13, the 6,003 domains in data/hunt_domains.txt (tools/hunt_proofs.py): none of the entries left here was found there either.",
       "selectors": [
         {
           "shape": {
@@ -1031,28 +945,9 @@
         }
       ]
     },
-    "SendGrid": {
-      "category": "Transactional",
-      "networks": [
-        {
-          "value": "AS11377"
-        }
-      ],
-      "checked": "2026-10-09, the vendor's own domains sendgrid.com, sendgrid.net, twilio.com: CNAMEs at the bounce labels; CNAMEs at the tracking labels; Team Cymru for the addresses of the apex, www, mail and the MX hosts; TXT at 184 DKIM selectors; homepage not readable at sendgrid.net. None of the entries here was found. 2026-10-10, the 2,003 domains in data/hunt_domains.txt (tools/hunt_proofs.py): none of the entries left here was found there either.",
-      "selectors": [
-        {
-          "shape": {
-            "kind": "fixed",
-            "names": [
-              "sendgrid"
-            ]
-          }
-        }
-      ]
-    },
     "Shopify": {
       "category": "Commerce and apps",
-      "checked": "2026-10-09, the vendor's own domains shopify.com: SPF at the apex and 70 labels, with every include and redirect below them; TXT at 184 DKIM selectors. None of the entries here was found. 2026-10-10, the 2,003 domains in data/hunt_domains.txt (tools/hunt_proofs.py): none of the entries left here was found there either.",
+      "checked": "2026-10-09, the vendor's own domains shopify.com: SPF at the apex and 70 labels, with every include and redirect below them; TXT at 184 DKIM selectors. None of the entries here was found. 2026-10-10, the 2,003 domains in data/hunt_domains.txt (tools/hunt_proofs.py): none of the entries left here was found there either. 2026-11-13, the 6,003 domains in data/hunt_domains.txt (tools/hunt_proofs.py): none of the entries left here was found there either.",
       "selectors": [
         {
           "shape": {
@@ -1074,7 +969,7 @@
     },
     "SparkPost": {
       "category": "Transactional",
-      "checked": "2026-10-09, the vendor's own domains sparkpost.com, sparkpostmail.com: SPF at the apex and 70 labels, with every include and redirect below them; CNAMEs at the bounce labels; CNAMEs at the tracking labels; TXT at 184 DKIM selectors. None of the entries here was found. 2026-10-10, the 2,003 domains in data/hunt_domains.txt (tools/hunt_proofs.py): none of the entries left here was found there either.",
+      "checked": "2026-10-09, the vendor's own domains sparkpost.com, sparkpostmail.com: SPF at the apex and 70 labels, with every include and redirect below them; CNAMEs at the bounce labels; CNAMEs at the tracking labels; TXT at 184 DKIM selectors. None of the entries here was found. 2026-10-10, the 2,003 domains in data/hunt_domains.txt (tools/hunt_proofs.py): none of the entries left here was found there either. 2026-11-13, the 6,003 domains in data/hunt_domains.txt (tools/hunt_proofs.py): none of the entries left here was found there either.",
       "selectors": [
         {
           "shape": {
@@ -1106,11 +1001,11 @@
           }
         }
       ],
-      "checked": "2026-10-09, the vendor's own domains squareup.com, square.com: TXT at 184 DKIM selectors. None of the entries here was found. 2026-10-10, the 2,003 domains in data/hunt_domains.txt (tools/hunt_proofs.py): none of the entries left here was found there either."
+      "checked": "2026-10-09, the vendor's own domains squareup.com, square.com: TXT at 184 DKIM selectors. None of the entries here was found. 2026-10-10, the 2,003 domains in data/hunt_domains.txt (tools/hunt_proofs.py): none of the entries left here was found there either. 2026-11-13, the 6,003 domains in data/hunt_domains.txt (tools/hunt_proofs.py): none of the entries left here was found there either."
     },
     "Squarespace": {
       "category": "Commerce and apps",
-      "checked": "2026-10-09, the vendor's own domains squarespace.com: the CNAMEs of 184 DKIM selectors; TXT at 184 DKIM selectors. None of the entries here was found. 2026-10-10, the 2,003 domains in data/hunt_domains.txt (tools/hunt_proofs.py): none of the entries left here was found there either.",
+      "checked": "2026-10-09, the vendor's own domains squarespace.com: the CNAMEs of 184 DKIM selectors; TXT at 184 DKIM selectors. None of the entries here was found. 2026-10-10, the 2,003 domains in data/hunt_domains.txt (tools/hunt_proofs.py): none of the entries left here was found there either. 2026-11-13, the 6,003 domains in data/hunt_domains.txt (tools/hunt_proofs.py): none of the entries left here was found there either.",
       "selectors": [
         {
           "shape": {
@@ -1134,7 +1029,7 @@
           }
         }
       ],
-      "checked": "2026-10-09, the vendor's own domains stripe.com: TXT at 184 DKIM selectors. None of the entries here was found. 2026-10-10, the 2,003 domains in data/hunt_domains.txt (tools/hunt_proofs.py): none of the entries left here was found there either."
+      "checked": "2026-10-09, the vendor's own domains stripe.com: TXT at 184 DKIM selectors. None of the entries here was found. 2026-10-10, the 2,003 domains in data/hunt_domains.txt (tools/hunt_proofs.py): none of the entries left here was found there either. 2026-11-13, the 6,003 domains in data/hunt_domains.txt (tools/hunt_proofs.py): none of the entries left here was found there either."
     },
     "Symantec MessageLabs": {
       "category": "Security gateway",
@@ -1156,7 +1051,7 @@
           }
         }
       ],
-      "checked": "2026-10-09, the vendor's own domains broadcom.com, symantec.com, messagelabs.com: TXT at 184 DKIM selectors; the homepage's text. None of the entries here was found. 2026-10-10, the 2,003 domains in data/hunt_domains.txt (tools/hunt_proofs.py): none of the entries left here was found there either.",
+      "checked": "2026-10-09, the vendor's own domains broadcom.com, symantec.com, messagelabs.com: TXT at 184 DKIM selectors; the homepage's text. None of the entries here was found. 2026-10-10, the 2,003 domains in data/hunt_domains.txt (tools/hunt_proofs.py): none of the entries left here was found there either. 2026-11-13, the 6,003 domains in data/hunt_domains.txt (tools/hunt_proofs.py): none of the entries left here was found there either.",
       "subprocessor_names": [
         {
           "value": "Symantec MessageLabs"
@@ -1165,27 +1060,13 @@
     },
     "Wix": {
       "category": "Commerce and apps",
-      "checked": "2026-10-09, the vendor's own domains wix.com: the scripts and stylesheets the homepage loads; TXT at 184 DKIM selectors. None of the entries here was found. 2026-10-10, the 2,003 domains in data/hunt_domains.txt (tools/hunt_proofs.py): none of the entries left here was found there either. 2026-10-22, the 2,003 domains of data/hunt_domains.txt and 50 more mapped that day, by DoH: static.wixstatic.com proven on wixstudio.com and moved; the wix selector was not looked for again.",
+      "checked": "2026-10-09, the vendor's own domains wix.com: the scripts and stylesheets the homepage loads; TXT at 184 DKIM selectors. None of the entries here was found. 2026-10-10, the 2,003 domains in data/hunt_domains.txt (tools/hunt_proofs.py): none of the entries left here was found there either. 2026-10-22, the 2,003 domains of data/hunt_domains.txt and 50 more mapped that day, by DoH: static.wixstatic.com proven on wixstudio.com and moved; the wix selector was not looked for again. 2026-11-13, the 6,003 domains in data/hunt_domains.txt (tools/hunt_proofs.py): none of the entries left here was found there either.",
       "selectors": [
         {
           "shape": {
             "kind": "fixed",
             "names": [
               "wix"
-            ]
-          }
-        }
-      ]
-    },
-    "Zendesk": {
-      "category": "Support and CRM",
-      "checked": "2026-10-09, the vendor's own domains zendesk.com: the CNAMEs of 184 DKIM selectors; TXT at 184 DKIM selectors. None of the entries here was found. 2026-10-10, the 2,003 domains in data/hunt_domains.txt (tools/hunt_proofs.py): none of the entries left here was found there either.",
-      "selectors": [
-        {
-          "shape": {
-            "kind": "fixed",
-            "names": [
-              "zendesk"
             ]
           }
         }
@@ -1198,39 +1079,11 @@
           "value": "zoho.com.au"
         }
       ],
-      "checked": "2026-10-09, the vendor's own domains zoho.com, zohomail.com, zoho.eu: SPF at the apex and 70 labels, with every include and redirect below them; MX at the apex and 70 labels; TXT at the apex; TXT at 184 DKIM selectors. None of the entries here was found. 2026-10-10, the 2,003 domains in data/hunt_domains.txt (tools/hunt_proofs.py): none of the entries left here was found there either.",
-      "selectors": [
-        {
-          "shape": {
-            "kind": "fixed",
-            "names": [
-              "zohomail"
-            ]
-          }
-        }
-      ]
-    },
-    "Mapp": {
-      "category": "Marketing",
-      "checked": "2026-10-11, the 2,049 domains of data/hunt_domains.txt plus 75 brands named in the E2 survey or likely customers (tools/hunt_proofs.py), NS asked by hand at every sending name whose SPF or MX names the vendor, and the vendor's documentation: spf_includes shortest-route.com: customers publish Mapp's ranges as ip4 terms (news.springer.com, newsletter.cnet.com), and only shortest-route.com itself redirects to spf.h.shortest-route.com.",
-      "spf_includes": [
-        {
-          "value": "shortest-route.com"
-        }
-      ]
-    },
-    "Cordial": {
-      "category": "Marketing",
-      "checked": "2026-10-11, the 2,049 domains of data/hunt_domains.txt plus 75 brands named in the E2 survey or likely customers (tools/hunt_proofs.py), NS asked by hand at every sending name whose SPF or MX names the vendor, and the vendor's documentation: spf_includes cordial.io: published only by Cordial's own domain crdl.io; customers include _spf.cordialmail.net instead.",
-      "spf_includes": [
-        {
-          "value": "cordial.io"
-        }
-      ]
+      "checked": "2026-10-09, the vendor's own domains zoho.com, zohomail.com, zoho.eu: SPF at the apex and 70 labels, with every include and redirect below them; MX at the apex and 70 labels; TXT at the apex; TXT at 184 DKIM selectors. None of the entries here was found. 2026-10-10, the 2,003 domains in data/hunt_domains.txt (tools/hunt_proofs.py): none of the entries left here was found there either. 2026-11-13, the 6,003 domains in data/hunt_domains.txt (tools/hunt_proofs.py): none of the entries left here was found there either."
     },
     "Dotdigital": {
       "category": "Marketing",
-      "checked": "2026-10-11, the 2,049 domains of data/hunt_domains.txt plus 75 brands named in the E2 survey or likely customers (tools/hunt_proofs.py), NS asked by hand at every sending name whose SPF or MX names the vendor, and the vendor's documentation: tracking dotdigital.com, dmtrk.net, trackedlink.net: no tracking label asked carried a CNAME into them.",
+      "checked": "2026-10-11, the 2,049 domains of data/hunt_domains.txt plus 75 brands named in the E2 survey or likely customers (tools/hunt_proofs.py), NS asked by hand at every sending name whose SPF or MX names the vendor, and the vendor's documentation: tracking dotdigital.com, dmtrk.net, trackedlink.net: no tracking label asked carried a CNAME into them. 2026-11-13, the 6,003 domains in data/hunt_domains.txt (tools/hunt_proofs.py): none of the entries left here was found there either.",
       "tracking": [
         {
           "value": "dotdigital.com"
@@ -1245,7 +1098,7 @@
     },
     "Cheetah Digital": {
       "category": "Marketing",
-      "checked": "2026-10-11, the 2,049 domains of data/hunt_domains.txt plus 75 brands named in the E2 survey or likely customers (tools/hunt_proofs.py), NS asked by hand at every sending name whose SPF or MX names the vendor, and the vendor's documentation: none of chtah.com, cheetahmail.com or chtah.net was found in any SPF, MX, NS or CNAME, including at the US retail, travel and publishing brands added for this search; no customer setup page was readable. 2026-10-22, the 2,003 domains of data/hunt_domains.txt and 50 more mapped that day, by DoH: no SPF or MX at the apex or the common sending labels names chtah.com, chtah.net or cheetahmail.com. 2026-10-28, the 2,003 domains of data/hunt_domains.txt by tools/hunt_proofs.py: em.disneyplus.com delegates to cheetahmail.com's name servers, so that delegation moved to vendors.json; none of the entries left here was found.",
+      "checked": "2026-10-11, the 2,049 domains of data/hunt_domains.txt plus 75 brands named in the E2 survey or likely customers (tools/hunt_proofs.py), NS asked by hand at every sending name whose SPF or MX names the vendor, and the vendor's documentation: none of chtah.com, cheetahmail.com or chtah.net was found in any SPF, MX, NS or CNAME, including at the US retail, travel and publishing brands added for this search; no customer setup page was readable. 2026-10-22, the 2,003 domains of data/hunt_domains.txt and 50 more mapped that day, by DoH: no SPF or MX at the apex or the common sending labels names chtah.com, chtah.net or cheetahmail.com. 2026-10-28, the 2,003 domains of data/hunt_domains.txt by tools/hunt_proofs.py: em.disneyplus.com delegates to cheetahmail.com's name servers, so that delegation moved to vendors.json; none of the entries left here was found. 2026-11-13, the 6,003 domains in data/hunt_domains.txt (tools/hunt_proofs.py): none of the entries left here was found there either.",
       "delegation_ns": [
         {
           "value": "chtah.com"
@@ -1260,20 +1113,11 @@
         },
         {
           "value": "cheetahmail.com"
-        },
-        {
-          "value": "chtah.net"
         }
       ],
       "spf_includes": [
         {
           "value": "chtah.com"
-        },
-        {
-          "value": "cheetahmail.com"
-        },
-        {
-          "value": "chtah.net"
         }
       ],
       "return_path": [
@@ -1295,7 +1139,7 @@
     },
     "Inxmail": {
       "category": "Marketing",
-      "checked": "2026-10-11, the 2,049 domains of data/hunt_domains.txt plus 75 brands named in the E2 survey or likely customers (tools/hunt_proofs.py), NS asked by hand at every sending name whose SPF or MX names the vendor, and the vendor's documentation: no NS delegation to inxmail.com or inxserver.de was found (news.teamviewer.com is a CNAME to rdir.inxmail.com, which delegates nothing), and no MX, bounce or tracking CNAME at inxmail.com.",
+      "checked": "2026-10-11, the 2,049 domains of data/hunt_domains.txt plus 75 brands named in the E2 survey or likely customers (tools/hunt_proofs.py), NS asked by hand at every sending name whose SPF or MX names the vendor, and the vendor's documentation: no NS delegation to inxmail.com or inxserver.de was found (news.teamviewer.com is a CNAME to rdir.inxmail.com, which delegates nothing), and no MX, bounce or tracking CNAME at inxmail.com. 2026-11-13, the 6,003 domains in data/hunt_domains.txt (tools/hunt_proofs.py): none of the entries left here was found there either.",
       "delegation_ns": [
         {
           "value": "inxmail.com"
@@ -1314,11 +1158,6 @@
           "value": "inxmail.com"
         }
       ],
-      "return_path": [
-        {
-          "value": "inxmail.com"
-        }
-      ],
       "tracking": [
         {
           "value": "inxmail.com"
@@ -1327,7 +1166,7 @@
     },
     "UniSender": {
       "category": "Marketing",
-      "checked": "2026-10-11, the 2,049 domains of data/hunt_domains.txt plus 75 brands named in the E2 survey or likely customers (tools/hunt_proofs.py), NS asked by hand at every sending name whose SPF or MX names the vendor, and the vendor's documentation: no MX, NS delegation, bounce or tracking CNAME at unisender.com was found; customers show UniSender by SPF only.",
+      "checked": "2026-10-11, the 2,049 domains of data/hunt_domains.txt plus 75 brands named in the E2 survey or likely customers (tools/hunt_proofs.py), NS asked by hand at every sending name whose SPF or MX names the vendor, and the vendor's documentation: no MX, NS delegation, bounce or tracking CNAME at unisender.com was found; customers show UniSender by SPF only. 2026-11-13, the 6,003 domains in data/hunt_domains.txt (tools/hunt_proofs.py): none of the entries left here was found there either.",
       "delegation_ns": [
         {
           "value": "unisender.com"
@@ -1351,7 +1190,7 @@
     },
     "Sendsay": {
       "category": "Marketing",
-      "checked": "2026-10-11, the 2,049 domains of data/hunt_domains.txt plus 75 brands named in the E2 survey or likely customers (tools/hunt_proofs.py), NS asked by hand at every sending name whose SPF or MX names the vendor, and the vendor's documentation: no bounce or tracking CNAME into sendsay.ru was found.",
+      "checked": "2026-10-11, the 2,049 domains of data/hunt_domains.txt plus 75 brands named in the E2 survey or likely customers (tools/hunt_proofs.py), NS asked by hand at every sending name whose SPF or MX names the vendor, and the vendor's documentation: no bounce or tracking CNAME into sendsay.ru was found. 2026-11-13, the 6,003 domains in data/hunt_domains.txt (tools/hunt_proofs.py): none of the entries left here was found there either.",
       "return_path": [
         {
           "value": "sendsay.ru"
@@ -1365,7 +1204,7 @@
     },
     "Optimizely Campaign": {
       "category": "Marketing",
-      "checked": "2026-10-11, the 2,049 domains of data/hunt_domains.txt plus 75 brands named in the E2 survey or likely customers (tools/hunt_proofs.py), NS asked by hand at every sending name whose SPF or MX names the vendor, and the vendor's documentation: return_path and tracking srv2.de: Optimizely's documentation sets the technical subdomain by A and MX records, not a CNAME, and none was found. 2026-10-22: the selector mailing is now a backed only name in vendors.json, asked wherever SPF or MX shows Optimizely Campaign.",
+      "checked": "2026-10-11, the 2,049 domains of data/hunt_domains.txt plus 75 brands named in the E2 survey or likely customers (tools/hunt_proofs.py), NS asked by hand at every sending name whose SPF or MX names the vendor, and the vendor's documentation: return_path and tracking srv2.de: Optimizely's documentation sets the technical subdomain by A and MX records, not a CNAME, and none was found. 2026-10-22: the selector mailing is now a backed only name in vendors.json, asked wherever SPF or MX shows Optimizely Campaign. 2026-11-13, the 6,003 domains in data/hunt_domains.txt (tools/hunt_proofs.py): none of the entries left here was found there either.",
       "return_path": [
         {
           "value": "srv2.de"
@@ -1374,20 +1213,6 @@
       "tracking": [
         {
           "value": "srv2.de"
-        }
-      ]
-    },
-    "Sailthru": {
-      "category": "Marketing",
-      "checked": "2026-10-22, named on the vendor's DNS setup page (products.zetaglobal.com). The 2,003 domains of data/hunt_domains.txt and 50 more, by DoH: no key at sailthru2.",
-      "selectors": [
-        {
-          "shape": {
-            "kind": "fixed",
-            "names": [
-              "sailthru2"
-            ]
-          }
         }
       ]
     }
