@@ -35,6 +35,13 @@ A service a domain lost with no catalog change behind it is either drift or a bu
 | run | shared named groups | fully named | senders found | no sender | median seconds |
 |---|---|---|---|---|---|
 | 0.1.7, 2026-10-25 | 83 | 57 of 300 (19.0%) | 1,417 | 63 | 10.8 |
+| 0.1.13, 2026-11-14 | 68 | 74 of 300 (24.7%) | 1,437 | 59 | 3.6 |
+| 0.1.14, 2026-11-14 | 58 | 75 of 300 (25.0%) | 1,456 | 55 | 5.5 |
+
+The 0.1.13 and 0.1.14 runs were made hours apart on one machine. The median seconds differ with
+the load on the resolver, not with the code: the two versions timed one after the other on
+zoom.us, spotify.com and vimeo.com took the same time to within 0.2 seconds. mail.ru's sending
+subdomains answer differently from run to run, so its services come and go between runs.
 
 ### Work list from the 0.1.7 run
 

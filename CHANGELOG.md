@@ -11,6 +11,8 @@ fails before anything is published.
 
 ## Unreleased
 
+## 0.1.14 (2026-11-13)
+
 - Seven services are new in the catalog, each pattern with a live proof: SendCloud, Alibaba Cloud
   Direct Mail, Alibaba Mail (with its setup, from Alibaba's own documentation), KnowBe4, Adobe
   Journey Optimizer, Vero and GreenArrow. Marketo is also named by a landing page CNAME into
@@ -29,6 +31,9 @@ fails before anything is published.
   lists them. Before, two findings of the same severity could swap places between the two modes.
 - The proof hunt reads the top 6,000 domains of its Tranco list, up from 2,000.
 - Two more recorded domains in the test corpus: `hicloudcam.com` and `medium.com`.
+- The benchmark over the same 300 domains, 0.1.13 to 0.1.14: named unknowns 901 to 808, shared
+  unknown groups 68 to 58, senders found 1,437 to 1,456.
+- `opentelemetry-api` is locked at 1.45.2 (Dependabot alert 14).
 - ARCHITECTURE.md says what a rebound name gets from the page fetch guard: a failed TLS
   handshake, since every client checks the certificate, and no page.
 
