@@ -11,9 +11,13 @@ fails before anything is published.
 
 ## Unreleased
 
-- Five services are new in the catalog, each pattern with a live proof: SendCloud, Alibaba Cloud
-  Direct Mail, Alibaba Mail (with its setup, from Alibaba's own documentation), KnowBe4 and Adobe
-  Journey Optimizer. Marketo is also named by a landing page CNAME into `mktoweb.com`.
+- Seven services are new in the catalog, each pattern with a live proof: SendCloud, Alibaba Cloud
+  Direct Mail, Alibaba Mail (with its setup, from Alibaba's own documentation), KnowBe4, Adobe
+  Journey Optimizer, Vero and GreenArrow. Marketo is also named by a landing page CNAME into
+  `mktoweb.com`.
+- A vendor block with an empty `published_spf` list is not read for its published ranges.
+  SendCloud's SPF record lists /16 ranges of Alibaba Cloud, so reading it would credit SendCloud
+  with any domain that lists an address in that cloud. SendCloud is named by its include and MX.
 - 23 patterns moved from pending to the catalog, each proven on a customer domain: DKIM selector
   names for Amazon SES (`ses1`, `ses2`), Customer.io (`cio`), Google Workspace (`googlemail`),
   Mailchimp (`mailchimp`), Mimecast (`mc1`), Postmark (`pm1`), Proofpoint (`proofpoint`), Sailthru

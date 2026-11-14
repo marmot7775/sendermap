@@ -438,7 +438,7 @@ Looked for and not found
     _domainkey.mail.allbirds.com TXT no record of this type
 
 How this was checked
-  Checked 2026-10-12 01:24 UTC: 805 DNS lookups in 0.0 s over Google DNS over HTTPS.
+  Checked 2026-10-12 01:24 UTC: 803 DNS lookups in 0.0 s over Google DNS over HTTPS.
   At allbirds.com: 122 possible DKIM key names, 25 service record names, 1 web page.
     Pages:                                                                                          
     https://api.certspotter.com/v1/issuances?domain=allbirds.com&include_subdomains=true&expand=dns_

@@ -6,7 +6,8 @@ the record. Each range, IPv4 or IPv6, is named in this order:
 1. Published ranges. Each service publishes its sending ranges in its own SPF record: the one
    its customers include, named in vendors.json as `published_spf` where the include value is
    the company's own domain, whose record is its office mail (hubspot.com lists other senders'
-   ranges; Mimecast's customers include _netblocks.mimecast.com, not mimecast.com). A range
+   ranges; Mimecast's customers include _netblocks.mimecast.com, not mimecast.com). A service
+   whose record lists whole cloud allocations has an empty `published_spf` and is not read. A range
    inside a range that exactly one service publishes is that service: this is how a flattened
    copy of Amazon SES's ranges is recognised. When several services publish the holding range,
    this check names none of them.

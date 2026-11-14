@@ -249,7 +249,7 @@ Records Sendermap looked for and did not find.
 
 ## How this was checked
 
-Checked 2026-11-14 06:40 UTC: 677 DNS lookups in 0.0 s over Google DNS over HTTPS.
+Checked 2026-11-14 06:40 UTC: 675 DNS lookups in 0.0 s over Google DNS over HTTPS.
 
 - At medium.com: 126 possible DKIM key names, 25 service record names, 1 web page.
 - At email.medium.com: 27 possible DKIM key names.

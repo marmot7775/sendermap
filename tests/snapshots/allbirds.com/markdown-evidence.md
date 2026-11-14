@@ -337,7 +337,7 @@ Records Sendermap looked for and did not find.
 
 ## How this was checked
 
-Checked 2026-10-12 01:24 UTC: 805 DNS lookups in 0.0 s over Google DNS over HTTPS.
+Checked 2026-10-12 01:24 UTC: 803 DNS lookups in 0.0 s over Google DNS over HTTPS.
 
 - At allbirds.com: 122 possible DKIM key names, 25 service record names, 1 web page.
 - At alerts.allbirds.com: 36 possible DKIM key names.

@@ -1,5 +1,5 @@
 {
-  "about": "Email services recognisable from a domain's own DNS. One block per vendor; imported from dns-audit (MIT) at fac9e2e. Hostname patterns match the host itself or any name under it, and the longest match wins. Every pattern is an entry with its value and a proof: a live domain that publishes it, the record name (or, for a website host or a subprocessor name, the page) as found, and the date it was checked. Networks are autonomous system numbers a service owns outright; shared clouds are listed under rules.cloud_networks and never credited to a service. Each selectors entry names a vendor's DKIM selectors with their source and a proof; a fixed shape with several names takes a list of proofs, one per name in order. These entries are the only selector list: they credit keys by name, back generic names, and with rules.generic_selectors make the probe sweep. rules.backed_only_selectors maps a plain selector name to the one vendor it credits, and only where the domain's SPF, MX or an NS delegation already shows that vendor; each carries a proof like a selectors entry. A sending_ip entry is one address the service sends from, for SPF evaluation; its proof's record is either the service's own SPF record, publishing a range that holds the address, or a host of the service's whose A record is the address; each shipped one is an outbound host whose PTR name leads back to the address, which SPF evaluation gives as the HELO name. Hints are MX and SPF values the vendor's customers publish, with the pages that list them. Patterns not yet proven wait in vendors_pending.json, which Sendermap never reads. A setup list names the records the vendor's documentation says a complete setup publishes: each item's record, whether it is needed, its values (patterns of the same block) and a proof whose record is the documentation page that names them all. Aliases are other names a client calls the vendor by, a plain list with no proof: an alias matches text a person typed, never anything in DNS. rules.web_hosts are website hosts and CDNs: a CNAME into one at a label that is not a tracking label is a website, not a sender, so it is not listed as unknown; at a tracking label it still is, since sending services serve click links through CDNs.",
+  "about": "Email services recognisable from a domain's own DNS. One block per vendor; imported from dns-audit (MIT) at fac9e2e. Hostname patterns match the host itself or any name under it, and the longest match wins. Every pattern is an entry with its value and a proof: a live domain that publishes it, the record name (or, for a website host or a subprocessor name, the page) as found, and the date it was checked. Networks are autonomous system numbers a service owns outright; shared clouds are listed under rules.cloud_networks and never credited to a service. Each selectors entry names a vendor's DKIM selectors with their source and a proof; a fixed shape with several names takes a list of proofs, one per name in order. These entries are the only selector list: they credit keys by name, back generic names, and with rules.generic_selectors make the probe sweep. rules.backed_only_selectors maps a plain selector name to the one vendor it credits, and only where the domain's SPF, MX or an NS delegation already shows that vendor; each carries a proof like a selectors entry. A sending_ip entry is one address the service sends from, for SPF evaluation; its proof's record is either the service's own SPF record, publishing a range that holds the address, or a host of the service's whose A record is the address; each shipped one is an outbound host whose PTR name leads back to the address, which SPF evaluation gives as the HELO name. An empty published_spf list means the service's own SPF record is not read for its ranges, because it lists whole cloud allocations (SendCloud lists /16 ranges of Alibaba Cloud). Hints are MX and SPF values the vendor's customers publish, with the pages that list them. Patterns not yet proven wait in vendors_pending.json, which Sendermap never reads. A setup list names the records the vendor's documentation says a complete setup publishes: each item's record, whether it is needed, its values (patterns of the same block) and a proof whose record is the documentation page that names them all. Aliases are other names a client calls the vendor by, a plain list with no proof: an alias matches text a person typed, never anything in DNS. rules.web_hosts are website hosts and CDNs: a CNAME into one at a label that is not a tracking label is a website, not a sender, so it is not listed as unknown; at a tracking label it still is, since sending services serve click links through CDNs.",
   "categories": [
     "Mailbox",
     "Security gateway",
@@ -3039,6 +3039,23 @@
             "date": "2026-10-09"
           }
         }
+      ]
+    },
+    "GreenArrow": {
+      "spf_includes": [
+        {
+          "value": "spf.drhinternet.net",
+          "proof": {
+            "domain": "getvero.com",
+            "record": "spf.getvero.com",
+            "date": "2026-11-13"
+          }
+        }
+      ],
+      "category": "Transactional",
+      "aliases": [
+        "GreenArrow Email",
+        "DRH Internet"
       ]
     },
     "Greenhouse": {
@@ -6545,7 +6562,8 @@
       "category": "Transactional",
       "aliases": [
         "Sohu SendCloud"
-      ]
+      ],
+      "published_spf": []
     },
     "SendForensics": {
       "reporting": [
@@ -7384,6 +7402,43 @@
       "aliases": [
         "Valimail Enforce",
         "Valimail Monitor"
+      ]
+    },
+    "Vero": {
+      "spf_includes": [
+        {
+          "value": "spf.getvero.com",
+          "proof": {
+            "domain": "unsplash.com",
+            "record": "click.unsplash.com",
+            "date": "2026-11-13"
+          }
+        }
+      ],
+      "mx": [
+        {
+          "value": "getvero.com",
+          "proof": {
+            "domain": "unsplash.com",
+            "record": "click.unsplash.com",
+            "date": "2026-11-13"
+          }
+        }
+      ],
+      "tracking": [
+        {
+          "value": "track.getvero.com",
+          "proof": {
+            "domain": "unsplash.com",
+            "record": "click.unsplash.com",
+            "date": "2026-11-13"
+          }
+        }
+      ],
+      "category": "Marketing",
+      "aliases": [
+        "Vero Cloud",
+        "getvero"
       ]
     },
     "VK WorkMail": {

@@ -96,6 +96,12 @@ def test_published_ranges_are_read_from_published_spf_where_a_block_names_it() -
     assert "sendgrid.net" in sources["SendGrid"]
 
 
+def test_a_service_with_an_empty_published_spf_is_read_nowhere() -> None:
+    # spf.sendcloud.org lists /16 ranges of Alibaba Cloud, so it would claim that cloud's customers.
+    assert C.spf("spf.sendcloud.org") == "SendCloud"
+    assert "SendCloud" not in catalog.load().spf_sources()
+
+
 def test_inbound_mx_from_the_0_1_7_benchmark() -> None:
     # eu.wxpcollaboration.hp.com and foundry.openai.com receive through SES; community.openai.com
     # and community.f5.com are Discourse forums whose replies arrive at discoursemail.com.

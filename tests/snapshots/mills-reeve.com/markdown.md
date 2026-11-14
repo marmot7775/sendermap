@@ -110,7 +110,7 @@ These records point somewhere Sendermap does not recognise: a service it does no
 
 ## How this was checked
 
-Checked 2026-10-12 01:24 UTC: 680 DNS lookups in 0.0 s over Google DNS over HTTPS.
+Checked 2026-10-12 01:24 UTC: 678 DNS lookups in 0.0 s over Google DNS over HTTPS.
 
 - At mills-reeve.com: 122 possible DKIM key names, 25 service record names, 1 web page.
 - At update.mills-reeve.com: 30 possible DKIM key names.
