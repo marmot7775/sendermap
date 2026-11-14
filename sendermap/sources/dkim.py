@@ -306,7 +306,7 @@ async def collect(
         sweep, answers = list(order.first), await _ask(ctx, base, list(order.first))
         first = _scan(ctx, where, sweep, answers, backed=backed, canary=canary, denial=denial)
         then = list(order.then(_keyed(first, where)))
-        sweep, answers = sweep + then, answers + await _ask(ctx, base, then)
+        sweep, answers = _in_sweep_order(names, sweep + then, answers + await _ask(ctx, base, then))
         skipped = tuple(n for n in names if n not in set(sweep))
         stopped = _stopped(where, len(names), skipped, every=bool(order.rest) and not then)
     observed = (
@@ -323,6 +323,16 @@ async def collect(
         absence = Absence(f"DKIM keys at {where}", happened, (negative(node, ctx.checked_at),))
         observed += Observed(absences=(absence,))
     return observed
+
+
+def _in_sweep_order(
+    names: list[str], asked: list[str], answers: list[Answer]
+) -> tuple[list[str], list[Answer]]:
+    """The names asked and their answers in the order the full sweep asks them, so a map reads
+    the same whichever order the early stop asked in."""
+    place = {name: i for i, name in enumerate(names)}
+    pairs = sorted(zip(asked, answers, strict=True), key=lambda p: place.get(p[0], len(names)))
+    return [name for name, _ in pairs], [answer for _, answer in pairs]
 
 
 def _stopped(where: str, total: int, skipped: tuple[str, ...], *, every: bool) -> Observed:

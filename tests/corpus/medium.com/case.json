@@ -1,0 +1,8 @@
+{
+ "domain": "medium.com",
+ "checked_at": "2026-11-14T06:40:31+00:00",
+ "use_web": false,
+ "use_subdomains": true,
+ "use_ct": false,
+ "resolver": "doh google"
+}

@@ -194,7 +194,8 @@ def test_without_senders_the_plan_never_stops() -> None:
     loaded = catalog.load()
     order = dkim.plan(loaded, DOMAIN, loaded.probe_selectors, [])
     assert order.senders == frozenset()
-    assert set(order.then({"Google Workspace", "Microsoft 365"})) == set(order.rest) - {"gapps"}
+    google_only = {"gapps", "googlemail"}
+    assert set(order.then({"Google Workspace", "Microsoft 365"})) == set(order.rest) - google_only
 
 
 class Counting:

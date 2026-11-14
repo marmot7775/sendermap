@@ -130,9 +130,9 @@ Records Sendermap looked for and did not find.
 
 ## How this was checked
 
-Checked 2026-10-28 12:11 UTC: 414 DNS lookups in 0.0 s over Google DNS over HTTPS.
+Checked 2026-10-28 12:11 UTC: 426 DNS lookups in 0.0 s over Google DNS over HTTPS.
 
-- At cognifit.com: 114 possible DKIM key names, 25 service record names, 1 web page.
+- At cognifit.com: 126 possible DKIM key names, 25 service record names, 1 web page.
 - At messages.cognifit.com: 8 possible DKIM key names.
 - At send.cognifit.com: 8 possible DKIM key names.
 

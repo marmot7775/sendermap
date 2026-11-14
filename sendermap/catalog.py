@@ -314,15 +314,16 @@ class Catalog:
         """{service: the SPF hosts its published ranges are read from}: its `published_spf`
         hosts where the block names them, else its include hosts that are real records, not
         zones that only hold per-customer names. A vendor whose include value is its company
-        domain names `published_spf`, since that domain's record is its own office mail."""
-        return {
-            name: hosts
+        domain names `published_spf`, since that domain's record is its own office mail. A
+        block with an empty `published_spf` is read nowhere: its record lists whole cloud
+        allocations, which would credit it with every other customer of that cloud."""
+        sources = {
+            name: list(block["published_spf"])
+            if "published_spf" in block
+            else [h for h in block.get("spf_includes", ()) if "." in h]
             for name, block in self.services.items()
-            if (
-                hosts := list(block.get("published_spf", ()))
-                or [h for h in block.get("spf_includes", ()) if "." in h]
-            )
         }
+        return {name: hosts for name, hosts in sources.items() if hosts}
 
     def __iter__(self) -> Iterator[str]:
         return iter(self.services)

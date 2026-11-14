@@ -1,0 +1,490 @@
+<header class="view-head">
+<h2>Who handles email for medium.com?</h2>
+<p class="summary"><strong class="to-fix">10 services handle email for medium.com. 4 things need fixing.</strong></p>
+<p class="checked">Checked 2026-11-14 06:40 UTC: 675 DNS lookups in 0.0 s over Google DNS over HTTPS.</p>
+</header>
+<div class="lead">
+<div class="story">
+<p>Google Workspace receives the domain&#x27;s mail and has a DKIM key in place to sign it.</p>
+<p>Six other services are set up to send as the domain: two transactional (Amazon SES, SendGrid), two support and CRM (Intercom, Zendesk), two commerce and apps (KnowBe4, Tipalti); three more are likely from a DKIM key name alone (Cloudflare Email Routing, Kit, Mandrill).</p>
+<p>DMARC reports go to Valimail.</p>
+<p class="story-muted">Not checked: the website (turned off), DKIM selectors past the first 27 on two subdomains, and the crt.sh certificate log (read only with --ct).</p>
+</div>
+</div>
+<section class="view-section glance">
+<h3 class="section-title">Who handles your email</h3>
+<p class="section-intro">Each service below receives or sends email for medium.com.</p>
+<ul class="section-key">
+<li>Receives your mail: your MX records deliver the domain&#x27;s mail there.</li>
+<li>Set up to send: its records for sending are in your DNS.</li>
+<li>Likely sends: one clue points to it, such as a key named for it.</li>
+</ul>
+<table class="glance">
+<thead><tr><th>Service</th><th>Category</th><th>Status</th><th>Setup</th></tr></thead>
+<tbody>
+<tr>
+<td class="name"><span class="dot in-use"></span><a href="#service-google-workspace">Google Workspace</a></td>
+<td class="category">Mailbox</td>
+<td><span class="badge b-in-use">Receives your mail</span></td>
+<td class="state incomplete">⚠ setup incomplete</td>
+</tr>
+<tr>
+<td class="name"><span class="dot configured"></span><a href="#service-amazon-ses">Amazon SES</a></td>
+<td class="category">Transactional</td>
+<td><span class="badge b-configured">Set up to send</span></td>
+<td class="state "></td>
+</tr>
+<tr>
+<td class="name"><span class="dot configured"></span><a href="#service-intercom">Intercom</a></td>
+<td class="category">Support and CRM</td>
+<td><span class="badge b-configured">Set up to send</span></td>
+<td class="state complete">✓ setup complete</td>
+</tr>
+<tr>
+<td class="name"><span class="dot configured"></span><a href="#service-knowbe4">KnowBe4</a></td>
+<td class="category">Commerce and apps</td>
+<td><span class="badge b-configured">Set up to send</span></td>
+<td class="state "></td>
+</tr>
+<tr>
+<td class="name"><span class="dot configured"></span><a href="#service-sendgrid">SendGrid</a></td>
+<td class="category">Transactional</td>
+<td><span class="badge b-configured">Set up to send</span></td>
+<td class="state complete">✓ setup complete</td>
+</tr>
+<tr>
+<td class="name"><span class="dot configured"></span><a href="#service-tipalti">Tipalti</a></td>
+<td class="category">Commerce and apps</td>
+<td><span class="badge b-configured">Set up to send</span></td>
+<td class="state "></td>
+</tr>
+<tr>
+<td class="name"><span class="dot configured"></span><a href="#service-zendesk">Zendesk</a></td>
+<td class="category">Support and CRM</td>
+<td><span class="badge b-configured">Set up to send</span></td>
+<td class="state complete">✓ setup complete</td>
+</tr>
+<tr>
+<td class="name"><span class="dot likely"></span><a href="#service-cloudflare-email-routing">Cloudflare Email Routing</a></td>
+<td class="category">Mailbox</td>
+<td><span class="badge b-likely">Likely sends</span></td>
+<td class="state basis">from: DKIM key</td>
+</tr>
+<tr>
+<td class="name"><span class="dot likely"></span><a href="#service-kit">Kit</a></td>
+<td class="category">Marketing</td>
+<td><span class="badge b-likely">Likely sends</span></td>
+<td class="state basis">from: DKIM key</td>
+</tr>
+<tr>
+<td class="name"><span class="dot likely"></span><a href="#service-mandrill">Mandrill</a></td>
+<td class="category">Transactional</td>
+<td><span class="badge b-likely">Likely sends</span></td>
+<td class="state basis">from: DKIM key</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section class="view-section attention">
+<h3 class="section-title">What to fix</h3>
+<p class="section-intro">Problems found in the setup, most serious first.</p>
+<ol class="fixes">
+<li class="finding warning">
+<h4>Seven DKIM keys at medium.com are 1024-bit: google (Google Workspace), s2 (SendGrid), smtpapi (SendGrid), intercom (Intercom), cka (Kit), mandrill (Mandrill) and mx</h4>
+<p>Some receivers already treat 1024-bit RSA keys as weak. Rotate to 2048-bit.</p>
+<details class="records"><summary>Records</summary>
+<ul class="records">
+<li class="ev mono">google._domainkey.medium.com TXT v=DKIM1; k=rsa; p=MIGfMA0GCSqG..., 1024-bit, fp ed74a6d0292ef851</li>
+<li class="ev mono">s2._domainkey.medium.com TXT k=rsa; t=s (strict); p=MIGfMA0GCSqG..., 1024-bit, fp 656c793271cffad5 via s2.domainkey.u1815634.wl135.sendgrid.net</li>
+<li class="ev mono">smtpapi._domainkey.medium.com TXT k=rsa; t=s (strict); p=MIGfMA0GCSqG..., 1024-bit, fp 303963420cfee1c6</li>
+<li class="ev mono">intercom._domainkey.medium.com TXT k=rsa; p=MIGfMA0GCSqG..., 1024-bit, fp c5fb9f656f567b63 via 5fdfac11-2ed9-41ef-9460-e56a59043246.dkim.intercom.io</li>
+<li class="ev mono">cka._domainkey.medium.com TXT k=rsa; t=s (strict); p=MIGfMA0GCSqG..., 1024-bit, fp ae2635ee9f973947 via dkim.dm-0m73zvny.sg7.convertkit.com</li>
+<li class="ev mono">mandrill._domainkey.medium.com TXT v=DKIM1; k=rsa; p=MIGfMA0GCSqG..., 1024-bit, fp 9cee89b6f986543a</li>
+<li class="ev mono">mx._domainkey.medium.com TXT k=rsa; p=MIGfMA0GCSqG..., 1024-bit, fp ed9c30e7c3b40a07</li>
+</ul>
+</details>
+</li>
+<li class="finding warning">
+<h4>The SendGrid key smtpapi at email.medium.com is 1024-bit</h4>
+<p>Some receivers already treat 1024-bit RSA keys as weak. Rotate to 2048-bit.</p>
+<details class="records"><summary>Records</summary>
+<ul class="records">
+<li class="ev mono">smtpapi._domainkey.email.medium.com TXT k=rsa; t=s (strict); p=MIGfMA0GCSqG..., 1024-bit, fp 303963420cfee1c6</li>
+</ul>
+</details>
+</li>
+<li class="finding warning">
+<h4>Google Workspace at mail.medium.com has no SPF</h4>
+<p>Its documented setup needs it and the map shows it missing: no SPF record.</p>
+<details class="records"><summary>Records</summary>
+<ul class="records">
+<li class="ev mono">mail.medium.com TXT no SPF record (v=spf1)</li>
+</ul>
+</details>
+</li>
+<li class="finding warning">
+<h4>Google Workspace at mail.medium.com has no DKIM</h4>
+<p>Its documented setup needs it and the map shows it missing: no key at google._domainkey, a name that does not exist.</p>
+<details class="records"><summary>Records</summary>
+<ul class="records">
+<li class="ev mono">google._domainkey.mail.medium.com TXT no such name</li>
+<li class="ev mono">_domainkey.mail.medium.com TXT no record of this type</li>
+</ul>
+</details>
+</li>
+</ol>
+</section>
+<section class="view-section notes">
+<h3 class="section-title">Good to know</h3>
+<p class="section-intro">Nothing to change here. These explain what the map shows.</p>
+<ul class="notes">
+<li><strong>The smtpapi key at medium.com and the smtpapi key at email.medium.com are the same key</strong>. They publish one public key, fp 303963420cfee1c6, so one private key signs for all of them, and replacing the key at one selector leaves it live at the others.
+<details class="records"><summary>Records</summary>
+<ul class="records">
+<li class="ev mono">smtpapi._domainkey.medium.com TXT k=rsa; t=s (strict); p=MIGfMA0GCSqG..., 1024-bit, fp 303963420cfee1c6</li>
+<li class="ev mono">smtpapi._domainkey.email.medium.com TXT k=rsa; t=s (strict); p=MIGfMA0GCSqG..., 1024-bit, fp 303963420cfee1c6</li>
+</ul>
+</details>
+</li>
+<li><strong>Cloudflare Email Routing at medium.com has no SPF</strong>. Its documented setup needs it and the map shows it missing: the record does not authorize _spf.mx.cloudflare.net. The map shows this service only as likely, so check it still sends first.
+<details class="records"><summary>Records</summary>
+<ul class="records">
+<li class="ev mono">medium.com TXT v=spf1 include:amazonses.com include:_spf.google.com include:mail.zendesk.com include:sendgrid.net include:spf.tipalti.com include:_spf.psm.knowbe4.com ~all</li>
+</ul>
+</details>
+</li>
+</ul>
+</section>
+<section class="view-section tier">
+<h3 class="section-title">The proof, service by service</h3>
+<p class="section-intro">The DNS records behind each service above, for anyone who wants to check them.</p>
+<ul class="section-key">
+<li>MX: where the domain&#x27;s mail is delivered.</li>
+<li>SPF: the list of servers allowed to send as the domain.</li>
+<li>DKIM: a signature key that proves mail really came from the domain.</li>
+<li>Bounce CNAME: lets a service handle bounced mail under the domain&#x27;s name.</li>
+</ul>
+<div class="rows">
+<article class="row" id="service-google-workspace">
+<h4>Google Workspace</h4>
+<p class="meta">Mailbox</p>
+<span class="badge b-in-use">Receives your mail</span>
+<div class="row-body">
+<p class="decider"><span class="kind">MX</span>: aspmx.l.google.com, alt1.aspmx.l.google.com and 3 more</p>
+<ul class="claims">
+<li><span class="kind">SPF</span>: include:_spf.google.com</li>
+<li><span class="kind">MX for a subdomain&#x27;s mail</span>: aspmx.l.google.com, alt1.aspmx.l.google.com and 3 more at mail.medium.com</li>
+<li><span class="kind">DKIM key</span>: google (1024 bit, named for it)</li>
+</ul>
+<p class="setup">setup incomplete: SPF missing at mail.medium.com, DKIM missing at mail.medium.com</p>
+<details class="records"><summary>All records</summary>
+<p class="kind">MX</p>
+<ul class="records">
+<li class="ev mono">medium.com MX 1 aspmx.l.google.com</li>
+<li class="ev mono">medium.com MX 5 alt1.aspmx.l.google.com</li>
+<li class="ev mono">medium.com MX 5 alt2.aspmx.l.google.com</li>
+<li class="ev mono">medium.com MX 10 aspmx2.googlemail.com</li>
+<li class="ev mono">medium.com MX 10 aspmx3.googlemail.com</li>
+</ul>
+<p class="kind">SPF</p>
+<ul class="records">
+<li class="ev mono">medium.com TXT include:_spf.google.com</li>
+</ul>
+<p class="kind">MX for a subdomain&#x27;s mail</p>
+<ul class="records">
+<li class="ev mono">mail.medium.com MX 1 aspmx.l.google.com</li>
+<li class="ev mono">mail.medium.com MX 5 alt1.aspmx.l.google.com</li>
+<li class="ev mono">mail.medium.com MX 5 alt2.aspmx.l.google.com</li>
+<li class="ev mono">mail.medium.com MX 10 alt3.aspmx.l.google.com</li>
+<li class="ev mono">mail.medium.com MX 10 alt4.aspmx.l.google.com</li>
+</ul>
+<p class="kind">DKIM key</p>
+<ul class="records">
+<li class="ev mono">google._domainkey.medium.com TXT v=DKIM1; k=rsa; p=MIGfMA0GCSqG..., 1024-bit, fp ed74a6d0292ef851 via medium.com TXT include:_spf.google.com</li>
+</ul>
+<p class="setup">setup incomplete: SPF present at medium.com, DKIM present at medium.com, MX present at medium.com and mail.medium.com, bounce CNAME not needed at medium.com and mail.medium.com, SPF missing at mail.medium.com, DKIM missing at mail.medium.com</p>
+</details>
+</div>
+</article>
+<article class="row" id="service-amazon-ses">
+<h4>Amazon SES</h4>
+<p class="meta">Transactional</p>
+<span class="badge b-configured">Set up to send</span>
+<div class="row-body">
+<p class="decider"><span class="kind">SPF</span>: include:amazonses.com</p>
+<details class="records"><summary>All records</summary>
+<p class="kind">SPF</p>
+<ul class="records">
+<li class="ev mono">medium.com TXT include:amazonses.com</li>
+</ul>
+</details>
+</div>
+</article>
+<article class="row" id="service-intercom">
+<h4>Intercom</h4>
+<p class="meta">Support and CRM</p>
+<span class="badge b-configured">Set up to send</span>
+<div class="row-body">
+<p class="decider"><span class="kind">DKIM key</span>: intercom (1024 bit, by CNAME)</p>
+<ul class="claims">
+<li><span class="kind">Bounce CNAME</span>: outbound.intercom.medium.com</li>
+</ul>
+<p class="setup">setup complete</p>
+<details class="records"><summary>All records</summary>
+<p class="kind">DKIM key</p>
+<ul class="records">
+<li class="ev mono">intercom._domainkey.medium.com TXT k=rsa; p=MIGfMA0GCSqG..., 1024-bit, fp c5fb9f656f567b63 via 5fdfac11-2ed9-41ef-9460-e56a59043246.dkim.intercom.io</li>
+</ul>
+<p class="kind">Bounce CNAME</p>
+<ul class="records">
+<li class="ev mono">outbound.intercom.medium.com CNAME rp.medium-a7e301761373.intercom-mail.com</li>
+</ul>
+<p class="setup">setup complete: SPF not needed, DKIM present</p>
+</details>
+</div>
+</article>
+<article class="row" id="service-knowbe4">
+<h4>KnowBe4</h4>
+<p class="meta">Commerce and apps</p>
+<span class="badge b-configured">Set up to send</span>
+<div class="row-body">
+<p class="decider"><span class="kind">SPF</span>: include:_spf.psm.knowbe4.com</p>
+<details class="records"><summary>All records</summary>
+<p class="kind">SPF</p>
+<ul class="records">
+<li class="ev mono">medium.com TXT include:_spf.psm.knowbe4.com</li>
+</ul>
+</details>
+</div>
+</article>
+<article class="row" id="service-sendgrid">
+<h4>SendGrid</h4>
+<p class="meta">Transactional</p>
+<span class="badge b-configured">Set up to send</span>
+<div class="row-body">
+<p class="decider"><span class="kind">SPF</span>: include:sendgrid.net</p>
+<ul class="claims">
+<li><span class="kind">DKIM keys</span>: s1 2048 bit, s2 1024 bit (by CNAME)</li>
+<li><span class="kind">MX for bounces</span>: mx.sendgrid.net at email.medium.com</li>
+<li><span class="kind">SPF ranges</span>: ip4:149.72.137.151, ip4:149.72.133.6 and 32 more at email.medium.com</li>
+<li><span class="kind">DKIM keys</span>: smtpapi (both 1024 bit, named for it) at medium.com and email.medium.com</li>
+</ul>
+<p class="setup">setup complete</p>
+<details class="records"><summary>All records</summary>
+<p class="kind">SPF</p>
+<ul class="records">
+<li class="ev mono">medium.com TXT include:sendgrid.net</li>
+</ul>
+<p class="kind">DKIM keys</p>
+<ul class="records">
+<li class="ev mono">s1._domainkey.medium.com TXT k=rsa; t=s (strict); p=MIIBIjANBgkq..., 2048-bit, fp c8d37e821f8cbd21 via s1.domainkey.u1815634.wl135.sendgrid.net</li>
+<li class="ev mono">s2._domainkey.medium.com TXT k=rsa; t=s (strict); p=MIGfMA0GCSqG..., 1024-bit, fp 656c793271cffad5 via s2.domainkey.u1815634.wl135.sendgrid.net</li>
+</ul>
+<p class="kind">MX for bounces</p>
+<ul class="records">
+<li class="ev mono">email.medium.com MX 10 mx.sendgrid.net</li>
+</ul>
+<p class="kind">SPF ranges</p>
+<ul class="records">
+<li class="ev mono">_digest-one.medium.com TXT ip4:149.72.137.151 via sendgrid.net TXT ip4:149.72.0.0/16</li>
+<li class="ev mono">_digest-one.medium.com TXT ip4:149.72.133.6 via sendgrid.net TXT ip4:149.72.0.0/16</li>
+<li class="ev mono">_digest-one.medium.com TXT ip4:149.72.133.59 via sendgrid.net TXT ip4:149.72.0.0/16</li>
+<li class="ev mono">_digest-two.medium.com TXT ip4:149.72.177.63 via sendgrid.net TXT ip4:149.72.0.0/16</li>
+<li class="ev mono">_digest-two.medium.com TXT ip4:149.72.177.236 via sendgrid.net TXT ip4:149.72.0.0/16</li>
+<li class="ev mono">_digest-two.medium.com TXT ip4:149.72.177.231 via sendgrid.net TXT ip4:149.72.0.0/16</li>
+<li class="ev mono">_digest-two.medium.com TXT ip4:149.72.177.225 via sendgrid.net TXT ip4:149.72.0.0/16</li>
+<li class="ev mono">_digest-two.medium.com TXT ip4:149.72.177.21 via sendgrid.net TXT ip4:149.72.0.0/16</li>
+<li class="ev mono">_digest-two.medium.com TXT ip4:149.72.177.204 via sendgrid.net TXT ip4:149.72.0.0/16</li>
+<li class="ev mono">_digest-two.medium.com TXT ip4:149.72.177.190 via sendgrid.net TXT ip4:149.72.0.0/16</li>
+<li class="ev mono">_digest-two.medium.com TXT ip4:149.72.177.155 via sendgrid.net TXT ip4:149.72.0.0/16</li>
+<li class="ev mono">_digest-two.medium.com TXT ip4:149.72.122.8 via sendgrid.net TXT ip4:149.72.0.0/16</li>
+<li class="ev mono">_digest-two.medium.com TXT ip4:149.72.117.99 via sendgrid.net TXT ip4:149.72.0.0/16</li>
+<li class="ev mono">_legal.medium.com TXT ip4:159.183.144.235 via sendgrid.net TXT ip4:159.183.0.0/16</li>
+<li class="ev mono">_legal.medium.com TXT ip4:159.183.145.91 via sendgrid.net TXT ip4:159.183.0.0/16</li>
+<li class="ev mono">_legal.medium.com TXT ip4:159.183.160.29 via sendgrid.net TXT ip4:159.183.0.0/16</li>
+<li class="ev mono">_letters.medium.com TXT ip4:159.183.172.152 via sendgrid.net TXT ip4:159.183.0.0/16</li>
+<li class="ev mono">_letters.medium.com TXT ip4:149.72.199.196 via sendgrid.net TXT ip4:149.72.0.0/16</li>
+<li class="ev mono">_partnerprogram.medium.com TXT ip4:159.183.176.0 via sendgrid.net TXT ip4:159.183.0.0/16</li>
+<li class="ev mono">_transactional.medium.com TXT ip4:149.72.36.156 via sendgrid.net TXT ip4:149.72.0.0/16</li>
+<li class="ev mono">_auth.medium.com TXT ip4:149.72.23.220 via sendgrid.net TXT ip4:149.72.0.0/16</li>
+<li class="ev mono">_auth.medium.com TXT ip4:159.183.87.116 via sendgrid.net TXT ip4:159.183.0.0/16</li>
+<li class="ev mono">_campaigns.medium.com TXT ip4:167.89.66.191 via 191.66.89.167.origin.asn.cymru.com TXT 11377 | 167.89.64.0/19 | US | arin | 2013-10-31 via as11377.asn.cymru.com TXT 11377 | US | arin | 2012-06-28 | SENDGRID - SendGrid, Inc., US</li>
+<li class="ev mono">_campaigns.medium.com TXT ip4:167.89.66.175 via 175.66.89.167.origin.asn.cymru.com TXT 11377 | 167.89.64.0/19 | US | arin | 2013-10-31 via as11377.asn.cymru.com TXT 11377 | US | arin | 2012-06-28 | SENDGRID - SendGrid, Inc., US</li>
+<li class="ev mono">_digest-one.medium.com TXT ip4:168.245.100.68 via 68.100.245.168.origin.asn.cymru.com TXT 11377 | 168.245.96.0/19 | US | arin | 2016-11-10 via as11377.asn.cymru.com TXT 11377 | US | arin | 2012-06-28 | SENDGRID - SendGrid, Inc., US</li>
+<li class="ev mono">_digest-one.medium.com TXT ip4:168.245.3.222 via 222.3.245.168.origin.asn.cymru.com TXT 11377 | 168.245.0.0/18 | US | arin | 2016-11-10 via as11377.asn.cymru.com TXT 11377 | US | arin | 2012-06-28 | SENDGRID - SendGrid, Inc., US</li>
+<li class="ev mono">_digest-one.medium.com TXT ip4:167.89.47.62 via 62.47.89.167.origin.asn.cymru.com TXT 11377 | 167.89.0.0/18 | US | arin | 2013-10-31 via as11377.asn.cymru.com TXT 11377 | US | arin | 2012-06-28 | SENDGRID - SendGrid, Inc., US</li>
+<li class="ev mono">_digest-one.medium.com TXT ip4:167.89.15.8 via 8.15.89.167.origin.asn.cymru.com TXT 11377 | 167.89.0.0/18 | US | arin | 2013-10-31 via as11377.asn.cymru.com TXT 11377 | US | arin | 2012-06-28 | SENDGRID - SendGrid, Inc., US</li>
+<li class="ev mono">_digest-one.medium.com TXT ip4:167.89.15.48 via 48.15.89.167.origin.asn.cymru.com TXT 11377 | 167.89.0.0/18 | US | arin | 2013-10-31 via as11377.asn.cymru.com TXT 11377 | US | arin | 2012-06-28 | SENDGRID - SendGrid, Inc., US</li>
+<li class="ev mono">_digest-one.medium.com TXT ip4:167.89.110.85 via 85.110.89.167.origin.asn.cymru.com TXT 11377 | 167.89.96.0/20 | US | arin | 2013-10-31 via as11377.asn.cymru.com TXT 11377 | US | arin | 2012-06-28 | SENDGRID - SendGrid, Inc., US</li>
+<li class="ev mono">_digest-one.medium.com TXT ip4:167.89.110.59 via 59.110.89.167.origin.asn.cymru.com TXT 11377 | 167.89.96.0/20 | US | arin | 2013-10-31 via as11377.asn.cymru.com TXT 11377 | US | arin | 2012-06-28 | SENDGRID - SendGrid, Inc., US</li>
+<li class="ev mono">_legal.medium.com TXT ip4:168.245.8.34 via 34.8.245.168.origin.asn.cymru.com TXT 11377 | 168.245.0.0/18 | US | arin | 2016-11-10 via as11377.asn.cymru.com TXT 11377 | US | arin | 2012-06-28 | SENDGRID - SendGrid, Inc., US</li>
+<li class="ev mono">_letters.medium.com TXT ip4:167.89.49.168 via 168.49.89.167.origin.asn.cymru.com TXT 11377 | 167.89.0.0/18 | US | arin | 2013-10-31 via as11377.asn.cymru.com TXT 11377 | US | arin | 2012-06-28 | SENDGRID - SendGrid, Inc., US</li>
+<li class="ev mono">_transactional.medium.com TXT ip4:167.89.65.228 via 228.65.89.167.origin.asn.cymru.com TXT 11377 | 167.89.64.0/19 | US | arin | 2013-10-31 via as11377.asn.cymru.com TXT 11377 | US | arin | 2012-06-28 | SENDGRID - SendGrid, Inc., US</li>
+</ul>
+<p class="kind">DKIM keys</p>
+<ul class="records">
+<li class="ev mono">smtpapi._domainkey.medium.com TXT k=rsa; t=s (strict); p=MIGfMA0GCSqG..., 1024-bit, fp 303963420cfee1c6 via medium.com TXT include:sendgrid.net</li>
+<li class="ev mono">smtpapi._domainkey.email.medium.com TXT k=rsa; t=s (strict); p=MIGfMA0GCSqG..., 1024-bit, fp 303963420cfee1c6</li>
+</ul>
+<p class="setup">setup complete: DKIM present, bounce CNAME present, SPF not needed, tracking CNAME not used (optional, CNAME at 25 labels under medium.com)</p>
+</details>
+</div>
+</article>
+<article class="row" id="service-tipalti">
+<h4>Tipalti</h4>
+<p class="meta">Commerce and apps</p>
+<span class="badge b-configured">Set up to send</span>
+<div class="row-body">
+<p class="decider"><span class="kind">SPF</span>: include:spf.tipalti.com</p>
+<details class="records"><summary>All records</summary>
+<p class="kind">SPF</p>
+<ul class="records">
+<li class="ev mono">medium.com TXT include:spf.tipalti.com</li>
+</ul>
+</details>
+</div>
+</article>
+<article class="row" id="service-zendesk">
+<h4>Zendesk</h4>
+<p class="meta">Support and CRM</p>
+<span class="badge b-configured">Set up to send</span>
+<div class="row-body">
+<p class="decider"><span class="kind">SPF</span>: include:mail.zendesk.com at medium.com and help.medium.com</p>
+<ul class="claims">
+<li><span class="kind">DKIM keys</span>: zendesk1, zendesk2 (both 2048 bit, by CNAME)</li>
+<li><span class="kind">MX for bounces</span>: mail-pod-23.int.zendesk.com at help.medium.com</li>
+</ul>
+<p class="setup">setup complete</p>
+<details class="records"><summary>All records</summary>
+<p class="kind">SPF</p>
+<ul class="records">
+<li class="ev mono">medium.com TXT include:mail.zendesk.com</li>
+<li class="ev mono">help.medium.com TXT include:mail.zendesk.com</li>
+</ul>
+<p class="kind">DKIM keys</p>
+<ul class="records">
+<li class="ev mono">zendesk1._domainkey.medium.com TXT v=DKIM1; t=s (strict); n=core; k=rsa; p=MIIBIjANBgkq..., 2048-bit, fp cb942434bd40aaba via zendesk1._domainkey.zendesk.com</li>
+<li class="ev mono">zendesk2._domainkey.medium.com TXT v=DKIM1; t=s (strict); n=core; k=rsa; p=MIIBIjANBgkq..., 2048-bit, fp c5fa8a017cd8c5a5 via zendesk2._domainkey.zendesk.com</li>
+</ul>
+<p class="kind">MX for bounces</p>
+<ul class="records">
+<li class="ev mono">help.medium.com MX 10 mail-pod-23.int.zendesk.com</li>
+</ul>
+<p class="setup">setup complete: SPF present, DKIM present</p>
+</details>
+</div>
+</article>
+<article class="row" id="service-cloudflare-email-routing">
+<h4>Cloudflare Email Routing</h4>
+<p class="meta">Mailbox</p>
+<span class="badge b-likely">Likely sends</span>
+<div class="row-body">
+<p class="decider"><span class="kind">DKIM key</span>: cf2024-1 (2048 bit, named for it)</p>
+<p class="setup">setup incomplete: SPF missing</p>
+<details class="records"><summary>All records</summary>
+<p class="kind">DKIM key</p>
+<ul class="records">
+<li class="ev mono">cf2024-1._domainkey.medium.com TXT v=DKIM1; h=sha256; k=rsa; p=MIIBIjANBgkq..., 2048-bit, fp 3893fd85802c0281</li>
+</ul>
+<p class="setup">setup incomplete: MX not used (optional, MX at medium.com), SPF missing, DKIM present</p>
+</details>
+</div>
+</article>
+<article class="row" id="service-kit">
+<h4>Kit</h4>
+<p class="meta">Marketing</p>
+<span class="badge b-likely">Likely sends</span>
+<div class="row-body">
+<p class="decider"><span class="kind">DKIM key</span>: cka (1024 bit, named for it)</p>
+<details class="records"><summary>All records</summary>
+<p class="kind">DKIM key</p>
+<ul class="records">
+<li class="ev mono">cka._domainkey.medium.com TXT k=rsa; t=s (strict); p=MIGfMA0GCSqG..., 1024-bit, fp ae2635ee9f973947 via dkim.dm-0m73zvny.sg7.convertkit.com</li>
+</ul>
+</details>
+</div>
+</article>
+<article class="row" id="service-mandrill">
+<h4>Mandrill</h4>
+<p class="meta">Transactional</p>
+<span class="badge b-likely">Likely sends</span>
+<div class="row-body">
+<p class="decider"><span class="kind">DKIM key</span>: mandrill (1024 bit, named for it)</p>
+<p class="setup">setup complete</p>
+<details class="records"><summary>All records</summary>
+<p class="kind">DKIM key</p>
+<ul class="records">
+<li class="ev mono">mandrill._domainkey.medium.com TXT v=DKIM1; k=rsa; p=MIGfMA0GCSqG..., 1024-bit, fp 9cee89b6f986543a</li>
+</ul>
+<p class="setup">setup complete: DKIM present (older setup: a key at mandrill; the current setup names mte1 and mte2), bounce CNAME not used (optional, CNAME at 25 labels under medium.com), tracking CNAME not used (optional, CNAME at 25 labels under medium.com)</p>
+</details>
+</div>
+</article>
+</div>
+</section>
+<section class="view-section unknowns">
+<h3 class="section-title">Not matched to a service</h3>
+<p class="section-intro">These records point somewhere Sendermap does not recognise: a service it does not know yet, or your own servers.</p>
+<ul class="unknowns">
+<li>CNAME at link: <span class="mono">custom.bnc.lt</span>
+<span class="ev mono">link.medium.com CNAME custom.bnc.lt</span>
+</li>
+<li>DKIM key: <span class="mono">mx</span>
+<span class="ev mono">mx._domainkey.medium.com TXT k=rsa; p=MIGfMA0GCSqG..., 1024-bit, fp ed9c30e7c3b40a07</span>
+</li>
+</ul>
+</section>
+<section class="view-section absences">
+<h3 class="section-title">Looked for and not found</h3>
+<p class="section-intro">Records Sendermap looked for and did not find.</p>
+<ul class="gaps absences">
+<li><span class="mono">DKIM keys at help.medium.com</span>: no selectors exist: _domainkey.help.medium.com does not exist, so the 30-name sweep was skipped; the 11 names its MX, SPF and delegations point to were asked as a check, and none exists (RFC 8020 section 5)<span class="ev mono">_domainkey.help.medium.com TXT no such name</span><span class="ev mono">sendermap-wildcard-check._domainkey.help.medium.com TXT no such name</span></li>
+<li><span class="mono">DKIM keys at mail.medium.com</span>: selectors exist but none of the 34 names asked is one<span class="ev mono">_domainkey.mail.medium.com TXT no record of this type</span></li>
+<li><span class="mono">DKIM keys at read.medium.com</span>: no selectors exist: _domainkey.read.medium.com does not exist, so the 27-name sweep was skipped; the 8 names its MX, SPF and delegations point to were asked as a check, and none exists (RFC 8020 section 5)<span class="ev mono">_domainkey.read.medium.com TXT no such name</span><span class="ev mono">sendermap-wildcard-check._domainkey.read.medium.com TXT no such name</span></li>
+</ul>
+</section>
+<section class="view-section how-checked">
+<h3 class="section-title">How this was checked</h3>
+<details class="how"><summary>675 lookups at 5 names · 4 things not checked</summary>
+<h4>Not checked</h4>
+<ul class="gaps">
+<li>DKIM selectors at <span class="mono">email.medium.com</span>: 95 of 122 not asked. The first 27 were asked, plus any the name&#x27;s own SPF, MX or delegation points to (cap 27).</li>
+<li>DKIM selectors at <span class="mono">mail.medium.com</span>: 92 of 126 not asked. The first 27 were asked, plus any the name&#x27;s own SPF, MX or delegation points to (cap 27).</li>
+<li>the website. Web checks were turned off (--no-web).</li>
+<li>certificate transparency, crt.sh. Read only with --ct (it also holds expired certificates).</li>
+</ul>
+<h4>What was asked</h4>
+<p class="asked-total">675 lookups at 5 names</p>
+<ul class="gaps">
+<li>At <span class="mono">medium.com</span>: 126 possible DKIM key names, 25 service record names, 1 web page.</li>
+<li>At <span class="mono">email.medium.com</span>: 27 possible DKIM key names.</li>
+<li>At <span class="mono">help.medium.com</span>: 11 possible DKIM key names.</li>
+<li>At <span class="mono">mail.medium.com</span>: 34 possible DKIM key names.</li>
+<li>At <span class="mono">read.medium.com</span>: 8 possible DKIM key names.</li>
+</ul>
+<details class="asked"><summary>Names asked</summary>
+<h4 class="mono">medium.com</h4>
+<ul>
+<li>Pages (1): <span class="mono">https://api.certspotter.com/v1/issuances?domain=medium.com&amp;include_subdomains=true&amp;expand=dns_names</span></li>
+<li>CNAME labels (25): <span class="mono">bounce, bounces, em, email, mail, send, mta, rp, pm-bounces, links, link, click, track, tracking, url, go, autodiscover, cf-bounce, eversrv, fwdkim1, bnc3, bounces.cloud.em, bounces.cloud2.em, outbound.intercom, atlassian-bounces</span></li>
+<li>DKIM selectors (126): <span class="mono">google, gapps, googlemail, s1, s2, smtpapi, sendgrid, acdkim1, acdkim2, ses, ses1, ses2, aweber_key_a, aweber_key_b, aweber_key_c, brevo, brevo1, brevo2, cm, cf2024-1, ctct1, ctct2, krs, cio, e2ma-k1, e2ma-k2, e2ma-k3, everlytickey1, everlytickey2, fm2, fm1, fm3, mesmtp, secureserver1, secureserver2, gor, strong1, strong2, hs1, hs2, intercom, s1-ionos, s42582890, s2-ionos, cka, kl, kl1, kl2, km1, km2, k2, k1, k3, mailchimp, litesrv, mg, mailgun, mg1, pdk1, pdk2, mailjet, mailpoet2, mailpoet1, mandrill, mte1, mte2, marketo, mkto, mkto1, selector1, selector2, mimecast, mimecast20190719, mc1, pepipost, pm1, pp1, proofpoint, protonmail, protonmail2, protonmail3, resend, sailthru, sailthru2, salesforce, salesforce2, salesforce1, sf, sf1, sf2, sfdc, 200608, pardot, sfmc, scph0819, sparkpost, squarespace, mailru, mail, zendesk1, zendesk2, zendesk, zoho, zohomail, api, default, dk, dkim, dkim1, dkim2, email, k, key, key1, key2, mta, mx, pm, s, selector, smtp, sp, 20161025, 20210112, 20221208, 20230601</span></li>
+</ul>
+<h4 class="mono">email.medium.com</h4>
+<ul>
+<li>DKIM selectors (27): <span class="mono">s1, s2, smtpapi, sendgrid, acdkim1, acdkim2, ses, ses1, ses2, aweber_key_a, aweber_key_b, aweber_key_c, brevo, brevo1, brevo2, cm, cf2024-1, ctct1, ctct2, krs, cio, e2ma-k1, e2ma-k2, e2ma-k3, everlytickey1, everlytickey2, fm2</span></li>
+</ul>
+<h4 class="mono">help.medium.com</h4>
+<ul>
+<li>DKIM selectors (11): <span class="mono">acdkim1, acdkim2, ses, ses1, ses2, aweber_key_a, aweber_key_b, aweber_key_c, zendesk, zendesk1, zendesk2</span></li>
+</ul>
+<h4 class="mono">mail.medium.com</h4>
+<ul>
+<li>DKIM selectors (34): <span class="mono">acdkim1, acdkim2, ses, ses1, ses2, aweber_key_a, aweber_key_b, aweber_key_c, brevo, brevo1, brevo2, cm, cf2024-1, ctct1, ctct2, krs, cio, e2ma-k1, e2ma-k2, e2ma-k3, everlytickey1, everlytickey2, fm2, fm1, fm3, mesmtp, secureserver1, 20161025, 20210112, 20221208, 20230601, gapps, google, googlemail</span></li>
+</ul>
+<h4 class="mono">read.medium.com</h4>
+<ul>
+<li>DKIM selectors (8): <span class="mono">acdkim1, acdkim2, ses, ses1, ses2, aweber_key_a, aweber_key_b, aweber_key_c</span></li>
+</ul>
+</details>
+</details>
+</section>

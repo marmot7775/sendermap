@@ -1,0 +1,344 @@
+{
+ "domain": "hicloudcam.com",
+ "services": [
+  {
+   "name": "Alibaba Cloud Direct Mail",
+   "category": "Transactional",
+   "tier": "In use",
+   "role": "sender",
+   "claims": [
+    {
+     "service": "Alibaba Cloud Direct Mail",
+     "kind": "receives the domain's mail (MX)",
+     "where": "hicloudcam.com",
+     "evidence": {
+      "name": "hicloudcam.com",
+      "rtype": "MX",
+      "value": "10 mx01.dm.aliyun.com",
+      "checked_at": "2026-11-14T06:40:20+00:00"
+     },
+     "supporting": []
+    },
+    {
+     "service": "Alibaba Cloud Direct Mail",
+     "kind": "included in SPF",
+     "where": "hicloudcam.com",
+     "evidence": {
+      "name": "hicloudcam.com",
+      "rtype": "TXT",
+      "value": "include:spfdm-ap-southeast-1.aliyun.com",
+      "checked_at": "2026-11-14T06:40:20+00:00"
+     },
+     "supporting": []
+    },
+    {
+     "service": "Alibaba Cloud Direct Mail",
+     "kind": "receives replies and bounces for a sending subdomain (MX)",
+     "where": "notify.hicloudcam.com",
+     "evidence": {
+      "name": "notify.hicloudcam.com",
+      "rtype": "MX",
+      "value": "10 mxdm-ap-southeast-1.aliyun.com",
+      "checked_at": "2026-11-14T06:40:20+00:00"
+     },
+     "supporting": []
+    },
+    {
+     "service": "Alibaba Cloud Direct Mail",
+     "kind": "included in SPF",
+     "where": "notify.hicloudcam.com",
+     "evidence": {
+      "name": "notify.hicloudcam.com",
+      "rtype": "TXT",
+      "value": "include:spfdm-ap-southeast-1.aliyun.com",
+      "checked_at": "2026-11-14T06:40:20+00:00"
+     },
+     "supporting": []
+    }
+   ],
+   "setups": []
+  },
+  {
+   "name": "Alibaba Mail",
+   "category": "Mailbox",
+   "tier": "In use",
+   "role": "sender",
+   "claims": [
+    {
+     "service": "Alibaba Mail",
+     "kind": "receives the domain's mail (MX)",
+     "where": "hicloudcam.com",
+     "evidence": {
+      "name": "hicloudcam.com",
+      "rtype": "MX",
+      "value": "5 mxn.mxhichina.com",
+      "checked_at": "2026-11-14T06:40:20+00:00"
+     },
+     "supporting": []
+    },
+    {
+     "service": "Alibaba Mail",
+     "kind": "receives the domain's mail (MX)",
+     "where": "hicloudcam.com",
+     "evidence": {
+      "name": "hicloudcam.com",
+      "rtype": "MX",
+      "value": "10 mxw.mxhichina.com",
+      "checked_at": "2026-11-14T06:40:20+00:00"
+     },
+     "supporting": []
+    },
+    {
+     "service": "Alibaba Mail",
+     "kind": "included in SPF",
+     "where": "hicloudcam.com",
+     "evidence": {
+      "name": "hicloudcam.com",
+      "rtype": "TXT",
+      "value": "include:spf.mxhichina.com",
+      "checked_at": "2026-11-14T06:40:20+00:00"
+     },
+     "supporting": []
+    }
+   ],
+   "setups": [
+    {
+     "service": "Alibaba Mail",
+     "where": "hicloudcam.com",
+     "items": [
+      {
+       "record": "mx",
+       "need": "optional",
+       "state": "present",
+       "evidence": [
+        {
+         "name": "hicloudcam.com",
+         "rtype": "MX",
+         "value": "5 mxn.mxhichina.com",
+         "checked_at": "2026-11-14T06:40:20+00:00"
+        },
+        {
+         "name": "hicloudcam.com",
+         "rtype": "MX",
+         "value": "10 mxw.mxhichina.com",
+         "checked_at": "2026-11-14T06:40:20+00:00"
+        }
+       ],
+       "asked": "MX at hicloudcam.com",
+       "detail": ""
+      },
+      {
+       "record": "spf",
+       "need": "required",
+       "state": "present",
+       "evidence": [
+        {
+         "name": "hicloudcam.com",
+         "rtype": "TXT",
+         "value": "include:spf.mxhichina.com",
+         "checked_at": "2026-11-14T06:40:20+00:00"
+        }
+       ],
+       "asked": "TXT at hicloudcam.com",
+       "detail": ""
+      }
+     ],
+     "complete": true
+    }
+   ]
+  },
+  {
+   "name": "Amazon SES",
+   "category": "Transactional",
+   "tier": "Account only",
+   "role": "sender",
+   "claims": [
+    {
+     "service": "Amazon SES",
+     "kind": "verification token",
+     "where": "hicloudcam.com",
+     "evidence": {
+      "name": "hicloudcam.com",
+      "rtype": "TXT",
+      "value": "amazonses:hUp0SJqUUSLitFCvnXtq9BHr28l8RN9qKKu4lI/5YpU=",
+      "checked_at": "2026-11-14T06:40:20+00:00"
+     },
+     "supporting": []
+    }
+   ],
+   "setups": []
+  }
+ ],
+ "run": {
+  "checked_at": "2026-11-14T06:40:20+00:00",
+  "resolver": "doh google"
+ },
+ "findings": [],
+ "unknowns": [
+  {
+   "what": "DMARC reports go to",
+   "value": "ibesecurity.com",
+   "where": "hicloudcam.com",
+   "evidence": {
+    "name": "_dmarc.hicloudcam.com",
+    "rtype": "TXT",
+    "value": "v=DMARC1; p=none; rua=mailto:dmarc_agg@ibesecurity.com;",
+    "checked_at": "2026-11-14T06:40:20+00:00"
+   }
+  },
+  {
+   "what": "CNAME at mail",
+   "value": "mail.mxhichina.com",
+   "where": "hicloudcam.com",
+   "evidence": {
+    "name": "mail.hicloudcam.com",
+    "rtype": "CNAME",
+    "value": "mail.mxhichina.com",
+    "checked_at": "2026-11-14T06:40:20+00:00"
+   }
+  }
+ ],
+ "gaps": [
+  {
+   "asked": "the website",
+   "happened": "not read: web checks were turned off (--no-web)",
+   "kind": "off",
+   "count": 0,
+   "cap": 0
+  },
+  {
+   "asked": "certificate transparency, crt.sh: GET https://crt.sh/?q=%25.hicloudcam.com&output=json",
+   "happened": "not asked: read only with --ct (it also holds expired certificates)",
+   "kind": "off",
+   "count": 0,
+   "cap": 0
+  }
+ ],
+ "subdomains_checked": [
+  "notify.hicloudcam.com"
+ ],
+ "checked": [
+  {
+   "where": "hicloudcam.com",
+   "dkim_selectors": [
+    "acdkim1",
+    "acdkim2",
+    "ses",
+    "ses1",
+    "ses2",
+    "aweber_key_a",
+    "aweber_key_b",
+    "aweber_key_c"
+   ],
+   "labels": [
+    "bounce",
+    "bounces",
+    "em",
+    "email",
+    "mail",
+    "send",
+    "mta",
+    "rp",
+    "pm-bounces",
+    "links",
+    "link",
+    "click",
+    "track",
+    "tracking",
+    "url",
+    "go",
+    "autodiscover",
+    "cf-bounce",
+    "eversrv",
+    "fwdkim1",
+    "bnc3",
+    "bounces.cloud.em",
+    "bounces.cloud2.em",
+    "outbound.intercom",
+    "atlassian-bounces"
+   ],
+   "pages": [
+    "https://api.certspotter.com/v1/issuances?domain=hicloudcam.com&include_subdomains=true&expand=dns_names"
+   ],
+   "denial": "classic",
+   "dkim_skipped": []
+  },
+  {
+   "where": "notify.hicloudcam.com",
+   "dkim_selectors": [
+    "acdkim1",
+    "acdkim2",
+    "ses",
+    "ses1",
+    "ses2",
+    "aweber_key_a",
+    "aweber_key_b",
+    "aweber_key_c"
+   ],
+   "labels": [],
+   "pages": [],
+   "denial": "classic",
+   "dkim_skipped": []
+  }
+ ],
+ "ct": {
+  "status": "off",
+  "logged": 1,
+  "resolved": 0,
+  "gone_unnamed": 0,
+  "providers": [
+   {
+    "name": "Cert Spotter",
+    "status": "read",
+    "logged": 1
+   },
+   {
+    "name": "crt.sh",
+    "status": "off",
+    "logged": 0
+   }
+  ]
+ },
+ "historical": [],
+ "logo": null,
+ "schema": "sendermap/1",
+ "absences": [
+  {
+   "asked": "DKIM keys at hicloudcam.com",
+   "happened": "no selectors exist: _domainkey.hicloudcam.com does not exist, so the 122-name sweep was skipped; the 8 names its MX, SPF and delegations point to were asked as a check, and none exists (RFC 8020 section 5)",
+   "evidence": [
+    {
+     "name": "_domainkey.hicloudcam.com",
+     "rtype": "TXT",
+     "value": "no such name",
+     "checked_at": "2026-11-14T06:40:20+00:00"
+    },
+    {
+     "name": "sendermap-wildcard-check._domainkey.hicloudcam.com",
+     "rtype": "TXT",
+     "value": "no such name",
+     "checked_at": "2026-11-14T06:40:20+00:00"
+    }
+   ]
+  },
+  {
+   "asked": "DKIM keys at notify.hicloudcam.com",
+   "happened": "no selectors exist: _domainkey.notify.hicloudcam.com does not exist, so the 27-name sweep was skipped; the 8 names its MX, SPF and delegations point to were asked as a check, and none exists (RFC 8020 section 5)",
+   "evidence": [
+    {
+     "name": "_domainkey.notify.hicloudcam.com",
+     "rtype": "TXT",
+     "value": "no such name",
+     "checked_at": "2026-11-14T06:40:20+00:00"
+    },
+    {
+     "name": "sendermap-wildcard-check._domainkey.notify.hicloudcam.com",
+     "rtype": "TXT",
+     "value": "no such name",
+     "checked_at": "2026-11-14T06:40:20+00:00"
+    }
+   ]
+  }
+ ],
+ "story": "Alibaba Cloud Direct Mail receives the domain's mail; Alibaba Mail receives the domain's mail. One service shows an account and nothing set up to send (Amazon SES). Not checked: the website (turned off) and the crt.sh certificate log (read only with --ct)."
+}

@@ -35,3 +35,9 @@ Recorded 2026-10-28 through Google's DNS over HTTPS, `--ct` and the website off:
 
 - `cognifit.com`: an SPF include of `ses.amazonaws.com`, a name that does not exist (Amazon
   SES's include is `amazonses.com`), so the record errors where a receiver reaches it.
+
+Recorded 2026-11-13 through Google's DNS over HTTPS, `--ct` and the website off:
+
+- `hicloudcam.com`: Alibaba Mail as the mailbox, by its `mxhichina.com` MX and SPF include, with
+  Alibaba Cloud Direct Mail beside it in MX and at a sending subdomain.
+- `medium.com`: Google Workspace with seven senders in one SPF record, KnowBe4 among them.

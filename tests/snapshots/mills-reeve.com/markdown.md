@@ -110,16 +110,16 @@ These records point somewhere Sendermap does not recognise: a service it does no
 
 ## How this was checked
 
-Checked 2026-10-12 01:24 UTC: 646 DNS lookups in 0.0 s over Google DNS over HTTPS.
+Checked 2026-10-12 01:24 UTC: 678 DNS lookups in 0.0 s over Google DNS over HTTPS.
 
-- At mills-reeve.com: 110 possible DKIM key names, 25 service record names, 1 web page.
-- At update.mills-reeve.com: 29 possible DKIM key names.
+- At mills-reeve.com: 122 possible DKIM key names, 25 service record names, 1 web page.
+- At update.mills-reeve.com: 30 possible DKIM key names.
 - At updates.mills-reeve.com: 27 possible DKIM key names.
 
 Not checked:
 
-- DKIM selectors at update.mills-reeve.com: 81 of 110 not asked. The first 27 were asked, plus any the name's own SPF, MX or delegation points to (cap 27).
-- DKIM selectors at updates.mills-reeve.com: 83 of 110 not asked. The first 27 were asked, plus any the name's own SPF, MX or delegation points to (cap 27).
+- DKIM selectors at update.mills-reeve.com: 92 of 122 not asked. The first 27 were asked, plus any the name's own SPF, MX or delegation points to (cap 27).
+- DKIM selectors at updates.mills-reeve.com: 95 of 122 not asked. The first 27 were asked, plus any the name's own SPF, MX or delegation points to (cap 27).
 
 Not run:
 

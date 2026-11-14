@@ -11,6 +11,32 @@ fails before anything is published.
 
 ## Unreleased
 
+## 0.1.14 (2026-11-13)
+
+- Seven services are new in the catalog, each pattern with a live proof: SendCloud, Alibaba Cloud
+  Direct Mail, Alibaba Mail (with its setup, from Alibaba's own documentation), KnowBe4, Adobe
+  Journey Optimizer, Vero and GreenArrow. Marketo is also named by a landing page CNAME into
+  `mktoweb.com`.
+- A vendor block with an empty `published_spf` list is not read for its published ranges.
+  SendCloud's SPF record lists /16 ranges of Alibaba Cloud, so reading it would credit SendCloud
+  with any domain that lists an address in that cloud. SendCloud is named by its include and MX.
+- 23 patterns moved from pending to the catalog, each proven on a customer domain: DKIM selector
+  names for Amazon SES (`ses1`, `ses2`), Customer.io (`cio`), Google Workspace (`googlemail`),
+  Mailchimp (`mailchimp`), Mimecast (`mc1`), Postmark (`pm1`), Proofpoint (`proofpoint`), Sailthru
+  (`sailthru2`), SendGrid (`sendgrid`), Zendesk (`zendesk`) and Zoho Mail (`zohomail`); SPF
+  includes for Cheetah Digital, Cordial and Mapp; MX hosts for Amazon SES Mail Manager, Cheetah
+  Digital and IONOS; Inxmail's bounce CNAME; and website scripts for Attentive and Intercom. A
+  full DKIM sweep now asks 126 names, up from 114.
+- Fixed: with `--stop-early-dkim`, keys and their findings are listed in the order the full sweep
+  lists them. Before, two findings of the same severity could swap places between the two modes.
+- The proof hunt reads the top 6,000 domains of its Tranco list, up from 2,000.
+- Two more recorded domains in the test corpus: `hicloudcam.com` and `medium.com`.
+- The benchmark over the same 300 domains, 0.1.13 to 0.1.14: named unknowns 901 to 808, shared
+  unknown groups 68 to 58, senders found 1,437 to 1,456.
+- `opentelemetry-api` is locked at 1.45.2 (Dependabot alert 14).
+- ARCHITECTURE.md says what a rebound name gets from the page fetch guard: a failed TLS
+  handshake, since every client checks the certificate, and no page.
+
 ## 0.1.13 (2026-11-02)
 
 - An opt-in early stop for the DKIM probe: `map_domain(stop_early=True)` and `--stop-early-dkim`.
